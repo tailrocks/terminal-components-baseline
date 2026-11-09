@@ -1,0 +1,143 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+key down
+checkpoint 001: connection cursor moved 77b1ee3085c8570b
+key down
+checkpoint 002: connection cursor moved 23afca19a02c7bb7
+key down
+checkpoint 003: connection cursor moved 8c74765db906c1ba
+key down
+checkpoint 004: connection cursor moved bf155f39e57929aa
+key shift+f10
+checkpoint 005: menu Duplicate 53565770f844927f
+key esc
+checkpoint 006: closed New connection… 416b78b387f904ae
+checkpoint 007: settled 416b78b387f904ae
+mouse Press { x: 5, y: 0, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 5, y: 0, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 008: connections app menu 7d0cf9d875fee994
+key esc
+checkpoint 009: closed Quit TablePro fa148c197856d7e1
+key down
+checkpoint 010: connection cursor moved 416b78b387f904ae
+key enter
+checkpoint 011: development connected 1615509862a77c56
+key /
+checkpoint 012: visible Filter objects 1615509862a77c56
+type 14 UTF-8 bytes
+checkpoint 013: visible set_updated_at 12c8fe1c8c82e7dc
+key down
+key down
+checkpoint 014: explorer cursor moved 91fdcbb8b10b9a26
+key down
+checkpoint 015: explorer cursor moved 086ef8eedbe42b7d
+key down
+checkpoint 016: explorer cursor moved 128f07edc1e4aad1
+key shift+f10
+checkpoint 017: menu Filter objects… 25c145e4cf251669
+key up
+checkpoint 018: explorer open is disabled b83872e1c4e5cf9d
+key esc
+checkpoint 019: closed Tables and views 938cd3d8e0c7c49a
+key esc
+checkpoint 020: explorer filter cleared 7bfe1fbafc7f176b
+key ctrl+o
+checkpoint 021: visible Open Quickly 94b3872dfe017bb6
+type 8 UTF-8 bytes
+checkpoint 022: visible products 94b3872dfe017bb6
+key enter
+checkpoint 023: products grid 93d04bad150fe3db
+key shift+f10
+checkpoint 024: menu Copy cell 85f413fe577d9d5c
+key esc
+checkpoint 025: closed Copy cell 06ee6df680193692
+type 20 UTF-8 bytes
+checkpoint 026: column header menu efb5430219994d89
+key esc
+checkpoint 027: closed Sort Ascending 06ee6df680193692
+key [
+checkpoint 028: previous tab 807eded80fa96161
+type 69 UTF-8 bytes
+checkpoint 029: visible SELECT name FROM products WHERE sku = 'SKU-01000' -- t05_menus_marker 2a15edece25d8755
+key ctrl+r
+checkpoint 030: marker result b800757b1805e3f4
+key esc
+checkpoint 031: editor stopped editing 10a754133da93c20
+key tab
+checkpoint 032: result focus moved 8c76a667e30ea9b3
+key tab
+checkpoint 033: result focus moved 3b92b7ea60bf44bb
+key shift+f10
+checkpoint 034: menu Copy cell 0bed72e09efe7398
+key down
+key down
+checkpoint 035: query edit cell is read-only 78756f205cd6289b
+key esc
+checkpoint 036: closed Read-only rows 337b14aad2c66150
+key ctrl+y
+checkpoint 037: history list f0f8768609794eb8
+key shift+f10
+checkpoint 038: menu Run in new tab 349aab774fceed64
+key down
+key down
+key down
+key enter
+checkpoint 039: history search focused 21ad3148c96afa61
+checkpoint 040: settled 21ad3148c96afa61
+mouse Press { x: 5, y: 0, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 5, y: 0, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 041: workbench app menu 1c9a404f3b7db016
+key enter
+checkpoint 042: open tabs from the app menu d9cf149d8158f562
+key esc
+checkpoint 043: tab list closed 89773ca9ee0581e9
+resize 121x40
+checkpoint 044: visible 121×40 56b1e57664a32569
+resize 120x40
+checkpoint 045: visible 120×40 0d7b03ae0adb90c6
+key [
+checkpoint 046: previous tab 5c3dc9cf992da57b
+key [
+checkpoint 047: previous tab 83ae3d3cf1ac7a0e
+key tab
+checkpoint 048: left the explorer 01a17177718a00a7
+key esc
+checkpoint 049: toward the tab strip 062b47163d9f5204
+key esc
+checkpoint 050: toward the tab strip 9e205fc695f7c02b
+key shift+f10
+checkpoint 051: menu New query tab bd968d606a57270a
+key up
+checkpoint 052: switch to tab is the disabled current row 062b8068844967f1
+checkpoint 053: absent Opened 7d065f4b42266d3b
+checkpoint 054: settled 7d065f4b42266d3b
+precondition 
+visual pre_refactor/t05_menus/t05_menus_menus_120x40 candidate 1e35e5ff402f8654322f72374143082c6148bab8451d4a8ffb64005a766c1c8d
+capture-only pre_refactor/t05_menus/t05_menus_menus_120x40: Failure(CheckFailure { test_id: "pre_refactor/t05_menus/t05_menus_menus_120x40", gate: State, reason: Missing, candidate_sha256: "1e35e5ff402f8654322f72374143082c6148bab8451d4a8ffb64005a766c1c8d", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-menus-commands-60974-1793901285438186000-0/check-artifacts/pre_refactor/t05_menus/t05_menus_menus_120x40/1e35e5ff402f8654322f72374143082c6148bab8451d4a8ffb64005a766c1c8d/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-menus-commands-60974-1793901285438186000-0/check-artifacts/pre_refactor/t05_menus/t05_menus_menus_120x40/1e35e5ff402f8654322f72374143082c6148bab8451d4a8ffb64005a766c1c8d/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-menus-commands-60974-1793901285438186000-0/check-artifacts/pre_refactor/t05_menus/t05_menus_menus_120x40/1e35e5ff402f8654322f72374143082c6148bab8451d4a8ffb64005a766c1c8d/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 055: current-tab menu at 80x24 b2976e974c95da31
+checkpoint 056: settled b2976e974c95da31
+precondition 
+visual pre_refactor/t05_menus/t05_menus_menus_narrow candidate 19fe5202207babb8f384991f631d90382945bde77c148099717f66ddd471963c
+capture-only pre_refactor/t05_menus/t05_menus_menus_narrow: Failure(CheckFailure { test_id: "pre_refactor/t05_menus/t05_menus_menus_narrow", gate: State, reason: Missing, candidate_sha256: "19fe5202207babb8f384991f631d90382945bde77c148099717f66ddd471963c", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-menus-commands-60974-1793901285438186000-0/check-artifacts/pre_refactor/t05_menus/t05_menus_menus_narrow/19fe5202207babb8f384991f631d90382945bde77c148099717f66ddd471963c/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-menus-commands-60974-1793901285438186000-0/check-artifacts/pre_refactor/t05_menus/t05_menus_menus_narrow/19fe5202207babb8f384991f631d90382945bde77c148099717f66ddd471963c/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-menus-commands-60974-1793901285438186000-0/check-artifacts/pre_refactor/t05_menus/t05_menus_menus_narrow/19fe5202207babb8f384991f631d90382945bde77c148099717f66ddd471963c/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 057: current-tab menu back at 120x40 7d065f4b42266d3b
+key enter
+checkpoint 058: disabled switch to tab did nothing 7d065f4b42266d3b
+key down
+key down
+key enter
+checkpoint 059: new query tab from the highlighted command 04b9535afed31109
+key esc
+checkpoint 060: editor stopped editing 74dc153ba6bde121
+key [
+checkpoint 061: back toward Query 1 2280ea42aac03b18
+key [
+checkpoint 062: back toward Query 1 1a45e6f7d1b08971
+key [
+checkpoint 063: back toward Query 1 020821c531bd636c
+key ctrl+q
+checkpoint 064: visible Quit TablePro? aadf2a9608c0c052
+key right
+key enter
+observed exit 0

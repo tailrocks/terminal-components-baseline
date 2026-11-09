@@ -1,0 +1,2 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/tests/functional/reference-bins/aarch64-apple-darwin/showcase ["--page", "overview", "--frame", "40", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: reference showcase painted c1f48b6847398633

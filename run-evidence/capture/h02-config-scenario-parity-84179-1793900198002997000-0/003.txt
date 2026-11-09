@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          team · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Deploy preview                                                                                       scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Deploy preview         custom · here   
+  › Deploy preview  custom  here  Current folder · ⚠ unreviewed…                 ────────────────────────────────────   
+                                                                                 Does       push the current branch     
+                                                                                            to the preview stack        
+                                                                                 Runs       tools/deploy-pre…hoami)'    
+                                                                                 In         ~/work/team                 
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        Current folder · ⚠          
+                                                                                            unreviewed · same bytes     
+                                                                                            were trusted at another     
+                                                                                            path                        
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       trust required ·            
+                                                                                            ~/work/team/.holla.toml     
+                                                                                 Alt+Enter  Set an alias… · Show        
+                                                                                            configuration               
+                                                                                            diagnostics · Pin ·         
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/team   main                                                            ▲ 2 config warnings   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Trust…  Alt+Enter Alternatives…  Esc Clear  …               Esc never quits · Ctrl+Q quits 

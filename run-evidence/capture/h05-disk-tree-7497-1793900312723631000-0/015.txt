@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                           big · Rust project  mbp · local  
+  Here › Disk › Usage › Disk › Overview                                                                                 
+  Here › Disk › Usage › Disk › Overview                                                                                 
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────── 
+  Disk overview                                                                                                         
+  home folders alphabetically, then insight roots · cached sizes are hints with their age · Enter analyses live         
+                                                                                                                        
+ ▎  ~/Desktop                                     – · unscanned  home f…     Desktop                             root   
+    ~/Documents                                   – · unscanned  home f…     ────────────────────────────────────────   
+    ~/Downloads                                   – · unscanned  home f…     Path  ~/Desktop                            
+    ~/Library                                     – · unscanned  home f…     Kind  home folder                          
+    ~/Movies                                      – · unscanned  home f…     Size  unscanned · Enter starts a live      
+    ~/Photos                                      – · unscanned  home f…           analysis                             
+    ~/Pictures                                    – · unscanned  home f…                                                
+    ~/work                                        – · unscanned  home f…                                                
+    ~/Library/Caches                              – · unscanned  User c…                                                
+    ~/Library/Logs                                – · unscanned  User l…                                                
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/big                                         10 roots                                         truecolor · 120×40 
+ ↑↓ Move  Enter Analyze  t Top files  p Details  Esc Back  Shift+F10 Menu        Noise folders folded · sizes unchanged 

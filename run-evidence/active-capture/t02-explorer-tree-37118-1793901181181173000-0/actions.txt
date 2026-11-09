@@ -1,0 +1,72 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io:5432 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development workbench 1615509862a77c56
+checkpoint 005: visible analytics 1615509862a77c56
+mouse Press { x: 10, y: 20, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 20, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+key right
+checkpoint 006: analytics schema expanded 7e8aa42aec12bd34
+key right
+key right
+checkpoint 007: visible events ad3812e1f046f3db
+checkpoint 008: visible events ad3812e1f046f3db
+checkpoint 009: visible organizations ad3812e1f046f3db
+mouse Press { x: 14, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 14, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 010: organizations preview 6883b468e3d89068
+checkpoint 011: visible organizations 6883b468e3d89068
+mouse Press { x: 14, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 14, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 012: organizations pinned e4ab93afee9fd0bb
+resize 121x40
+checkpoint 013: visible 121×40 c60b9ae028f3f661
+resize 120x40
+checkpoint 014: visible 120×40 b7e1ee7a43612ebe
+checkpoint 015: settled b7e1ee7a43612ebe
+precondition 
+visual pre_refactor/t02_explorer/t02_explorer_tree_120x40 candidate b692e67b163e5500768256b6f73ed1d386d3ec3bb0131e05f173dba3e34b6358
+capture-only pre_refactor/t02_explorer/t02_explorer_tree_120x40: Failure(CheckFailure { test_id: "pre_refactor/t02_explorer/t02_explorer_tree_120x40", gate: State, reason: Missing, candidate_sha256: "b692e67b163e5500768256b6f73ed1d386d3ec3bb0131e05f173dba3e34b6358", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-explorer-tree-37118-1793901181181173000-0/check-artifacts/pre_refactor/t02_explorer/t02_explorer_tree_120x40/b692e67b163e5500768256b6f73ed1d386d3ec3bb0131e05f173dba3e34b6358/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-explorer-tree-37118-1793901181181173000-0/check-artifacts/pre_refactor/t02_explorer/t02_explorer_tree_120x40/b692e67b163e5500768256b6f73ed1d386d3ec3bb0131e05f173dba3e34b6358/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-explorer-tree-37118-1793901181181173000-0/check-artifacts/pre_refactor/t02_explorer/t02_explorer_tree_120x40/b692e67b163e5500768256b6f73ed1d386d3ec3bb0131e05f173dba3e34b6358/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 016: narrow size 79bcdf64d6425d1d
+resize 81x24
+checkpoint 017: narrow nudge dcdddfbef4156bc8
+resize 80x24
+checkpoint 018: narrow restored 242b164b281c1322
+checkpoint 019: settled 7dcd768efce019c1
+precondition 
+visual pre_refactor/t02_explorer/t02_explorer_tree_narrow candidate f13ba6e96b27a65025d3fac56cec2c15faa98ff30aed972580a608dcf312f7d5
+capture-only pre_refactor/t02_explorer/t02_explorer_tree_narrow: Failure(CheckFailure { test_id: "pre_refactor/t02_explorer/t02_explorer_tree_narrow", gate: State, reason: Missing, candidate_sha256: "f13ba6e96b27a65025d3fac56cec2c15faa98ff30aed972580a608dcf312f7d5", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-explorer-tree-37118-1793901181181173000-0/check-artifacts/pre_refactor/t02_explorer/t02_explorer_tree_narrow/f13ba6e96b27a65025d3fac56cec2c15faa98ff30aed972580a608dcf312f7d5/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-explorer-tree-37118-1793901181181173000-0/check-artifacts/pre_refactor/t02_explorer/t02_explorer_tree_narrow/f13ba6e96b27a65025d3fac56cec2c15faa98ff30aed972580a608dcf312f7d5/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-explorer-tree-37118-1793901181181173000-0/check-artifacts/pre_refactor/t02_explorer/t02_explorer_tree_narrow/f13ba6e96b27a65025d3fac56cec2c15faa98ff30aed972580a608dcf312f7d5/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 020: restored 120x40 b8b78f77a8abef9e
+checkpoint 021: visible customers b7e1ee7a43612ebe
+mouse Press { x: 14, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 14, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 022: customers preview 8f0f0b3152da0c3a
+checkpoint 023: visible products 8f0f0b3152da0c3a
+mouse Press { x: 14, y: 12, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 14, y: 12, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 024: products replaces the preview bc212eac63b81b79
+checkpoint 025: visible organizations bc212eac63b81b79
+mouse Press { x: 14, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 14, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 026: organizations reused c85b019dcfbdb24c
+key /
+type 9 UTF-8 bytes
+checkpoint 027: tree filtered to customers 039acb4588de4100
+checkpoint 028: visible customers 039acb4588de4100
+mouse Press { x: 14, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 14, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 029: filtered customers open 1e9818265ec4a389
+checkpoint 030: visible customers 1e9818265ec4a389
+mouse Press { x: 14, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 14, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 031: filtered customers again 75aed2a740796e6e
+key ctrl+q
+clean exit 0

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   poly · Node project · yarn  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ yarn dev                                                                                             scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  yarn dev               script · here   
+  › yarn dev  script  here  package.json here                                    ────────────────────────────────────   
+                                                                                 Does       vite · package.json         
+                                                                                 Runs       yarn run dev                
+                                                                                 In         ~/work/poly                 
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        package.json here           
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/poly                                                                                         truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

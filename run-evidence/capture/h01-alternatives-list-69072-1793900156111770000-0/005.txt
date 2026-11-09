@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          holla · Rust project  mbp · local  
+                                                                                                                         
+  Here                                                                                                                   
+ ━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   Search actions and resources…                                                                         scope ‹ here ›  
+                                                                                                                         
+    Suggested here                                                                Review 5 modified files   git · here   
+    Inspect 12 GB of generate…  disk      here  12 GB generated artifacts         ────────────────────────────────────   
+    Pull                        git       here  branch is 3 commits behind        Does       show the changed files      
+  › Review 5 modified files     git       here  4 modified · 1 untracked                     with their diff stat        
+    Run╭───────────────────────────────╮  here  5 files changed since the la…                before committing or        
+    Who│  Review 5 modified files      │  here  2 sessions blocked for 4 min                 syncing                     
+       │  Open                   Enter │                                          Runs       git -C /Users/al…--short    
+    Rec│  Copy command               y │                                                     git -C /Users/al… --stat    
+    not│  Insert into shell            │                                          In         ~/work/holla                
+       │ ───────────────────────────── │                                          Host       mbp · local                 
+    Exp│  Open in a Git TUI (lazygit)  │                                          Scope      here                        
+     Ta│ ───────────────────────────── │es   System                               Why        4 modified · 1 untracked    
+    Sys│  Pin here                     │  host  available on this host            Changes    none · read-only            
+       │  Set alias…                   │                                          Risk       read-only                   
+       │  Hide here                    │                                          Data       live · 0 s ago              
+       │  Reset ranking                │                                          Gate       runs directly               
+       │ ───────────────────────────── │                                          Alt+Enter  Open in a Git TUI           
+       │  Why is this here?            │                                                     (lazygit) · Pin · Alias     
+       ╰───────────────────────────────╯                                                     · Why here?                 
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+ ~/work/holla   main   ↓3   • 5                                                                       truecolor · 121×40 
+ ↑↓ Move  Type to jump  Enter Choose  Esc Close                                                                          

@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T orders ×    T customers ×    T organizations ×                                                   +   
+ ──────────────────────────────────────────────━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › organizations ──────────────────────────────────────────────────── 9 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   match all ▾   id = 'af3e2db9-3aa5-4f25-91ed-6db9875cdecc' ×    + Add filter        │ 
+ │      ▾ Tables             │││                                                                                      │ 
+ │        ▸ T organizations  │││        ⚷ id ∇     name    slug    plan    billing_email      seats  settings     2›  │ 
+ │        ▸ T customers      │││                                                                                      │ 
+ │        ▸ T products       │││                                                                                      │ 
+ │        ▸ T orders         │││                                                                                      │ 
+ │        ▸ T order_items    │││                                                                                      │ 
+ │        ▸ T payments       │││                                                                                      │ 
+ │        ▸ T subscriptions  │││                                                                                      │ 
+ │      ▸ Views              │││                                                                                      │ 
+ │      ▸ Functions          │││                                                                                      │ 
+ │      ▸ Sequences          │││                                                                                      │ 
+ │    ▸ S analytics          │││                                                                                      │ 
+ │    ▸ S audit              │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││     ⠋ Loading rows…                                                                  │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││   filtered (1) · 0 rows                                                              │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓←→ Cell  Alt+D Duplicate row  s Sort  f Filter  Space Select row  Shift+F10 Menu  …          Opened public.customers 

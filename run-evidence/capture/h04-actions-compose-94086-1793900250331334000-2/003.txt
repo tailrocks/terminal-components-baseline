@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here    stop the compose project ✓ ×                                                                                  
+ ────────━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────── 
+  stop the compose project · succeeded · 0 s · exit 0                                        here · ~/work/stack · mbp  
+  $ docker compose down · started by Stop the Compose project                                                           
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ docker compose down                                                                                             │ 
+ │   Container acme-db-1  Removed                                                                                     │ 
+ │   Container acme-api-1  Removed                                                                                    │ 
+ │   Container acme-worker-1  Removed                                                                                 │ 
+ │   Network acme_default  Removed                                                                                    │ 
+ │  volumes kept (no --volumes)                                                                                       │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/stack                                    succeeded · 0 s                                     truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  r Restart  Esc Back to Here  …         stop the compose project finished · exit 0 

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+  Here › Files › src                                                                                                    
+  Here › Files › src                                                                                                    
+ ━━━━━━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────────────────────────────── 
+  Files · ~/work/app/src                                                                                                
+  1 entry · 0 hidden hidden · Ctrl+H shows · directories first                                                          
+                                                                                                                        
+ ▎  main.rs                             13 B  2026-09-08 08:41      ╭─ ~/work/app/src/main.rs ───────── 13 B of 13 B ─╮ 
+                                                                    │      1 fn main() {}                             │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    ╰─────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/notes                              ~/work/app/src · hidden off                               truecolor · 120×40 
+ ↑↓ Move  Enter Open / preview  ← Parent  g Go to path  Ctrl+H Show hidden  Esc Back  …   Select a file or folder first 

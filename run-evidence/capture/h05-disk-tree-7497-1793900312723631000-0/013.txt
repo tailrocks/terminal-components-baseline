@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                           big · Rust project  mbp · local  
+  Here › Disk › Usage › Disk                                                                                            
+  Here › Disk › Usage › Disk                                                                                            
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search disk…                                                                                         scope ‹ here ›  
+                                                                                                                        
+    Disk · 12 entries                                                            cargo clean · 2.0 MiB cleanup · here   
+  › cargo clean · 2.0 MiB      cleanup  here  2.0 MiB of gener…  destructive     ────────────────────────────────────   
+    Analyze disk usage         disk     here  / is 66% full                      Does       remove the resolved         
+    Delete everything inside…  cleanup  here  always available…  destructive                target directory            
+    cargo clean dry run        cargo    here  read-only                                     ~/work/big/target · 5       
+    Analyze a custom path…     disk     host  available                                     files · tool-native         
+    Clean Cargo registry cac…  cleanup  host  safe if old…                                  permanent removal, not      
+    Clean Project artifacts …  cleanup  host  review first…                                 Trash · rebuilt by the      
+    Clean User caches · 900.…  cleanup  host  review first…                                 next build                  
+    Clean User logs · 44.0 K…  cleanup  host  rebuilt on deman…                  Runs       cargo clean                 
+    Disk overview              disk     host  available                          In         ~/work/big                  
+    Review cleanup candidates  cleanup  host  902.2 MiB across…                  Host       mbp · local                 
+    Top files on this Mac      disk     host  macOS Spotlight                    Scope      here                        
+                                                                                 Why        2.0 MiB of generated        
+                                                                                            artifacts                   
+                                                                                 Changes    2.0 MiB freed by cargo      
+                                                                                            itself · permanent ·        
+                                                                                            next build recompiles       
+                                                                                            everything                  
+                                                                                 Risk       destructive                 
+                                                                                 Data       live · 3 s ago              
+                                                                                 Gate       one confirmation            
+                                                                                 Alt+Enter  Show what clean would       
+                                                                                            remove (dry run) · Pin ·    
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/big                                    discovery complete                                    truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Confirm…  Alt+Enter Alternatives…  Esc Back  …      Noise folders folded · sizes unchanged 

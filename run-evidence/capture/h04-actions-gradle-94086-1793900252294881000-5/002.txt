@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                       android · Gradle build  mbp · local  
+                                                                                                                        
+  Here    gradle build ! ×                                                                                              
+ ────────━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────── 
+  gradle build · failed · 0 s · exit 1                                                     here · ~/work/android · mbp  
+  $ gradle build · started by gradle build                                                                              
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ gradle build                                                                                                    │ 
+ │  > Task :app:compileKotlin FAILED                                                                                  │ 
+ │  ! e: file:///src/main/kotlin/Main.kt:12:5 Unresolved reference: ledger                                            │ 
+ │  ! BUILD FAILED in 9s                                                                                              │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/android                                    ! exit 1 · 0 s                                    truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  r Restart  x Close  Esc Back to Here  …            ! gradle build failed · exit 1 

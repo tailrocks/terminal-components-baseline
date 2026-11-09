@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   Connect to devbox                                                                                    scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Connect to devbox         ssh · host   
+  › Connect to devbox  ssh  host  from ~/.ssh/config.d/work                      ────────────────────────────────────   
+       ╭───────────────────────────────────╮                                     Does       ssh devbox · resolves to    
+       │  Connect to devbox                │                                                alex@devbox.internal:22     
+       │  Run now                    Enter │                                                · development               
+       │  Copy command                   y │                                     Runs       ssh devbox                  
+       │  Insert into shell                │                                     In         mbp · host-wide             
+       │ ───────────────────────────────── │                                     Host       mbp · local                 
+       │  Show the resolved configuration  │                                     Scope      host                        
+       │ ───────────────────────────────── │                                     Why        from                        
+       │  Pin here                         │                                                ~/.ssh/config.d/work        
+       │  Set alias…                       │                                     Changes    interactive session on      
+       │  Hide here                        │                                                devbox.internal             
+       │  Reset ranking                    │                                     Risk       read-only                   
+       │ ───────────────────────────────── │                                     Data       live · 1 s ago              
+       │  Why is this here?                │                                     Gate       runs directly               
+       ╰───────────────────────────────────╯                                     Alt+Enter  Show the resolved           
+                                                                                            configuration · Pin ·       
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/scratch                                                                     / ━━━━━━━━━━─ 91% ▲   truecolor · 120×40 
+ ↑↓ Move  Type to jump  Enter Choose  Esc Close                                          Esc never quits · Ctrl+Q quits 

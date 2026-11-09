@@ -1,0 +1,6 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: settled 4bcb5a9f7dcb7be4
+checkpoint 002: settled 4bcb5a9f7dcb7be4
+precondition connections screen at 120 by 40 with no page flag
+visual pre_refactor/t01_leave/t01_leave_route_120x40 candidate 92e00bf6e080a1f0fa88f405261007ada62c583a0c13d855f5c086a852949255

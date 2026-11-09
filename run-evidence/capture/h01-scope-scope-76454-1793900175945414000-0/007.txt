@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                        acme › frontend · Node project · pnpm  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                      scope ‹ system ›  
+                                                                                                                        
+    System · mbp · 44 entries                                               ┃    Clean Docker completely  plan · host   
+  › Clean Docker completely    plan     host  7.1 GB reclaima…  destructive ┃    ────────────────────────────────────   
+    List containers            docker   host  5 running                     ┃    Does       remove all              ┃   
+    Prune builder cache        docker   host  2.9 GB of build…  destructive ┃               user-removable Docker   ┃   
+    Show Docker disk usage     docker   host  7.1 GB reclaima…              ┃               state on mbp:           ┃   
+    Show system resources      system   host  CPU 12%…                      ┃               containers, all images, ┃   
+    Stop all containers        docker   host  5 running on mbp              ┃               networks, system data,  ┃   
+    Upgrade 8 outdated mise …  task     host  8 tools have ne…              ┃               volumes, build cache ·  ┃   
+    Upgrade everything         plan     host  1 managers dete…              ┃               as a reviewable plan    ┃   
+    Upgrade mise-managed too…  upgrade  host  8 outdated tools              ┃    Runs       docker stop acme…duler-1┃   
+    Analyze a custom path…     disk     host  available                     ┃               docker rm acme-d…pgadmin┃   
+    Clean Project artifacts …  cleanup  host  review first…                 ┃               docker image pru…--force┃   
+    Clean User caches · 900.…  cleanup  host  review first…                 ┃               docker network p…--force┃   
+    Clean User logs · 44.0 K…  cleanup  host  rebuilt on dema…              ┃               docker system pr…--force┃   
+    Connect to bastion         ssh      host  from ~/.ssh/con…              ┃               docker volume pr…--force┃   
+    Connect to devbox          ssh      host  from ~/.ssh/con…              ┃               … 2 more                ┃   
+    Connect to prod-eu-1       ssh      host  from ~/.ssh/con…   privileged ┃    In         mbp · host-wide         ┃   
+    Connect to production-db   ssh      host  from ~/.ssh/con…   privileged ┃    Host       mbp · local             ┃   
+    Disk overview              disk     host  available                     ┃    Scope      host                    ┃   
+    Find files under home…     file     host  always available              ┃    Why        7.1 GB reclaimable on   ┃   
+    Find the process on a po…  system   host  available on th…              ┃               mbp                     ┃   
+    Follow pgadmin logs        docker   host  exited                        ┆    Changes    6 containers · 23 images┃   
+    Open btm                   system   host  installed on th…              ┆               · 3 volumes · ~7.1 GB   ┃   
+    Prune buildx caches        docker   host  expansion beyon…  destructive ┆               reclaimed · permanent   ┃   
+    Prune unused networks      docker   host  available on th…              ┆    Risk       destructive             ┃   
+    Prune unused volumes       docker   host  3 volumes         destructive ┆    Data       live · 1 min ago        ┃   
+    Remove all unused images   docker   host  5 dangling        destructive ┆    Gate       two gates · type I      ┃   
+    Restart acme-api-1         docker   host  container action              ┆               UNDERSTAND: REMOVE ALL  ┆   
+    Restart acme-db-1          docker   host  container action              ┆               DOCKER DATA ON mbp      ┆   
+    Restart acme-redis-1       docker   host  container action              ┆    Alt+Enter  Stop all containers only┆   
+    Restart acme-scheduler-1   docker   host  container action              ┆                                           
+                                                                                                                        
+ ~/work/acme/apps/frontend   main   ↑1   • 2                   scope system · mbp                    truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Review…  Alt+Enter Alternatives…  Tab Preview  Esc Back to Here  …      Scope system · mbp 

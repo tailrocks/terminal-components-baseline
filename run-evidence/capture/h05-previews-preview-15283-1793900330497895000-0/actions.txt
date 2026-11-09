@@ -1,0 +1,232 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-browser", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Type Search 3ab3934c4ba98fde
+paste 18 UTF-8 bytes
+checkpoint 001: browse row 2e781d9aac3e6c09
+key enter
+checkpoint 002: site directory 932dbb96505379a7
+key home
+checkpoint 003: home 932dbb96505379a7
+key down
+checkpoint 004: down toward index.html 0 86cc28856525e3d9
+key down
+checkpoint 005: down toward index.html 1 17d6419c5d7427c8
+key down
+checkpoint 006: down toward index.html 2 0d542947e063ae24
+key down
+checkpoint 007: down toward index.html 3 0a531f70ccd4d568
+key down
+checkpoint 008: down toward index.html 4 2d609d1baf6be854
+key down
+checkpoint 009: down toward index.html 5 9a9d6b2dd86470c0
+key down
+checkpoint 010: down toward index.html 6 f0acb464cd0a9931
+key down
+checkpoint 011: down toward index.html 7 eb3a485ce600154a
+key down
+checkpoint 012: down toward index.html 8 a05f6ad3004c4b16
+key down
+checkpoint 013: down toward index.html 9 28a859e7a5e9680c
+checkpoint 014: text preview 28a859e7a5e9680c
+key home
+checkpoint 015: home 12797cee41b29ca7
+key down
+checkpoint 016: down toward empty.txt 0 86cc28856525e3d9
+key down
+checkpoint 017: down toward empty.txt 1 17d6419c5d7427c8
+key down
+checkpoint 018: down toward empty.txt 2 0d542947e063ae24
+key down
+checkpoint 019: down toward empty.txt 3 0a531f70ccd4d568
+key down
+checkpoint 020: down toward empty.txt 4 2d609d1baf6be854
+key down
+checkpoint 021: down toward empty.txt 5 9a9d6b2dd86470c0
+key down
+checkpoint 022: down toward empty.txt 6 f0acb464cd0a9931
+key down
+checkpoint 023: down toward empty.txt 7 eb3a485ce600154a
+key down
+checkpoint 024: down toward empty.txt 8 a05f6ad3004c4b16
+checkpoint 025: empty preview a05f6ad3004c4b16
+key home
+checkpoint 026: home 12797cee41b29ca7
+key down
+checkpoint 027: down toward logo.png 0 86cc28856525e3d9
+key down
+checkpoint 028: down toward logo.png 1 17d6419c5d7427c8
+key down
+checkpoint 029: down toward logo.png 2 0d542947e063ae24
+key down
+checkpoint 030: down toward logo.png 3 0a531f70ccd4d568
+key down
+checkpoint 031: down toward logo.png 4 2d609d1baf6be854
+key down
+checkpoint 032: down toward logo.png 5 9a9d6b2dd86470c0
+key down
+checkpoint 033: down toward logo.png 6 f0acb464cd0a9931
+key down
+checkpoint 034: down toward logo.png 7 eb3a485ce600154a
+key down
+checkpoint 035: down toward logo.png 8 a05f6ad3004c4b16
+key down
+checkpoint 036: down toward logo.png 9 28a859e7a5e9680c
+key down
+checkpoint 037: down toward logo.png 10 9421249ecac1a3ea
+checkpoint 038: nul preview 9421249ecac1a3ea
+key home
+checkpoint 039: home 12797cee41b29ca7
+key down
+checkpoint 040: down toward bad.txt 0 86cc28856525e3d9
+key down
+checkpoint 041: down toward bad.txt 1 17d6419c5d7427c8
+checkpoint 042: utf-8 preview 17d6419c5d7427c8
+key home
+checkpoint 043: home 12797cee41b29ca7
+key down
+checkpoint 044: down toward current 0 86cc28856525e3d9
+key down
+checkpoint 045: down toward current 1 17d6419c5d7427c8
+key down
+checkpoint 046: down toward current 2 0d542947e063ae24
+key down
+checkpoint 047: down toward current 3 0a531f70ccd4d568
+key down
+checkpoint 048: down toward current 4 2d609d1baf6be854
+key down
+checkpoint 049: down toward current 5 9a9d6b2dd86470c0
+key down
+checkpoint 050: down toward current 6 f0acb464cd0a9931
+key down
+checkpoint 051: down toward current 7 eb3a485ce600154a
+checkpoint 052: symlink preview eb3a485ce600154a
+key home
+checkpoint 053: home 12797cee41b29ca7
+key down
+checkpoint 054: down toward broken 0 86cc28856525e3d9
+key down
+checkpoint 055: down toward broken 1 17d6419c5d7427c8
+key down
+checkpoint 056: down toward broken 2 0d542947e063ae24
+key down
+checkpoint 057: down toward broken 3 0a531f70ccd4d568
+checkpoint 058: broken preview 0a531f70ccd4d568
+key enter
+checkpoint 059: broken stays 57da209c6c219c46
+key home
+checkpoint 060: home d036b9a78551fe5d
+key down
+checkpoint 061: down toward private 0 86cc28856525e3d9
+checkpoint 062: private preview 86cc28856525e3d9
+key enter
+checkpoint 063: private stays e5475da2c575cb2b
+key home
+checkpoint 064: home d036b9a78551fe5d
+key down
+checkpoint 065: down toward pipe 0 86cc28856525e3d9
+key down
+checkpoint 066: down toward pipe 1 17d6419c5d7427c8
+key down
+checkpoint 067: down toward pipe 2 0d542947e063ae24
+key down
+checkpoint 068: down toward pipe 3 0a531f70ccd4d568
+key down
+checkpoint 069: down toward pipe 4 2d609d1baf6be854
+key down
+checkpoint 070: down toward pipe 5 9a9d6b2dd86470c0
+key down
+checkpoint 071: down toward pipe 6 f0acb464cd0a9931
+key down
+checkpoint 072: down toward pipe 7 eb3a485ce600154a
+key down
+checkpoint 073: down toward pipe 8 a05f6ad3004c4b16
+key down
+checkpoint 074: down toward pipe 9 28a859e7a5e9680c
+key down
+checkpoint 075: down toward pipe 10 9421249ecac1a3ea
+key down
+checkpoint 076: down toward pipe 11 17fe1edb74a92df0
+key down
+checkpoint 077: down toward pipe 12 d0cf28da04396902
+key down
+checkpoint 078: down toward pipe 13 bb82c7dc8c0d8e79
+checkpoint 079: fifo preview bb82c7dc8c0d8e79
+key enter
+checkpoint 080: fifo stays af95c97a52590fd5
+key home
+checkpoint 081: home d036b9a78551fe5d
+key down
+checkpoint 082: down toward long.txt 0 86cc28856525e3d9
+key down
+checkpoint 083: down toward long.txt 1 17d6419c5d7427c8
+key down
+checkpoint 084: down toward long.txt 2 0d542947e063ae24
+key down
+checkpoint 085: down toward long.txt 3 0a531f70ccd4d568
+key down
+checkpoint 086: down toward long.txt 4 2d609d1baf6be854
+key down
+checkpoint 087: down toward long.txt 5 9a9d6b2dd86470c0
+key down
+checkpoint 088: down toward long.txt 6 f0acb464cd0a9931
+key down
+checkpoint 089: down toward long.txt 7 eb3a485ce600154a
+key down
+checkpoint 090: down toward long.txt 8 a05f6ad3004c4b16
+key down
+checkpoint 091: down toward long.txt 9 28a859e7a5e9680c
+key down
+checkpoint 092: down toward long.txt 10 9421249ecac1a3ea
+key down
+checkpoint 093: down toward long.txt 11 17fe1edb74a92df0
+checkpoint 094: long meta 17fe1edb74a92df0
+key enter
+checkpoint 095: long drawer bb9f337f2fa6483e
+key shift+end
+checkpoint 096: long line end 252656a9a3f9d6f1
+key left
+checkpoint 097: long closed bc4aefc7a70a5162
+key home
+checkpoint 098: home 12797cee41b29ca7
+key down
+checkpoint 099: down toward index.html 0 86cc28856525e3d9
+key down
+checkpoint 100: down toward index.html 1 17d6419c5d7427c8
+key down
+checkpoint 101: down toward index.html 2 0d542947e063ae24
+key down
+checkpoint 102: down toward index.html 3 0a531f70ccd4d568
+key down
+checkpoint 103: down toward index.html 4 2d609d1baf6be854
+key down
+checkpoint 104: down toward index.html 5 9a9d6b2dd86470c0
+key down
+checkpoint 105: down toward index.html 6 f0acb464cd0a9931
+key down
+checkpoint 106: down toward index.html 7 eb3a485ce600154a
+key down
+checkpoint 107: down toward index.html 8 a05f6ad3004c4b16
+key down
+checkpoint 108: down toward index.html 9 28a859e7a5e9680c
+key ctrl+h
+checkpoint 109: hidden shown 8b246c8eb522e7dc
+key home
+checkpoint 110: home 4e6485c08020239b
+key down
+checkpoint 111: down toward .env 0 576b02013082f360
+key down
+checkpoint 112: down toward .env 1 e778d25d1267624c
+key down
+checkpoint 113: down toward .env 2 0b80f08d06374952
+checkpoint 114: env preview 0b80f08d06374952
+key ctrl+h
+checkpoint 115: hidden again cd558c99cc083c17
+key enter
+checkpoint 116: log drawer 927fe7f4eec2af8a
+key pagedown
+checkpoint 117: page down f936186fb0dce2e2
+key down
+checkpoint 118: preview down 361cbab42e3cfe12
+key up
+checkpoint 119: preview up f936186fb0dce2e2
+key end
+checkpoint 120: log tail 461ce7dca5c64181

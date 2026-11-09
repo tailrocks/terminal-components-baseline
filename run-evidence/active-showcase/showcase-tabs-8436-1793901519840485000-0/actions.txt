@@ -1,0 +1,16 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "tabs", "--motion", "paused", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Nested strips f3ef0bf783c7f481
+mouse Press { x: 52, y: 21, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 52, y: 21, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 001: DDL strip selection changes the breadcrumb 8b443c8e46f67906
+key tab
+checkpoint 002: settled c8e85338a2464c8d
+mouse Press { x: 39, y: 21, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 39, y: 21, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 003: reselect Structure e85ee0c91dcf201b
+checkpoint 004: settled e85ee0c91dcf201b
+precondition 
+visual functional/showcase_tabs_selection candidate 699c276a666d2f0f194ffa25100166bd2769c60d4b51b935ed49f3d7ce151b0f
+capture-only functional/showcase_tabs_selection: Failure(CheckFailure { test_id: "functional/showcase_tabs_selection", gate: State, reason: Missing, candidate_sha256: "699c276a666d2f0f194ffa25100166bd2769c60d4b51b935ed49f3d7ce151b0f", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-tabs-8436-1793901519840485000-0/check-artifacts/functional/showcase_tabs_selection/699c276a666d2f0f194ffa25100166bd2769c60d4b51b935ed49f3d7ce151b0f/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-tabs-8436-1793901519840485000-0/check-artifacts/functional/showcase_tabs_selection/699c276a666d2f0f194ffa25100166bd2769c60d4b51b935ed49f3d7ce151b0f/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-tabs-8436-1793901519840485000-0/check-artifacts/functional/showcase_tabs_selection/699c276a666d2f0f194ffa25100166bd2769c60d4b51b935ed49f3d7ce151b0f/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

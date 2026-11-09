@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  ✓ safe                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×                                                                                                     +   
+ ━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ › ╭─ Query 1 ──────────────────────────────────────────────────────────────────────────────────────────────── 12 ms ─╮ 
+   │   Run   Run all   Explain                                                                                        │ 
+ E │  ▎›  1 UPDATE organizations SET name = 'ExactMarkerT03' WHERE slug = 'northwind-labs'                            │ 
+ x │                                                                                                                  │ 
+ p │                                                                                                                  │ 
+ l │                                                                                                                  │ 
+ o │                                                                                                                  │ 
+ r │                                                                                                                  │ 
+ e │                                                                                                                  │ 
+ r │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                 ln 1/1 · col 79  │ 
+   │  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── │ 
+   │   UPDATE organizations (8) ×                                                                                     │ 
+   │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────── │ 
+   │   ✓ UPDATE organizations · 8 rows affected · 12 ms                                                               │ 
+   │    Statement executed                                                                                            │ 
+   │    ────────────────────────────────────────────────────────                                                      │ 
+   │    Statement      UPDATE organizations                                                                           │ 
+   │    Rows affected  8                                                                                              │ 
+   │    Duration       12 ms                                                                                          │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  EDIT   Ctrl+R Run  Alt+R Run all  Ctrl+Space Complete  Tab Indent  Esc Done  …     i Cancelled · nothing was executed 

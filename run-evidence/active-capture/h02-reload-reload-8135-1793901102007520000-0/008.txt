@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                   team · Rust project  mbp · local  
+  Here › Custom actions                                                          
+  Here › Custom actions                                                          
+ ━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────── 
+  Custom actions                       ~/work/team/.holla.toml · live · 1 s ago  
+                                                                                 
+  Origin   project                                                               
+  Digest   sha256:80de150cfec6235763ee88135d6e8abf9c8de43ddebf148135b5eb42ea710  
+           dad                                                                   
+  Trust    Moved                                                                 
+  Actions  3 · 2 diagnostics                                                     
+                                                                                 
+ ╭─ Detail ────────────────────────────────────────────── 40 lines · y copies ─╮ 
+ │  /Users/alex/work/team/.holla.toml action[2]: id "shared" is already defi…┃ │ 
+ │  /Users/alex/work/team/.holla.toml action[3]: invalid id "Bad Id": lowerc…┆ │ 
+ │  deploy.preview          mutating     tools/deploy-preview.sh --env 'prev…┆ │ 
+ │  wipe                    destructive  sh -c 'rm -rf .cache && echo done'  ┆ │ 
+ │  multi                   safe         printf '%s' 'ab c'                  ┆ │ 
+ │                                                                           ┆ │ 
+ │  # team actions                                                           ┆ │ 
+ ╰─────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                 
+ ~/work/team   main            snapshot · read-only            truecolor · 81×24 
+ Esc Back  …   Re-reading the configuration files · trust is re-checked by dige… 

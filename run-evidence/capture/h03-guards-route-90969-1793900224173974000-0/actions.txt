@@ -1,0 +1,22 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "activities-multi", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 172568979a6417c8
+key ctrl+w
+checkpoint 001: visible Here cannot be closed · Ctrl+Q quits 0a105385edb03f06
+key q
+checkpoint 002: q is query text 9dc2afc3dc97cc9e
+key backspace
+checkpoint 003: query cleared 6455247b08e6035b
+key ctrl+g
+checkpoint 004: activities 01f6092802bad00a
+key enter
+checkpoint 005: frontend dev open f737b679bbb32d9a
+key ctrl+w
+checkpoint 006: close guard 03e53a969f987894
+key enter
+checkpoint 007: kept running 8bd3a95514c7fa1f
+key ctrl+q
+checkpoint 008: quit guard f03675c05bc826d1
+key right
+key enter
+key ctrl+q
+clean exit 0

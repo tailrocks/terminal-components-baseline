@@ -1,0 +1,40 @@
+ ▪ Junie Design system  Feedback › Notices                                   truecolor · 120×40   i Inspector   ? Help  
+                                                                                                                        
+ Components           54  Notices  Notice: inline error, warning, information and success blocks with a wrapped detail  
+ ───────────────────────                                                                                                
+    Overview               Playground    Options    States                                              the live widget 
+  ▸ App shell             ━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────
+  ▸ Inputs & forms                                                                                                      
+  ▸ Tables                  prod-replica                                                          postgres · connectio ┃
+  ▸ Navigation              ────────────────────────────────────────────────────────────────────────────────────────── ┃
+  ▸ Overlays                acme_app@analytics.acme.io:5432/analytics                                                  ┃
+  ▾ Feedback                                                                                                           ┃
+      Progress              ! Authentication failed                                                                    ┃
+      Empty & error           FATAL: password authentication failed for user "acme_app" (SQLSTATE 28P01). Check the pa ┃
+      Meters                  in the keychain or use “Prompt for password”.                                            ┃
+ ▎  › Notices                 Test connection retries · e edits the connection                                         ┃
+  ▸ Layout                                                                                                             ┃
+  ▸ Text & code              Test connection                                                                           ┃
+  ▸ Screens                                                                                                            ┃
+                                                                                                                       ┃
+                            Result 1                                                                     error card ·  ┃
+                            ────────────────────────────────────────────────────────────────────────────────────────── ┃
+                            ! syntax error at or near "FORM"                                                           ┃
+                              LINE 1: SELECT id, email, created_at FORM users WHERE created_at > now() - interval '7 d ┃
+                              ORDER BY created_at DESC LIMIT 200                                                       ┃
+                              Enter on the result tab jumps to the statement                                           ┃
+                                                                                                                       ┃
+                                                                                                                       ┃
+                            New connection                                       inline · one per kind, the glyph carr ┃
+                            ────────────────────────────────────────────────────────────────────────────────────────── ┃
+                            ! Port must be a number between 1 and 65535                                                ┃
+                                                                                                                       ┃
+                            ▲ 3 rows changed outside this session                                                      ┃
+                              Reload to see them; saving now overwrites them                                           ┃
+                                                                                                                       ┃
+                            i Read-only replica: edits are disabled                                                    ┃
+                                                                                                                       ┃
+                            ✓ Saved 12 rows in 84 ms                                                                   ┆
+                          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄ 
+                                                                                                                        
+ ↑↓ Move  Enter Open  / Filter  Tab Into page  q Quit                                                                   

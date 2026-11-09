@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         holla · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Who is blocking the database?                                                                        scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Who is blocking the… postgres · here   
+  › Who is blocking the data…  postgres  here  2 sessions blocked for 4 min      ────────────────────────────────────   
+                                                                                 Does       blocker dependency tree     
+                                                                                            with query and              
+                                                                                            transaction ages, wait      
+                                                                                            state, database, user,      
+                                                                                            client and affected         
+                                                                                            sessions                    
+                                                                                 Runs       psql -c 'SELECT …)) > 0'    
+                                                                                 In         ~/work/holla                
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        2 sessions blocked for 4    
+                                                                                            min                         
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Cancel the blocking         
+                                                                                            query · Open pg_activity    
+                                                                                            · Pin · Alias · Why         
+                                                                                            here?                       
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/holla   main   ↓3   • 5                                                                      truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear    Who is blocking t… 

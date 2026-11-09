@@ -1,0 +1,22 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-custom-actions", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: finder ready c7355e6d92301a78
+paste 10 UTF-8 bytes
+checkpoint 001: search Open notes 63e8cccf202faa1c
+key escape
+key escape
+key escape
+key escape
+checkpoint 002: visible Search actions and resources 4f80d2752e716588
+paste 14 UTF-8 bytes
+checkpoint 003: search Deploy preview 88dd9c601eef6e64
+key escape
+key escape
+key escape
+key escape
+checkpoint 004: visible Search actions and resources 0e50df4a1c4fd173
+paste 27 UTF-8 bytes
+checkpoint 005: search Custom action configuration d43467d9e6a3f3be
+key enter
+checkpoint 006: custom actions page 6bc272143e43ac0f
+key ctrl+q
+clean exit 0

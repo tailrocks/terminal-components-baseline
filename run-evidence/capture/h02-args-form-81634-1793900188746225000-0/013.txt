@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help           poly · Node project · yarn  mbp · local  
+  Here › Arguments                                                              
+  Here › Arguments                                                              
+ ━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────── 
+  Clone a GitHub repository… · arguments                                        
+  field name, expected value, default and validation · secrets stay masked      
+                                                                                
+   owner                                                                        
+   alex-dev                                            ▾                        
+                                                                                
+                                                                                
+   repository *                                                                 
+   args-repo                                                                    
+   searched in the owner's repositories                                         
+                                                                                
+   protocol                                                                     
+ ▎ https                                               ▾                        
+                                                                                
+                                                                                
+   destination  optional                                                        
+   ~/work/poly                                                  Cancel    Run   
+   never overwrites an existing folder                                          
+ ~/work/poly                                                  truecolor · 80×24 
+ Enter Edit  Tab Next  Ctrl+S Run task  Esc Cancel                              

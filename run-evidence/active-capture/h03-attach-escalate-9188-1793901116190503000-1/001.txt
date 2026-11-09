@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                             app · service checkout  ◆ devbox · production  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Run the stubborn worker                                                                              scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Run the stubborn work… custom · here   
+  › Run the stubborn worker  custom  here  Current folder · trusted              ────────────────────────────────────   
+                                                                                 Does       ignores SIGTERM             
+                                                                                 Runs       ./stubborn                  
+                                                                                 In         /srv/app                    
+                                                                                 Host       devbox · production ·       
+                                                                                            over SSH                    
+                                                                                 Scope      here                        
+                                                                                 Why        Current folder · trusted    
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Set an alias… · Show        
+                                                                                            configuration               
+                                                                                            diagnostics · Pin ·         
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ /srv/app                                                                                            truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

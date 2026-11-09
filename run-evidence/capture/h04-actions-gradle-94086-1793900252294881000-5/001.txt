@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                       android · Gradle build  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ gradle build                                                                                         scope ‹ here ›  
+                                                                                                                        
+    Results · 5                                                                  gradle build           gradle · here   
+  › gradle build               gradle   here  build.gradle.kts…                  ────────────────────────────────────   
+    gradle clean               gradle   here  build.gradle.kts…                  Does       compile, test and           
+    gradle test                gradle   here  build.gradle.kts…                             assemble                    
+    Clean Gradle outputs und…  cleanup  here  4 candidates       destructive     Runs       gradle build                
+    ./gradlew build            gradle   here  wrapper present                    In         ~/work/android              
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        build.gradle.kts here       
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Use the wrapper             
+                                                                                            (./gradlew) instead ·       
+                                                                                            Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/android                                                                                      truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear    gradle build — bui… 

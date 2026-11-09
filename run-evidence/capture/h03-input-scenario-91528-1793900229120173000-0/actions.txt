@@ -1,0 +1,25 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-task-input", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible /srv/app 1e9cd1ad0c648932
+checkpoint 001: visible devbox 1e9cd1ad0c648932
+key escape
+key escape
+checkpoint 002: visible Search actions and resources 1e9cd1ad0c648932
+paste 18 UTF-8 bytes
+checkpoint 003: visible asks for a password b6b8c75be0dc7639
+key enter
+checkpoint 004: visible Password: b700fa3e54c7047a
+key s
+checkpoint 005: visible terminated (SIGTERM) 559a95237c3b7257
+key escape
+checkpoint 006: visible Type Search daabb59ba1d7f772
+key escape
+key escape
+checkpoint 007: visible Search actions and resources b02a00369c2411f2
+paste 23 UTF-8 bytes
+checkpoint 008: visible ignores SIGTERM 47e86ae8b82fd5c0
+key escape
+checkpoint 009: visible Search actions and resources b02a00369c2411f2
+paste 11 UTF-8 bytes
+checkpoint 010: visible Quick no-op b02a00369c2411f2
+key ctrl+q
+clean exit 0

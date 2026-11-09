@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-disk-navigation", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 6b4e13c63f1f81ad
+paste 18 UTF-8 bytes
+checkpoint 001: visible ▎ Analyze disk usage 2d71e5b63cfcd8f5
+key enter
+checkpoint 002: disk usage 2319d09b842e9d61
+key escape
+checkpoint 003: finder restored 2d71e5b63cfcd8f5
+key ctrl+q
+clean exit 0

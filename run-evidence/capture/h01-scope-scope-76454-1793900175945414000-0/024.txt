@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                        acme › frontend · Node project · pnpm  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ t                                                                                                  scope ‹ parent ›  
+                                                                                                                        
+    Results · 30                                                                 Tasks                 explore · here   
+  › Tasks                      explore  here     alias t                         ────────────────────────────────────   
+    Parent · acme (mise mono…  explore  parent   workspace roo…                  Does       project tasks from mise     
+    Run test                   task     parent   defined by ~/…                             and the build system,       
+    Show git status            git      parent   on main                                    here and around             
+    Run workspace setup        task     parent   defined by ~/…                  Runs       no command · opens          
+    Rotate local secrets       custom   parent   Current folde…  destructive                inside holla                
+    Run //services/api:test    task     sibling  defined by ~/…                  In         ~/work/acme/apps…rontend    
+    Run //tools/worker:test    task     sibling  defined by ~/…                  Host       mbp · local                 
+    Start required containers  task     parent   defined by ~/…                  Scope      here                        
+    Run //services/api:migra…  task     sibling  defined by ~/…                  Why        stable entry point          
+    Start development ecosys…  task     parent   defined by ~/…                  Changes    none · read-only            
+    Start development ecosys…  task     sibling  defined by ~/…                  Risk       read-only                   
+    Start development ecosys…  task     sibling  defined by ~/…                  Data       live · 0 s ago              
+    Open lazygit               git      parent   installed on …                  Gate       runs directly               
+    Open mise.toml             file     parent   config here                     Alt+Enter  Pin · Alias · Why here?     
+    Fetch and prune            git      parent   available                                                              
+    Pull with merge            git      parent   ordinary pull…                                                         
+    Pull with rebase           git      parent   ordinary pull…                                                         
+    Show short status          git      parent   available                                                              
+    Garbage-collect the repo…  git      parent   available                                                              
+    Follow acme-api-1 logs     docker   parent   pinned here…                                                           
+    Review 2 modified files    git      parent   2 modified…                                                            
+    Deploy preview             custom   parent   Current folde…                                                         
+    Follow acme-db-1 logs      docker   parent   running                                                                
+    Follow acme-redis-1 logs   docker   parent   running                                                                
+    Follow acme-scheduler-1 …  docker   parent   running                                                                
+    Follow acme-worker-1 logs  docker   parent   running                                                                
+    Pull                       git      parent   blocked…                                                               
+    Push                       git      parent   1 commits ahe…                                                         
+    Push dry run               git      parent   read-only                                                              
+                                                                                                                        
+ ~/work/acme/apps/frontend   main   ↑1   • 2                   scope parent · acme                   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Esc Clear  …                      Ranking reset for this row · pins and aliases kept 

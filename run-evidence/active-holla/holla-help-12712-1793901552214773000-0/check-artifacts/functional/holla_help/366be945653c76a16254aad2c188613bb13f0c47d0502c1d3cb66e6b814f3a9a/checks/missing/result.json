@@ -1,0 +1,1 @@
+{"schema":"tuiscotti.check.v1","test_id":"functional/holla_help","gate":"state","reason":"missing","candidate_sha256":"366be945653c76a16254aad2c188613bb13f0c47d0502c1d3cb66e6b814f3a9a","baseline_sha256":"missing","changed_fields":["baseline"],"changed_cells":[],"changed_cell_total":0,"title_values":null,"pixel_changed_pixels":0,"pixel_compared_pixels":0,"pixel_bounds":null}

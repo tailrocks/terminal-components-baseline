@@ -1,0 +1,478 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.11s
+────────────
+ Nextest run ID 2ef59729-dc81-4d59-b5ea-bf5c1a02abd5 with nextest profile: default
+    Starting 59 tests across 1 binary (1037 tests skipped)
+       START [         ] ( 1/59) junie-tui::functional showcase::showcase_button_hover_hold_release_cancel_and_disabled_16_colors
+
+running 1 test
+test showcase::showcase_button_hover_hold_release_cancel_and_disabled_16_colors ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.47s
+
+        PASS [   3.484s] ( 1/59) junie-tui::functional showcase::showcase_button_hover_hold_release_cancel_and_disabled_16_colors
+       START [         ] ( 2/59) junie-tui::functional showcase::showcase_button_hover_hold_release_cancel_and_disabled_256_colors
+
+running 1 test
+test showcase::showcase_button_hover_hold_release_cancel_and_disabled_256_colors ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.18s
+
+        PASS [   3.192s] ( 2/59) junie-tui::functional showcase::showcase_button_hover_hold_release_cancel_and_disabled_256_colors
+       START [         ] ( 3/59) junie-tui::functional showcase::showcase_button_hover_hold_release_cancel_and_disabled_monochrome
+
+running 1 test
+test showcase::showcase_button_hover_hold_release_cancel_and_disabled_monochrome ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.19s
+
+        PASS [   3.207s] ( 3/59) junie-tui::functional showcase::showcase_button_hover_hold_release_cancel_and_disabled_monochrome
+       START [         ] ( 4/59) junie-tui::functional showcase::showcase_button_hover_hold_release_cancel_and_disabled_truecolor
+
+running 1 test
+test showcase::showcase_button_hover_hold_release_cancel_and_disabled_truecolor ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.13s
+
+        PASS [   3.141s] ( 4/59) junie-tui::functional showcase::showcase_button_hover_hold_release_cancel_and_disabled_truecolor
+       START [         ] ( 5/59) junie-tui::functional showcase::showcase_button_hover_hold_release_cancel_and_disabled_without_color
+
+running 1 test
+test showcase::showcase_button_hover_hold_release_cancel_and_disabled_without_color ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.12s
+
+        PASS [   3.128s] ( 5/59) junie-tui::functional showcase::showcase_button_hover_hold_release_cancel_and_disabled_without_color
+       START [         ] ( 6/59) junie-tui::functional showcase::showcase_checks_radio_exclusivity_mixed_and_disabled
+
+running 1 test
+test showcase::showcase_checks_radio_exclusivity_mixed_and_disabled ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.32s
+
+        PASS [   2.335s] ( 6/59) junie-tui::functional showcase::showcase_checks_radio_exclusivity_mixed_and_disabled
+       START [         ] ( 7/59) junie-tui::functional showcase::showcase_dialog_opens_traps_and_escape_cancels
+
+running 1 test
+test showcase::showcase_dialog_opens_traps_and_escape_cancels ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.64s
+
+        PASS [   1.646s] ( 7/59) junie-tui::functional showcase::showcase_dialog_opens_traps_and_escape_cancels
+       START [         ] ( 8/59) junie-tui::functional showcase::showcase_form_required_validation_and_reset
+
+running 1 test
+test showcase::showcase_form_required_validation_and_reset ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.67s
+
+        PASS [   3.683s] ( 8/59) junie-tui::functional showcase::showcase_form_required_validation_and_reset
+       START [         ] ( 9/59) junie-tui::functional showcase::showcase_input_edit_apply_and_escape_reverts
+
+running 1 test
+test showcase::showcase_input_edit_apply_and_escape_reverts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.67s
+
+        PASS [   1.683s] ( 9/59) junie-tui::functional showcase::showcase_input_edit_apply_and_escape_reverts
+       START [         ] (10/59) junie-tui::functional showcase::showcase_keyboard_activates_focused_run_task
+
+running 1 test
+test showcase::showcase_keyboard_activates_focused_run_task ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.77s
+
+        PASS [   1.781s] (10/59) junie-tui::functional showcase::showcase_keyboard_activates_focused_run_task
+       START [         ] (11/59) junie-tui::functional showcase::showcase_list_selection_keyboard_and_multiselect
+
+running 1 test
+test showcase::showcase_list_selection_keyboard_and_multiselect ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.64s
+
+        PASS [   1.655s] (11/59) junie-tui::functional showcase::showcase_list_selection_keyboard_and_multiselect
+       START [         ] (12/59) junie-tui::functional showcase::showcase_menu_outside_click_dismisses
+
+running 1 test
+test showcase::showcase_menu_outside_click_dismisses ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.40s
+
+        PASS [   1.411s] (12/59) junie-tui::functional showcase::showcase_menu_outside_click_dismisses
+       START [         ] (13/59) junie-tui::functional showcase::showcase_page_accountsusage
+
+running 1 test
+test showcase::showcase_page_accountsusage ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.44s
+
+        PASS [   1.446s] (13/59) junie-tui::functional showcase::showcase_page_accountsusage
+       START [         ] (14/59) junie-tui::functional showcase::showcase_page_activity
+
+running 1 test
+test showcase::showcase_page_activity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.45s
+
+        PASS [   1.459s] (14/59) junie-tui::functional showcase::showcase_page_activity
+       START [         ] (15/59) junie-tui::functional showcase::showcase_page_breadcrumbsrails
+
+running 1 test
+test showcase::showcase_page_breadcrumbsrails ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.43s
+
+        PASS [   1.441s] (15/59) junie-tui::functional showcase::showcase_page_breadcrumbsrails
+       START [         ] (16/59) junie-tui::functional showcase::showcase_page_celleditors
+
+running 1 test
+test showcase::showcase_page_celleditors ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.51s
+
+        PASS [   1.520s] (16/59) junie-tui::functional showcase::showcase_page_celleditors
+       START [         ] (17/59) junie-tui::functional showcase::showcase_page_chrome
+
+running 1 test
+test showcase::showcase_page_chrome ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.42s
+
+        PASS [   1.436s] (17/59) junie-tui::functional showcase::showcase_page_chrome
+       START [         ] (18/59) junie-tui::functional showcase::showcase_page_codeeditor
+
+running 1 test
+test showcase::showcase_page_codeeditor ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.43s
+
+        PASS [   1.439s] (18/59) junie-tui::functional showcase::showcase_page_codeeditor
+       START [         ] (19/59) junie-tui::functional showcase::showcase_page_columns
+
+running 1 test
+test showcase::showcase_page_columns ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.42s
+
+        PASS [   1.436s] (19/59) junie-tui::functional showcase::showcase_page_columns
+       START [         ] (20/59) junie-tui::functional showcase::showcase_page_connections
+
+running 1 test
+test showcase::showcase_page_connections ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.43s
+
+        PASS [   1.438s] (20/59) junie-tui::functional showcase::showcase_page_connections
+       START [         ] (21/59) junie-tui::functional showcase::showcase_page_dialogkinds
+
+running 1 test
+test showcase::showcase_page_dialogkinds ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.41s
+
+        PASS [   1.424s] (21/59) junie-tui::functional showcase::showcase_page_dialogkinds
+       START [         ] (22/59) junie-tui::functional showcase::showcase_page_diff
+
+running 1 test
+test showcase::showcase_page_diff ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.41s
+
+        PASS [   1.423s] (22/59) junie-tui::functional showcase::showcase_page_diff
+       START [         ] (23/59) junie-tui::functional showcase::showcase_page_diskcleanup
+
+running 1 test
+test showcase::showcase_page_diskcleanup ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.42s
+
+        PASS [   1.434s] (23/59) junie-tui::functional showcase::showcase_page_diskcleanup
+       START [         ] (24/59) junie-tui::functional showcase::showcase_page_editable
+
+running 1 test
+test showcase::showcase_page_editable ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.42s
+
+        PASS [   1.434s] (24/59) junie-tui::functional showcase::showcase_page_editable
+       START [         ] (25/59) junie-tui::functional showcase::showcase_page_emptyerror
+
+running 1 test
+test showcase::showcase_page_emptyerror ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.41s
+
+        PASS [   1.418s] (25/59) junie-tui::functional showcase::showcase_page_emptyerror
+       START [         ] (26/59) junie-tui::functional showcase::showcase_page_filebrowser
+
+running 1 test
+test showcase::showcase_page_filebrowser ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.41s
+
+        PASS [   1.423s] (26/59) junie-tui::functional showcase::showcase_page_filebrowser
+       START [         ] (27/59) junie-tui::functional showcase::showcase_page_finder
+
+running 1 test
+test showcase::showcase_page_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.47s
+
+        PASS [   1.479s] (27/59) junie-tui::functional showcase::showcase_page_finder
+       START [         ] (28/59) junie-tui::functional showcase::showcase_page_focusnavigation
+
+running 1 test
+test showcase::showcase_page_focusnavigation ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.43s
+
+        PASS [   1.441s] (28/59) junie-tui::functional showcase::showcase_page_focusnavigation
+       START [         ] (29/59) junie-tui::functional showcase::showcase_page_helpkeys
+
+running 1 test
+test showcase::showcase_page_helpkeys ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.44s
+
+        PASS [   1.454s] (29/59) junie-tui::functional showcase::showcase_page_helpkeys
+       START [         ] (30/59) junie-tui::functional showcase::showcase_page_launchcockpit
+
+running 1 test
+test showcase::showcase_page_launchcockpit ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.44s
+
+        PASS [   1.453s] (30/59) junie-tui::functional showcase::showcase_page_launchcockpit
+       START [         ] (31/59) junie-tui::functional showcase::showcase_page_masterdetail
+
+running 1 test
+test showcase::showcase_page_masterdetail ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.44s
+
+        PASS [   1.451s] (31/59) junie-tui::functional showcase::showcase_page_masterdetail
+       START [         ] (32/59) junie-tui::functional showcase::showcase_page_meters
+
+running 1 test
+test showcase::showcase_page_meters ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.42s
+
+        PASS [   1.426s] (32/59) junie-tui::functional showcase::showcase_page_meters
+       START [         ] (33/59) junie-tui::functional showcase::showcase_page_notices
+
+running 1 test
+test showcase::showcase_page_notices ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.42s
+
+        PASS [   1.435s] (33/59) junie-tui::functional showcase::showcase_page_notices
+       START [         ] (34/59) junie-tui::functional showcase::showcase_page_panels
+
+running 1 test
+test showcase::showcase_page_panels ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.44s
+
+        PASS [   1.447s] (34/59) junie-tui::functional showcase::showcase_page_panels
+       START [         ] (35/59) junie-tui::functional showcase::showcase_page_panetree
+
+running 1 test
+test showcase::showcase_page_panetree ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.40s
+
+        PASS [   1.412s] (35/59) junie-tui::functional showcase::showcase_page_panetree
+       START [         ] (36/59) junie-tui::functional showcase::showcase_page_pickers
+
+running 1 test
+test showcase::showcase_page_pickers ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.40s
+
+        PASS [   1.414s] (36/59) junie-tui::functional showcase::showcase_page_pickers
+       START [         ] (37/59) junie-tui::functional showcase::showcase_page_progress
+
+running 1 test
+test showcase::showcase_page_progress ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.38s
+
+        PASS [   1.393s] (37/59) junie-tui::functional showcase::showcase_page_progress
+       START [         ] (38/59) junie-tui::functional showcase::showcase_page_queryworkbench
+
+running 1 test
+test showcase::showcase_page_queryworkbench ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.44s
+
+        PASS [   1.448s] (38/59) junie-tui::functional showcase::showcase_page_queryworkbench
+       START [         ] (39/59) junie-tui::functional showcase::showcase_page_quitleave
+
+running 1 test
+test showcase::showcase_page_quitleave ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.43s
+
+        PASS [   1.443s] (39/59) junie-tui::functional showcase::showcase_page_quitleave
+       START [         ] (40/59) junie-tui::functional showcase::showcase_page_readonlyreport
+
+running 1 test
+test showcase::showcase_page_readonlyreport ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.44s
+
+        PASS [   1.448s] (40/59) junie-tui::functional showcase::showcase_page_readonlyreport
+       START [         ] (41/59) junie-tui::functional showcase::showcase_page_selection
+
+running 1 test
+test showcase::showcase_page_selection ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.46s
+
+        PASS [   1.467s] (41/59) junie-tui::functional showcase::showcase_page_selection
+       START [         ] (42/59) junie-tui::functional showcase::showcase_page_settings
+
+running 1 test
+test showcase::showcase_page_settings ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.43s
+
+        PASS [   1.440s] (42/59) junie-tui::functional showcase::showcase_page_settings
+       START [         ] (43/59) junie-tui::functional showcase::showcase_page_sidebars
+
+running 1 test
+test showcase::showcase_page_sidebars ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.45s
+
+        PASS [   1.463s] (43/59) junie-tui::functional showcase::showcase_page_sidebars
+       START [         ] (44/59) junie-tui::functional showcase::showcase_page_statushints
+
+running 1 test
+test showcase::showcase_page_statushints ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.46s
+
+        PASS [   1.472s] (44/59) junie-tui::functional showcase::showcase_page_statushints
+       START [         ] (45/59) junie-tui::functional showcase::showcase_page_taskrunner
+
+running 1 test
+test showcase::showcase_page_taskrunner ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.42s
+
+        PASS [   1.426s] (45/59) junie-tui::functional showcase::showcase_page_taskrunner
+       START [         ] (46/59) junie-tui::functional showcase::showcase_page_terminal
+
+running 1 test
+test showcase::showcase_page_terminal ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.42s
+
+        PASS [   1.429s] (46/59) junie-tui::functional showcase::showcase_page_terminal
+       START [         ] (47/59) junie-tui::functional showcase::showcase_page_textareas
+
+running 1 test
+test showcase::showcase_page_textareas ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.45s
+
+        PASS [   1.458s] (47/59) junie-tui::functional showcase::showcase_page_textareas
+       START [         ] (48/59) junie-tui::functional showcase::showcase_page_textutilities
+
+running 1 test
+test showcase::showcase_page_textutilities ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.49s
+
+        PASS [   1.501s] (48/59) junie-tui::functional showcase::showcase_page_textutilities
+       START [         ] (49/59) junie-tui::functional showcase::showcase_page_toolbars
+
+running 1 test
+test showcase::showcase_page_toolbars ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.43s
+
+        PASS [   1.441s] (49/59) junie-tui::functional showcase::showcase_page_toolbars
+       START [         ] (50/59) junie-tui::functional showcase::showcase_page_workspaces
+
+running 1 test
+test showcase::showcase_page_workspaces ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.42s
+
+        PASS [   1.427s] (50/59) junie-tui::functional showcase::showcase_page_workspaces
+       START [         ] (51/59) junie-tui::functional showcase::showcase_primary_button_exact_rest_hover_held_colours
+
+running 1 test
+test showcase::showcase_primary_button_exact_rest_hover_held_colours ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 6.78s
+
+        PASS [   6.786s] (51/59) junie-tui::functional showcase::showcase_primary_button_exact_rest_hover_held_colours
+       START [         ] (52/59) junie-tui::functional showcase::showcase_scrollbar_thumb_drag_moves_list
+
+running 1 test
+test showcase::showcase_scrollbar_thumb_drag_moves_list ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.26s
+
+        PASS [   3.277s] (52/59) junie-tui::functional showcase::showcase_scrollbar_thumb_drag_moves_list
+       START [         ] (53/59) junie-tui::functional showcase::showcase_select_outside_click_and_escape_dismiss_without_change
+
+running 1 test
+test showcase::showcase_select_outside_click_and_escape_dismiss_without_change ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.65s
+
+        PASS [   1.665s] (53/59) junie-tui::functional showcase::showcase_select_outside_click_and_escape_dismiss_without_change
+       START [         ] (54/59) junie-tui::functional showcase::showcase_splitter_seam_drag_resizes_panes
+
+running 1 test
+test showcase::showcase_splitter_seam_drag_resizes_panes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.61s
+
+        PASS [   1.619s] (54/59) junie-tui::functional showcase::showcase_splitter_seam_drag_resizes_panes
+       START [         ] (55/59) junie-tui::functional showcase::showcase_tab_selection_survives_focus_move_and_single_gutter
+
+running 1 test
+test showcase::showcase_tab_selection_survives_focus_move_and_single_gutter ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.63s
+
+        PASS [   1.646s] (55/59) junie-tui::functional showcase::showcase_tab_selection_survives_focus_move_and_single_gutter
+       START [         ] (56/59) junie-tui::functional showcase::showcase_table_header_sort_changes_row_order
+
+running 1 test
+test showcase::showcase_table_header_sort_changes_row_order ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.35s
+
+        PASS [   1.361s] (56/59) junie-tui::functional showcase::showcase_table_header_sort_changes_row_order
+       START [         ] (57/59) junie-tui::functional showcase::showcase_tree_expand_and_file_selection
+
+running 1 test
+test showcase::showcase_tree_expand_and_file_selection ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.21s
+
+        PASS [   2.224s] (57/59) junie-tui::functional showcase::showcase_tree_expand_and_file_selection
+       START [         ] (58/59) junie-tui::functional showcase::showcase_wheel_scrolls_pointed_grid_without_moving_sidebar
+
+running 1 test
+test showcase::showcase_wheel_scrolls_pointed_grid_without_moving_sidebar ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.41s
+
+        PASS [   1.421s] (58/59) junie-tui::functional showcase::showcase_wheel_scrolls_pointed_grid_without_moving_sidebar
+       START [         ] (59/59) junie-tui::functional showcase::showcase_wheel_targets_the_pointed_pane_then_keys_follow_clicked_focus
+
+running 1 test
+test showcase::showcase_wheel_targets_the_pointed_pane_then_keys_follow_clicked_focus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.51s
+
+        PASS [   2.527s] (59/59) junie-tui::functional showcase::showcase_wheel_targets_the_pointed_pane_then_keys_follow_clicked_focus
+────────────
+     Summary [ 107.721s] 59 tests run: 59 passed, 1037 skipped

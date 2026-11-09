@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent        …                                          
+                                                                                                                        
+  ≡ Query 1 ×    T products ×                                               +                                           
+ ───────────────━━━━━━━━━━━━━━━────────────────────────────────────────────────                                         
+ › ╭─ public › products ─────────────────────────╭────────────────────────────╮                                         
+   │   Data    Structure                         │  sku · row 2               │                                         
+ E │  ━━━━━━━────────────────────────────────────│  Copy cell               y │                                         
+ x │                                             │  Copy row                Y │                                         
+ p │         ⚷ id                                │ ────────────────────────── │                                         
+ l │       1 c1b47346-68a4-4af4-9075-49a956607aff│  Edit cell           Enter │                                         
+ o │       2 f756d2b7-e0bd-425e-88aa-b562360df0c5│  Set NULL              Del │                                         
+ r │       3 9ea4edba-e9c8-489a-a567-451175e4cd98│ ────────────────────────── │                                         
+ e │       4 67e9108c-7bf4-417b-94ea-a51db4389cef│  Filter by this value    f │                                         
+ r │       5 b4389cef-a51d-44ea-b091-215ed5f04e64│  Sort ascending          s │                                         
+   │       6 63dd1772-3630-4c77-bbcb-ceb31510ba9a│ ────────────────────────── │                                         
+   │       7 4bcabbe4-6899-4b59-a63b-0d1cac7d075c│  Insert row              + │                                         
+   │       8 74f2b1c5-85cd-4e98-a900-ff53fcb43c07│  Duplicate row       Alt+D │                                         
+   │       9 ad62d85f-0dec-4a38-a985-6243b1d04564│  Delete row              - │                                         
+   │      10 b1d04564-6243-4985-b8b3-f018b87d1d82│ ────────────────────────── │                                         
+   │         ━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄│  Preview SQL             p │                                         
+   │   rows 1–10 of 312 · cols 1–2 of 9          │  Save changes       Ctrl+S │                                         
+   ╰─────────────────────────────────────────────│  Discard changes         U │                                         
+                                                 │  Refresh                 r │                                         
+ ↑↓ Move  Enter Choose  Esc Close                ╰────────────────────────────╯                                         
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        

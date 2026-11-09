@@ -1,0 +1,7 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "overview", "--frame", "40", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible 120×40 c1f48b6847398633
+checkpoint 001: settled c1f48b6847398633
+precondition 
+visual functional/harness_missing_screen candidate 713ea195354d56e529450f1622337311e21d4cf367cc278e072745941e9b78e3
+key ctrl+q
+clean exit 0

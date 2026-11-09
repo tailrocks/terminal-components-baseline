@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          no project  devbox · development  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ List containers                                                                                      scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  List containers   docker · on devbox   
+  › List containers  docker  on devbox  5 running                                ────────────────────────────────────   
+                                                                                 Does       12 containers · 5           
+                                                                                            running · with image,       
+                                                                                            state, ports, project       
+                                                                                            and size                    
+                                                                                 Runs       docker ps -a --size         
+                                                                                 In         devbox · host-wide          
+                                                                                 Host       devbox · development ·      
+                                                                                            over SSH                    
+                                                                                 Scope      on devbox                   
+                                                                                 Why        5 running                   
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ /work/scratch                                                                                       truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Esc Clear  …    Esc never quits · Ctrl+Q quits 

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local  
+                                                                                                                        
+  Here    frontend dev ⠋ ×    api dev ⠋ ×    api tests ⠋ ×    logs · api worker sched… ⠋ ×    btm ○ ×                   
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ q                                                                                                    scope ‹ here ›  
+                                                                                                                        
+                                                                                 Preview                                
+                                                                                 ────────────────────────────────────   
+                                                                                          Nothing to preview            
+                                                                                                                        
+                                                                                         Esc clears the query           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                              No matches for “q”                                                                        
+                                                                                                                        
+           Esc clears the query · Ctrl+↑ widens to the parent scope                                                     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/acme   main   ↑1       ⠋ discovering filesystem, git, mise, … · 0 of 9        ⠋ 5 running    truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

@@ -1,0 +1,40 @@
+ ▪ Junie Design system  Inputs & forms › Forms                               truecolor · 120×40   i Inspector   ? Help  
+                                                                                                                        
+ Components           54  Forms  Sections, required fields, validation, submission                                      
+ ───────────────────────                                                                                                
+    Overview               Playground    Options    States                                              the live widget 
+  ▸ App shell             ━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────
+  ▾ Inputs & forms                                                                                                      
+      Buttons               New task                                                                     Ctrl+S Submit  
+      Inputs                ──────────────────────────────────────────────────────────────────────────────────────────  
+      Text areas            Task                                           Options                                      
+      Chips & selects         Task name *                                    Mode                                       
+    › Forms                 ▎ Ship login fix                                ( ) Fast                                    
+      Checks & radios                                                       (●) Balanced                                
+      Toolbars                Description                                   ( ) Thorough                                
+  ▸ Tables                    What should Junie do, and what does                                                       
+  ▸ Navigation                done look like?                               [✓] Run tests before opening a PR           
+  ▸ Overlays                                                                [ ] Open a pull request when done           
+  ▸ Feedback                                                                                                            
+  ▸ Layout                    Optional · Markdown                           ○── Auto-approve changes off                
+  ▸ Text & code                                                             ──● Notify on completion on                 
+  ▸ Screens                 Review                                           Managed by your organization               
+                              Reviewer  optional                                                                        
+                              name@company.com                                                                          
+                              Optional                                                                                  
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                             Create task    Reset                                                                       
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+  EDIT   Enter Apply  Esc Cancel  Tab Next field                                                                        

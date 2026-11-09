@@ -1,0 +1,14 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-files", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 7cc0a7bac30549db
+paste 24 UTF-8 bytes
+checkpoint 001: visible ▎ Find files under home… 1113b7219cac7dab
+key enter
+checkpoint 002: find page ec94f5fc628e4ee2
+paste 3 UTF-8 bytes
+checkpoint 003: non-empty query faed8f11a124d7fd
+key escape
+checkpoint 004: query cleared ec94f5fc628e4ee2
+key escape
+checkpoint 005: finder restored 1113b7219cac7dab
+key ctrl+q
+clean exit 0

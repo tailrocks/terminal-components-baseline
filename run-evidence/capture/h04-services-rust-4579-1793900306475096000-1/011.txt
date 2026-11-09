@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         holla · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Show PostgreSQL activity                                                                             scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Show PostgreSQL act… postgres · here   
+  › Show PostgreSQL activity  postgres  here  24/100 connections                 ────────────────────────────────────   
+                                                                                 Does       holla@localhost:5432/hol    
+                                                                                            la_dev · connections        
+                                                                                            24/100 · sessions by        
+                                                                                            state, wait event, query    
+                                                                                            and transaction age         
+                                                                                 Runs       psql -c 'SELECT …tivity'    
+                                                                                 In         ~/work/holla                
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        24/100 connections          
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Open pg_activity · Pin ·    
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/holla   main   ↓3   • 5                                                                      truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                       

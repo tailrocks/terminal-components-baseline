@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-docker", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 8065a4ec3836cf2f
+paste 15 UTF-8 bytes
+checkpoint 001: Stop acme-api-1 selected 3f71fec1af290160
+key enter
+checkpoint 002: confirmation ec51828444b789af
+key enter
+checkpoint 003: cannot stop container: acme-api-1 023fce2469830e81
+key ctrl+q
+clean exit 0

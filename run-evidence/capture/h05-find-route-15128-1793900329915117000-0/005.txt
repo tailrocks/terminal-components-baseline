@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Find files under home…                                                                               scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Find files under home…   file · host   
+  › Find files under home…  file  host  always available                         ────────────────────────────────────   
+                                                                                 Does       search ~ · exact name       
+                                                                                            and stem first, then        
+                                                                                            name substring, then        
+                                                                                            fuzzy · at most 100         
+                                                                                            results · hidden,           
+                                                                                            ignored and iCloud          
+                                                                                            entries excluded            
+                                                                                 Runs       'holla find'                
+                                                                                 In         mbp · host-wide             
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      host                        
+                                                                                 Why        always available            
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       opens a review · the        
+                                                                                            deletion is gated there     
+                                                                                            (typed phrase)              
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/notes                                                                                        truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

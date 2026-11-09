@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-git-current", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 66e0c820f1c28617
+paste 4 UTF-8 bytes
+checkpoint 001: Push selected 5fbfe38477d51968
+key enter
+checkpoint 002: push confirmation d748ea5ab8d6cd45
+key escape
+checkpoint 003: push cancelled 8ad414f8ee267cfc
+key ctrl+q
+clean exit 0

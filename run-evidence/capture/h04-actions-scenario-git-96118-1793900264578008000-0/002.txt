@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                           svc · Rust project  mbp · local  
+  Here › Git status                                                                                                     
+  Here › Git status                                                                                                     
+ ━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────────── 
+  Git status                                                                               ~/work/svc · live · 1 s ago  
+                                                                                                                        
+  Branch    feature/x                                                                                                   
+  Upstream  origin/feature/x · 2 behind · 1 ahead                                                                       
+  Primary   main · resolved from origin/HEAD                                                                            
+  Worktree  0 staged · 1 unstaged · 0 untracked · 0 conflicts · 0 stashed                                               
+                                                                                                                        
+ ╭─ Status ────────────────────────────────────────────────────────────────────────────────────── 2 lines · y copies ─╮ 
+ │  $ git -C /Users/alex/work/svc status --porcelain=v2 --branch --show-stash                                         │ 
+ │   M src/api/mod.rs                                                                                                 │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Pull    Open lazygit                                                                                           
+                                                                                                                        
+ ~/work/svc/src/api   feature/x   ↓2 ↑1   • 1                  snapshot · read-only                  truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                                                          

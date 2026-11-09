@@ -1,0 +1,23 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--connect", "Local PostgreSQL", "--motion", "reduced", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Query 1 a4f5f52a50763f3a
+key tab
+paste 21 UTF-8 bytes
+key ctrl+r
+checkpoint 001: select returns order rows 3235bcfcb85d6d55
+checkpoint 002: absent ✓ Connected to 9e93412a9a44c59d
+checkpoint 003: settled 9e93412a9a44c59d
+precondition 
+visual functional/tablepro_query_results candidate 752768252c1b716f785138e0eab4dfb7d8b1901567eb099362226852bbbba6c3
+capture-only functional/tablepro_query_results: Failure(CheckFailure { test_id: "functional/tablepro_query_results", gate: State, reason: Missing, candidate_sha256: "752768252c1b716f785138e0eab4dfb7d8b1901567eb099362226852bbbba6c3", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-query-results-28179-1793901642306319000-0/check-artifacts/functional/tablepro_query_results/752768252c1b716f785138e0eab4dfb7d8b1901567eb099362226852bbbba6c3/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-query-results-28179-1793901642306319000-0/check-artifacts/functional/tablepro_query_results/752768252c1b716f785138e0eab4dfb7d8b1901567eb099362226852bbbba6c3/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-query-results-28179-1793901642306319000-0/check-artifacts/functional/tablepro_query_results/752768252c1b716f785138e0eab4dfb7d8b1901567eb099362226852bbbba6c3/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key escape
+checkpoint 004: visible Ctrl+X Explain 7ac4341392c3ac94
+key ctrl+w
+checkpoint 005: close guard or no open tabs b14efc031b02c9b8
+key right
+key enter
+key ctrl+w
+checkpoint 006: close guard or no open tabs b14efc031b02c9b8
+key right
+key enter
+key ctrl+q
+clean exit 0

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                no project  devbox · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Homebrew services                                                                                    scope ‹ here ›  
+                                                                                                                        
+    Results · 4                                                                  Homebrew services     service · host   
+  › Homebrew services      service  host  1 services                             ────────────────────────────────────   
+    Restart postgresql@17  service  host  stopped                                Does       1 services · no cache ·     
+    Start postgresql@17    service  host  stopped                                           probed · status is          
+    Stop postgresql@17     service  host  stopped                                           re-observed after every     
+                                                                                            verb                        
+                                                                                 Runs       brew services li… --json    
+                                                                                 In         devbox · host-wide          
+                                                                                 Host       devbox · local              
+                                                                                 Scope      host                        
+                                                                                 Why        1 services                  
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/box                                                                                          truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                       

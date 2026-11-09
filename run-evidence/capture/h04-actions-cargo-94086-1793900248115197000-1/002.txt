@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                        engine · Rust project  mbp · local  
+                                                                                                                        
+  Here    cargo test ! ×                                                                                                
+ ────────━━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────────────────────────── 
+  cargo test · failed · 1 s · exit 101                                                      here · ~/work/engine · mbp  
+  $ cargo test · started by cargo test                                                                                  
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ cargo test                                                                                                      │ 
+ │     Compiling engine v0.3.1 (/Users/alex/work/engine)                                                              │ 
+ │       Running unittests src/lib.rs                                                                                 │ 
+ │  running 128 tests                                                                                                 │ 
+ │  ! test ranking::tests::aliases_beat_everything ... FAILED                                                         │ 
+ │  failures:                                                                                                         │ 
+ │      ranking::tests::aliases_beat_everything                                                                       │ 
+ │  ! test result: FAILED. 127 passed; 1 failed; 0 ignored                                                            │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/engine   main                                ! exit 101 · 1 s                                truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  r Restart  x Close  Esc Back to Here  …            ! cargo test failed · exit 101 

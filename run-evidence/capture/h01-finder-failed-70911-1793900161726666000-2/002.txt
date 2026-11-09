@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         probe · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ docker                                                                                               scope ‹ here ›  
+                                                                                                                        
+    Results · 9                                                                  Docker                 docker · host   
+  › Docker                     docker  host  capability presen…                  ────────────────────────────────────   
+    Clean Docker completely    plan    host  0.0 GB reclaimabl…  destructive     Does       the Docker daemon could     
+    Prune builder cache        docker  host  0.0 GB of build c…  destructive                not be reached;             
+    Stop all containers        docker  host  0 running on mbp                               container actions are       
+    Prune buildx caches        docker  host  expansion beyond …  destructive                unavailable until it is     
+    Prune unused networks      docker  host  available on this…                  Runs       docker info                 
+    Prune unused volumes       docker  host  0 volumes           destructive     In         mbp · host-wide             
+    Remove all unused images   docker  host  0 dangling          destructive     Host       mbp · local                 
+    Stop and remove all cont…  docker  host  no containers…      destructive     Scope      host                        
+                                                                                 Why        capability present,         
+                                                                                            daemon unreachable          
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       unavailable · Cannot        
+                                                                                            connect to the Docker       
+                                                                                            daemon at                   
+                                                                                            unix:///var/run/docker.s    
+                                                                                            ock                         
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/probe   main   ↓1       ⠹ discovering git, brew, github · 6 of 9       ▲ 3 config warnings   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear    Docker — capabili… 

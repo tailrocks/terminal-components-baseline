@@ -1,0 +1,1 @@
+/no/such/junie-tui-g02-binary: failed to open session: Unable to spawn /no/such/junie-tui-g02-binary because it doesn't exist on the filesystem (ENOENT: No such file or directory)

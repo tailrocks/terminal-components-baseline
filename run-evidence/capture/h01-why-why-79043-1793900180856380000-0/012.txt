@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                           no project  mbp · local   
+                                                                                 
+  Here                                                                           
+ ━━━━━━━───────────────────────────────────────────────────────────────────────  
+   Search actions and resources…                                scope ‹ here ›   
+   ╭────────────────────────────────────────────────────────────────────────╮    
+   │                                                                        │    
+   │  Why is “Open btm” here?                                               │    
+  ›│                                                                        │    
+   │  live state  sustained pressure · continuous view fits                 │    
+   │  risk        read-only · runs directly · never changes the rank        │    
+   │                                                                        │    
+   │              Ranking order: alias › pin › live state › context ›       │    
+   │              query › used here › used anywhere › default. Risk         │    
+   │              changes the gate, never the rank.                         │    
+   │                                                                        │    
+   ╰────────────────────────────────────────────────────────────────────────╯    
+                                                                                 
+                                                                                 
+                                                                                 
+    → btm · host · read-only                                                     
+                                                                                 
+ ~/scratch                              / ━━━━━━━━━━─ 91% ▲   truecolor · 80×24  
+ ↑↓ Scroll  Esc Close                                                            

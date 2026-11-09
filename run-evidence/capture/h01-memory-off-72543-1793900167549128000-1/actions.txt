@@ -1,0 +1,6 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-history", "--frame", "800", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible nothing used here yet 01bbdfbfb889d27b
+paste 4 UTF-8 bytes
+checkpoint 001: pull search settled 4b12b6c32edabb30
+key ctrl+q
+clean exit 0

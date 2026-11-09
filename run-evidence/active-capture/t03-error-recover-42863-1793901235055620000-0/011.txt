@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×                                                                                                       +   
+ ━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query 1 ───────────────────────────────────────────────────────────────────── 1 ms ─╮ 
+ │                           │││   Run   Run all   Explain                                                            │ 
+ │   Filter objects          │││  ▎   1 Type SQL. Ctrl+R runs the statement under the cursor.                         │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││                                                                                      │ 
+ │      ▾ Tables             │││                                                                                      │ 
+ │        ▸ T organizations  │││                                                                                      │ 
+ │        ▸ T customers      │││                                                                                      │ 
+ │        ▸ T products       │││                                                                                      │ 
+ │        ▸ T orders         │││                                                                                      │ 
+ │        ▸ T order_items    │││                                                                                      │ 
+ │        ▸ T payments       │││                                                                      ln 1/1 · col 1  │ 
+ │        ▸ T subscriptions  │││  ─────────────────────────────────────────────────────────────────────────────────── │ 
+ │      ▸ Views              │││   Error 1 ! ×                                                                        │ 
+ │      ▸ Functions          │││  ━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────── │ 
+ │      ▸ Sequences          │││   ✗ failed · 1 ms                                                                    │ 
+ │    ▸ S analytics          │││    Error                                                                             │ 
+ │    ▸ S audit              │││    ───────────────────────────────────────────────────────────────────────────────   │ 
+ │                           │││    ! syntax error at or near "SELEC"                                                 │ 
+ │                           │││      syntax error                                                                    │ 
+ │                           │││      Enter on the result tab jumps to the statement · the offending token is unde…   │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  EDIT   Ctrl+R Run  Alt+R Run all  Ctrl+Space Complete  Tab Indent  F6 Leave  Esc Done      ✓ Connected to Development 

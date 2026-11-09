@@ -1,0 +1,40 @@
+  jackin❯    File   Go   Help                 Workspaces › payments-platform › b5df  inside the Construct  ● 3 running  
+                                                                                                                        
+ ╭─ Workspaces ────────── 3 running ─╮ │  b5df · payments-platform                                 instance · running   
+ │     Current directory             │ │  ───────────────────────────────────────────────────────────────────────────   
+ │   ▾ payments-platform             │ │  Workspace     payments-platform › role the-architect                          
+ │     ◉ 7f3a  the-archite…ude Code  │ │  Agent         Claude Code · account Claude · Personal (provider default)      
+ │     ◌ c41e  reviewer · Codex   •  │ │  Container     jackin-payments-platform-b5df                                   
+ │ ▎   ◉ b5df  the-archite…ude Code  │ │  Started       21 s ago · last seen 0 s ago                                    
+ │   ▸ infra-control-plane           │ │  Lifecycle     running · Container and Capsule daemon are live.                
+ │   ▸ release-automation            │ │  Working tree  2 uncommitted                                                   
+ │   ▸ customer-portal               │ │  Branch        feature/settlement-backoff                                      
+ │     + New workspace               │ │                                                                                
+ │                                   │ │  Live topology                                              daemon · 0 s ago   
+ │                                   │ │  ▾ tab 1  Claude Code                                                          
+ │                                   │ │   › pane 1  claude     working                                                 
+ │                                   │ │  Sessions                                              manifest · 0 recorded   
+ │                                   │ │  No sessions recorded                                                          
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │  Reconnect    New session    Shell    Inspect    Stop    Purge…                
+ ╰───────────────────────────────────╯ │                                                                                
+                                                                                                                        
+ Enter Reconnect  a New session  ? Help  …    Detached · payments-platform keeps running · 3 instances in the Construct 

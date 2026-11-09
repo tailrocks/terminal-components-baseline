@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "rust-dirty", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources f4dcff1afb0c0c1f
+paste 15 UTF-8 bytes
+checkpoint 001: listed Show git status 92fd3dcc6b32e334
+key enter
+checkpoint 002: visible $ git -C /Users/alex/work/holla status --porcelain=v2 --branch --show-stash 07091b3b1681725b
+key esc
+checkpoint 003: visible full git status 92fd3dcc6b32e334
+key ctrl+q
+observed exit 0

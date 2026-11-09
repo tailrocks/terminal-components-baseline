@@ -1,0 +1,12 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "activities-multi", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 6416971520ec4bcd
+key ctrl+g
+checkpoint 001: activities open 8f8dddf55b0b80c4
+key escape
+checkpoint 002: finder restored 6416971520ec4bcd
+key ctrl+q
+checkpoint 003: quit dialog 3a9ebffac7966c48
+key right
+checkpoint 004: stop and quit focused 6dfc2abb0e5479e2
+key enter
+checkpoint 005: stopping ece54c494ed4da83

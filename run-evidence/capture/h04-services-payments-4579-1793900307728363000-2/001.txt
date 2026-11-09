@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                     payments · service checkout  ◆ prod-eu-1 · production  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Show payments status                                                                                 scope ‹ here ›  
+                                                                                                                        
+    Results · 2                                                                  Show payments… system · on prod-eu-1   
+  › Show payments status       system  on prod-eu-1  active                      ────────────────────────────────────   
+    Show payments-worker sta…  system  on prod-eu-1  3 restarts in 10 min        Does       systemd unit                
+                                                                                            payments.service ·          
+                                                                                            active · 2 h                
+                                                                                 Runs       systemctl status…ayments    
+                                                                                 In         prod-eu-1 · host-wide       
+                                                                                 Host       prod-eu-1 · production ·    
+                                                                                            over SSH                    
+                                                                                 Scope      on prod-eu-1                
+                                                                                 Why        active                      
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Follow the journal ·        
+                                                                                            Restart · Pin · Alias ·     
+                                                                                            Why here?                   
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ /srv/payments   detached @ v2.14.3                                                                  truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                       

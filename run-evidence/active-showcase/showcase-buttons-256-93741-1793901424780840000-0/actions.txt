@@ -1,0 +1,38 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "buttons", "--motion", "paused", "--color", "256"] 160x50 color=Some("256") clock=false
+checkpoint 000: visible Disabled primary ecc615e9e2c920af
+mouse Motion { x: 31, y: 10 }
+checkpoint 001: Run task visibly responds to hover aef4051083765d12
+mouse Press { x: 31, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: held Run task differs from hover and rest 6627264c4af04b40
+mouse Release { x: 31, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 003: visible Run task ✓ 4d59305e6b9fa73d
+mouse Press { x: 43, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 43, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: visible Preview ✓ 0ed535bd3fd6a4dd
+mouse Press { x: 31, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Drag { x: 28, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 28, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 005: settled a4e02af89753f167
+mouse Press { x: 33, y: 13, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 33, y: 13, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: visible Auto-approve on 7726ee5a1d82b20d
+mouse Press { x: 33, y: 13, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 33, y: 13, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 007: visible Auto-approve off 562c6f68e75ee743
+mouse Motion { x: 28, y: 9 }
+checkpoint 008: settled 562c6f68e75ee743
+mouse Motion { x: 31, y: 16 }
+checkpoint 009: settled a31a8371326a51a4
+mouse Press { x: 31, y: 16, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 010: settled a31a8371326a51a4
+mouse Release { x: 31, y: 16, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 011: settled a31a8371326a51a4
+mouse Press { x: 43, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 43, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 012: visible Preview ✓ eef0303f23d059e2
+checkpoint 013: settled eef0303f23d059e2
+precondition 
+visual functional/showcase_buttons_256 candidate f93c039af4030665282ff99595a936227273ecd21840370347fb621a36a0713d
+capture-only functional/showcase_buttons_256: Failure(CheckFailure { test_id: "functional/showcase_buttons_256", gate: State, reason: Missing, candidate_sha256: "f93c039af4030665282ff99595a936227273ecd21840370347fb621a36a0713d", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-buttons-256-93741-1793901424780840000-0/check-artifacts/functional/showcase_buttons_256/f93c039af4030665282ff99595a936227273ecd21840370347fb621a36a0713d/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-buttons-256-93741-1793901424780840000-0/check-artifacts/functional/showcase_buttons_256/f93c039af4030665282ff99595a936227273ecd21840370347fb621a36a0713d/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-buttons-256-93741-1793901424780840000-0/check-artifacts/functional/showcase_buttons_256/f93c039af4030665282ff99595a936227273ecd21840370347fb621a36a0713d/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here    stop acme-api-1 ! ×                                                                                           
+ ────────━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────── 
+  stop acme-api-1 · failed · 0 s · exit 1                                                                          mbp  
+  $ docker stop acme-api-1 · started by Stop acme-api-1                                                                 
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ docker stop acme-api-1                                                                                          │ 
+ │  acme-api-1                                                                                                        │ 
+ │  ! Error response from daemon: cannot stop container: acme-api-1: tried to kill container, but did not receive an  │ 
+ │  exit event                                                                                                        │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/stack                                     ! exit 1 · 0 s                                     truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  r Restart  x Close  Esc Back to Here  …         ! stop acme-api-1 failed · exit 1 

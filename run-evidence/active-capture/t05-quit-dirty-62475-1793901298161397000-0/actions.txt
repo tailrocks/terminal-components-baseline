@@ -1,0 +1,26 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+checkpoint 005: visible Type SQL 1615509862a77c56
+mouse Press { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: visible Ctrl+Space 328dfa4f70d0366e
+type 32 UTF-8 bytes
+checkpoint 007: visible t05_quit_keep 0f8b57a3ea967549
+key escape
+checkpoint 008: escape applied 1738f44330b121dc
+key escape
+checkpoint 009: escape applied d870f31f702e9825
+key ctrl+q
+checkpoint 010: quit dialog f50d429d533e0c8b
+resize 121x40
+checkpoint 011: visible 121×40 5767736236a99e73
+resize 120x40
+checkpoint 012: visible 120×40 b5bc974539feadd9

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local  
+                                                                                                                        
+  Here    frontend dev ⠼ ×    api dev ⠼ ×    api tests ✓ ×    logs · api worker sched… ⠼ ×    btm ○ ×    test ✓ ×       
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────━━━━━━━━━━━──── 
+  test · succeeded · 0 s · exit 0                                                             here · ~/work/acme · mbp  
+  $ mise run test · started by Run tests                                                                                
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ mise run test                                                                                                   │ 
+ │  [mise] test · mise run //apps/frontend:test //services/api:test //tools/worker:test                               │ 
+ │  [mise] test finished                                                                                              │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/acme   main   ↑1                       succeeded · 0 s                        ⠼ 4 running    truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  r Restart  x Close  Esc Back to Here  Shift+F10 Menu       test finished · exit 0 

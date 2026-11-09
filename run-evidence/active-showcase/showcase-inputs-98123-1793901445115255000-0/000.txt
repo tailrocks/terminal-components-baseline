@@ -1,0 +1,40 @@
+ ▪ Junie Design system  Inputs & forms › Inputs                              truecolor · 120×40   i Inspector   ? Help  
+                                                                                                                        
+ Components           54  Inputs  Focus is a bar; editing is a cursor. Enter to edit, Esc to revert.                    
+ ───────────────────────                                                                                                
+    Overview               Playground    Options    States                                              the live widget 
+  ▸ App shell             ━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────
+  ▾ Inputs & forms                                                                                                      
+      Buttons               Playground                            Type to edit · Enter Apply · Esc Cancel · Tab Next   ┃
+ ▎  › Inputs                ────────────────────────────────────────────────────────────────────────────────────────   ┃
+      Text areas              Project name *                                                                           ┃
+      Chips & selects         payments-gateway                                                                         ┃
+      Forms                   Used as the working directory name                                                       ┃
+      Checks & radios         Branch to check out once the task is done  optional                                      ┃
+      Toolbars                feat/…                                                                                   ┃
+  ▸ Tables                    Leave empty to work on a detached checkout                                               ┃
+  ▸ Navigation                Owner email *                                 API token  optional                        ┃
+  ▸ Overlays                  mira@example                          !       jb_live_••••••••••••                       ┃
+  ▸ Feedback                  Enter a valid email address                   Managed by the organization                ┃
+  ▸ Layout                    Search files  optional                                                                   ┃
+  ▸ Text & code               Type a path or symbol…                                                      214 files    ┃
+  ▸ Screens                   Selection: Shift+←→  ·  words: Ctrl+←→  ·  clear: Ctrl+U                                 ┃
+                              API key  optional                                                                        ┃
+                              ••••••••••••••••••••••••c1f2                                                             ┃
+                              Masked while typing; the last four characters show once committed                        ┃
+                                                                                                                       ┃
+                                                                                                                       ┃
+                            Text commands                                                       the preset's key map   ┃
+                            ────────────────────────────────────────────────────────────────────────────────────────   ┆
+                            Desktop keys                                  Emacs keys                                   ┆
+                            Select all            Ctrl+A                  Select all            Ctrl+L                 ┆
+                            Copy                  Ctrl+C                  Copy                  Alt+W                  ┆
+                            Cut                   Ctrl+X · Ctrl+W         Cut                   Ctrl+W                 ┆
+                            Paste                 Ctrl+V                  Paste                 Ctrl+Y                 ┆
+                            Undo                  Ctrl+Z                  Undo                  Ctrl+Z                 ┆
+                            Redo                  Ctrl+Y ·                Redo                  Ctrl+Shift+Z ·         ┆
+                                                  Ctrl+Shift+Z ·                                Ctrl+Z                 ┆
+                                                  Ctrl+Z                  Line start            Cmd chord              ┆
+                            Line start            Cmd chord               Line end              Cmd chord              ┆
+                                                                                                                        
+ ↑↓ Move  Enter Open  / Filter  Tab Into page  q Quit                                                                   

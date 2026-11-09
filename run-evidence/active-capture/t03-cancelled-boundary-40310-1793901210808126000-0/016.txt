@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×                                                                                                     +   
+ ━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query 1 ────────────────────────────────────────────────────────────────────────────╮ 
+ │                           │││   Run   Run all   Explain                                                            │ 
+ │   Filter objects          │││      1 SELECT sku FROM products WHERE sku = 't03_cancelled_first';                   │ 
+ │  ▾ D acme_prod            │││  ▎›  2 SELECT name FROM products WHERE name = 't03_cancelled_second'                 │ 
+ │    ▾ S public             │││                                                                                      │ 
+ │      ▾ Tables             │││                                                                                      │ 
+ │        ▸ T organizations  │││                                                                                      │ 
+ │        ▸ T customers      │││                                                                                      │ 
+ │        ▸ T products       │││                                                                                      │ 
+ │        ▸ T orders         │││                                                                                      │ 
+ │        ▸ T order_items    │││                                                                                      │ 
+ │        ▸ T payments       │││                                                                     ln 2/2 · col 62  │ 
+ │        ▸ T subscriptions  │││  ─────────────────────────────────────────────────────────────────────────────────── │ 
+ │      ▸ Views              │││   Cancelled ×                                                                        │ 
+ │      ▸ Functions          │││  ━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────── │ 
+ │      ▸ Sequences          │││   Cancelled · nothing was recorded                                                   │ 
+ │    ▸ S analytics          │││                                                                                      │ 
+ │    ▸ S audit              │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                       Cancelled                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││          The statement was stopped before it finished; nothing was recorded          │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  EDIT   Ctrl+R Run  Alt+R Run all  Ctrl+Space Complete  Tab Indent  F6 Leave  Esc Done               i Query cancelled 

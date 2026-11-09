@@ -1,0 +1,18 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+key down
+checkpoint 001: connection cursor moved 77b1ee3085c8570b
+key down
+checkpoint 002: connection cursor moved 23afca19a02c7bb7
+key down
+checkpoint 003: connection cursor moved 8c74765db906c1ba
+key down
+checkpoint 004: connection cursor moved bf155f39e57929aa
+key enter
+checkpoint 005: development connected 1615509862a77c56
+key ctrl+y
+checkpoint 006: visible Query history c6610258956fad10
+key ctrl+w
+checkpoint 007: back on query 1 7a372cb36228fe46
+key ctrl+q
+clean exit 0

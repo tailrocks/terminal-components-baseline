@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                   no project  devbox · development 
+  Here › Upgrade everything                                                     
+  H╭───────────────────────────────────────────────────────────────────── × ─╮  
+ ━━│                                                                         │──
+  U│  Start upgrade everything?                                              │s 
+  u│                                                                         │  
+   │  Plan       Upgrade everything · upgrade Debian packages and global    ┃│  
+   │             mise tools on devbox                                       ┃│  
+  [│  Host       devbox                                                     ┃│  
+  [│  Steps      8 included · 0 excluded · ~16 s                            ┃│  
+  [│  Privilege  sudo · cached for this session                             ┃│  
+  [│  Debian     14 upgradable · 2 security                                 ┆│  
+  [│  mise       4 outdated global tools · go excluded                      ┆│  
+  [│  Reboot     required after the kernel upgrade                          ┆│  
+  [│                                                                        ┆│  
+  [│  cat /etc/os-release                                                   ┆│  
+   │  sudo -n true                                                          ┆│  
+   │  ↓ 13 more                                                              │  
+   │                                                 ▎Cancel    Start plan   │  
+   │                                                                         │  
+   ╰─────────────────────────────────────────────────────────────────────────╯  
+                                                                                
+ ~           review · 8 steps · 2 branches parallel            truecolor · 81×24
+ ←→ Choose  Enter Cancel  ↑↓ Scroll  Esc Cancel                                 

@@ -1,0 +1,8 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "remote-host", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions d9347f16505b4413
+paste 20 UTF-8 bytes
+checkpoint 001: finder row selected e56dbb25787e58d3
+key enter
+checkpoint 002: snapshot open afaeb9bec2ee5758
+key ctrl+q
+clean exit 0

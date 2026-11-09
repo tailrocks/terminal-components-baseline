@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×    T products ×    H History ×                                                                      +   
+ ─────────────────────────────────━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query history ───────────────────────────────────────────────────────── 16 entries ─╮ 
+ │                           │││                                                                                      │ 
+ │   Filter objects          │││    Search history · terms are ANDed               scope: Development  ·  status: any │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   › SELECT name FROM pr… just now · 5 ms  │  Query               Editor · just now   │ 
+ │      ▾ Tables             │││  ╭─────────────────────────────────────────────────────────────────────────╮──────   │ 
+ │        ▸ T organizations  │││  │  SELECT name FROM products WHERE sku = 'SKU-01000' -- t05_menus_marker  │         │ 
+ │        ▸ T customers      │││  │  Open in new tab                                                  Enter │         │ 
+ │        ▸ T products       │││  │  Run in new tab                                                       r │         │ 
+ │        ▸ T orders         │││  │  Copy query                                                           y │         │ 
+ │        ▸ T order_items    │││  │ ─────────────────────────────────────────────────────────────────────── │         │ 
+ │        ▸ T payments       │││  │  Search                                                               / │prod.…   │ 
+ │        ▸ T subscriptions  │││  │  Show all connections                                                 c │         │ 
+ │      ▸ Views              │││  │  Show failed only                                                     s │         │ 
+ │      ▸ Functions          │││  ╰─────────────────────────────────────────────────────────────────────────╯         │ 
+ │      ▸ Sequences          │││                                           │   Open in new tab    Run in new tab      │ 
+ │    ▸ S analytics          │││                                           │   Copy                                   │ 
+ │    ▸ S audit              │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓ Move  Enter Choose  Esc Close                                                                Opened public.products 

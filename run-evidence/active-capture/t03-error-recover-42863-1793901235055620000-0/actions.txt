@@ -1,0 +1,46 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+checkpoint 005: visible Type SQL 1615509862a77c56
+mouse Press { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: editor focused 328dfa4f70d0366e
+type 23 UTF-8 bytes
+checkpoint 007: visible SELEC sku FROM products cd7d44a8d4a0473b
+key ctrl+r
+checkpoint 008: syntax error stays 708eb34b11f7f293
+checkpoint 009: visible SELEC sku FROM products 708eb34b11f7f293
+mouse Press { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 010: bad statement focused 708eb34b11f7f293
+key ctrl+a
+key ctrl+k
+checkpoint 011: bad statement cleared aa502ce7e9d515f1
+type 32 UTF-8 bytes
+checkpoint 012: visible SELECT sku FROM products LIMIT 1 395aaa5d61d53e23
+key ctrl+r
+checkpoint 013: corrected result stays cc178ff40a988327
+checkpoint 014: settled cc178ff40a988327
+precondition 
+visual pre_refactor/t03_error/t03_error_recover_120x40 candidate 84b3bff568d92fe4fc3331f8d37121aa389ef80ad8dfad2a2e20df8486a3031d
+capture-only pre_refactor/t03_error/t03_error_recover_120x40: Failure(CheckFailure { test_id: "pre_refactor/t03_error/t03_error_recover_120x40", gate: State, reason: Missing, candidate_sha256: "84b3bff568d92fe4fc3331f8d37121aa389ef80ad8dfad2a2e20df8486a3031d", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-error-recover-42863-1793901235055620000-0/check-artifacts/pre_refactor/t03_error/t03_error_recover_120x40/84b3bff568d92fe4fc3331f8d37121aa389ef80ad8dfad2a2e20df8486a3031d/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-error-recover-42863-1793901235055620000-0/check-artifacts/pre_refactor/t03_error/t03_error_recover_120x40/84b3bff568d92fe4fc3331f8d37121aa389ef80ad8dfad2a2e20df8486a3031d/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-error-recover-42863-1793901235055620000-0/check-artifacts/pre_refactor/t03_error/t03_error_recover_120x40/84b3bff568d92fe4fc3331f8d37121aa389ef80ad8dfad2a2e20df8486a3031d/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 015: recovered result at 80x24 6262ac05ecf2770a
+checkpoint 016: settled 1e2564369c1082f1
+precondition 
+visual pre_refactor/t03_error/t03_error_recover_narrow candidate 69a4f564add90557411f45bbc8422d47708e8851e1d4b4fff87888081aa9d4b7
+capture-only pre_refactor/t03_error/t03_error_recover_narrow: Failure(CheckFailure { test_id: "pre_refactor/t03_error/t03_error_recover_narrow", gate: State, reason: Missing, candidate_sha256: "69a4f564add90557411f45bbc8422d47708e8851e1d4b4fff87888081aa9d4b7", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-error-recover-42863-1793901235055620000-0/check-artifacts/pre_refactor/t03_error/t03_error_recover_narrow/69a4f564add90557411f45bbc8422d47708e8851e1d4b4fff87888081aa9d4b7/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-error-recover-42863-1793901235055620000-0/check-artifacts/pre_refactor/t03_error/t03_error_recover_narrow/69a4f564add90557411f45bbc8422d47708e8851e1d4b4fff87888081aa9d4b7/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-error-recover-42863-1793901235055620000-0/check-artifacts/pre_refactor/t03_error/t03_error_recover_narrow/69a4f564add90557411f45bbc8422d47708e8851e1d4b4fff87888081aa9d4b7/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 017: recovered result back at 120x40 cc178ff40a988327
+key ctrl+q
+checkpoint 018: visible Quit TablePro? 241dec1aebcb8919
+key right
+key enter
+observed exit 0

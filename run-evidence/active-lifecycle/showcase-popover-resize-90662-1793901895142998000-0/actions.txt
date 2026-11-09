@@ -1,0 +1,18 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "popups", "--motion", "paused", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Open popover ▾ 8eefdc70e872e0a4
+mouse Press { x: 31, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 31, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 001: visible report.pdf 3ae3fa40b7ea693e
+resize 80x24
+checkpoint 002: popover still owned at 80x24 fb0d8e195a7f1b54
+checkpoint 003: selected tab neutral under popover fb0d8e195a7f1b54
+mouse Motion { x: 79, y: 0 }
+checkpoint 004: trigger unhovered under popover d012066082686f84
+checkpoint 005: settled d012066082686f84
+precondition 
+visual functional/showcase_popover_resize candidate 3baf3d33297321d871bdaca86e6cb65273b1a4b612d900fcd9d44262b63c3fd1
+capture-only functional/showcase_popover_resize: Failure(CheckFailure { test_id: "functional/showcase_popover_resize", gate: State, reason: Missing, candidate_sha256: "3baf3d33297321d871bdaca86e6cb65273b1a4b612d900fcd9d44262b63c3fd1", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-lifecycle/showcase-popover-resize-90662-1793901895142998000-0/check-artifacts/functional/showcase_popover_resize/3baf3d33297321d871bdaca86e6cb65273b1a4b612d900fcd9d44262b63c3fd1/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-lifecycle/showcase-popover-resize-90662-1793901895142998000-0/check-artifacts/functional/showcase_popover_resize/3baf3d33297321d871bdaca86e6cb65273b1a4b612d900fcd9d44262b63c3fd1/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-lifecycle/showcase-popover-resize-90662-1793901895142998000-0/check-artifacts/functional/showcase_popover_resize/3baf3d33297321d871bdaca86e6cb65273b1a4b612d900fcd9d44262b63c3fd1/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key escape
+checkpoint 006: escape dismisses the popover after resize ce7cb93a700f0883
+key ctrl+q
+clean exit 0

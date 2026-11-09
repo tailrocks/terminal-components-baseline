@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×    ≡ Query 2 • ×                                                                                    +   
+ ─────────────────━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query 2 ────────────────────────────────────────────────────────────────────────────╮ 
+ │                           │││   Run   Run all   Explain                                                            │ 
+ │   Filter objects          │││   ›  1 SELECT 't05_max_two'                                                          │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │ ▎  ▾ S public             │││                                                                                      │ 
+ │      ▾ Tables             │││                                                                                      │ 
+ │        ▸ T organizations  │││                                                                                      │ 
+ │        ▸ T customers      │││                                                                                      │ 
+ │        ▸ T products       │││                                                                                      │ 
+ │        ▸ T orders         │││                                                                                      │ 
+ │        ▸ T order_items    │││                                                                                      │ 
+ │        ▸ T payments       │││                                                                                      │ 
+ │        ▸ T subscriptions  │││                                                                                      │ 
+ │      ▸ Views              │││                                                                                      │ 
+ │      ▸ Functions          │││                                                                                      │ 
+ │      ▸ Sequences          │││  ─────────────────────────────────────────────────────────────────────────────────── │ 
+ │    ▸ S analytics          │││                                                                                      │ 
+ │    ▸ S audit              │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                    No results yet                                    │ 
+ │                           │││                                                                                      │ 
+ │                           │││              Ctrl+R runs the statement under the cursor · Alt+R runs all             │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓ Move  Enter Open  → Expand  / Filter  Ctrl+O Quick open  Shift+F10 Menu  Tab Next        ✓ Connected to Development 

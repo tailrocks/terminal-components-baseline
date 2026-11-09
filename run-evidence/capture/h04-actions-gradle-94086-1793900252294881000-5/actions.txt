@@ -1,0 +1,8 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-gradle", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions c2587e1729ad9610
+paste 12 UTF-8 bytes
+checkpoint 001: gradle build selected 3ab37b6225b7312b
+key enter
+checkpoint 002: Unresolved reference: ledger 6438fc2b2f54043d
+key ctrl+q
+clean exit 0

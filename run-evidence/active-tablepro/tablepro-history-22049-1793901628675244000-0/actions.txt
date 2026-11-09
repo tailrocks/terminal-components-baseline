@@ -1,0 +1,18 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--connect", "Local PostgreSQL", "--motion", "reduced", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Query 1 a4f5f52a50763f3a
+key tab
+paste 21 UTF-8 bytes
+key ctrl+r
+key ctrl+y
+checkpoint 001: history opens before the orders query settles 96c2362bc15a6534
+checkpoint 002: settled 96c2362bc15a6534
+precondition 
+visual functional/tablepro_history candidate 7d003c9ae8498b7d43c2e69ef6a125a2dc126895af73b937096539cb4599a256
+capture-only functional/tablepro_history: Failure(CheckFailure { test_id: "functional/tablepro_history", gate: State, reason: Missing, candidate_sha256: "7d003c9ae8498b7d43c2e69ef6a125a2dc126895af73b937096539cb4599a256", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-history-22049-1793901628675244000-0/check-artifacts/functional/tablepro_history/7d003c9ae8498b7d43c2e69ef6a125a2dc126895af73b937096539cb4599a256/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-history-22049-1793901628675244000-0/check-artifacts/functional/tablepro_history/7d003c9ae8498b7d43c2e69ef6a125a2dc126895af73b937096539cb4599a256/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-history-22049-1793901628675244000-0/check-artifacts/functional/tablepro_history/7d003c9ae8498b7d43c2e69ef6a125a2dc126895af73b937096539cb4599a256/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key r
+checkpoint 003: rerun executes the selected orders query 9520825c6547e93a
+key ctrl+q
+checkpoint 004: visible Quit TablePro? c2f68b8d17cbf50b
+key right
+key enter
+observed exit 0

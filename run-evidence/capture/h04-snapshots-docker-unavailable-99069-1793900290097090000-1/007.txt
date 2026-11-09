@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                 probe · Rust project  mbp · local  
+  Here › Docker                                                                 
+  Here › Docker                                                                 
+ ━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────── 
+  Docker                                                  mbp · live · 1 s ago  
+                                                                                
+  Daemon      Cannot connect to the Docker daemon at unix:///var/run/docker.s…  
+  Capability  docker CLI present · daemon unreachable · container actions hid…  
+                                                                                
+ ╭─ Daemon ────────────────────────────────────────────── 2 lines · y copies ─╮ 
+ │  $ docker info                                                             │ 
+ │  Cannot connect to the Docker daemon at unix:///var/run/docker.sock        │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ ╰────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                
+ ~/work/probe   main   ↓1        snapshot · read-only         truecolor · 80×24 
+ ↑↓ Scroll  y Copy  Esc Back  Shift+F10 Menu     Esc never quits · Ctrl+Q quits 

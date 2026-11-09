@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T orders ×                                                                                         +   
+ ───────────────━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › orders ────────────────────────────────────────────────────────── 14 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   ‹6    currency    shipping_address                          notes             6›   │ 
+ │      ▾ Tables             │││       1 USD         {"line1": "104 Calle Mayor", "city": "S…  Customer asked f…    ┃ │ 
+ │        ▸ T organizations  │││       2 USD         ╭────────────────────────────╮ty": "Mil…  NULL                 ┆ │ 
+ │        ▸ T customers      │││       3 EUR         │  shipping_address · row 1  │": "Toron…  Second attempt a…    ┆ │ 
+ │        ▸ T products       │││       4 EUR         │  Copy cell               y │ty": "Par…  Leave at recepti…    ┆ │ 
+ │        ▸ T orders         │││       5 USD         │  Copy row                Y │ty": "Lis…  Replace damaged …    ┆ │ 
+ │        ▸ T order_items    │││       6 GBP         │ ────────────────────────── │city": "T…  Gift wrap, no pr…    ┆ │ 
+ │        ▸ T payments       │││       7 GBP         │  Edit cell           Enter │city": "B…  NULL                 ┆ │ 
+ │        ▸ T subscriptions  │││       8 EUR         │  Set NULL              Del │            Second attempt a…    ┆ │ 
+ │      ▸ Views              │││       9 USD         │ ────────────────────────── │ty": "Par…  NULL                 ┆ │ 
+ │      ▸ Functions          │││      10 EUR         │  Filter by this value    f │ity": "To…  NULL                 ┆ │ 
+ │      ▸ Sequences          │││      11 USD         │  Sort ascending          s │y": "Pari…  Gift wrap, no pr…    ┆ │ 
+ │    ▸ S analytics          │││      12 USD         │ ────────────────────────── │ity": "To…  NULL                 ┆ │ 
+ │    ▸ S audit              │││      13 USD         │  Insert row              + │ty": "Lis…  NULL                 ┆ │ 
+ │                           │││      14 GBP         │  Duplicate row       Alt+D │ty": "Sto…  Leave at recepti…    ┆ │ 
+ │                           │││      15 USD         │  Delete row              - │y": "Madr…  Gift wrap, no pr…    ┆ │ 
+ │                           │││      16 USD         │ ────────────────────────── │ty": "Lis…  Leave at recepti…    ┆ │ 
+ │                           │││      17 USD         │  Preview SQL             p │ity": "St…  NULL                 ┆ │ 
+ │                           │││      18 USD         │  Save changes       Ctrl+S │ "city": …  NULL                 ┆ │ 
+ │                           │││      19 USD         │  Discard changes         U │": "Lisbo…  NULL                 ┆ │ 
+ │                           │││      20 EUR         │  Refresh                 r │ity": "Ma…  NULL                 ┆ │ 
+ │                           │││      21 USD         ╰────────────────────────────╯            NULL                 ┆ │ 
+ │                           │││      22 USD         {"line1": "43 Hauptstrasse", "city": "S…  NULL                 ┆ │ 
+ │                           │││      23 EUR         {"line1": "32 Queen St", "city": "San F…  Gift wrap, no pr…    ┆ │ 
+ │                           │││      24 USD         NULL                                      NULL                 ┆ │ 
+ │                           │││      25 USD         {"line1": "41 Market St", "city": "Toro…  NULL                 ┆ │ 
+ │                           │││      26 USD         {"line1": "10 Via Roma", "city": "Paris…  Replace damaged …    ┆ │ 
+ │                           │││         ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 500 loaded · 1,203,338 total · cols 7–8 of 14                         │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓ Move  Enter Choose  Esc Close                       Copied 90 characters · {"line1": "104 Calle Mayor", "city": "S… 

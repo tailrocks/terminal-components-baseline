@@ -1,0 +1,40 @@
+  ▪  TablePro  Connections  5 saved                                                         truecolor · 120×40  ? help  
+                                                                                                                        
+ ╭─ Connections ─────────────────── 5 ─╮    Production                                                                  
+ │                                     │    ──────────────────────────────────────────────────────────────────          
+ │   Filter connections                │    Engine       PostgreSQL                                                     
+ │  ▾ Personal                         │    Host         prod-db-1.acme.io:5432                                         
+ │        Local PostgreSQL         pg  │    Database     acme_prod                                                      
+ │  ▾ Acme                             │    User         acme_ops                                                       
+ │      · Development              pg  │    Environment  production                                                     
+ │      ◇ Staging                  pg  │    Safe Mode    Safe Mode · Writes ask for confirmation and a                  
+ │      ◆ Analytics             mysql  │                 deliberate acknowledgement.                                    
+ │      ◆ Production               pg  │    SSL          ✓ on                                                           
+ │                                     │    SSH          bastion.acme.io                                                
+ │                                     │    Last used    1 hour ago                                                     
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │     Connect    Edit    Duplicate   ▎Delete…                                    
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ ╰─────────────────────────────────────╯                                                                                
+                                                                                                                        
+ ↑↓ Move  Enter Connect  e Edit…  d Delete…  Alt+D Duplicate  / Filter  Ctrl+N New  Shift+F10 Menu  Esc Back  Tab Next  

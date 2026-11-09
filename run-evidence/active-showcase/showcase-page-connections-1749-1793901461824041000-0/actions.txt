@@ -1,0 +1,9 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "connections", "--motion", "paused", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Connections f449c2b0820376b3
+checkpoint 001: settled f449c2b0820376b3
+checkpoint 002: settled f449c2b0820376b3
+precondition 
+visual functional/showcase_page_connections candidate 5f152d7fad1520e4868b96bd3388be3146488f8071d6521cb2889a49a2df63da
+capture-only functional/showcase_page_connections: Failure(CheckFailure { test_id: "functional/showcase_page_connections", gate: State, reason: Missing, candidate_sha256: "5f152d7fad1520e4868b96bd3388be3146488f8071d6521cb2889a49a2df63da", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-page-connections-1749-1793901461824041000-0/check-artifacts/functional/showcase_page_connections/5f152d7fad1520e4868b96bd3388be3146488f8071d6521cb2889a49a2df63da/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-page-connections-1749-1793901461824041000-0/check-artifacts/functional/showcase_page_connections/5f152d7fad1520e4868b96bd3388be3146488f8071d6521cb2889a49a2df63da/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-page-connections-1749-1793901461824041000-0/check-artifacts/functional/showcase_page_connections/5f152d7fad1520e4868b96bd3388be3146488f8071d6521cb2889a49a2df63da/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

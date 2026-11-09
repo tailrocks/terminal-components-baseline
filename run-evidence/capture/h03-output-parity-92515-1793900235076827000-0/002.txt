@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   batch · project collection  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Status across 3 child p… git · child   
+  › Status across 3 child pr…  git      child  0 dirty · 1 behind                ────────────────────────────────────   
+    Emit a burst               custom   here   Current folder · trusted          Does       inspect every discovered    
+    Emit a mixed stream        custom   here   Current folder · trusted                     Git project · worktrees     
+                                                                                            deduplicated, submodules    
+    Recent here                                                                             marked                      
+    nothing used here yet                                                        Runs       git -C /Users/al…-branch    
+                                                                                            git -C /Users/al…-branch    
+    Explore                                                                                 git -C /Users/al…-branch    
+     Tasks   Git   Files   Disk   Services   System                              In         ~/work/batch                
+    Children · 3 projects      explore  child  3 child projects discovered       Host       mbp · local                 
+    System · mbp               explore  host   available on this host            Scope      child                       
+                                                                                 Why        0 dirty · 1 behind          
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/batch                                                                                        truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Ctrl+G Activities    Status ac… 

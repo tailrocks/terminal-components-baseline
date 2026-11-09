@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         probe · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Pull                      git · here   
+  › Pull                       git      here  branch is 1 comm…                  ────────────────────────────────────   
+    Clean IntelliJ metadata …  idea     here  1 candidates       destructive     Does       fast-forward                
+    Deploy                     custom   here  Current folder…                               ~/work/probe from           
+    Run tests                  task     here  defined by ~/wor…                             origin/main                 
+    Show git status            git      here  on main                            Runs       git -C /Users/al…ff-only    
+                                                                                 In         ~/work/probe                
+    Recent here                                                                  Host       mbp · local                 
+    nothing used here yet                                                        Scope      here                        
+                                                                                 Why        branch is 1 commits         
+    Explore                                                                                 behind                      
+     Tasks   Git   Files   Disk   Services   System                              Changes    1 commits arrive ·          
+    System · mbp               explore  host  available on thi…                             nothing is rewritten        
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Fetch only · Pull with      
+                                                                                            merge · Pull with rebase    
+                                                                                            · Push · Pin · Alias ·      
+                                                                                            Why here?                   
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/probe   main   ↓1             ! docker, github unavailable             ▲ 4 config warnings   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Ctrl+G Activities    Pull — bra… 

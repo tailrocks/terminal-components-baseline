@@ -1,0 +1,24 @@
+  ≡ Query 1 • ×                                                                 
+ ━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────
+ › ╭─ Query 1 ──────────────────────────────────────────────────────────────────
+   │   Run   Run all   Explain                                                  
+ E │   ›  1 UPDATE organizations SET name = 'ExactMarkerT03' WHERE slug = 'north
+ x │                                                                            
+ p │                                                                            
+ l │                                                                            
+ o │                                                                            
+ r │                   ╭────────────────────────────────────────────────────────
+ e │                   │                                                        
+ r │                   │  Execute write query?                                  
+   │                   │                                                        
+   │                   │  Action      UPDATE                                    
+   │  ─────────────────│  Target      Development · development · acme_prod · or
+   │                   │  Scope       matching rows in organizations            
+   │                   │  Reversible  Reversible by a compensating UPDATE       
+   │                   │  Safe Mode   Safe Mode · type to confirm               
+   │                   │                                                        
+   │                   │  UPDATE organizations SET name = 'ExactMarkerT03' WHERE
+   │                   │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │                   │                                                        
+   │                   │  Type organizations to confirm                         
+   │                   │▎                                                       

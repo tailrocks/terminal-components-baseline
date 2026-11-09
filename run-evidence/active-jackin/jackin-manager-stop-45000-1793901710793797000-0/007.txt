@@ -1,0 +1,40 @@
+  jackin❯    File   Go   Help                 Workspaces › payments-platform › 7f3a  inside the Construct  ● 1 running  
+                                                                                                                        
+ ╭─ Workspaces ────────── 1 running ─╮ │  7f3a · payments-platform                       instance · preserved · dirty   
+ │     Current directory             │ │  ───────────────────────────────────────────────────────────────────────────   
+ │   ▾ payments-platform             │ │  Workspace     payments-platform › role the-architect                          
+ │ ▎   ◌ 7f3a  the-archit…de Code •  │ │  Agent         Claude Code · account Claude · Personal (provider default)      
+ │     ◌ c41e  reviewer · Codex   •  │ │  Container     jackin-payments-platform-7f3a                                   
+ │   ▸ infra-control-plane           │ │  Started       2 h ago · last seen 1 s ago                                     
+ │   ▸ release-automation            │ │  Lifecycle     preserved · dirty · Stopped with uncommitted changes in the     
+ │   ▸ customer-portal               │ │                Workspace; kept until you decide.                               
+ │     + New workspace               │ │  Working tree  2 uncommitted · 1 unpushed                                      
+ │                                   │ │  Branch        feature/settlement-backoff · PR #482 · Settlement retry back…   
+ │                                   │ │                                                                                
+ │                                   │ │  Live topology                                                   unavailable   
+ │                                   │ │  No live daemon (instance not running)                                         
+ │                                   │ │  Sessions                                              manifest · 2 recorded   
+ │                                   │ │  s-01  2 h ago     claude   active                                             
+ │                                   │ │  s-02  yesterday   codex    exited                                             
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │                                                                                
+ │                                   │ │  Restore    Inspect    Purge…                                                  
+ ╰───────────────────────────────────╯ │                                                                                
+                                                                                                                        
+ Enter Restore  i Inspect  p Purge…  ← Back  Tab Details  c Accounts  u Usage  ? Help  …          Instance 7f3a stopped 

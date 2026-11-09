@@ -1,0 +1,61 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "monorepo-child", "--frame", "1125", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+key ctrl+up
+checkpoint 000: parent scope changes the visible set f906e1e067faba80
+resize 121x40
+checkpoint 001: nudge width 52573082bf6bed7e
+resize 120x40
+checkpoint 002: nudge restored f58edee1ac6b86b1
+checkpoint 003: settled f906e1e067faba80
+precondition 
+visual pre_refactor/h01_scope/h01_scope_scope_120x40 candidate 7af03bfcd87d5a575decf3612c07d48802846628921d45b27169e18f7e3d586c
+capture-only pre_refactor/h01_scope/h01_scope_scope_120x40: Failure(CheckFailure { test_id: "pre_refactor/h01_scope/h01_scope_scope_120x40", gate: State, reason: Missing, candidate_sha256: "7af03bfcd87d5a575decf3612c07d48802846628921d45b27169e18f7e3d586c", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h01-scope-scope-76454-1793900175945414000-0/check-artifacts/pre_refactor/h01_scope/h01_scope_scope_120x40/7af03bfcd87d5a575decf3612c07d48802846628921d45b27169e18f7e3d586c/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h01-scope-scope-76454-1793900175945414000-0/check-artifacts/pre_refactor/h01_scope/h01_scope_scope_120x40/7af03bfcd87d5a575decf3612c07d48802846628921d45b27169e18f7e3d586c/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h01-scope-scope-76454-1793900175945414000-0/check-artifacts/pre_refactor/h01_scope/h01_scope_scope_120x40/7af03bfcd87d5a575decf3612c07d48802846628921d45b27169e18f7e3d586c/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 004: parent scope at 80x24 d9d5d56d441d000a
+checkpoint 005: settled d9d5d56d441d000a
+precondition 
+visual pre_refactor/h01_scope/h01_scope_scope_narrow candidate b7c5626d32f5f97e36f367375aecd7700ab4f65f1a22efd3ef1ba0e9ecd15edd
+capture-only pre_refactor/h01_scope/h01_scope_scope_narrow: Failure(CheckFailure { test_id: "pre_refactor/h01_scope/h01_scope_scope_narrow", gate: State, reason: Missing, candidate_sha256: "b7c5626d32f5f97e36f367375aecd7700ab4f65f1a22efd3ef1ba0e9ecd15edd", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h01-scope-scope-76454-1793900175945414000-0/check-artifacts/pre_refactor/h01_scope/h01_scope_scope_narrow/b7c5626d32f5f97e36f367375aecd7700ab4f65f1a22efd3ef1ba0e9ecd15edd/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h01-scope-scope-76454-1793900175945414000-0/check-artifacts/pre_refactor/h01_scope/h01_scope_scope_narrow/b7c5626d32f5f97e36f367375aecd7700ab4f65f1a22efd3ef1ba0e9ecd15edd/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h01-scope-scope-76454-1793900175945414000-0/check-artifacts/pre_refactor/h01_scope/h01_scope_scope_narrow/b7c5626d32f5f97e36f367375aecd7700ab4f65f1a22efd3ef1ba0e9ecd15edd/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 006: parent scope back at 120x40 f906e1e067faba80
+key ctrl+up
+checkpoint 007: system scope b2acffb007292084
+key escape
+checkpoint 008: visible scope ‹ here › c93ccc7d4a103f44
+key ctrl+up
+checkpoint 009: parent scope again f906e1e067faba80
+key alt+enter
+checkpoint 010: visible Pin here 99bad0105a37c7c0
+checkpoint 011: visible Pin here 99bad0105a37c7c0
+mouse Press { x: 10, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 012: pinned here 2488cca38a79588e
+key alt+enter
+checkpoint 013: visible Hide here c163131faa397b9c
+checkpoint 014: visible Hide here c163131faa397b9c
+mouse Press { x: 10, y: 19, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 19, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 015: hidden here a76ef5b4a686de44
+type 10 UTF-8 bytes
+checkpoint 016: hidden row found 630174cc550acc3a
+key alt+enter
+checkpoint 017: visible Restore here 96196d1d3cbab9b5
+checkpoint 018: visible Restore here 96196d1d3cbab9b5
+mouse Press { x: 10, y: 19, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 19, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 019: restored here 9906bf4eaf6c7e51
+key escape
+checkpoint 020: visible Parent · acme · 29 entries 094e60e1bdff2c93
+key alt+enter
+checkpoint 021: visible Reset ranking f6acf1cbf2404ee5
+checkpoint 022: visible Reset ranking f6acf1cbf2404ee5
+mouse Press { x: 10, y: 20, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 20, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 023: ranking reset cfe3bf7167003bef
+type 1 UTF-8 bytes
+checkpoint 024: visible alias t 5cb25e8c871c8d0e
+key enter
+checkpoint 025: visible Tasks · 5919c30d94185387
+key escape
+checkpoint 026: tasks group popped 5cb25e8c871c8d0e
+key ctrl+q
+clean exit 0

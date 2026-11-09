@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                             app · service checkout  ◆ devbox · production  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Deploy the release                                                                                   scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Deploy the release     custom · here   
+  › Deploy the release  custom  here  Current folder · trusted                   ────────────────────────────────────   
+                                                                                 Does       asks for a password,        
+                                                                                            then for confirmation       
+                                                                                 Runs       ./deploy.sh                 
+                                                                                 In         /srv/app                    
+                                                                                 Host       devbox · production ·       
+                                                                                            over SSH                    
+                                                                                 Scope      here                        
+                                                                                 Why        Current folder · trusted    
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Set an alias… · Show        
+                                                                                            configuration               
+                                                                                            diagnostics · Pin ·         
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ /srv/app                                                                                            truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Esc Clear  …     Esc never quits · Ctrl+Q quits 

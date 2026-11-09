@@ -1,0 +1,7 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-discovery", "--frame", "12", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources 6076ffc60dd22aa6
+checkpoint 001: visible 6 of 9 6076ffc60dd22aa6
+type 6 UTF-8 bytes
+checkpoint 002: visible unavailable · Cannot 7489fbe47c7af033
+key ctrl+q
+clean exit 0

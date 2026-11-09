@@ -1,0 +1,243 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+resize 121x40
+checkpoint 002: visible 121×40 7fc50d1e8f413e18
+resize 120x40
+checkpoint 003: visible 120×40 ddfae927c9ff25d2
+checkpoint 004: visible dev-db.internal.acme.io ddfae927c9ff25d2
+checkpoint 005: settled ddfae927c9ff25d2
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: development connected 1615509862a77c56
+key home
+checkpoint 007: focus home f059be5dec79d3d0
+key down
+checkpoint 008: focus down 2d082784dc7e841f
+key down
+checkpoint 009: focus down 99365e5c04236ee8
+key down
+checkpoint 010: focus down 4c34bdb7c08ecc95
+key down
+checkpoint 011: focus down 9453f6fb0575be9b
+key down
+checkpoint 012: focus down c47c82bd2e702b31
+key down
+checkpoint 013: focus down 5245d373ffff7934
+key enter
+checkpoint 014: visible order_number 37158f77d82923fd
+checkpoint 015: visible 10000 37158f77d82923fd
+key right
+key right
+key right
+key right
+key right
+key right
+key right
+checkpoint 016: settled 73d169c2ccabd65f
+checkpoint 017: visible shipping_address 73d169c2ccabd65f
+key enter
+checkpoint 018: address viewer 413449a09972d0a0
+type 8 UTF-8 bytes
+checkpoint 019: settled 29d6b55ff544e871
+key escape
+checkpoint 020: address viewer closed 8e1c19834cee56a1
+key right
+checkpoint 021: settled 410898cef34c2106
+key enter
+checkpoint 022: notes key dddd3083a57c74fa
+key escape
+checkpoint 023: notes viewer closed f046516988cac082
+key down
+checkpoint 024: focus down 4c657a5f2bd832f4
+key enter
+checkpoint 025: notes key e30284b7a296f3a6
+key escape
+checkpoint 026: absent Apply b5cf149343c69550
+key left
+key left
+key left
+key left
+key left
+key left
+key left
+key left
+checkpoint 027: settled a30901f43760c452
+key enter
+checkpoint 028: visible Apply 283fb3fbcaedf893
+key ctrl+l
+key backspace
+type 10 UTF-8 bytes
+checkpoint 029: visible not-a-uuid 5050289c394aff5c
+key enter
+checkpoint 030: reject not-a-uuid 6783f716edfcf342
+key escape
+checkpoint 031: cancel not-a-uuid d6116ee6e2405ef9
+key enter
+checkpoint 032: visible Apply 283fb3fbcaedf893
+key ctrl+l
+key backspace
+type 36 UTF-8 bytes
+checkpoint 033: visible ddd-eeeeeeeeeeee e3fa74708f6817b0
+key enter
+checkpoint 034: commit aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee 2f26dfb30a339b98
+key right
+checkpoint 035: settled b8b209a596aa9ec3
+key enter
+checkpoint 036: visible order_number is read-only 3f646069ec84f612
+key right
+key right
+key right
+checkpoint 037: settled 036ea15bd568fb36
+key enter
+checkpoint 038: visible Apply e201b0fbd4b2c498
+key ctrl+l
+key backspace
+type 4 UTF-8 bytes
+checkpoint 039: visible nope deb0c98b4ae96648
+key enter
+checkpoint 040: reject nope 04b36b5302512624
+key escape
+checkpoint 041: cancel nope 832aa541203a554f
+key enter
+checkpoint 042: visible Apply e201b0fbd4b2c498
+key ctrl+l
+key backspace
+type 8 UTF-8 bytes
+checkpoint 043: visible refunded e201b0fbd4b2c498
+key enter
+checkpoint 044: commit refunded 4382f46892f92ab9
+key right
+checkpoint 045: settled b04934fad2286ca2
+key enter
+checkpoint 046: visible Apply ddb1b36022e886f9
+key ctrl+l
+key backspace
+type 4 UTF-8 bytes
+checkpoint 047: visible nope 7da6caaeaf4e5dab
+key enter
+checkpoint 048: reject nope 4e46c98cdd3cbc83
+key escape
+checkpoint 049: cancel nope e44d4e2d32fbc5b0
+key enter
+checkpoint 050: visible Apply ddb1b36022e886f9
+key ctrl+l
+key backspace
+type 5 UTF-8 bytes
+checkpoint 051: visible 42.50 85fa02f661582edb
+key enter
+checkpoint 052: commit 42.50 340643bf49284f11
+key right
+key right
+key right
+checkpoint 053: settled 61ad7008dba92ac3
+key enter
+checkpoint 054: visible Apply 4954d98d0b910e65
+key ctrl+l
+key backspace
+type 9 UTF-8 bytes
+checkpoint 055: visible desk-note 8a8429cb7db278bb
+key enter
+checkpoint 056: commit desk-note caac79451aa225ec
+key right
+key right
+checkpoint 057: settled e39111f835338166
+key enter
+checkpoint 058: visible Apply 0f46eb7c04be4588
+key ctrl+l
+key backspace
+type 9 UTF-8 bytes
+checkpoint 059: visible yesterday e926555b72a727b3
+key enter
+checkpoint 060: reject yesterday 4ede659bbd1bbf01
+key escape
+checkpoint 061: cancel yesterday 91a9ccbc25293b92
+key enter
+checkpoint 062: visible Apply 0f46eb7c04be4588
+key ctrl+l
+key backspace
+type 10 UTF-8 bytes
+checkpoint 063: visible 2020-01-01 9f6666a4846fafc9
+key enter
+checkpoint 064: commit 2020-01-01 b47d2363f7d0466e
+key delete
+checkpoint 065: nullable clear 0b25c4513a9996c0
+key right
+checkpoint 066: settled 9415ddd7bb67da4b
+key enter
+checkpoint 067: bool toggle 8c1c3d6364717d61
+key delete
+checkpoint 068: not null clear 8c1c3d6364717d61
+key left
+key left
+key left
+key left
+key left
+key left
+key left
+key left
+key left
+key left
+checkpoint 069: settled 6af167cef56d0a5c
+key down
+checkpoint 070: focus down 421df69c72a5f22c
+key -
+checkpoint 071: row marked 421df69c72a5f22c
+key up
+checkpoint 072: back to edited row f0020b2d4c142412
+key right
+key right
+key right
+key right
+key right
+key right
+key right
+checkpoint 073: settled e73d6a589443fe08
+key alt+d
+checkpoint 074: duplicated notes e73d6a589443fe08
+key home
+checkpoint 075: duplicated primary 96014ab91ad97330
+key +
+key home
+checkpoint 076: inserted row a1ce5394e732c851
+key ctrl+home
+key down
+key right
+key right
+key right
+key right
+key right
+key right
+key right
+key right
+checkpoint 077: settled 1f91f5f9e1b2ff9e
+checkpoint 078: edited row visible 1f91f5f9e1b2ff9e
+checkpoint 079: absent Connected to Development 1f91f5f9e1b2ff9e
+checkpoint 080: absent order_number is read-only ec3d6f69c1712b63
+resize 121x40
+checkpoint 081: visible 121×40 d504a89e0eed6218
+resize 120x40
+checkpoint 082: visible 120×40 ec3d6f69c1712b63
+checkpoint 083: settled ec3d6f69c1712b63
+precondition 
+visual pre_refactor/t02_editors/t02_editors_types_120x40 candidate 1c07febe67f552c35b8aa8ff806814d6c1a2207342d26d54c9f44ffb9116d581
+capture-only pre_refactor/t02_editors/t02_editors_types_120x40: Failure(CheckFailure { test_id: "pre_refactor/t02_editors/t02_editors_types_120x40", gate: State, reason: Missing, candidate_sha256: "1c07febe67f552c35b8aa8ff806814d6c1a2207342d26d54c9f44ffb9116d581", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-editors-types-35782-1793901166733431000-0/check-artifacts/pre_refactor/t02_editors/t02_editors_types_120x40/1c07febe67f552c35b8aa8ff806814d6c1a2207342d26d54c9f44ffb9116d581/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-editors-types-35782-1793901166733431000-0/check-artifacts/pre_refactor/t02_editors/t02_editors_types_120x40/1c07febe67f552c35b8aa8ff806814d6c1a2207342d26d54c9f44ffb9116d581/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-editors-types-35782-1793901166733431000-0/check-artifacts/pre_refactor/t02_editors/t02_editors_types_120x40/1c07febe67f552c35b8aa8ff806814d6c1a2207342d26d54c9f44ffb9116d581/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 084: 80x24 redraw 7fc277c55670ee02
+resize 81x24
+checkpoint 085: narrow nudge cadaa7a6d1da940d
+resize 80x24
+checkpoint 086: narrow restored 52b1f32139f388f1
+checkpoint 087: settled 7fc277c55670ee02
+precondition 
+visual pre_refactor/t02_editors/t02_editors_types_narrow candidate 7ca5bd4d086cb42494b51ad8509f58f86023009a1074021773b6e9ab45593e1b
+capture-only pre_refactor/t02_editors/t02_editors_types_narrow: Failure(CheckFailure { test_id: "pre_refactor/t02_editors/t02_editors_types_narrow", gate: State, reason: Missing, candidate_sha256: "7ca5bd4d086cb42494b51ad8509f58f86023009a1074021773b6e9ab45593e1b", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-editors-types-35782-1793901166733431000-0/check-artifacts/pre_refactor/t02_editors/t02_editors_types_narrow/7ca5bd4d086cb42494b51ad8509f58f86023009a1074021773b6e9ab45593e1b/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-editors-types-35782-1793901166733431000-0/check-artifacts/pre_refactor/t02_editors/t02_editors_types_narrow/7ca5bd4d086cb42494b51ad8509f58f86023009a1074021773b6e9ab45593e1b/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-editors-types-35782-1793901166733431000-0/check-artifacts/pre_refactor/t02_editors/t02_editors_types_narrow/7ca5bd4d086cb42494b51ad8509f58f86023009a1074021773b6e9ab45593e1b/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 088: visible 120×40 ec3d6f69c1712b63
+key ctrl+q
+checkpoint 089: visible Quit TablePro? f661a6ec056f4776
+key right
+key enter
+observed exit 0

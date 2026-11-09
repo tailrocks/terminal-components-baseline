@@ -1,0 +1,24 @@
+ ▪ Junie Design system  Overlays › Popups & tooltips      i Inspector   ? Help  
+                                                                                
+ Components      54  Popups & tooltips  Where popups go and how they close, th… 
+ ──────────────────                                                             
+    Overview          Playground    Options    States                           
+  ▸ App shell        ━━━━━━━━━━━━━──────────────────────────────────────────────
+  ▸ Inputs & forms                                                              
+  ▸ Tables             Popover                                         click · ┃
+  ▸ Navigation         ─────────────────────────────────────────────────────── ┃
+  ▾ Overlays           ▎Open popover ▾                                         ┃
+      Dialogs                                                                  ┃
+      Pickers          A menu anchored to its button: placement, fit and dismi ┆
+      Dialog kinds     are options.                                            ┆
+    › Popups & to…                                                             ┆
+      File browser                                                             ┆
+  ▸ Feedback           Tooltips                                     rest the p ┆
+  ▸ Layout             ─────────────────────────────────────────────────────── ┆
+  ▸ Text & code         Save draft    New tab                                  ┆
+  ▸ Screens                                                                    ┆
+                        ◆ production   eu-west-1                               ┆
+                                                                               ┆
+                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄ 
+                                                                                
+ Enter / Space Open popover  Tab Next                                           

@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                   svc · Rust project  mbp · local  
+                                                                                
+  Here                                                                          
+ ━━╭──────────────────────────────────────────────────────────────────── × ─╮── 
+   │                                                                        │›  
+   │  Push                                                                  │   
+   │                                                                        │   
+  ›│  Action        push feature/x of ~/work/svc to origin/feature/x        │   
+   │  Host          mbp · local                                             │   
+   │  In            ~/work/svc                                              │   
+   │  Scope         parent                                                  │   
+   │  Changes       the remote rejects it (fetch first) · nothing changes   │   
+   │  Risk          mutating                                                │   
+   │  Data          live · 0 s ago                                          │   
+   │  Confirmation  one explicit confirmation · not remembered              │   
+   │                                                                        │   
+   │  git -C /Users/alex/work/svc push                                      │   
+   │                                                                        │   
+   │                                                        Cancel   ▎Run   │   
+   │                                                                        │   
+   ╰────────────────────────────────────────────────────────────────────────╯   
+                                                                                
+ ~/work/svc/src/api   feature/x   ↓2 ↑1   • 1                 truecolor · 80×24 
+ ←→ Choose  Enter Run  Esc Cancel                                               

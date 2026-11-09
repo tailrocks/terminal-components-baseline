@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                 holla · Rust project  mbp · local                                          
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━───────────────────────────────────────────────────────────────────────                                         
+   Search actions and resources…                                scope ‹ here ›                                          
+                                                                                                                        
+    Suggested here                                                                                                      
+    Inspect 12 GB of generate…  disk      here  12 GB generated artifacts                                               
+    Pull                        git       here  branch is 3 commits behind                                              
+  › Rev╭───────────────────────────────╮  here  4 modified · 1 untracked                                                
+    Run│  Review 5 modified files      │  here  5 files changed since the las…                                          
+    Who│  Open                   Enter │  here  2 sessions blocked for 4 min                                            
+       │  Copy command               y │                                                                                
+    Rec│  Insert into shell            │                                                                                
+    not│ ───────────────────────────── │                                                                                
+       │  Open in a Git TUI (lazygit)  │                                                                                
+    Exp│ ───────────────────────────── │                                                                                
+     Ta│  Pin here                     │es   System                                                                     
+    Sys│  Set alias…                   │  host  available on this host                                                  
+       │  Hide here                    │                                                                                
+    → g│  Reset ranking                │us --short · here · read-only                                                   
+       │ ───────────────────────────── │                                                                                
+ ~/work│  Why is this here?            │                      truecolor · 80×24                                         
+ ↑↓ Mov╰───────────────────────────────╯c Close                                                                         
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        

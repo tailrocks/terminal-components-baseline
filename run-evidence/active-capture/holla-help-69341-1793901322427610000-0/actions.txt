@@ -1,0 +1,7 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "first-use", "--motion", "reduced", "--frame", "40", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources cf78c85991ba1321
+key f1
+checkpoint 001: visible Key reference 6d8b31f483a741ab
+key escape
+checkpoint 002: absent Key reference cf78c85991ba1321
+checkpoint 003: settled cf78c85991ba1321

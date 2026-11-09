@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                        acme › frontend · Node project · pnpm  mbp · local  
+  Here › Tasks                                                                                                          
+  Here › Tasks                                                                                                          
+ ━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search tasks…                                                                                        scope ‹ here ›  
+                                                                                                                        
+    Tasks · 22 entries                                                           Install missing tools ·… task · here   
+  › Install missing tools · …  task    here     1 tool missing                   ────────────────────────────────────   
+    Run tests                  task    here     2 files change…                  Does       install the tools this      
+    Run build                  task    here     defined by ~/w…                             configuration requests      
+    Run lint                   task    here     defined by ~/w…                             but the host lacks          
+    Start dev server           task    here     defined by ~/w…                  Runs       mise install --i…k-tools    
+    pnpm build                 script  here     package.json h…                  In         ~/work/acme/apps…rontend    
+    pnpm dev                   script  here     package.json h…                  Host       mbp · local                 
+    pnpm lint                  script  here     package.json h…                  Scope      here                        
+    pnpm test                  script  here     package.json h…                  Why        1 tool missing              
+    Deploy preview             custom  parent   Current folder…                  Changes    see the command             
+    Rotate local secrets       custom  parent   Current folder…  destructive     Risk       mutating                    
+    Run //services/api:migra…  task    sibling  defined by ~/w…                  Data       live · 0 s ago              
+    Run //services/api:test    task    sibling  defined by ~/w…                  Gate       one confirmation            
+    Run //tools/worker:test    task    sibling  defined by ~/w…                  Alt+Enter  Pin · Alias · Why here?     
+    Run test                   task    parent   defined by ~/w…                                                         
+    Run workspace setup        task    parent   defined by ~/w…                                                         
+    Start development ecosys…  task    parent   defined by ~/w…                                                         
+    Start development ecosys…  task    sibling  defined by ~/w…                                                         
+    Start development ecosys…  task    sibling  defined by ~/w…                                                         
+    Start required containers  task    parent   defined by ~/w…                                                         
+    Custom action configurat…  custom  here     configuration …                                                         
+    Show mise configuration    task    here     4 configuratio…                                                         
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/acme/apps/frontend   main   ↑1   • 2                   discovery complete                    truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Confirm…  Esc Back  …                   Ranking reset for this row · pins and aliases kept 

@@ -1,0 +1,26 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-discovery", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources 0eaadc72a7ad5be6
+type 6 UTF-8 bytes
+checkpoint 001: typed cargo ba0d07cd048758df
+paste 6 UTF-8 bytes
+checkpoint 002: pasted clippy 9e742523a2721550
+key backspace
+checkpoint 003: backspaced the query 3b221d1c0e16d55c
+key escape
+checkpoint 004: query cleared 0eaadc72a7ad5be6
+type 19 UTF-8 bytes
+checkpoint 005: empty query 614f24a0f863bc31
+key enter
+checkpoint 006: enter on an empty result 614f24a0f863bc31
+key escape
+checkpoint 007: discovery surface restored 0eaadc72a7ad5be6
+resize 80x24
+checkpoint 008: finder at 80x24 05654a9ffd29decb
+checkpoint 009: settled 271f9050ed4cb580
+precondition 
+visual pre_refactor/h01_finder/h01_finder_discovery_narrow candidate 627a2dbec7257c699917295e12347aca5c82be96dd90eae93d4316f372ecd8cd
+capture-only pre_refactor/h01_finder/h01_finder_discovery_narrow: Failure(CheckFailure { test_id: "pre_refactor/h01_finder/h01_finder_discovery_narrow", gate: State, reason: Missing, candidate_sha256: "627a2dbec7257c699917295e12347aca5c82be96dd90eae93d4316f372ecd8cd", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h01-finder-discovery-70911-1793900163704218000-6/check-artifacts/pre_refactor/h01_finder/h01_finder_discovery_narrow/627a2dbec7257c699917295e12347aca5c82be96dd90eae93d4316f372ecd8cd/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h01-finder-discovery-70911-1793900163704218000-6/check-artifacts/pre_refactor/h01_finder/h01_finder_discovery_narrow/627a2dbec7257c699917295e12347aca5c82be96dd90eae93d4316f372ecd8cd/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h01-finder-discovery-70911-1793900163704218000-6/check-artifacts/pre_refactor/h01_finder/h01_finder_discovery_narrow/627a2dbec7257c699917295e12347aca5c82be96dd90eae93d4316f372ecd8cd/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 010: finder back at 120x40 4212687d1a0604fc
+key ctrl+q
+clean exit 0

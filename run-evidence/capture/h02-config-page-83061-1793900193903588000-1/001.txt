@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          team · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Duplicate of a global id                                                                             scope ‹ here ›  
+                                                                                                                        
+                                                                                 Preview                                
+                                                                                 ────────────────────────────────────   
+                                                                                          Nothing to preview            
+                                                                                                                        
+                                                                                         Esc clears the query           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                  No matches for “Duplicate of a global id”                                                             
+                                                                                                                        
+           Esc clears the query · Ctrl+↑ widens to the parent scope                                                     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/team   main                                                            ▲ 2 config warnings   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

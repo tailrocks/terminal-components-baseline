@@ -1,0 +1,23 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Production 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 12, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 12, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+resize 121x40
+checkpoint 002: visible 121×40 3db31d315ff36533
+resize 120x40
+checkpoint 003: visible 120×40 05ffcfee7132f811
+checkpoint 004: visible prod-db-1.acme.io 05ffcfee7132f811
+key e
+checkpoint 005: visible Edit connection 15b6a7bf55032307
+key tab
+key tab
+checkpoint 006: settled 84fe3197e6d61ca6
+type 17 UTF-8 bytes
+key enter
+checkpoint 007: host draft committed 2f52642ed0026bad
+key escape
+checkpoint 008: close dialog bce2cb549b58860d
+checkpoint 009: settled bce2cb549b58860d
+precondition unsaved dialog from Close at 120 by 40, before Stay
+visual pre_refactor/t01_leave/t01_leave_guards_120x40 candidate 04de29a2c931f8aa5376b15e8af628efcb04505b0d298490e1e4ed02001c0e1b

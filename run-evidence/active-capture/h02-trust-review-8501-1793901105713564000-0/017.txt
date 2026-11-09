@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                        acme › frontend · Node project · pnpm  mbp · local  
+                                                                                                                        
+  Here    deploy preview ! ×                                                                                            
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Deploy preview                                                                                       scope ‹ here ›  
+                                                                                                                        
+    Results · 2                                                                  Deploy preview       custom · parent   
+  › Deploy preview  custom    parent  Current folder · trusted                   ────────────────────────────────────   
+    deploy preview  activity  parent  ! failed · 0 s                             Does       push the current branch     
+                                                                                            to the preview stack        
+                                                                                 Runs       tools/deploy-pre…preview    
+                                                                                 In         ~/work/acme                 
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      parent                      
+                                                                                 Why        Current folder · trusted    
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Set an alias… · Show        
+                                                                                            configuration               
+                                                                                            diagnostics · Pin ·         
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/acme/apps/frontend   main   ↑1   • 2                                                         truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

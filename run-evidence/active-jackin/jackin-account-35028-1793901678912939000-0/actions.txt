@@ -1,0 +1,49 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/jackin ["--scenario", "accounts-mixed", "--motion", "paused", "--frame", "40"] 120x40 color=Some("nocolor") clock=true
+checkpoint 000: visible Overview a3796865f21277ea
+key a
+checkpoint 001: visible New account 4987e7fa7b5d60b1
+checkpoint 002: visible Save 4987e7fa7b5d60b1
+mouse Press { x: 87, y: 33, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 87, y: 33, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 003: visible Required a45a69e23d77275a
+key enter
+type 5 UTF-8 bytes
+key tab
+key tab
+key tab
+key down
+key down
+checkpoint 004: visible API key a45a69e23d77275a
+key tab
+key enter
+type 23 UTF-8 bytes
+checkpoint 005: visible •••••••••••• f7ad5bd2baf8e647
+key tab
+checkpoint 006: visible 1234 866a0ff0de6a69c8
+checkpoint 007: visible Save 866a0ff0de6a69c8
+mouse Press { x: 87, y: 33, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 87, y: 33, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 008: visible Saved Claude · Spare d9aafdc92aff62fc
+key d
+checkpoint 009: visible Remove account Spare? 7842120f98ffdc51
+key escape
+checkpoint 010: visible Cancelled · account kept 89c7fad7da3e88c4
+checkpoint 011: visible Accounts › Claude › Spare 89c7fad7da3e88c4
+key d
+checkpoint 012: visible Remove account Spare? 10263c4450525c64
+checkpoint 013: visible Remove 10263c4450525c64
+mouse Press { x: 77, y: 23, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 77, y: 23, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 014: visible Removed Claude · Spare 476ffca47e053b86
+key /
+checkpoint 015: visible Filter accounts e7283ab72a8dab69
+type 5 UTF-8 bytes
+checkpoint 016: account filter contains the removed name f58ad529e3ef3a4d
+key enter
+checkpoint 017: visible Accounts · filt 09100af38c2e6940
+checkpoint 018: settled 09100af38c2e6940
+precondition 
+visual functional/jackin_account_remove candidate 1df4116dbb0b3230afa8d57ecb5143cd291eb6b9ab8fda0fbbe9cbe9be383a63
+capture-only functional/jackin_account_remove: Failure(CheckFailure { test_id: "functional/jackin_account_remove", gate: State, reason: Missing, candidate_sha256: "1df4116dbb0b3230afa8d57ecb5143cd291eb6b9ab8fda0fbbe9cbe9be383a63", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-account-35028-1793901678912939000-0/check-artifacts/functional/jackin_account_remove/1df4116dbb0b3230afa8d57ecb5143cd291eb6b9ab8fda0fbbe9cbe9be383a63/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-account-35028-1793901678912939000-0/check-artifacts/functional/jackin_account_remove/1df4116dbb0b3230afa8d57ecb5143cd291eb6b9ab8fda0fbbe9cbe9be383a63/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-account-35028-1793901678912939000-0/check-artifacts/functional/jackin_account_remove/1df4116dbb0b3230afa8d57ecb5143cd291eb6b9ab8fda0fbbe9cbe9be383a63/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

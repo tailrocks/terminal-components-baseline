@@ -1,0 +1,22 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.09s
+────────────
+ Nextest run ID 35003b9c-47e1-4d3c-894a-e29483aea75f with nextest profile: default
+    Starting 2 tests across 1 binary (1094 tests skipped)
+       START [         ] (1/2) junie-tui::functional lifecycle::showcase_help_survives_shrink_and_growth_and_returns_focus
+
+running 1 test
+test lifecycle::showcase_help_survives_shrink_and_growth_and_returns_focus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.15s
+
+        PASS [   3.160s] (1/2) junie-tui::functional lifecycle::showcase_help_survives_shrink_and_growth_and_returns_focus
+       START [         ] (2/2) junie-tui::functional lifecycle::showcase_popover_survives_resize_and_escape_returns_focus
+
+running 1 test
+test lifecycle::showcase_popover_survives_resize_and_escape_returns_focus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.99s
+
+        PASS [   2.000s] (2/2) junie-tui::functional lifecycle::showcase_popover_survives_resize_and_escape_returns_focus
+────────────
+     Summary [   5.161s] 2 tests run: 2 passed, 1094 skipped

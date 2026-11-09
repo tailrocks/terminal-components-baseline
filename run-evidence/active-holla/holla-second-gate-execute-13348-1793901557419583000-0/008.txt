@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          no project  devbox · development  
+                                                                                                                        
+  Here    Clean Docker completely ⠏ ×                                                                                   
+ ────────━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────── 
+  Clean Docker completely · 0 of 7 done · 02 waits for 01                                                        ⠏ 0 s  
+  ─────────────────────────────────────────────────────   0%                                                            
+                                                                                                                        
+        step                                                         ╭─ 01 Stop running containers ─────────── ready ─╮ 
+ ▎ · 01 Stop running containers      –            ·     ready        │                                                │ 
+   · 02 Remove containers            01           ·     waits 01     │                                                │ 
+   · 03 Remove unused images         02           a     waits 02     │                                                │ 
+   · 04 Prune networks               02           b     waits 02     │                                                │ 
+   · 05 Prune volumes                02           c     waits 02     │                                                │ 
+   · 06 Prune builder and Buildx c…  02           d     waits 02     │                                                │ 
+   · 07 Rescan and report            03 04 05 06  join  waits 03     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     ╰────────────────────────────────────────────────╯ 
+                                                                                                                        
+ /work/scratch                                        waiting                                        truecolor · 120×40 
+ ↑↓ Step  Enter Expand output  Ctrl+C Cancel remaining  x Close  Esc Back to Here       Clean Docker completely started 

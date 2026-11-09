@@ -1,0 +1,16 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "first-use", "--frame", "40", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Analyze disk usage cf78c85991ba1321
+key home
+checkpoint 001: row A selected cf78c85991ba1321
+key down
+checkpoint 002: row B selected 658d1cd083c36ef2
+key alt+enter
+checkpoint 003: alternatives for row B ab0367fb613e4097
+key end
+checkpoint 004: Why item focused 9c9e3100c3dc5c5c
+key enter
+checkpoint 005: why modal for row B 88153fdbbf858c11
+key escape
+checkpoint 006: why closed on row B 658d1cd083c36ef2
+key ctrl+q
+clean exit 0

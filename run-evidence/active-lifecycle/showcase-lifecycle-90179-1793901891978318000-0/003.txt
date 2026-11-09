@@ -1,0 +1,24 @@
+ ▪ Junie Design system  Overview      truecolor · 80×24   i Inspector   ? Help  
+                                                                                
+ Compone╭─ Keyboard & mouse ────────────────────────── 1–16 of 30 ─ × ─╮ent     
+ ───────│  Shell                                                      ┃│        
+  › Over│  F1 ?        This reference                                 ┃│        
+  ▸ App │  F10 Ctrl+F2 Menu bar                                       ┃│────────
+  ▸ Inpu│  Ctrl+PgDn ] Next page                                      ┃│        
+  ▸ Tabl│  Ctrl+PgUp [ Previous page                                  ┃│       ┃
+  ▸ Navi│  0           Jump to navigation                             ┃│────── ┆
+  ▸ Over│  i           The Inspector                                  ┃│#00000 ┆
+  ▸ Feed│  Tab         Next control                                   ┃│#11111 ┆
+  ▸ Layo│  Shift+Tab   Previous control                               ┆│#18181 ┆
+  ▸ Text│  Esc         Back                                           ┆│#27272 ┆
+  ▸ Scre│  Ctrl+Q q    Quit                                           ┆│#1e1e2 ┆
+        │  Ctrl+C      Copy, else quit                                ┆│#2f2f3 ┆
+        │                                                             ┆│#3f3f4 ┆
+        │  Sidebar                                                    ┆│#2f5aa ┆
+        │  ↑↓          Move                                           ┆│#7a2a2 ┆
+        │  PgUp PgDn   Page                                           ┆│#1f346 ┆
+        │                                                      ▎Done   │#3a3a3 ┆
+        ╰──────────────────────────────────────────────────────────────╯#4d4d4 ┆
+                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄ 
+                                                                                
+ ↑↓ Scroll  Esc Close                                                           

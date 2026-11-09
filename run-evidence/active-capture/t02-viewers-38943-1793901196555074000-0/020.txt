@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T orders ×                                                                                         +   
+ ───────────────━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › orders ────────────────────────────────────────────────────────── 14 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   ‹6    currency    shipping_address                          notes             6›   │ 
+ │      ▾ Tables             │││  ▎    1 USD         {"line1": "104 Calle Mayor", "city": "S…  Customer asked f…    ┃ │ 
+ │        ▸ T organizations  │││       2 USD         {"line1": "87 Nevsky Ave", "city": "Mil…  NULL                 ┆ │ 
+ │        ▸ T customers      │││       3 EUR         {"line1": "78 Via Roma", "city": "Toron…  Second attempt a…    ┆ │ 
+ │        ▸ T products       │││       4 EUR         {"line1": "152 Market St", "city": "Par…  Leave at recepti…    ┆ │ 
+ │        ▸ T orders         │││       5 USD         {"line1": "179 Market St", "city": "Lis…  Replace damaged …    ┆ │ 
+ │        ▸ T order_items    │││       6 GBP         {"line1": "152 Calle Mayor", "city": "T…  Gift wrap, no pr…    ┆ │ 
+ │        ▸ T payments       │││       7 GBP         {"line1": "3 Rue de Rivoli", "city": "B…  NULL                 ┆ │ 
+ │        ▸ T subscriptions  │││       8 EUR         NULL                                      Second attempt a…    ┆ │ 
+ │      ▸ Views              │││       9 USD         {"line1": "196 Market St", "city": "Par…  NULL                 ┆ │ 
+ │      ▸ Functions          │││      10 EUR         {"line1": "164 Nevsky Ave", "city": "To…  NULL                 ┆ │ 
+ │      ▸ Sequences          │││      11 USD         {"line1": "100 Queen St", "city": "Pari…  Gift wrap, no pr…    ┆ │ 
+ │    ▸ S analytics          │││      12 USD         {"line1": "32 Calle Mayor", "city": "To…  NULL                 ┆ │ 
+ │    ▸ S audit              │││      13 USD         {"line1": "3 Calle Mayor", "city": "Lis…  NULL                 ┆ │ 
+ │                           │││      14 GBP         {"line1": "53 Kungsgatan", "city": "Sto…  Leave at recepti…    ┆ │ 
+ │                           │││      15 USD         {"line1": "6 Kungsgatan", "city": "Madr…  Gift wrap, no pr…    ┆ │ 
+ │                           │││      16 USD         {"line1": "55 Nevsky Ave", "city": "Lis…  Leave at recepti…    ┆ │ 
+ │                           │││      17 USD         {"line1": "139 Kungsgatan", "city": "St…  NULL                 ┆ │ 
+ │                           │││      18 USD         {"line1": "125 Rue de Rivoli", "city": …  NULL                 ┆ │ 
+ │                           │││      19 USD         {"line1": "66 Queen St", "city": "Lisbo…  NULL                 ┆ │ 
+ │                           │││      20 EUR         {"line1": "115 Kungsgatan", "city": "Ma…  NULL                 ┆ │ 
+ │                           │││      21 USD         NULL                                      NULL                 ┆ │ 
+ │                           │││      22 USD         {"line1": "43 Hauptstrasse", "city": "S…  NULL                 ┆ │ 
+ │                           │││      23 EUR         {"line1": "32 Queen St", "city": "San F…  Gift wrap, no pr…    ┆ │ 
+ │                           │││      24 USD         NULL                                      NULL                 ┆ │ 
+ │                           │││      25 USD         {"line1": "41 Market St", "city": "Toro…  NULL                 ┆ │ 
+ │                           │││      26 USD         {"line1": "10 Via Roma", "city": "Paris…  Replace damaged …    ┆ │ 
+ │                           │││         ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 500 loaded · 1,203,338 total · cols 7–8 of 14                         │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓←→ Cell  Enter Edit  Alt+D Duplicate row  …          Copied 90 characters · {"line1": "104 Calle Mayor", "city": "S… 

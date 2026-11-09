@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                     payments · service checkout  ◆ prod-eu-1 · production  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                      scope ‹ parent ›  
+                                                                                                                        
+                                                                                 Preview                                
+                                                                                 ────────────────────────────────────   
+                                                                                          Nothing to preview            
+                                                                                                                        
+                                                                                       Ctrl+↑ widens the scope          
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                     No project root above /srv/payments                                                                
+                                                                                                                        
+               Esc clears the query · Ctrl+↓ narrows the scope                                                          
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ /srv/payments   detached @ v2.14.3                     scope parent · payments                      truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Esc Back to Here  …             Scope parent · no root above 

@@ -1,0 +1,40 @@
+  ▪  TablePro  Connections  6 saved                                                         truecolor · 120×40  ? help  
+                                                                                                                        
+ ╭─ Connections ─────────────────── 6 ─╮    Edit connection                                               Ctrl+S Save   
+ │                                     │    ─────────────────────────────────────────────────────────────────────────   
+ │   Filter connections                │     Basic    Advanced                                                          
+ │  ▾ Personal                         │    ━━━━━━━━─────────────────────────────────────────────────────────────────   
+ │        Local PostgreSQL         pg  │                                                                                
+ │        Scratch              sqlite  │      Name *                                      Environment                   
+ │  ▾ Acme                             │      Production                                 ( ) local                      
+ │      · Development              pg  │                                                 ( ) development                
+ │      ◇ Staging                  pg  │      Engine                                     ( ) staging                    
+ │      ◆ Analytics             mysql  │      PostgreSQL                          ▾      (●) production                 
+ │      ◆ Production               pg  │                                                                                
+ │                                     │      Host  optional              Port            Group                         
+ │                                     │      prod-db-2.acme.io           5432            Acme                     ▾    
+ │                               ╭──────────────────────────────────────────────── × ─╮                                 
+ │                               │                                                    │   Safe Mode                     
+ │                               │  Unsaved changes                                   │  ( ) Silent                     
+ │                               │                                                    │  ( ) Alert                      
+ │                               │  Save before leaving? Unsaved changes would be     │  ( ) Alert (Full)               
+ │                               │  lost.                                             │  (●) Safe Mode                  
+ │                               │                                                    │  ( ) Safe Mode (Full)           
+ │                               │                        Cancel    Discard   ▎Save   │  ( ) Read-Only                  
+ │                               │                                                    │   Writes ask for confirmation   
+ │                               ╰────────────────────────────────────────────────────╯   and a deliberate …            
+ │                                     │     [ ] Prompt for password on connect                                         
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │     Test connection    Cancel    Save    Save & connect                        
+ ╰─────────────────────────────────────╯                                                                                
+                                                                                                                        
+ ←→ Choose  Enter Save  Esc Cancel                                                                                      

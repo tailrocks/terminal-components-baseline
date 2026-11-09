@@ -1,0 +1,2 @@
+spawn /bin/sh ["-c", "i=0; while :; do printf '%s\\n' \"$i\"; i=$((i+1)); done"] 80x24 color=None clock=false
+stability deadline /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/harness-changing-60821-1793900132520363000-0

@@ -1,0 +1,94 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.12s
+────────────
+ Nextest run ID e7d26416-20c2-48de-a7d7-caf02a2dafeb with nextest profile: default
+    Starting 11 tests across 1 binary (1085 tests skipped)
+       START [         ] ( 1/11) junie-tui::functional tablepro::tablepro_clean_picker_close_is_immediate_and_picker_stays_usable
+
+running 1 test
+test tablepro::tablepro_clean_picker_close_is_immediate_and_picker_stays_usable ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 6.78s
+
+        PASS [   6.787s] ( 1/11) junie-tui::functional tablepro::tablepro_clean_picker_close_is_immediate_and_picker_stays_usable
+       START [         ] ( 2/11) junie-tui::functional tablepro::tablepro_connect_development_opens_workbench
+
+running 1 test
+test tablepro::tablepro_connect_development_opens_workbench ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 7.41s
+
+        PASS [   7.422s] ( 2/11) junie-tui::functional tablepro::tablepro_connect_development_opens_workbench
+       START [         ] ( 3/11) junie-tui::functional tablepro::tablepro_connection_failure_retries_then_another_connection_succeeds
+
+running 1 test
+test tablepro::tablepro_connection_failure_retries_then_another_connection_succeeds ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 9.80s
+
+        PASS [   9.810s] ( 3/11) junie-tui::functional tablepro::tablepro_connection_failure_retries_then_another_connection_succeeds
+       START [         ] ( 4/11) junie-tui::functional tablepro::tablepro_connections_landing_and_unreachable_detail
+
+running 1 test
+test tablepro::tablepro_connections_landing_and_unreachable_detail ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.57s
+
+        PASS [   3.585s] ( 4/11) junie-tui::functional tablepro::tablepro_connections_landing_and_unreachable_detail
+       START [         ] ( 5/11) junie-tui::functional tablepro::tablepro_delete_connection_cancel_then_confirm
+
+running 1 test
+test tablepro::tablepro_delete_connection_cancel_then_confirm ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.47s
+
+        PASS [   1.477s] ( 5/11) junie-tui::functional tablepro::tablepro_delete_connection_cancel_then_confirm
+       START [         ] ( 6/11) junie-tui::functional tablepro::tablepro_dirty_picker_close_matches_ctrl_w_and_cancel_preserves_sql
+
+running 1 test
+test tablepro::tablepro_dirty_picker_close_matches_ctrl_w_and_cancel_preserves_sql ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 6.40s
+
+        PASS [   6.410s] ( 6/11) junie-tui::functional tablepro::tablepro_dirty_picker_close_matches_ctrl_w_and_cancel_preserves_sql
+       START [         ] ( 7/11) junie-tui::functional tablepro::tablepro_filtered_picker_closes_requested_dirty_tab_and_preserves_active
+
+running 1 test
+test tablepro::tablepro_filtered_picker_closes_requested_dirty_tab_and_preserves_active ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 6.40s
+
+        PASS [   6.411s] ( 7/11) junie-tui::functional tablepro::tablepro_filtered_picker_closes_requested_dirty_tab_and_preserves_active
+       START [         ] ( 8/11) junie-tui::functional tablepro::tablepro_history_rerun_and_help_and_layout
+
+running 1 test
+test tablepro::tablepro_history_rerun_and_help_and_layout ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 13.62s
+
+        PASS [  13.630s] ( 8/11) junie-tui::functional tablepro::tablepro_history_rerun_and_help_and_layout
+       START [         ] ( 9/11) junie-tui::functional tablepro::tablepro_query_select_results_and_error_recovery
+
+running 1 test
+test tablepro::tablepro_query_select_results_and_error_recovery ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 12.99s
+
+        PASS [  13.006s] ( 9/11) junie-tui::functional tablepro::tablepro_query_select_results_and_error_recovery
+       START [         ] (10/11) junie-tui::functional tablepro::tablepro_resize_and_too_small_recovers
+
+running 1 test
+test tablepro::tablepro_resize_and_too_small_recovers ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 7.66s
+
+        PASS [   7.676s] (10/11) junie-tui::functional tablepro::tablepro_resize_and_too_small_recovers
+       START [         ] (11/11) junie-tui::functional tablepro::tablepro_write_confirmation_cancels_retries_and_executes_only_when_armed
+
+running 1 test
+test tablepro::tablepro_write_confirmation_cancels_retries_and_executes_only_when_armed ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 7.46s
+
+        PASS [   7.486s] (11/11) junie-tui::functional tablepro::tablepro_write_confirmation_cancels_retries_and_executes_only_when_armed
+────────────
+     Summary [  83.703s] 11 tests run: 11 passed, 1085 skipped

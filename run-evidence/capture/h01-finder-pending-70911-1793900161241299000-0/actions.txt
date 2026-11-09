@@ -1,0 +1,6 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-discovery", "--frame", "0", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources 5fd4e880c4dcfe7a
+type 6 UTF-8 bytes
+checkpoint 001: visible No matches for 1da36202775609a8
+key ctrl+q
+clean exit 0

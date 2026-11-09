@@ -1,0 +1,1 @@
+reference binary refused in candidate mode: /private/tmp/tuiscotti-bulk-pr2-20261106/tests/functional/reference-bins/x86_64-unknown-linux-gnu/showcase sha256 c6cac7998489a8ed6bb427c126e25a3a8bb1027823809beb578c3cec28bebf4a

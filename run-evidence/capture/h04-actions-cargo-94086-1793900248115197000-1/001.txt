@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                        engine · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ cargo test                                                                                           scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  cargo test              cargo · here   
+  › cargo test  cargo  here  Cargo.toml here                                     ────────────────────────────────────   
+                                                                                 Does       run the tests with the      
+                                                                                            built-in harness ·          
+                                                                                            failures are named          
+                                                                                 Runs       cargo test                  
+                                                                                 In         ~/work/engine               
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        Cargo.toml here             
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/engine   main                                                                                truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

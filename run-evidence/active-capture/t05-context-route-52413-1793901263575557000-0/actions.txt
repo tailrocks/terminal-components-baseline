@@ -1,0 +1,22 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+key down
+checkpoint 005: explorer moved toward customers 99365e5c04236ee8
+key down
+checkpoint 006: explorer moved toward customers 4c34bdb7c08ecc95
+key down
+checkpoint 007: explorer moved toward customers 9453f6fb0575be9b
+key shift+f10
+checkpoint 008: visible Filter objects… 305dfe5c3fe78b78
+key esc
+checkpoint 009: row menu dismissed 1e97b54a8969b38b
+key ctrl+q
+clean exit 0

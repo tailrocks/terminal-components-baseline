@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  ✓ safe                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×                                                                                                     +   
+ ━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ › ╭─ Query 1 ────────────────────────────────────────────────────────────────────────────────────────────────────────╮ 
+   │   Run   Run all   Explain                                                                                        │ 
+ E │   ›  1 UPDATE organizations SET name = 'ExactMarkerT03' WHERE slug = 'northwind-labs'                            │ 
+ x │                                                                                                                  │ 
+ p │                                                                                                                  │ 
+ l │                                                                                                                  │ 
+ o │                                                                                                                  │ 
+ r │                   ╭──────────────────────────────────────────────────────────────────── × ─╮                     │ 
+ e │                   │                                                                        │                     │ 
+ r │                   │  Execute write query?                                                  │                     │ 
+   │                   │                                                                        │                     │ 
+   │                   │  Action      UPDATE                                                    │                     │ 
+   │  ─────────────────│  Target      Development · development · acme_prod · organizations     │──────────────────── │ 
+   │                   │  Scope       matching rows in organizations                            │                     │ 
+   │                   │  Reversible  Reversible by a compensating UPDATE                       │                     │ 
+   │                   │  Safe Mode   Safe Mode · type to confirm                               │                     │ 
+   │                   │                                                                        │                     │ 
+   │                   │  UPDATE organizations SET name = 'ExactMarkerT03' WHERE slug = 'nort…  │                     │ 
+   │                   │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄  │                     │ 
+   │                   │                                                                        │                     │ 
+   │                   │  Type organizations to confirm                                         │                     │ 
+   │                   │▎                                                                       │                     │ 
+   │                   │                                                                        │                     │ 
+   │                   │                                                    Cancel    Execute   │                     │ 
+   │                   │                                                                        │                     │ 
+   │                   ╰────────────────────────────────────────────────────────────────────────╯                     │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Type "organizations" to confirm  Esc Cancel                                         i Cancelled · nothing was executed 

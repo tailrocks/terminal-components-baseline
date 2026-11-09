@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-task-input", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 1e9cd1ad0c648932
+paste 11 UTF-8 bytes
+checkpoint 001: quick no-op selected af3a67c8069e4cdd
+key enter
+checkpoint 002: quick no-op finished c79e8e8563d7d84e
+key ctrl+w
+checkpoint 003: finished tab closed a1b44b3b01d9c7d4
+key ctrl+q
+clean exit 0

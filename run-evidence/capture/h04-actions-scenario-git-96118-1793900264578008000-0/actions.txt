@@ -1,0 +1,8 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-git-current", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 66e0c820f1c28617
+paste 15 UTF-8 bytes
+checkpoint 001: Show git status selected 3bda081aa2413f36
+key enter
+checkpoint 002: git status 424bfbc72453db3b
+key ctrl+q
+clean exit 0

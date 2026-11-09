@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   poly · Node project · yarn  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ deploy-prod                                                                                          scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  make deploy-prod       target · here   
+  › make deploy-prod  target  here  Makefile here                                ────────────────────────────────────   
+                                                                                 Does       Make deploy-prod from       
+                                                                                            Makefile · the recipe       
+                                                                                            runs through make           
+                                                                                 Runs       make deploy-prod            
+                                                                                 In         ~/work/poly                 
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        Makefile here               
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/poly                                                                                         truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Esc Clear  …     Esc never quits · Ctrl+Q quits 

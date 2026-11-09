@@ -1,0 +1,18 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--connect", "Local PostgreSQL", "--motion", "reduced", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Query 1 a4f5f52a50763f3a
+resize 60x20
+checkpoint 001: workbench at 60x20 22347b2f4809e534
+checkpoint 002: settled 22347b2f4809e534
+precondition 
+visual functional/tablepro_workbench_60x20 candidate 5892a42d0ee1ddccb4ab20b734092d2712deee4a69f7413ad9546975d15ad98c
+capture-only functional/tablepro_workbench_60x20: Failure(CheckFailure { test_id: "functional/tablepro_workbench_60x20", gate: State, reason: Missing, candidate_sha256: "5892a42d0ee1ddccb4ab20b734092d2712deee4a69f7413ad9546975d15ad98c", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-resize-31264-1793901655313103000-0/check-artifacts/functional/tablepro_workbench_60x20/5892a42d0ee1ddccb4ab20b734092d2712deee4a69f7413ad9546975d15ad98c/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-resize-31264-1793901655313103000-0/check-artifacts/functional/tablepro_workbench_60x20/5892a42d0ee1ddccb4ab20b734092d2712deee4a69f7413ad9546975d15ad98c/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-resize-31264-1793901655313103000-0/check-artifacts/functional/tablepro_workbench_60x20/5892a42d0ee1ddccb4ab20b734092d2712deee4a69f7413ad9546975d15ad98c/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 003: workbench recovered at 120x40 a4f5f52a50763f3a
+checkpoint 004: absent ✓ Connected to 92d6b74a9913d9a5
+checkpoint 005: settled 92d6b74a9913d9a5
+precondition 
+visual functional/tablepro_resize_60x20 candidate 99a44f43f2ce36d79c2af89c9e0cb46c9a15eba20f8c3a802d766ceac7c038a5
+capture-only functional/tablepro_resize_60x20: Failure(CheckFailure { test_id: "functional/tablepro_resize_60x20", gate: State, reason: Missing, candidate_sha256: "99a44f43f2ce36d79c2af89c9e0cb46c9a15eba20f8c3a802d766ceac7c038a5", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-resize-31264-1793901655313103000-0/check-artifacts/functional/tablepro_resize_60x20/99a44f43f2ce36d79c2af89c9e0cb46c9a15eba20f8c3a802d766ceac7c038a5/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-resize-31264-1793901655313103000-0/check-artifacts/functional/tablepro_resize_60x20/99a44f43f2ce36d79c2af89c9e0cb46c9a15eba20f8c3a802d766ceac7c038a5/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-resize-31264-1793901655313103000-0/check-artifacts/functional/tablepro_resize_60x20/99a44f43f2ce36d79c2af89c9e0cb46c9a15eba20f8c3a802d766ceac7c038a5/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key escape
+key ctrl+q
+clean exit 0

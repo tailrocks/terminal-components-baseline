@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local  
+                                                                                                                        
+  Here    frontend dev ⠸ ×    api dev ⠸ ×    api tests ✓ ×    logs · api worker sched… ⠸ ×    btm ○ ×                   
+ ───────────────────────────────────────────━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────── 
+  api tests · succeeded · 2 s · exit 0                                                     project · ~/work/acme · mbp  
+  started by Run api tests                                                                                              
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ cargo nextest run                                                                                               │ 
+ │     Compiling holla v0.3.1 (/Users/alex/work/holla)                                                                │ 
+ │      Finished `test` profile [unoptimized + debuginfo] target(s) in 1.80s                                          │ 
+ │      Starting 128 tests across 3 binaries                                                                          │ 
+ │          PASS [   0.012s] holla ranking::tests::aliases_beat_everything                                            │ 
+ │          PASS [   0.010s] holla plan::tests::exclusion_cascades                                                    │ 
+ │          PASS [   0.041s] holla app_tests::root_opens_with_suggestions                                             │ 
+ │          PASS [   0.009s] holla scope::tests::axis_moves_outward                                                   │ 
+ │          PASS [   0.221s] holla app_tests::two_gate_flow_needs_phrase                                              │ 
+ │          PASS [   0.013s] holla activity::tests::scripts_emit_in_order                                             │ 
+ │       Summary [   2.307s] 128 tests run: 128 passed, 0 skipped                                                     │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Open the failing test    Run tests again    Review 4 modified files                                            
+                                                                                                                        
+ ~/work/acme   main   ↑1                       succeeded · 2 s                        ⠸ 4 running    truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  Esc Back to Here  …       Copied $ cargo nextest run ·    Compiling holla v0.3.1… 

@@ -1,0 +1,38 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "first-use", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources 17665f1cc3f887ef
+paste 4 UTF-8 bytes
+checkpoint 001: port row selected 5d2d5079b6528210
+key enter
+checkpoint 002: arguments form 78387e31ac587749
+paste 10 UTF-8 bytes
+checkpoint 003: literal port text 30d6ff0d31c61bd8
+resize 121x40
+checkpoint 004: nudged afb3a0ac5466b5a7
+resize 120x40
+checkpoint 005: size restored 30d6ff0d31c61bd8
+checkpoint 006: settled 30d6ff0d31c61bd8
+precondition 
+visual pre_refactor/h02_validation/h02_validation_literal_120x40 candidate 60adb79832410f2b7d5fbb90c4147e2ead641cb8e478c0ce88539cad66181b9c
+capture-only pre_refactor/h02_validation/h02_validation_literal_120x40: Failure(CheckFailure { test_id: "pre_refactor/h02_validation/h02_validation_literal_120x40", gate: State, reason: Missing, candidate_sha256: "60adb79832410f2b7d5fbb90c4147e2ead641cb8e478c0ce88539cad66181b9c", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-validation-literal-89135-1793900209598497000-0/check-artifacts/pre_refactor/h02_validation/h02_validation_literal_120x40/60adb79832410f2b7d5fbb90c4147e2ead641cb8e478c0ce88539cad66181b9c/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-validation-literal-89135-1793900209598497000-0/check-artifacts/pre_refactor/h02_validation/h02_validation_literal_120x40/60adb79832410f2b7d5fbb90c4147e2ead641cb8e478c0ce88539cad66181b9c/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-validation-literal-89135-1793900209598497000-0/check-artifacts/pre_refactor/h02_validation/h02_validation_literal_120x40/60adb79832410f2b7d5fbb90c4147e2ead641cb8e478c0ce88539cad66181b9c/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 007: arguments at 80x24 4d4e64c39f69b14e
+resize 81x24
+checkpoint 008: nudged 3df75963e98d8c1e
+resize 80x24
+checkpoint 009: size restored e2bc7ababda1d87c
+checkpoint 010: settled 6ccdb89bfe78a9fc
+precondition 
+visual pre_refactor/h02_validation/h02_validation_literal_narrow candidate 360d26a3265a45f61bef0e26ae0e08d4262670297c3121136ed9f5b29f8af89d
+capture-only pre_refactor/h02_validation/h02_validation_literal_narrow: Failure(CheckFailure { test_id: "pre_refactor/h02_validation/h02_validation_literal_narrow", gate: State, reason: Missing, candidate_sha256: "360d26a3265a45f61bef0e26ae0e08d4262670297c3121136ed9f5b29f8af89d", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-validation-literal-89135-1793900209598497000-0/check-artifacts/pre_refactor/h02_validation/h02_validation_literal_narrow/360d26a3265a45f61bef0e26ae0e08d4262670297c3121136ed9f5b29f8af89d/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-validation-literal-89135-1793900209598497000-0/check-artifacts/pre_refactor/h02_validation/h02_validation_literal_narrow/360d26a3265a45f61bef0e26ae0e08d4262670297c3121136ed9f5b29f8af89d/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-validation-literal-89135-1793900209598497000-0/check-artifacts/pre_refactor/h02_validation/h02_validation_literal_narrow/360d26a3265a45f61bef0e26ae0e08d4262670297c3121136ed9f5b29f8af89d/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 011: arguments back at 120x40 93f8dc505061f68f
+key ctrl+u
+checkpoint 012: required port cleared a04e617b0bdf6469
+key ctrl+s
+checkpoint 013: empty submit stays on the form 6dda8e02e56d1840
+key escape
+checkpoint 014: validation edit cancelled aa8719935ca29afb
+key escape
+checkpoint 015: finder keeps the port row 5d2d5079b6528210
+key ctrl+q
+clean exit 0

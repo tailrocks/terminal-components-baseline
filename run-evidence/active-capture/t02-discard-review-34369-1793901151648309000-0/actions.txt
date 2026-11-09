@@ -1,0 +1,57 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+key ctrl+o
+checkpoint 005: visible Open Quickly 94b3872dfe017bb6
+type 13 UTF-8 bytes
+checkpoint 006: visible organizations 94b3872dfe017bb6
+key enter
+checkpoint 007: opened organizations 4ed72e141150f393
+checkpoint 008: visible public › organizations 4ed72e141150f393
+key right
+key enter
+checkpoint 009: visible Apply a25e1bc2c8164ad8
+key ctrl+l
+key backspace
+type 11 UTF-8 bytes
+key enter
+checkpoint 010: name edit committed 19184e71a05bc2c8
+key U
+checkpoint 011: visible Discard unsaved changes? f1cfc7bc00ba520e
+resize 121x40
+checkpoint 012: visible 121×40 c17c293eee4bc0ef
+resize 120x40
+checkpoint 013: visible 120×40 86a4d96adee4c778
+checkpoint 014: settled 86a4d96adee4c778
+precondition 
+visual pre_refactor/t02_discard/t02_discard_discard_120x40 candidate a91ed27fe06b47c21700577a50fc8775f9d329e80c58c9176e44705c449bbe91
+capture-only pre_refactor/t02_discard/t02_discard_discard_120x40: Failure(CheckFailure { test_id: "pre_refactor/t02_discard/t02_discard_discard_120x40", gate: State, reason: Missing, candidate_sha256: "a91ed27fe06b47c21700577a50fc8775f9d329e80c58c9176e44705c449bbe91", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-discard-review-34369-1793901151648309000-0/check-artifacts/pre_refactor/t02_discard/t02_discard_discard_120x40/a91ed27fe06b47c21700577a50fc8775f9d329e80c58c9176e44705c449bbe91/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-discard-review-34369-1793901151648309000-0/check-artifacts/pre_refactor/t02_discard/t02_discard_discard_120x40/a91ed27fe06b47c21700577a50fc8775f9d329e80c58c9176e44705c449bbe91/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-discard-review-34369-1793901151648309000-0/check-artifacts/pre_refactor/t02_discard/t02_discard_discard_120x40/a91ed27fe06b47c21700577a50fc8775f9d329e80c58c9176e44705c449bbe91/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 015: discard dialog at 80x24 d33e9c3c6aa4a601
+resize 81x24
+checkpoint 016: narrow nudge a3ec04c9bb9e3326
+resize 80x24
+checkpoint 017: narrow restored 8d6f91595206a2dd
+checkpoint 018: settled 4c8d642d6c1872d6
+precondition 
+visual pre_refactor/t02_discard/t02_discard_discard_narrow candidate b611ee8ce752c512a9bcc9cc3f735e67a34304402854e78158885974555947c7
+capture-only pre_refactor/t02_discard/t02_discard_discard_narrow: Failure(CheckFailure { test_id: "pre_refactor/t02_discard/t02_discard_discard_narrow", gate: State, reason: Missing, candidate_sha256: "b611ee8ce752c512a9bcc9cc3f735e67a34304402854e78158885974555947c7", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-discard-review-34369-1793901151648309000-0/check-artifacts/pre_refactor/t02_discard/t02_discard_discard_narrow/b611ee8ce752c512a9bcc9cc3f735e67a34304402854e78158885974555947c7/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-discard-review-34369-1793901151648309000-0/check-artifacts/pre_refactor/t02_discard/t02_discard_discard_narrow/b611ee8ce752c512a9bcc9cc3f735e67a34304402854e78158885974555947c7/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-discard-review-34369-1793901151648309000-0/check-artifacts/pre_refactor/t02_discard/t02_discard_discard_narrow/b611ee8ce752c512a9bcc9cc3f735e67a34304402854e78158885974555947c7/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 019: discard dialog back at 120x40 86a4d96adee4c778
+key enter
+checkpoint 020: cancel keeps the edit 6fe8b178b9485348
+key U
+checkpoint 021: visible Discard unsaved changes? 2e4e1ae1d7149911
+key right
+checkpoint 022: discard button focused cd358fab85862b12
+key enter
+checkpoint 023: confirm restored the cell 45e4affb047f5996
+key ctrl+q
+clean exit 0

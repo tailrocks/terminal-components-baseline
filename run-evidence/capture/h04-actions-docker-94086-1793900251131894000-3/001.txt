@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Stop acme-api-1                                                                                      scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Stop acme-api-1        docker · host   
+  › Stop acme-api-1  docker  host  container action                              ────────────────────────────────────   
+                                                                                 Does       docker stop acme-api-1 ·    
+                                                                                            graceful stop with the      
+                                                                                            default 10 s timeout ·      
+                                                                                            nothing is removed          
+                                                                                 Runs       docker stop acme-api-1      
+                                                                                 In         mbp · host-wide             
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      host                        
+                                                                                 Why        container action            
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       one confirmation            
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/stack                                                                                        truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Confirm…  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                   

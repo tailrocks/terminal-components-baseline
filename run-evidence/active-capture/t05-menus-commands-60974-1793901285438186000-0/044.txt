@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                        truecolor · 121×40  ? help  
+                                                                                                                         
+  ≡ Query 1 • ×    T products ×    H History ×                                                                       +   
+ ─────────────────────────────────━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query history ────────────────────────────────────────────────────────── 16 entries ─╮ 
+ │                           │││                                                                                       │ 
+ │   Filter objects          │││    Search history · terms are ANDed                scope: Development  ·  status: any │ 
+ │ ▎▾ D acme_prod            │││                                                                                       │ 
+ │    ▾ S public             │││   › SELECT name FROM pro… just now · 5 ms  │  Query               Editor · just now   │ 
+ │      ▾ Tables             │││   ! SELECT * FROM events WHE… 5 d ago · –  │  ─────────────────────────────────────   │ 
+ │        ▸ T organizations  │││     TRUNCATE analytics.… 4 d ago · 210 ms  │  ›  1 SELECT name FROM products          │ 
+ │        ▸ T customers      │││     SELECT email, full_na… 1 d ago · 7 ms  │     2 WHERE sku = 'SKU-01000' --         │ 
+ │        ▸ T products       │││     ALTER TABLE orders A… 1 d ago · 88 ms  │     3 t05_menus_marker                   │ 
+ │        ▸ T orders         │││     DELETE FROM audit.l… 5 h ago · 1.82 s  │                                          │ 
+ │        ▸ T order_items    │││                                            │                                          │ 
+ │        ▸ T payments       │││                                            │  Connection  Development · acme_prod.…   │ 
+ │        ▸ T subscriptions  │││                                            │  Duration    5 ms                        │ 
+ │      ▸ Views              │││                                            │  Rows        1                           │ 
+ │      ▸ Functions          │││                                            │                                          │ 
+ │      ▸ Sequences          │││                                            │   Open in new tab    Run in new tab      │ 
+ │    ▸ S analytics          │││                                            │   Copy                                   │ 
+ │    ▸ S audit              │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ │                           │││                                            │                                          │ 
+ ╰───────────────────────────╯│╰───────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                         
+ ↑↓ Move  Enter Open  → Expand  / Filter  Ctrl+O Quick open  Shift+F10 Menu  Tab Next             Opened public.products 

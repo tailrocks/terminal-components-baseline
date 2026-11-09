@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local  
+                                                                                                                        
+  Here    frontend dev ⠋ ×    api dev ⠋ ×    api tests ⠋ ×    logs · api worker sched… ⠋ ×    btm ⠋ ×                   
+ ────────────────────────────────────────────────────────────────────────────────────────────━━━━━━━━━━──────────────── 
+  btm · cancelling · 0 s                                                                                           mbp  
+  started by Open system monitor                                                                                        
+                                                                                                                        
+ ╭─ btm screen ─────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  btm 0.11.1 · attached · q quits the monitor, Ctrl+] returns to holla                                              │ 
+ │  stop requested by holla · SIGTERM to the process group                                                            │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                       ╭────────────────────────────────────────────────────────────────────╮                       │ 
+ │                       │ Activities                                                  5 live │                       │ 
+ │                       │  ⠋ frontend dev                 running · child · 0 s  activities  │                       │ 
+ │                       │  ⠋ api dev                      running · child · 0 s              │                       │ 
+ │                       │  ⠋ api tests                    running · project · …              │                       │ 
+ │                       │  ⠋ logs · api worker scheduler  running · here · 0 s               │                       │ 
+ │                       │  ◐ btm                          cancelling · host · …              │                       │ 
+ │                       │                                                                    │                       │ 
+ │                       │                                                                    │                       │ 
+ │                       ╰────────────────────────────────────────────────────────────────────╯                       │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/acme   main   ↑1                      ⠋ stopping · 0 s                        ⠋ 5 running    truecolor · 120×40 
+ ↑↓ Move  Enter Switch  Esc Cancel                                            Stopping btm · SIGTERM sent · output kept 

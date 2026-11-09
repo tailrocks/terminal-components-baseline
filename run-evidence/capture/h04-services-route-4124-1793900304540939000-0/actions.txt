@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-platforms", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 8b7507b82a7b381b
+paste 17 UTF-8 bytes
+checkpoint 001: finder row selected 69e217ac8fb391bb
+key enter
+checkpoint 002: snapshot open 8b3ce14e2bdf2ad1
+key esc
+checkpoint 003: back on Homebrew services 69e217ac8fb391bb
+key ctrl+q
+observed exit 0

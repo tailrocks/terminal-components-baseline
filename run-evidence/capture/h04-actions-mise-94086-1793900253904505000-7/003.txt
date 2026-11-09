@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here    upgrade mise-managed to… ✓ ×                                                                                  
+ ────────━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────── 
+  upgrade mise-managed tools · succeeded · 0 s · exit 0                                                            mbp  
+  $ mise upgrade · started by Upgrade mise-managed tools                                                                
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ mise upgrade                                                                                                    │ 
+ │  mise node 26.0.1 → 26.1.0 ✓                                                                                       │ 
+ │  mise python 3.13.5 → 3.13.7 ✓                                                                                     │ 
+ │  2 tools upgraded                                                                                                  │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~                                          succeeded · 0 s                                          truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  r Restart  Esc Back to Here  …       upgrade mise-managed tools finished · exit 0 

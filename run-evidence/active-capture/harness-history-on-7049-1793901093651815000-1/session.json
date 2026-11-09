@@ -1,0 +1,21 @@
+{
+  "TERM": "xterm-256color",
+  "args": [
+    "-c",
+    "printf 'HISTORY=%s\\n' \"$HOLLA_NO_HISTORY\""
+  ],
+  "binary_path": "/bin/sh",
+  "binary_sha256": "f338dc2ba97328cb8aa29c57a348abf3267de71ef42ee1adf293b179542f2962",
+  "clock": false,
+  "color": null,
+  "cols": 80,
+  "comparator_name": "tuiscotti FrozenStore state comparison",
+  "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+  "history": true,
+  "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+  "mode": "candidate",
+  "motion": null,
+  "platform": "macos",
+  "reference_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "rows": 24
+}

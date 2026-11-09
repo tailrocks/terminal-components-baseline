@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  ✓ safe                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×                                                                                                     +   
+ ━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ › ╭─ Query 1 ──────────────────────────────────────────────────────────────────────────────────────────────── 12 ms ─╮ 
+   │   Run   Run all   Explain                                                                                        │ 
+ E │   ›  1 UPDATE organizations SET name = 'ExactMarkerT03' WHERE slug = 'northwind-labs'                            │ 
+ x │                                                                                                                  │ 
+ p │                                                                                                                  │ 
+ l │                                                                                                                  │ 
+ o │                                                                                                                  │ 
+ r │                                                                                                                  │ 
+ e │                                                                                                                  │ 
+ r │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │  ───────────────────────────╭──────────────────────────────────────────────── × ─╮────────────────────────────── │ 
+   │   UPDATE organizations (8) ×│                                                    │                               │ 
+   │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━│  Quit TablePro?                                    │────────────────────────────── │ 
+   │   ✓ UPDATE organizations · 8│                                                    │                               │ 
+   │    Statement executed       │  1 unsaved query will be lost.                     │                               │ 
+   │    ─────────────────────────│                                                    │                               │ 
+   │    Statement      UPDATE org│                                  ▎Cancel    Quit   │                               │ 
+   │    Rows affected  8         │                                                    │                               │ 
+   │    Duration       12 ms     ╰────────────────────────────────────────────────────╯                               │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   │                                                                                                                  │ 
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ←→ Choose  Enter Cancel  Esc Cancel                                                 i Cancelled · nothing was executed 

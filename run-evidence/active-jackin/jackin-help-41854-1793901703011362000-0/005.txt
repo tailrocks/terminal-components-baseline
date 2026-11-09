@@ -1,0 +1,40 @@
+  jackin❯    File   Go   Help                        Workspaces › payments-platform  inside the Construct  ● 2 running  
+                                                                                                                        
+ ╭─ Workspaces ────────── 2 running ─╮ │  payments-platform                               saved workspace · 1 running   
+ │     Current directory             │ │  ───────────────────────────────────────────────────────────────────────────   
+ │   ▸ payme╭─ Keyboard shortcuts ──────────────────────────────────── Workspaces › paymen 1–29 of 30 ─ × ─╮            
+ │   ▸ infra│  Workspaces                                   Instances                                     ┃│            
+ │   ▸ relea│  ↑↓ j k      move                             Enter r     reconnect / restore               ┃│            
+ │   ▸ custo│  ←→ h l      collapse / expand                a           new session                       ┃│            
+ │     + New│  Space       fold workspace                   x           open shell                        ┃│            
+ │          │  Enter       launch                           i           inspect container                 ┃│y ★ ·       
+ │          │  e           edit workspace                   t           stop                              ┃│            
+ │          │  n           new workspace                    p           purge…                            ┃│            
+ │          │  d           delete…                                                                        ┃│            
+ │          │  w           prewarm                          Editor and Settings                           ┃│· 3 s ago   
+ │          │  o           open in GitHub                   ←→ 1–5 [ ]  switch tab                        ┃│            
+ │          │  * -         expand / collapse all            Ctrl+S      save (preview first)              ┃│            
+ │          │  Tab         details                          Space       toggle / cycle                    ┃│            
+ │          │                                               a e d       add / edit / remove               ┃│            
+ │          │  Everywhere                                   m p s       mask · 1Password · scope          ┃│            
+ │          │  F5          refresh now                                                                    ┃│            
+ │          │                                               Shell                                         ┃│            
+ │          │  Mouse                                        s           Settings                          ┃│            
+ │          │  click       select · 2× activates            c           Accounts                          ┃│            
+ │          │  wheel       scroll under pointer             u           Usage                             ┃│            
+ │          │  drag        seam · scrollbar thumb           F1 ?        This reference                    ┃│            
+ │          │                                               F10 Ctrl+F2 Menu bar                          ┃│            
+ │          │                                               Ctrl+PgDn   Next page                         ┃│            
+ │          │                                               Ctrl+PgUp   Previous page                     ┃│            
+ │          │                                               q           Leave this screen                 ┃│            
+ │          │                                               Tab         Next control                      ┃│            
+ │          │                                               Shift+Tab   Previous control                  ┃│            
+ │          │                                               Esc         Back                              ┃│            
+ │          │                                               Ctrl+Q      Quit                              ┃│            
+ │          │                                               Ctrl+C      Copy, else quit                   ┆│            
+ │          │                                                                                      ▎Done   │            
+ │          ╰──────────────────────────────────────────────────────────────────────────────────────────────╯            
+ │                                   │ │  Launch    Edit    Prewarm    Delete…                                          
+ ╰───────────────────────────────────╯ │                                                                                
+                                                                                                                        
+ ↑↓ Scroll  Esc Close                                                                                                   

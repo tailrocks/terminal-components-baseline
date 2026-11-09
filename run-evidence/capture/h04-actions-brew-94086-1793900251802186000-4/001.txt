@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Stop svc02                                                                                           scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Stop svc02            service · host   
+  › Stop svc02  service  host  error                                             ────────────────────────────────────   
+                                                                                 Does       brew services stop svc02    
+                                                                                            · currently error ·         
+                                                                                            every verb is offered       
+                                                                                            whatever the status says    
+                                                                                 Runs       brew services stop svc02    
+                                                                                 In         mbp · host-wide             
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      host                        
+                                                                                 Why        error                       
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work                                                                                              truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

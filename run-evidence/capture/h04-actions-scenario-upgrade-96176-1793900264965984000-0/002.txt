@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   Upgrade mise-managed tools                                                                           scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Upgrade mise-managed… upgrade · host   
+  › Upgrade mise-managed too…  upgrade  host  2 outdated tools                   ────────────────────────────────────   
+                                                                                 Does       mise upgrade · 2            
+                                                                                            outdated tools reach        
+                                                                                            their latest versions       
+                       ╭──────────────────────────────────────────────────────────────────── × ─╮upgrade                
+                       │                                                                        │ host-wide             
+                       │  Upgrade mise-managed tools                                            │ local                 
+                       │                                                                        │                       
+                       │  Action        mise upgrade · 2 outdated tools reach their latest      │dated tools            
+                       │                versions                                                │he command             
+                       │  Host          mbp · local                                             │ing                    
+                       │  In            mbp · host-wide                                         │· 0 s ago              
+                       │  Scope         host                                                    │onfirmation            
+                       │  Risk          mutating                                                │ Alias · Why here?     
+                       │  Data          live · 0 s ago                                          │                       
+                       │  Confirmation  one explicit confirmation · not remembered              │                       
+                       │                                                                        │                       
+                       │  mise upgrade                                                          │                       
+                       │                                                                        │                       
+                       │                                                        Cancel   ▎Run   │                       
+                       │                                                                        │                       
+                       ╰────────────────────────────────────────────────────────────────────────╯                       
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~                                                                                                   truecolor · 120×40 
+ ←→ Choose  Enter Run  Esc Cancel                                                                                       

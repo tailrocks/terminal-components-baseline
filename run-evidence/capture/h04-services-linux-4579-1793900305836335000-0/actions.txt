@@ -1,0 +1,14 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-platforms-linux", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 3387653b61910cc0
+paste 17 UTF-8 bytes
+checkpoint 001: finder row selected bf6557402f105bec
+key enter
+checkpoint 002: snapshot open 2c249a8e958e2c6a
+key esc
+checkpoint 003: finder restored bf6557402f105bec
+key esc
+checkpoint 004: visible Search actions and resources 3387653b61910cc0
+paste 20 UTF-8 bytes
+checkpoint 005: visible No matches for 8be8b436c16fab90
+key ctrl+q
+clean exit 0

@@ -1,0 +1,8 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-git-batch", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources 8fb98e0d8f9cdbfc
+paste 30 UTF-8 bytes
+checkpoint 001: listed Status across 5 child projects 62a8a6e2d0be94b6
+key enter
+checkpoint 002: git-all 8c1c6655b322de75
+key ctrl+q
+observed exit 0

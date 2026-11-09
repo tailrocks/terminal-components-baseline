@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local  
+                                                                                                                        
+  Here    frontend dev ⠋ ×    api dev ⠋ ×    api tests ⠋ ×    logs · api worker sched… ⠋ ×    btm ⠋ ×                   
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Inspect 10 GB of genera… disk · here   
+  › Inspect 10 GB of generat…  disk      here     10 GB genera…                  ────────────────────────────────────   
+    Review cleanup candidates  cleanup   host     10.6 GiB acr…                  Does       2 rebuildable candidates    
+    Deploy preview             custom    here     Current fold…                             below this folder · 0       
+    Rotate local secrets       custom    here     Current fold…  destructive                stale enough to start       
+                                                                                            selected                    
+    Recent here                                                                  Runs       'holla disk anal…ifacts'    
+    nothing used here yet                                                        In         ~/work/acme                 
+                                                                                 Host       mbp · local                 
+    Running                                                                      Scope      here                        
+    api tests                  activity  project  ⠋ running…                     Why        10 GB generated             
+    logs · api worker schedu…  activity  here     ⠋ running…                                artifacts                   
+    api dev                    activity  child    ⠋ running…                     Changes    none · read-only            
+    btm                        activity  host     ⠋ detached…                    Risk       read-only                   
+                                                                                 Data       still discovering…          
+    Explore                                                                      Gate       opens a review · the        
+     Tasks   Git   Files   Disk   Services   System                                         deletion is gated there     
+    Children · 3 projects      explore   child    3 child proj…                             (typed phrase)              
+    System · mbp               explore   host     available on…                  Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/acme   main   ↑1       ⠋ discovering filesystem, git, mise, … · 0 of 9        ⠋ 5 running    truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  …                        stopping 5 activities · quitting when every process is gone 

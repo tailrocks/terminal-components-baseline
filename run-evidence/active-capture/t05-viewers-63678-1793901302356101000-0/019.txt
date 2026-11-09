@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T products ×                                                                                       +   
+ ───────────────━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › products ───────────────────────────────────────────────────────── 9 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   ‹6    is_active    attributes                                created_at       1›   │ 
+ │      ▾ Tables             │││       1 true         {"color": "white", "weight_kg": 21.1}     2024-04-22 07:4…    ┃ │ 
+ │        ▸ T organizations  │││       2 false        {"color": "graphite", "weight_kg": 18.8}  2024-07-25 18:3…    ┃ │ 
+ │        ▸ T customers      │││       3 true         {"color": "black", "weight_kg": 8.7}      2025-08-09 02:0…    ┆ │ 
+ │        ▸ T products       │││       4 true         {"color": "walnut", "weight_kg": 23.6}    2024-04-06 16:3…    ┆ │ 
+ │        ▸ T orders         │││       5 true         {"color": "black", "weight_kg": 16.2}     2025-10-17 11:3…    ┆ │ 
+ │        ▸ T order_╭────────────────────────────────────────────────────────────────────────── × ─╮-08-04 10:2…    ┆ │ 
+ │        ▸ T paymen│                                                                              │-12-28 01:4…    ┆ │ 
+ │        ▸ T subscr│  attributes                                                                  │-12-02 13:0…    ┆ │ 
+ │      ▸ Views     │                                                                              │-08-22 00:2…    ┆ │ 
+ │      ▸ Functions │                                                                              │-02-25 09:3…    ┆ │ 
+ │      ▸ Sequences │  {                                                                           │-02-08 02:5…    ┆ │ 
+ │    ▸ S analytics │    "color":"white",                                                          │-02-11 18:0…    ┆ │ 
+ │    ▸ S audit     │    "weight_kg":21.1                                                          │-08-10 20:4…    ┆ │ 
+ │                  │  }                                                                           │-08-10 20:4…    ┆ │ 
+ │                  │                                                                              │-08-09 00:1…    ┆ │ 
+ │                  │                                                                     ▎Close   │-01-20 06:3…    ┆ │ 
+ │                  │                                                                              │-01-01 18:5…    ┆ │ 
+ │                  ╰──────────────────────────────────────────────────────────────────────────────╯-12-19 23:0…    ┆ │ 
+ │                           │││      19 true         {"color": "black", "weight_kg": 16.8}     2025-07-16 12:5…    ┆ │ 
+ │                           │││      20 true         {"color": "black", "weight_kg": 1.8}      2024-06-10 10:4…    ┆ │ 
+ │                           │││      21 true         {"color": "walnut", "weight_kg": 21.5}    2024-06-17 04:1…    ┆ │ 
+ │                           │││      22 true         {"color": "walnut", "weight_kg": 17.4}    2025-06-19 19:2…    ┆ │ 
+ │                           │││      23 true         {"color": "black", "weight_kg": 23.3}     2024-05-25 04:0…    ┆ │ 
+ │                           │││      24 true         {"color": "white", "weight_kg": 28.4}     2024-05-09 00:4…    ┆ │ 
+ │                           │││      25 true         {"color": "walnut", "weight_kg": 4.3}     2025-09-23 08:2…    ┆ │ 
+ │                           │││      26 true         {"color": "black", "weight_kg": 7.6}      2024-05-17 13:5…    ┆ │ 
+ │                           │││         ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 312 · cols 7–8 of 9                                                   │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Enter Close  Esc Close                                                              Copied 11 characters · Monitor arm 

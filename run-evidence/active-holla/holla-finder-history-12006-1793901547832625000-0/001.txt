@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         holla · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ cargo check                                                                                          scope ‹ here ›  
+                                                                                                                        
+    Results · 2                                                                  cargo check             cargo · here   
+  › cargo check        cargo  here  Cargo.toml here                              ────────────────────────────────────   
+    cargo fmt --check  cargo  here  Cargo.toml here                              Does       type-check every target     
+                                                                                            without producing           
+                                                                                            binaries                    
+                                                                                 Runs       cargo check                 
+                                                                                 In         ~/work/holla                
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        Cargo.toml here             
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 3 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/holla   main                                                                                 truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

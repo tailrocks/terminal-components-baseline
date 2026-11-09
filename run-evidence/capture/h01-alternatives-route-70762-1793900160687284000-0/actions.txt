@@ -1,0 +1,13 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "rust-dirty", "--frame", "1", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Suggested here f4dcff1afb0c0c1f
+checkpoint 001: artifact row is selected f4dcff1afb0c0c1f
+key down
+checkpoint 002: Pull is the selected row 09be94ac0c908db7
+key down
+checkpoint 003: Review is the selected row 4a99963b787a3715
+key alt+enter
+checkpoint 004: alternatives for Review 2998f96a47ab26cc
+key escape
+checkpoint 005: alternatives closed on Review 4a99963b787a3715
+key ctrl+q
+clean exit 0

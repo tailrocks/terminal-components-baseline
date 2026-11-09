@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   repos · project collection  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Status across                                                                                        scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Status across 5 child p… git · child   
+  › Status across 5 child pr…  git  child  0 dirty · 1 behind                    ────────────────────────────────────   
+                                                                                 Does       inspect every discovered    
+                                                                                            Git project · worktrees     
+                                                                                            deduplicated, submodules    
+                                                                                            marked                      
+                                                                                 Runs       git -C /Users/al…-branch    
+                                                                                            git -C /Users/al…-branch    
+                                                                                            git -C /Users/al…-branch    
+                                                                                            git -C /Users/al…-branch    
+                                                                                            git -C /Users/al…-branch    
+                                                                                 In         ~/work/repos                
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      child                       
+                                                                                 Why        0 dirty · 1 behind          
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/repos                                                                                        truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear    Status across 5 c… 

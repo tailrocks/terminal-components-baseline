@@ -1,0 +1,14 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--motion", "reduced", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 001: visible Query 1 1615509862a77c56
+checkpoint 002: absent ✓ Connected to c233e795a6ff2b5b
+checkpoint 003: settled c233e795a6ff2b5b
+precondition 
+visual functional/tablepro_workbench_development candidate 06da2aa44cdd1bee554a0613facdc6625b4503c90414940ba4b6071e410d3cbf
+capture-only functional/tablepro_workbench_development: Failure(CheckFailure { test_id: "functional/tablepro_workbench_development", gate: State, reason: Missing, candidate_sha256: "06da2aa44cdd1bee554a0613facdc6625b4503c90414940ba4b6071e410d3cbf", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-dev-connect-18206-1793901593559607000-0/check-artifacts/functional/tablepro_workbench_development/06da2aa44cdd1bee554a0613facdc6625b4503c90414940ba4b6071e410d3cbf/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-dev-connect-18206-1793901593559607000-0/check-artifacts/functional/tablepro_workbench_development/06da2aa44cdd1bee554a0613facdc6625b4503c90414940ba4b6071e410d3cbf/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-dev-connect-18206-1793901593559607000-0/check-artifacts/functional/tablepro_workbench_development/06da2aa44cdd1bee554a0613facdc6625b4503c90414940ba4b6071e410d3cbf/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

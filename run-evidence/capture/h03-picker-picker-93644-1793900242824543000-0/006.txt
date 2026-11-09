@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                 acme · mise monorepo  mbp · local  
+                                                                                
+      Here    frontend dev ⠋ ×    api dev ⠋ ×    api tests ⠋ ×           2› +2  
+ ────━━━━━━━─────────────────────────────────────────────────────────────────── 
+   Search actions and resources…                                scope ‹ here ›  
+                                                                                
+    Suggested here                                                            ┃ 
+  › I╭────────────────────────────────────────────────────────────────────╮   ┃ 
+    R│ Activities                                                  5 live │   ┃ 
+    D│  ⠋ frontend dev                 running · child · 0 s  activities  │   ┃ 
+    R│  ⠋ api dev                      running · child · 0 s              │ve ┃ 
+     │  ⠋ api tests                    running · project · …              │   ┃ 
+    R│  ⠋ logs · api worker scheduler  running · here · 0 s               │   ┃ 
+    n│  ○ btm                          detached · host · 0 s              │   ┃ 
+     │                                                                    │   ┆ 
+    R│                                                                    │   ┆ 
+    a╰────────────────────────────────────────────────────────────────────╯   ┆ 
+    logs · api worker schedul…  activity  here     ⠋ running…                 ┆ 
+    api dev                     activity  child    ⠋ running…                 ┆ 
+                                                                                
+    → 'holla disk analyze --artifacts' · here · read-only                       
+                                                                                
+ ~/work/acme                                                  …    ⠋ 5 running  
+ ↑↓ Move  Enter Switch  Esc Cancel                                              

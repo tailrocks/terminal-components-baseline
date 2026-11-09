@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                            svc · Rust project  mbp · local  
+                                                                                                                         
+  Here                                                                                                                   
+ ━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   Push                                                                                                  scope ‹ here ›  
+                                                                                                                         
+    Results · 2                                                                   Push                    git · parent   
+  › Push          git  parent  1 commits ahead                                    ────────────────────────────────────   
+    Push dry run  git  parent  read-only                                          Does       push feature/x of           
+                                                                                             ~/work/svc to               
+                                                                                             origin/feature/x            
+                        ╭──────────────────────────────────────────────────────────────────── × ─╮C /Users/al…vc push    
+                        │                                                                        │k/svc                  
+                        │  Push                                                                  │ local                 
+                        │                                                                        │t                      
+                        │  Action        push feature/x of ~/work/svc to origin/feature/x        │mits ahead             
+                        │  Host          mbp · local                                             │emote rejects it       
+                        │  In            ~/work/svc                                              │h first) · nothing     
+                        │  Scope         parent                                                  │es                     
+                        │  Changes       the remote rejects it (fetch first) · nothing changes   │ing                    
+                        │  Risk          mutating                                                │· 0 s ago              
+                        │  Data          live · 0 s ago                                          │onfirmation            
+                        │  Confirmation  one explicit confirmation · not remembered              │dry run · Pin ·        
+                        │                                                                        │ · Why here?           
+                        │  git -C /Users/alex/work/svc push                                      │                       
+                        │                                                                        │                       
+                        │                                                        Cancel   ▎Run   │                       
+                        │                                                                        │                       
+                        ╰────────────────────────────────────────────────────────────────────────╯                       
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+ ~/work/svc/src/api   feature/x   ↓2 ↑1   • 1                                                         truecolor · 121×40 
+ ←→ Choose  Enter Run  Esc Cancel                                                                                        

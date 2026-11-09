@@ -1,0 +1,40 @@
+  jackin❯    File   Go   Help               …  Workspaces › payments-platform › edit  • 1 change  inside the Construct  
+                                                                                                                        
+                                                                                                                        
+   General    Mounts •    Roles    Environments    Accounts                                                             
+  ───────────━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────  
+                                                                                                                        
+        Destination                           Mode  Isolation  Kind    Source                                           
+   › •  /workspace/payments-platform          ro    clone      host    ~/src/payments-platform                          
+        /workspace/libs                       ro    shared     host    ~/src/shared-libs                                
+        + Add mount                                                                                                     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                           ╭──────────────────────────────────────────────────────────── × ─╮                           
+                           │                                                                │                           
+                           │  Save workspace                                                │                           
+                           │                                                                │                           
+                           │  Workspace  payments-platform                                  │                           
+                           │  Scope      workspace config · ~/.jackin/workspaces/payments…  │                           
+                           │  Changes    1 change                                           │                           
+                           │  Mounts     0 added · 1 modified · 0 removed                   │                           
+                           │                                                                │                           
+                           │  ~ mount /workspace/payments-platform  rw · worktree → ro · …  │                           
+                           │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄  │                           
+                           │                                                                │                           
+                           │                                              ▎Cancel    Save   │                           
+                           │                                                                │                           
+                           ╰────────────────────────────────────────────────────────────────╯                           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                  Cancel     Save…      
+                                                                                                                        
+ ←→ Choose  Enter Cancel  ⇧←→ Scroll code  Esc Cancel                    /workspace/payments-platform · isolation clone 

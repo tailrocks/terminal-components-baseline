@@ -1,0 +1,12 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "first-use", "--motion", "reduced", "--frame", "40", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources cf78c85991ba1321
+key f1
+checkpoint 001: visible Key reference 6d8b31f483a741ab
+key escape
+checkpoint 002: absent Key reference cf78c85991ba1321
+checkpoint 003: settled cf78c85991ba1321
+precondition 
+visual functional/holla_help candidate 366be945653c76a16254aad2c188613bb13f0c47d0502c1d3cb66e6b814f3a9a
+capture-only functional/holla_help: Failure(CheckFailure { test_id: "functional/holla_help", gate: State, reason: Missing, candidate_sha256: "366be945653c76a16254aad2c188613bb13f0c47d0502c1d3cb66e6b814f3a9a", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-help-12712-1793901552214773000-0/check-artifacts/functional/holla_help/366be945653c76a16254aad2c188613bb13f0c47d0502c1d3cb66e6b814f3a9a/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-help-12712-1793901552214773000-0/check-artifacts/functional/holla_help/366be945653c76a16254aad2c188613bb13f0c47d0502c1d3cb66e6b814f3a9a/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-help-12712-1793901552214773000-0/check-artifacts/functional/holla_help/366be945653c76a16254aad2c188613bb13f0c47d0502c1d3cb66e6b814f3a9a/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

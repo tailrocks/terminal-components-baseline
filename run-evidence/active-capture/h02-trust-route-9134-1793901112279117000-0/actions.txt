@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "monorepo-child", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible From acme · the parent root 255a187156f18435
+type 4 UTF-8 bytes
+checkpoint 001: visible alias test 8ab1f4a5fb758c62
+key enter
+checkpoint 002: mise trust dialog 1f4cfc40fa7345e7
+key escape
+checkpoint 003: absent Trust ~/work/acme/apps/frontend/mise.toml? 311f50e1e4223f95
+key ctrl+q
+clean exit 0

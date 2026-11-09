@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent          • 1 pending  truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T orders ×                                                                                         +   
+ ───────────────━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › orders ────────────────────────────────────────────────────────── 14 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   ‹1      order_number  customer_id                           organization_id   11›  │ 
+ │      ▾ Tables             │││       1          10000  f92c5e53-3ebb-4a35-a2f…55b014ba7e9 →  2bd03496-f…bb5d →    ┃ │ 
+ │        ▸ T organizations  │││    •  2          10001  1b3a6759-b804-4ed8-b95…b7428564812 →  a1cc5725-4…6aa8 →    ┆ │ 
+ │        ▸ T customers      │││  ▎    3          10002  64e6f4de-3e02-4ca0-9a5…24565132551 →  45e4f51f-2…8925 →    ┆ │ 
+ │        ▸ T products       │││       4          10003  32143a01-1da3-4ac1-b99…c6075254378 →  216371dc-b…df3e →    ┆ │ 
+ │        ▸ T orders         │││       5          10004  1c78fd05-5f61-47a4-97b…33a34f15f6a →  855a73fc-8…e6b3 →    ┆ │ 
+ │        ▸ T order_items    │││       6          10005  59fec2d8-1726-43b9-b97…1a2ad2f9ee0 →  3082dad1-5…4d71 →    ┆ │ 
+ │        ▸ T payments       │││       7          10006  ede350f8-5b4f-43c6-aff…8400f9c14bd →  b51d60b6-6…eb33 →    ┆ │ 
+ │        ▸ T subscriptions  │││       8          10007  0f9c14bd-5840-4ffd-b63…603b51d60b6 →  272ceb33-e…e925 →    ┆ │ 
+ │      ▸ Views              │││       9          10008  fb78dd25-a96f-4296-b51…1c3440148c6 →  e420b1cb-f…a6b7 →    ┆ │ 
+ │      ▸ Functions          │││      10          10009  dd2c444c-7d3a-4a51-94f…e11c0218d65 →  cbc419eb-5…287a →    ┆ │ 
+ │      ▸ Sequences          │││      11          10010  d8755486-2a99-4a4c-8da…e8cf504ad9b →  2beeba6e-1…7f9f →    ┆ │ 
+ │    ▸ S analytics          │││      12          10011  7557d493-6762-4302-a06…a3ecf869377 →  26e6126e-3…5aaa →    ┆ │ 
+ │    ▸ S audit              │││      13          10012  03ec066a-66ba-4257-bf2…7f3450f7c29 →  c04a0d90-9…4dff →    ┆ │ 
+ │                           │││      14          10013  1fd69c1a-6c1d-4004-a21…29d250e5b5e →  5e08138a-c…daa2 →    ┆ │ 
+ │                           │││      15          10014  250e5b5e-529d-421b-9d8…5725e08138a →  9ab0daa2-e…5c2b →    ┆ │ 
+ │                           │││      16          10015  44842f3f-c910-4cc2-86b…bdcbfbaee95 →  c7c8457e-d…6e8b →    ┆ │ 
+ │                           │││      17          10016  e0ada9f0-d147-4112-800…2d482f763e1 →  856eb1ff-e…e08f →    ┆ │ 
+ │                           │││      18          10017  b6d7e92a-e7c9-49f9-902…c684f35e139 →  c180d977-7…73ea →    ┆ │ 
+ │                           │││      19          10018  6dd6c286-1380-4f45-9c4…150e6054eef →  71ff0ea9-6…ece4 →    ┆ │ 
+ │                           │││      20          10019  33ba912f-50d1-46c2-887…ed0e88c0329 →  e20af405-1…0c1c →    ┆ │ 
+ │                           │││      21          10020  454b51cc-dd84-4ffc-b6e…ae7c3a06f9f →  3126689d-f…ed16 →    ┆ │ 
+ │                           │││      22          10021  c3a06f9f-eae7-46ea-b13…a5f3126689d →  e612ed16-f…1a52 →    ┆ │ 
+ │                           │││      23          10022  1fefdf3e-34b8-452d-807…13c9d71d63d →  10fd6c6e-7…1a44 →    ┆ │ 
+ │                           │││      24          10023  9d628e15-01b2-4964-bbe…dc4e3c55c7c →  91a5a928-3…8779 →    ┆ │ 
+ │                           │││         ┄┄┄┄┄━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││                                                                                      │ 
+ │                           │││   • 1 pending · 1 update                              Preview SQL   Discard   Save   │ 
+ │                           │││   rows 1–24 of 500 loaded · 1,203,338 total · cols 2–3 of 14                         │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓←→ Cell  Alt+D Duplicate row  s Sort  f Filter  Ctrl+S Save  Shift+F10 Menu  Tab Next      order_number is read-only 

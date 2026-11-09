@@ -1,0 +1,11 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-git-batch", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 8fb98e0d8f9cdbfc
+paste 17 UTF-8 bytes
+checkpoint 001: Push 4 repositories to origin and GitLab selected 82bf267eb4808122
+key enter
+checkpoint 002: batch confirmation 743364e9259b8b56
+key enter
+checkpoint 003: alpha push 66024b8e49f8dfad
+checkpoint 004: batch idle 66024b8e49f8dfad
+key ctrl+q
+clean exit 0

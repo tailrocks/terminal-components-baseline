@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                                                    
+                                                                                
+  Here                                                                          
+ ━━━━━━━────────────────────────────────────────────────────────────────────────
+ ▎ Search actions and resources…                                                
+                                                                                
+    Suggested here                                                              
+  › Pull                       git      here  branch is 1 comm…                 
+    Clean IntelliJ metadata …  idea     here  1 candidates       destructive    
+    Deploy                     custom   here  Current folder…                   
+    Run tests                  task     here  defined by ~/wor…                 
+    Show git status            git      here  on main                           
+                                                                                
+    Recent here                                                                 
+    nothing used here yet                                                       
+                                                                                
+    Explore                                                                     
+     Tasks   Git   Files   Disk   Services   System                             
+    System · mbp               explore  host  available on thi…                 
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                

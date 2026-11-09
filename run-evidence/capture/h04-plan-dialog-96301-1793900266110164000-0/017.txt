@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          no project  devbox · development  
+  Here › Upgrade everything                                                                                             
+  Here › Upgrade everything                                                                                             
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────── 
+  Upgrade everything · devbox                                                8 steps · 6 included · 2 excluded · ~16 s  
+  upgrade Debian packa╭────────────────────────────────────────────────────────────────────── × ─╮                      
+                      │                                                                          │                      
+         step         │  Start upgrade everything?                                               │ tools     optional   
+  [✓] 01 Preflight    │                                                                          │───────────────────   
+  [✓] 02 Refresh Debia│  Plan       Upgrade everything · upgrade Debian packages and global      │exclude go            
+  [✓] 03 Review Debian│             mise tools on devbox                                         │                      
+  [✓] 04 Apply Debian │  Host       devbox                                                       │al mise tools         
+  [✓] 05 Inspect globa│  Steps      6 included · 2 excluded · ~16 s                              │cation                
+  [ ] 06 Upgrade selec│  Privilege  sudo · cached for this session                               │                      
+  [ ] 07 Package clean│  Debian     14 upgradable · 2 security                                   │6.1.0 · python        
+  [✓] 08 Final verific│  mise       4 outdated global tools · go excluded                        │ · pnpm 10.4.0 →      
+                      │  Reboot     required after the kernel upgrade                            │luded                 
+    08 Final verificat│                                                                          │                      
+                      │  cat /etc/os-release                                                     │                      
+                      │  sudo -n true                                                            │                      
+                      │  fuser /var/lib/dpkg/lock-frontend                                       │                      
+                      │  df -h /                                                                 │                      
+                      │  test -f /var/run/reboot-required                                        │                      
+                      │  sudo apt-get update                                                     │                      
+                      │  apt list --upgradable                                                   │                      
+                      │  sudo apt-get upgrade -y                                                 │                      
+                      │  mise outdated --json                                                    │                      
+                      │  apt list --upgradable                                                   │                      
+                      │  mise ls --json                                                          │                      
+                      │  systemctl --failed                                                      │                      
+                      │  test -f /var/run/reboot-required                                        │                      
+                      │                                                                          │                      
+                      │                                                  ▎Cancel    Start plan   │                      
+                      │                                                                          │                      
+                      ╰──────────────────────────────────────────────────────────────────────────╯                      
+                                                                                                                        
+                                                                                               Cancel    Confirm plan   
+                                                                                                                        
+ ~                              review · 6 steps · 2 branches parallel                               truecolor · 120×40 
+ ←→ Choose  Enter Cancel  Esc Cancel                                                       06 excluded · 08 now blocked 

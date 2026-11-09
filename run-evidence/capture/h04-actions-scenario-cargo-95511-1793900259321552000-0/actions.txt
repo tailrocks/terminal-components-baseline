@@ -1,0 +1,16 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-cargo", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions a373e26419f8be6c
+paste 10 UTF-8 bytes
+checkpoint 001: cargo test selected 92bacd966087dd63
+key enter
+checkpoint 002: cargo test failed 3484b200c4cffd6d
+key escape
+checkpoint 003: finder bf1670ab70f6a060
+key escape
+checkpoint 004: visible Search actions 62f9a7640828ee3f
+paste 12 UTF-8 bytes
+checkpoint 005: cargo clippy selected 6f0e28b8209837bb
+key enter
+checkpoint 006: clippy warnings dfa6638d70e13fdf
+key ctrl+q
+clean exit 0

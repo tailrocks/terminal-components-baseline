@@ -1,0 +1,20 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-browser", "--motion", "reduced", "--frame", "40", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources 3ab3934c4ba98fde
+paste 18 UTF-8 bytes
+checkpoint 001: visible ▎ Browse ~/work/site 2e781d9aac3e6c09
+key enter
+checkpoint 002: visible 16 entries 932dbb96505379a7
+resize 80x24
+checkpoint 003: files still listed at 80x24 dbc1dfa51c9c8c35
+checkpoint 004: settled dbc1dfa51c9c8c35
+precondition 
+visual functional/holla_browser_80x24 candidate f296c5a8a991a6d946e7d84cab7dc3b430785259164e91d4b8ae24401edf4683
+capture-only functional/holla_browser_80x24: Failure(CheckFailure { test_id: "functional/holla_browser_80x24", gate: State, reason: Missing, candidate_sha256: "f296c5a8a991a6d946e7d84cab7dc3b430785259164e91d4b8ae24401edf4683", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-resize-12976-1793901554894914000-0/check-artifacts/functional/holla_browser_80x24/f296c5a8a991a6d946e7d84cab7dc3b430785259164e91d4b8ae24401edf4683/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-resize-12976-1793901554894914000-0/check-artifacts/functional/holla_browser_80x24/f296c5a8a991a6d946e7d84cab7dc3b430785259164e91d4b8ae24401edf4683/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-resize-12976-1793901554894914000-0/check-artifacts/functional/holla_browser_80x24/f296c5a8a991a6d946e7d84cab7dc3b430785259164e91d4b8ae24401edf4683/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 005: files still listed at 120x40 97a80976aa729751
+checkpoint 006: settled d036b9a78551fe5d
+precondition 
+visual functional/holla_resize_narrow candidate bd5424f2028218ec0a66115f8f773d65c3ba733c6c5d8f762b0783f2f07558da
+capture-only functional/holla_resize_narrow: Failure(CheckFailure { test_id: "functional/holla_resize_narrow", gate: State, reason: Missing, candidate_sha256: "bd5424f2028218ec0a66115f8f773d65c3ba733c6c5d8f762b0783f2f07558da", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-resize-12976-1793901554894914000-0/check-artifacts/functional/holla_resize_narrow/bd5424f2028218ec0a66115f8f773d65c3ba733c6c5d8f762b0783f2f07558da/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-resize-12976-1793901554894914000-0/check-artifacts/functional/holla_resize_narrow/bd5424f2028218ec0a66115f8f773d65c3ba733c6c5d8f762b0783f2f07558da/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-resize-12976-1793901554894914000-0/check-artifacts/functional/holla_resize_narrow/bd5424f2028218ec0a66115f8f773d65c3ba733c6c5d8f762b0783f2f07558da/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

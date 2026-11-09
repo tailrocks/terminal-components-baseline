@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+  Here › Cleanup history                                                                                                
+  Here › Cleanup history                                                                                                
+ ━━━━━━━━━━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────────────────────────── 
+  Cleanup history                                                                                 mbp · live · 1 s ago  
+                                                                                                                        
+  Entries  1 · 0 operation log records                                                                                  
+  Log      ~/.cache/holla/ops.log · JSONL v1 · append only                                                              
+  Audit    targets, method, reclaimed space, skips and failures · restoration only from Trash                           
+                                                                                                                        
+ ╭─ History ───────────────────────────────────────────────────────────────────────────────────── 2 lines · y copies ─╮ 
+ │  when              target                                      method           freed   outcome                    │ 
+ │  2026-08-29 08:41  ~/work/legacy/node_modules                  Trash           3.9 GB   removed                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/scratch                        snapshot · read-only                         / ━━━━━━━━━━─ 91% ▲   truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Esc Back  Shift+F10 Menu                                             Esc never quits · Ctrl+Q quits 

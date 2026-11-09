@@ -1,0 +1,2 @@
+spawn /bin/sh ["-c", "printf 'HISTORY=%s\\n' \"$HOLLA_NO_HISTORY\""] 80x24 color=None clock=false
+observed exit 0

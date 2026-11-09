@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-upgrade-managers", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 869eeaa2d403a9e3
+paste 26 UTF-8 bytes
+checkpoint 001: Upgrade mise-managed tools selected 6bfd9cf864cb7ad7
+key enter
+checkpoint 002: confirmation 1e3581dcbac728fb
+key enter
+checkpoint 003: 2 tools upgraded 9d485e4294885821
+key ctrl+q
+clean exit 0

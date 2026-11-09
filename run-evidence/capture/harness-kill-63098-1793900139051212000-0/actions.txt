@@ -1,0 +1,2 @@
+spawn /bin/sh ["-c", "cat"] 80x24 color=None clock=false
+kill child

@@ -1,0 +1,16 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "activities-multi", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible api tests 172568979a6417c8
+key ctrl+g
+checkpoint 001: visible Enter Switch bd03814d7eb0d32f
+key esc
+checkpoint 002: visible Search actions bd03814d7eb0d32f
+key alt+3
+checkpoint 003: api tests output cb79ab31815b6993
+key esc
+checkpoint 004: visible Search actions 107180a2f9aacc23
+key ctrl+q
+checkpoint 005: quit dialog 3edf4c3c14169c6b
+key right
+checkpoint 006: stop focused 191c4e115b9739da
+key enter
+observed exit 0

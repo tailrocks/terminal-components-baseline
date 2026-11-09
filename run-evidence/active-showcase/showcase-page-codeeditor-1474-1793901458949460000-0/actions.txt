@@ -1,0 +1,9 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "codeeditor", "--motion", "paused", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Code editor 82041e36ed044f36
+checkpoint 001: settled 82041e36ed044f36
+checkpoint 002: settled 82041e36ed044f36
+precondition 
+visual functional/showcase_page_codeeditor candidate 688419beef07b27d4f7c43a949a3c7751c2b0ca7588b8945de86028d5d0e1cc4
+capture-only functional/showcase_page_codeeditor: Failure(CheckFailure { test_id: "functional/showcase_page_codeeditor", gate: State, reason: Missing, candidate_sha256: "688419beef07b27d4f7c43a949a3c7751c2b0ca7588b8945de86028d5d0e1cc4", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-page-codeeditor-1474-1793901458949460000-0/check-artifacts/functional/showcase_page_codeeditor/688419beef07b27d4f7c43a949a3c7751c2b0ca7588b8945de86028d5d0e1cc4/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-page-codeeditor-1474-1793901458949460000-0/check-artifacts/functional/showcase_page_codeeditor/688419beef07b27d4f7c43a949a3c7751c2b0ca7588b8945de86028d5d0e1cc4/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-page-codeeditor-1474-1793901458949460000-0/check-artifacts/functional/showcase_page_codeeditor/688419beef07b27d4f7c43a949a3c7751c2b0ca7588b8945de86028d5d0e1cc4/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

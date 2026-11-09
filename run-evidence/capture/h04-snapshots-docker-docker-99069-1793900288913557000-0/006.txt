@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          no project  devbox · development  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Show Docker disk usage                                                                               scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Show Docker disk… docker · on devbox   
+  › Show Docker disk usage  docker  on devbox  18.4 GB reclaimable               ────────────────────────────────────   
+                                                                                 Does       images, containers,         
+                                                                                            volumes and build cache     
+                                                                                            with reclaimable space      
+                                                                                 Runs       docker system df            
+                                                                                 In         devbox · host-wide          
+                                                                                 Host       devbox · development ·      
+                                                                                            over SSH                    
+                                                                                 Scope      on devbox                   
+                                                                                 Why        18.4 GB reclaimable         
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ /work/scratch                                                                                       truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Esc Clear  …    Esc never quits · Ctrl+Q quits 

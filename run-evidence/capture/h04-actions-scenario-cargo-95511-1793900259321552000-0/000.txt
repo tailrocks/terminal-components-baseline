@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                        engine · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Show git status           git · here   
+  › Show git status          git      here  on main                              ────────────────────────────────────   
+    cargo build              cargo    here  Cargo.toml here                      Does       full git status of          
+    cargo check              cargo    here  Cargo.toml here                                 ~/work/engine: branch,      
+    cargo clean · 900.0 MiB  cleanup  here  900.0 MiB of gener…  destructive                upstream, staged,           
+    cargo clippy             cargo    here  Cargo.toml here                                 unstaged, untracked,        
+                                                                                            stash                       
+    Recent here                                                                  Runs       git -C /Users/al… status    
+    nothing used here yet                                                        In         ~/work/engine               
+                                                                                 Host       mbp · local                 
+    Explore                                                                      Scope      here                        
+     Tasks   Git   Files   Disk   Services   System                              Why        on main                     
+    System · mbp             explore  host  available on this …                  Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Short status · Pin ·        
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/engine   main                                                                                truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Ctrl+G Activities               

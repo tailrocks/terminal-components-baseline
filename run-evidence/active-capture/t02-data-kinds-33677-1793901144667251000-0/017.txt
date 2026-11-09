@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent          • 1 pending  truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T organizations • ×    T active_customers ×                                                        +   
+ ──────────────────────────────────────━━━━━━━━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › active_customers ───────────────────────────────────────────────── 4 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││         id                                    email                             2›   │ 
+ │      ▾ Tables             │││       1 46be7724-3a8b-4970-b87d-2df47ab765c9  omar.nguyen@kestrel.health           ┃ │ 
+ │        ▸ T or╭──────────────────────────────────────────────────────────────────────────────────────╮            ┆ │ 
+ │        ▸ T cu│ Open Quickly                                                         All · Tab scope │            ┆ │ 
+ │        ▸ T pr│ ▎ Search tables, views, schemas, tabs, queries…                                      │            ┆ │ 
+ │        ▸ T or│                                                                                      │p           ┆ │ 
+ │        ▸ T or│  T change_log                        audit · Development            Tables         ┃ │p           ┆ │ 
+ │        ▸ T pa│  T customers                         public · Development                          ┃ │            ┆ │ 
+ │        ▸ T su│  T daily_revenue                     analytics · Development                       ┃ │            ┆ │ 
+ │      ▸ Views │  T events                            analytics · Development                       ┃ │            ┆ │ 
+ │      ▸ Functi│  T login_attempts                    audit · Development                           ┃ │pp          ┆ │ 
+ │      ▸ Sequen│  T order_items                       public · Development                          ┃ │            ┆ │ 
+ │    ▸ S analyt│  T orders                            public · Development                          ┃ │            ┆ │ 
+ │    ▸ S audit │  T organizations                     public · Development     open                 ┆ │            ┆ │ 
+ │              │  T payments                          public · Development                          ┆ │            ┆ │ 
+ │              │  T products                          public · Development                          ┆ │pp          ┆ │ 
+ │              │  T subscriptions                     public · Development                          ┆ │            ┆ │ 
+ │              │  V active_customers                  public · Development     open  Views          ┆ │            ┆ │ 
+ │              │  V cohort_retention                  analytics · Development                       ┆ │            ┆ │ 
+ │              │ ↑↓ Move · Enter Open · Alt+Enter New tab · Tab Scope · Esc Clear / Close             │            ┆ │ 
+ │              ╰──────────────────────────────────────────────────────────────────────────────────────╯p           ┆ │ 
+ │                           │││      21 39c44596-7378-48be-be28-45870ed7c06d  priya.novak@juniper.home             ┆ │ 
+ │                           │││      22 0ed7c06d-4587-4e28-b132-23dddda50712  tomas.iyer@fjord.ai                  ┆ │ 
+ │                           │││      23 5f43f203-de39-441c-b942-b815bd6532c2  ravi.haddad@meridian.foods           ┆ │ 
+ │                           │││      24 bd6532c2-b815-4942-9919-cf60475c8d8a  omar.fischer@lumen.shop              ┆ │ 
+ │                           │││      25 475c8d8a-cf60-4919-88f3-94c5be8d2606  leon.alvarez@orbit.studio            ┆ │ 
+ │                           │││      26 356a7529-b516-424f-884f-26936e8555e4  nadia.costa@orbit.studio             ┆ │ 
+ │                           │││         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 500 loaded · 41,207 total                                             │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Type Filter  ↑↓ Move  Enter Choose  Esc Cancel                    These rows come from a view, which cannot be edited. 

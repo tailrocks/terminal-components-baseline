@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          acme · mise monorepo  mbp · local  
+                                                                                                                         
+  Here    frontend dev ⠋ ×    api dev ⠋ ×    api tests ⠋ ×    logs · api worker sched… ⠋ ×    btm ○ ×                    
+ ━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   Search actions and resources…                                                                         scope ‹ here ›  
+                                                                                                                         
+    Suggested here                                                                Inspect 10 GB of genera… disk · here   
+  › Inspect 10 GB of generate…  disk      here     10 GB genera…                  ────────────────────────────────────   
+    Review cleanup candidates   cleanup   host     10.6 GiB acr…                  Does       2 rebuildable candidates    
+    Deploy preview              custom    here     Current fold…                             below this folder · 0       
+    Rotate local secrets        custom    here     Current fold…  destructive                stale enough to start       
+                                                                                             selected                    
+    Recent here                                                                   Runs       'holla disk anal…ifacts'    
+    nothing used here yet                                                         In         ~/work/acme                 
+                                                                                  Host       mbp · local                 
+    Running              ╭────────────────────────────────────────────────────────────────────╮re                        
+    api tests            │ Activities                                                  5 live │ GB generated             
+    logs · api worker sch│  ⠋ frontend dev                 running · child · 0 s  activities  │tifacts                   
+    api dev              │  ⠋ api dev                      running · child · 0 s              │ne · read-only            
+    btm                  │  ⠋ api tests                    running · project · …              │ad-only                   
+                         │  ⠋ logs · api worker scheduler  running · here · 0 s               │ill discovering…          
+    Explore              │  ○ btm                          detached · host · 0 s              │ens a review · the        
+     Tasks   Git   Files │                                                                    │letion is gated there     
+    Children · 3 projects│                                                                    │yped phrase)              
+    System · mbp         ╰────────────────────────────────────────────────────────────────────╯n · Alias · Why here?     
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+                                                                                                                         
+ ~/work/acme   main   ↑1       ⠋ discovering filesystem, git, mise, … · 0 of 9         ⠋ 5 running    truecolor · 121×40 
+ ↑↓ Move  Enter Switch  Esc Cancel                                                                                       

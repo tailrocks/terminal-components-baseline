@@ -1,0 +1,18 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-task-input", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible /srv/app 1e9cd1ad0c648932
+checkpoint 001: visible devbox 1e9cd1ad0c648932
+paste 18 UTF-8 bytes
+checkpoint 002: visible asks for a password 83e36d62f2acb2dc
+key enter
+checkpoint 003: visible $ ./deploy.sh 43c7e539fa486a98
+checkpoint 004: visible Password: b700fa3e54c7047a
+key i
+checkpoint 005: visible Typing goes to the program 29fbcf9440184a4f
+key escape
+checkpoint 006: visible Keyboard returned to holla 99c6b28e5d889d49
+key s
+checkpoint 007: visible terminated (SIGTERM) 559a95237c3b7257
+key escape
+checkpoint 008: visible Type Search daabb59ba1d7f772
+key ctrl+q
+clean exit 0

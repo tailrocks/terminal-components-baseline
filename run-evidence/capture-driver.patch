@@ -1,0 +1,37 @@
+diff --git a/tests/functional/support.rs b/tests/functional/support.rs
+index 95d90a5..343c180 100644
+--- a/tests/functional/support.rs
++++ b/tests/functional/support.rs
+@@ -210,6 +210,10 @@ impl App {
+             self.log(format!("visual {test_id} cursor only"));
+             return;
+         }
++        if !outcome.is_pass() && std::env::var_os("TUISCOTTI_CAPTURE_ONLY").is_some() {
++            self.log(format!("capture-only {test_id}: {outcome:?}"));
++            return;
++        }
+         assert!(
+             outcome.is_pass(),
+             "visual mismatch for {test_id}: {outcome:?}"
+@@ -268,6 +272,10 @@ impl App {
+             self.log(format!("visual {test_id} cursor only"));
+             return;
+         }
++        if !outcome.is_pass() && std::env::var_os("TUISCOTTI_CAPTURE_ONLY").is_some() {
++            self.log(format!("capture-only {test_id}: {outcome:?}"));
++            return;
++        }
+         assert!(
+             outcome.is_pass(),
+             "visual mismatch for {test_id}: {outcome:?}"
+@@ -818,6 +826,10 @@ fn evidence_directory(name: &str) -> PathBuf {
+         .expect("system clock")
+         .as_nanos();
+     let seq = SEQ.fetch_add(1, Ordering::Relaxed);
++    if let Some(root) = std::env::var_os("TUISCOTTI_CAPTURE_ROOT") {
++        return PathBuf::from(root)
++            .join(format!("{name}-{}-{nanos}-{seq}", std::process::id()));
++    }
+     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+         .join("target/functional")
+         .join(format!("{name}-{}-{nanos}-{seq}", std::process::id()))

@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×                                                                                                     +   
+ ━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query 1 ──────────────────────────────────────────────────────────────────── 12 ms ─╮ 
+ │                           │││   Run   Run all   Explain                                                            │ 
+ │   Filter objects          │││   ›  1 UPDATE products SET name = name WHERE sku = 't03-affected'                    │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││                                                                                      │ 
+ │      ▾ Tables             │││                                                                                      │ 
+ │        ▸ T organizations  │││                                                                                      │ 
+ │        ▸ T customers      │││                                                                                      │ 
+ │        ▸ T products       │││                                                                                      │ 
+ │        ▸ T orders         │││                                                                                      │ 
+ │        ▸ T order_items    │││                                                                                      │ 
+ │        ▸ T payments       │││                                                                                      │ 
+ │        ▸ T subscriptions  │││ ╭──────────────────────────────────────────────── × ─╮────────────────────────────── │ 
+ │      ▸ Views              │││ │                                                    │                               │ 
+ │      ▸ Functions          │││ │  Quit TablePro?                                    │────────────────────────────── │ 
+ │      ▸ Sequences          │││ │                                                    │                               │ 
+ │    ▸ S analytics          │││ │  1 unsaved query will be lost.                     │                               │ 
+ │    ▸ S audit              │││ │                                                    │─────                          │ 
+ │                           │││ │                                  ▎Cancel    Quit   │                               │ 
+ │                           │││ │                                                    │                               │ 
+ │                           │││ ╰────────────────────────────────────────────────────╯                               │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ←→ Choose  Enter Cancel  Esc Cancel                                                         ✓ Connected to Development 

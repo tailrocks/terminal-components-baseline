@@ -1,0 +1,36 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Staging 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 10, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+resize 121x40
+checkpoint 002: visible 121×40 5072d65a5fbf1480
+resize 120x40
+checkpoint 003: visible 120×40 1f6e27c1f6c71d07
+checkpoint 004: visible staging-db.acme.io 1f6e27c1f6c71d07
+checkpoint 005: settled 1f6e27c1f6c71d07
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: visible Authentication failed e000a4b934fa208d
+checkpoint 007: visible Analytics e000a4b934fa208d
+mouse Press { x: 10, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+resize 121x40
+checkpoint 008: visible 121×40 075c56a2d8338804
+resize 120x40
+checkpoint 009: visible 120×40 df501c1141eaa026
+checkpoint 010: visible analytics.acme.io df501c1141eaa026
+checkpoint 011: settled df501c1141eaa026
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 012: visible Could not reach the host 142c1782c03224aa
+checkpoint 013: visible Production 142c1782c03224aa
+mouse Press { x: 10, y: 12, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 12, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+resize 121x40
+checkpoint 014: visible 121×40 3db31d315ff36533
+resize 120x40
+checkpoint 015: visible 120×40 05ffcfee7132f811
+checkpoint 016: visible prod-db-1.acme.io 05ffcfee7132f811
+key ctrl+q
+clean exit 0

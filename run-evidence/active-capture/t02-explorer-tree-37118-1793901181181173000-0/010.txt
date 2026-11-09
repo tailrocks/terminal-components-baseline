@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T organizations ×                                                                                  +   
+ ───────────────━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › organizations ────────────────────────────────────────── preview · 9 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││         ⚷ id                                  name               slug           7›   │ 
+ │      ▾ Tables             │││       1 be6dd084-a1f4-4d47-ae53-915ac89debab  Tessellate         tessellate        ┃ │ 
+ │ ▎      ▸ T organizations  │││       2 d97fe685-9880-4103-b4bb-63f04f7511b3  Northwind Labs     northwind-labs    ┆ │ 
+ │        ▸ T customers      │││       3 fae0a7e8-6c0a-4d12-8383-f1b42ba59a27  Northwind Labs     northwind-labs    ┆ │ 
+ │        ▸ T products       │││       4 627f38d8-eddd-4a34-98e7-6eb1f70e56cc  Juniper Home       juniper-home      ┆ │ 
+ │        ▸ T orders         │││       5 f25d1e2a-218d-4645-b0e4-76ffeb325485  Halden & Co        halden--co        ┆ │ 
+ │        ▸ T order_items    │││       6 e038f23c-9711-427e-a701-88dafc2862d7  Halden & Co        halden--co        ┆ │ 
+ │        ▸ T payments       │││       7 7e7f5f53-fa4b-45fd-bd43-178dde9d6eff  Fjord Analytics    fjord-analyti…    ┆ │ 
+ │        ▸ T subscriptions  │││       8 70adfd05-229a-4d06-8716-8d62a7c72091  Kestrel Health     kestrel-health    ┆ │ 
+ │      ▸ Views              │││       9 bfd92b61-2ae1-4bf3-9e72-d5eb3706de35  Bluefin Logistics  bluefin-logis…    ┆ │ 
+ │      ▸ Functions          │││      10 89ebec4c-a8ed-4f15-911e-4d3cb70f93bf  Halden & Co        halden--co        ┆ │ 
+ │      ▸ Sequences          │││      11 cc12e61e-7508-4aea-a38a-5590c719c9f3  Northwind Labs     northwind-labs    ┆ │ 
+ │    ▾ S analytics          │││      12 1e232b53-16cf-4fc9-8e84-99581d384d6a  Fjord Analytics    fjord-analyti…    ┆ │ 
+ │      ▾ Tables             │││      13 0718645a-3448-4bb1-bbac-b6c71e7abdfb  Meridian Foods     meridian-foods    ┆ │ 
+ │        ▸ T events         │││      14 9fd3158c-168a-4419-b6aa-9dae28745c63  Meridian Foods     meridian-foods    ┆ │ 
+ │        ▸ T daily_revenue  │││      15 7d64a631-326d-4911-a454-1f388901678c  Meridian Foods     meridian-foods    ┆ │ 
+ │      ▸ Views              │││      16 c0a84803-0195-4636-968c-d9107d79c41f  Tessellate         tessellate        ┆ │ 
+ │    ▸ S audit              │││      17 6c5ed460-d362-4469-b068-36a0618a683a  Meridian Foods     meridian-foods    ┆ │ 
+ │                           │││      18 771e01b3-aa94-4fd2-ab51-c04e2cd45099  Meridian Foods     meridian-foods    ┆ │ 
+ │                           │││      19 24e788a3-1d10-4270-a347-b501237f66dc  Kestrel Health     kestrel-health    ┆ │ 
+ │                           │││      20 761f8055-46b8-42e1-b75b-6687649d9955  Tessellate         tessellate        ┆ │ 
+ │                           │││      21 e6925e20-a8c6-47dd-b02c-424c499cf6e9  Bluefin Logistics  bluefin-logis…    ┆ │ 
+ │                           │││      22 01299bc7-26a8-4ca8-adad-561d6637139c  Juniper Home       juniper-home      ┆ │ 
+ │                           │││      23 feb1fb96-0d27-4379-9b96-f158b804141a  Tessellate         tessellate        ┆ │ 
+ │                           │││      24 adf1a6c1-4012-4ab0-981d-e51b05c48f83  Halden & Co        halden--co        ┆ │ 
+ │                           │││      25 8d4074f0-9c60-4e00-b4ad-0eb74b270e0f  Halden & Co        halden--co        ┆ │ 
+ │                           │││      26 c32ddbef-531b-45ed-a503-c39d05a68d82  Lumen Retail       lumen-retail      ┆ │ 
+ │                           │││         ━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 500 loaded · 1,240 total · cols 1–2 of 9                              │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓ Move  Enter Open  → Expand  / Filter  Ctrl+O Quick open  Shift+F10 Menu  Tab Next        ✓ Connected to Development 

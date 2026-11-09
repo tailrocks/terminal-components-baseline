@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local  
+                                                                                                                        
+  Here    frontend dev ○ ×    api dev ⠦ ×    api tests ✓ ×    logs · api worker sched… ⠦ ×    btm ○ ×                   
+ ────────━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────── 
+  frontend dev · stopped · 4 s · exit 130                                      child · ~/work/acme/apps/frontend · mbp  
+  port 5173 · url http://localhost:5173/ · pid 7731                                                                     
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ mise run dev  (apps/frontend)                                                                                   │ 
+ │  > frontend@2.4.0 dev /Users/alex/work/acme/apps/frontend                                                          │ 
+ │  > vite --host                                                                                                     │ 
+ │                                                                                                                    │ 
+ │    VITE v6.3.1  ready in 412 ms                                                                                    │ 
+ │                                                                                                                    │ 
+ │    ➜  Local:   http://localhos╭──────────────────────────────────────────────── × ─╮                               │ 
+ │    ➜  Network: http://192.168.│                                                    │                               │ 
+ │  12:41:07 [vite] hmr update /s│  Quit holla❯?                                      │                               │ 
+ │  12:41:09 [vite] hmr update /s│                                                    │                               │ 
+ │  stop requested by holla · SIG│  3 activities are still running. Quitting stops    │                               │ 
+ │  terminated (SIGTERM) · proces│  what holla started; detached monitors keep        │                               │ 
+ │                               │  running.                                          │                               │ 
+ │                               │                                                    │                               │ 
+ │                               │                            Stay   ▎Stop and quit   │                               │ 
+ │                               │                                                    │                               │ 
+ │                               ╰────────────────────────────────────────────────────╯                               │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/acme   main   ↑1                        stopped · 4 s                         ⠦ 3 running    truecolor · 120×40 
+ ←→ Choose  Enter Stop and quit  Esc Stay                                               frontend dev stopped · exit 130 

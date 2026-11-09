@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T orders ×                                                                                         +   
+ ───────────────━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › orders ────────────────────────────────────────────────────────── 14 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   ‹6    currency    shipping_address                          notes             6›   │ 
+ │      ▾ Tables             │││       1 USD         {"line1": "104 Calle Mayor", "city": "S…  Customer asked f…    ┃ │ 
+ │        ▸ T or╭──────────────────────────────────────────────────────────────────────────────────────╮            ┆ │ 
+ │        ▸ T cu│ Open Quickly                                                         All · Tab scope │tempt a…    ┆ │ 
+ │        ▸ T pr│ ▎ Search tables, views, schemas, tabs, queries…                                      │recepti…    ┆ │ 
+ │        ▸ T or│                                                                                      │amaged …    ┆ │ 
+ │        ▸ T or│  T change_log                        audit · Development            Tables         ┃ │, no pr…    ┆ │ 
+ │        ▸ T pa│  T customers                         public · Development                          ┃ │            ┆ │ 
+ │        ▸ T su│  T daily_revenue                     analytics · Development                       ┃ │tempt a…    ┆ │ 
+ │      ▸ Views │  T events                            analytics · Development                       ┃ │            ┆ │ 
+ │      ▸ Functi│  T login_attempts                    audit · Development                           ┃ │            ┆ │ 
+ │      ▸ Sequen│  T order_items                       public · Development                          ┃ │, no pr…    ┆ │ 
+ │    ▸ S analyt│  T orders                            public · Development     open                 ┃ │            ┆ │ 
+ │    ▸ S audit │  T organizations                     public · Development                          ┆ │            ┆ │ 
+ │              │  T payments                          public · Development                          ┆ │recepti…    ┆ │ 
+ │              │  T products                          public · Development                          ┆ │, no pr…    ┆ │ 
+ │              │  T subscriptions                     public · Development                          ┆ │recepti…    ┆ │ 
+ │              │  V active_customers                  public · Development           Views          ┆ │            ┆ │ 
+ │              │  V cohort_retention                  analytics · Development                       ┆ │            ┆ │ 
+ │              │ ↑↓ Move · Enter Open · Alt+Enter New tab · Tab Scope · Esc Clear / Close             │            ┆ │ 
+ │              ╰──────────────────────────────────────────────────────────────────────────────────────╯            ┆ │ 
+ │                           │││      21 USD         NULL                                      NULL                 ┆ │ 
+ │                           │││      22 USD         {"line1": "43 Hauptstrasse", "city": "S…  NULL                 ┆ │ 
+ │                           │││      23 EUR         {"line1": "32 Queen St", "city": "San F…  Gift wrap, no pr…    ┆ │ 
+ │                           │││      24 USD         NULL                                      NULL                 ┆ │ 
+ │                           │││      25 USD         {"line1": "41 Market St", "city": "Toro…  NULL                 ┆ │ 
+ │                           │││      26 USD         {"line1": "10 Via Roma", "city": "Paris…  Replace damaged …    ┆ │ 
+ │                           │││         ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 500 loaded · 1,203,338 total · cols 7–8 of 14                         │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Type Filter  ↑↓ Move  Enter Choose  Esc Cancel         Copied 90 characters · {"line1": "104 Calle Mayor", "city": "S… 

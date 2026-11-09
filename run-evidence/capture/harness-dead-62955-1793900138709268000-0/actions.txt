@@ -1,0 +1,1 @@
+spawn /bin/sh ["-c", "printf 'dead-child-marker\\n'; exit 0"] 80x24 color=None clock=false

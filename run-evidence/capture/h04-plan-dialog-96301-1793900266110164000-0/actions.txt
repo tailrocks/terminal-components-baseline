@@ -1,0 +1,95 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "upgrade-plan", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Upgrade everything 98f7cc9a6ada7a80
+checkpoint 001: visible 8 steps · 8 included 98f7cc9a6ada7a80
+key c
+checkpoint 002: start dialog b0565187b2f46d4a
+resize 121x40
+checkpoint 003: nudge 9c6668699f1b1534
+resize 120x40
+checkpoint 004: restored 6b467c104bd9fc9a
+checkpoint 005: settled 6b467c104bd9fc9a
+precondition 
+visual pre_refactor/h04_plan/h04_plan_plan_120x40 candidate b0ba21f3cb2639b29a6fc050a3fe39b0578ccab20682d62e90e42974cadd699a
+capture-only pre_refactor/h04_plan/h04_plan_plan_120x40: Failure(CheckFailure { test_id: "pre_refactor/h04_plan/h04_plan_plan_120x40", gate: State, reason: Missing, candidate_sha256: "b0ba21f3cb2639b29a6fc050a3fe39b0578ccab20682d62e90e42974cadd699a", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-plan-dialog-96301-1793900266110164000-0/check-artifacts/pre_refactor/h04_plan/h04_plan_plan_120x40/b0ba21f3cb2639b29a6fc050a3fe39b0578ccab20682d62e90e42974cadd699a/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-plan-dialog-96301-1793900266110164000-0/check-artifacts/pre_refactor/h04_plan/h04_plan_plan_120x40/b0ba21f3cb2639b29a6fc050a3fe39b0578ccab20682d62e90e42974cadd699a/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-plan-dialog-96301-1793900266110164000-0/check-artifacts/pre_refactor/h04_plan/h04_plan_plan_120x40/b0ba21f3cb2639b29a6fc050a3fe39b0578ccab20682d62e90e42974cadd699a/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 006: start dialog narrow 96dabfe8e65e2a30
+resize 81x24
+checkpoint 007: nudge 4e198f30646bfd76
+resize 80x24
+checkpoint 008: restored 52c97847a7c4de11
+checkpoint 009: settled 96dabfe8e65e2a30
+precondition 
+visual pre_refactor/h04_plan/h04_plan_plan_narrow candidate c91276976fb455dd57c3619af8446384c87d7d5d6d6f49a19ef62bb25e7f2a4b
+capture-only pre_refactor/h04_plan/h04_plan_plan_narrow: Failure(CheckFailure { test_id: "pre_refactor/h04_plan/h04_plan_plan_narrow", gate: State, reason: Missing, candidate_sha256: "c91276976fb455dd57c3619af8446384c87d7d5d6d6f49a19ef62bb25e7f2a4b", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-plan-dialog-96301-1793900266110164000-0/check-artifacts/pre_refactor/h04_plan/h04_plan_plan_narrow/c91276976fb455dd57c3619af8446384c87d7d5d6d6f49a19ef62bb25e7f2a4b/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-plan-dialog-96301-1793900266110164000-0/check-artifacts/pre_refactor/h04_plan/h04_plan_plan_narrow/c91276976fb455dd57c3619af8446384c87d7d5d6d6f49a19ef62bb25e7f2a4b/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-plan-dialog-96301-1793900266110164000-0/check-artifacts/pre_refactor/h04_plan/h04_plan_plan_narrow/c91276976fb455dd57c3619af8446384c87d7d5d6d6f49a19ef62bb25e7f2a4b/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 010: start dialog wide again 6b467c104bd9fc9a
+key enter
+checkpoint 011: dialog cancelled 84dccd8f86cdae54
+key space
+checkpoint 012: visible 01 Preflight is required by the plan and cannot be excluded ef83c756cc01c29c
+key down
+key down
+key down
+key down
+key down
+key space
+checkpoint 013: visible 06 excluded · 08 now blocked f69191f99324a43c
+key u
+checkpoint 014: visible 06 restored a1cd25236fb7f2bc
+key down
+key space
+checkpoint 015: visible 07 excluded · nothing depends on it 8ff52450d697450d
+key up
+key space
+checkpoint 016: visible 06 excluded · 08 now blocked 0d60ad878659e9de
+key c
+checkpoint 017: required steps still confirm a8cefd3fcce78866
+key esc
+checkpoint 018: second confirm dismissed 4ab80103761223ed
+key u
+checkpoint 019: visible 06 restored ea6735d8a82cc23e
+key u
+checkpoint 020: visible 8 included 27ae1f2780d3fa48
+key x
+checkpoint 021: visible Plan discarded · nothing was executed b3b9d5ff98829a52
+paste 33 UTF-8 bytes
+checkpoint 022: finder lists the upgrade plan 2dbacc7e906d9276
+key enter
+checkpoint 023: visible upgrade Debian packages and global mise tools on devbox 3a3fd3323a7a589d
+checkpoint 024: visible 8 steps · 8 included 3a3fd3323a7a589d
+key enter
+key enter
+checkpoint 025: start dialog before run 45191318d8d3b6c3
+key right
+key enter
+key up
+key up
+key up
+key up
+checkpoint 026: visible $ sudo apt-get update d093b7400d0adebe
+key down
+key down
+key down
+key down
+checkpoint 027: visible exit status 1 c2800fb7191a7f3d
+key r
+key ctrl+c
+checkpoint 028: visible Cancel the remaining steps? 571385b51348aa48
+key enter
+checkpoint 029: keep running 714b432592d0a12a
+key ctrl+c
+checkpoint 030: visible Cancel the remaining steps? 449f8eefa8bec0f2
+key right
+key enter
+key up
+key up
+key up
+key up
+checkpoint 031: visible $ sudo apt-get update f153522255844f83
+key down
+key down
+key down
+key down
+checkpoint 032: visible retrying 7bd0006b9bf95720
+key ctrl+q
+observed exit 0

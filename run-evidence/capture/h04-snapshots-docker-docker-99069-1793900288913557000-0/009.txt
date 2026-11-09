@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          no project  devbox · development  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Inspect 4 GB of generat… disk · here   
+  › Inspect 4 GB of generate…  disk     here       4 GB generated artifacts      ────────────────────────────────────   
+                                                                                 Does       1 rebuildable candidate     
+    Recent here                                                                             below this folder · 0       
+    nothing used here yet                                                                   stale enough to start       
+                                                                                            selected                    
+    Explore                                                                      Runs       'holla disk anal…ifacts'    
+     Tasks   Git   Files   Disk   Services   System                              In         /work/scratch               
+    System · devbox            explore  on devbox  available on this host        Host       devbox · development ·      
+                                                                                            over SSH                    
+                                                                                 Scope      here                        
+                                                                                 Why        4 GB generated artifacts    
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       opens a review · the        
+                                                                                            deletion is gated there     
+                                                                                            (typed phrase)              
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ /work/scratch                                                                                       truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  …               Esc never quits · Ctrl+Q quits 

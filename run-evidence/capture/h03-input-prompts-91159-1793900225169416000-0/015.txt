@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                             app · service checkout  ◆ devbox · production  
+                                                                                                                        
+  Here    deploy the release ! ×    quick no-op ✓ ×                                                                     
+ ──────────────────────────────────━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────── 
+  quick no-op · succeeded · 0 s · exit 0                                                      here · /srv/app · devbox  
+  $ true · started by Quick no-op                                                                                       
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ true                                                                                                            │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ /srv/app                                      succeeded · 0 s                                       truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  r Restart  Esc Back to Here  …     The program has finished · nothing reads input 

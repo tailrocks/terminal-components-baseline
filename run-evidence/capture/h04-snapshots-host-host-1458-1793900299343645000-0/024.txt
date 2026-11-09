@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Show cleanup history                                                                                 scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Show cleanup history     disk · host   
+  › Show cleanup history  disk  host  1 log records                              ────────────────────────────────────   
+                                                                                 Does       every requested item        
+                                                                                            with its outcome:           
+                                                                                            removed, trashed,           
+                                                                                            would-remove, failed,       
+                                                                                            skipped · the operation     
+                                                                                            log at                      
+                                                                                            ~/.cache/holla/ops.log      
+                                                                                 Runs       'holla disk history'        
+                                                                                 In         mbp · host-wide             
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      host                        
+                                                                                 Why        1 log records               
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/scratch                                                                     / ━━━━━━━━━━─ 91% ▲   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Esc Clear  …    Esc never quits · Ctrl+Q quits 

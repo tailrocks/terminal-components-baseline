@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T orders ×                                                                                         +   
+ ───────────────━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › orders ────────────────────────────────────────────────────────── 14 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   ‹5      total_amount  currency    shipping_address                            6›   │ 
+ │      ▾ Tables             │││       1          25.90  USD         {"line1": "104 Calle Mayor", "city": "S…       ┃ │ 
+ │        ▸ T organizations  │││       2        1617.64  USD         {"line1": "87 Nevsky Ave", "city": "Mil…       ┆ │ 
+ │        ▸ T customers      │││       3        2236.65  EUR         {"line1": "78 Via Roma", "city": "Toron…       ┆ │ 
+ │        ▸ T products       │││       4        2376.57  EUR         {"line1": "152 Market St", "city": "Par…       ┆ │ 
+ │        ▸ T orders╭────────────────────────────────────────────────────────────────────────── × ─╮y": "Lis…       ┆ │ 
+ │        ▸ T order_│                                                                              │ity": "T…       ┆ │ 
+ │        ▸ T paymen│  shipping_address                                                            │ity": "B…       ┆ │ 
+ │        ▸ T subscr│                                                                              │                ┆ │ 
+ │      ▸ Views     │                                                                              │y": "Par…       ┆ │ 
+ │      ▸ Functions │  {                                                                           │ty": "To…       ┆ │ 
+ │      ▸ Sequences │    "line1":"104 Calle Mayor",                                                │": "Pari…       ┆ │ 
+ │    ▸ S analytics │    "city":"Stockholm",                                                       │ty": "To…       ┆ │ 
+ │    ▸ S audit     │    "postal_code":"19431",                                                    │y": "Lis…       ┆ │ 
+ │                  │    "country":"US"                                                            │y": "Sto…       ┆ │ 
+ │                  │  }                                                                           │": "Madr…       ┆ │ 
+ │                  │                                                                              │y": "Lis…       ┆ │ 
+ │                  │                                                                     ▎Close   │ty": "St…       ┆ │ 
+ │                  │                                                                              │"city": …       ┆ │ 
+ │                  ╰──────────────────────────────────────────────────────────────────────────────╯: "Lisbo…       ┆ │ 
+ │                           │││      20         497.22  EUR         {"line1": "115 Kungsgatan", "city": "Ma…       ┆ │ 
+ │                           │││      21        2402.17  USD         NULL                                           ┆ │ 
+ │                           │││      22        1645.69  USD         {"line1": "43 Hauptstrasse", "city": "S…       ┆ │ 
+ │                           │││      23        2412.74  EUR         {"line1": "32 Queen St", "city": "San F…       ┆ │ 
+ │                           │││      24        1282.42  USD         NULL                                           ┆ │ 
+ │                           │││      25        2219.60  USD         {"line1": "41 Market St", "city": "Toro…       ┆ │ 
+ │                           │││      26        1326.92  USD         {"line1": "10 Via Roma", "city": "Paris…       ┆ │ 
+ │                           │││         ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 500 loaded · 1,203,338 total · cols 6–8 of 14                         │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Enter Close  Esc Close                                                                            Opened public.orders 

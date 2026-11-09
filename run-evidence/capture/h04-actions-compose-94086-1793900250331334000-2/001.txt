@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Stop the Compose project                                                                             scope ‹ here ›  
+                                                                                                                        
+    Results · 2                                                                  Stop the Compose proj… docker · here   
+  › Stop the Compose project   docker  here  project containers only             ────────────────────────────────────   
+    Start the Compose project  docker  here  project containers                  Does       docker compose down for     
+                                                                                            project acme ·              
+                                                                                            containers and the          
+                                                                                            network are removed ·       
+                                                                                            volumes are kept (no        
+                                                                                            --volumes)                  
+                                                                                 Runs       docker compose down         
+                                                                                 In         ~/work/stack                
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        project containers only     
+                                                                                 Changes    project containers and      
+                                                                                            network removed · named     
+                                                                                            volumes stay                
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       one confirmation            
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/stack                                                                                        truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Confirm…  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                   

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+  Here › Files › Find                                                                                                   
+  Here › Files › Find                                                                                                   
+ ━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────── 
+   src                                                                                            ~ · 29 of 29 indexed  
+    1 result · home scope                                                                                               
+                                                                                                                        
+  ▸ src                         ~/work/app                            ~/work/app/src                        directory   
+     ╭──────────────────────────────╮                                 ───────────────────────────────────────────────   
+     │  /Users/alex/work/app/src    │                                 1 visible · 0 hidden                              
+     │  Open in the OS        Enter │                                 modified 2026-08-11 08:41                         
+     │  Reveal in the file manager  │                                 Find and Browse are always available from Here    
+     │  Copy full path            y │                                                                                   
+     │  Analyze disk usage          │                                                                                   
+     │ ──────────────────────────── │                                                                                   
+     │  Preview here                │                                                                                   
+     ╰──────────────────────────────╯                                                                                   
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/notes                                 29 indexed · 1 results                                 truecolor · 120×40 
+ ↑↓ Move  Type to jump  Enter Choose  Esc Close                                           Select a file or folder first 

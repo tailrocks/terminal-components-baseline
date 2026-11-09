@@ -1,0 +1,17 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--connect", "Local PostgreSQL", "--motion", "reduced", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Query 1 a4f5f52a50763f3a
+key ?
+checkpoint 001: visible Keyboard shortcuts e3f80eb9193fe073
+key escape
+key ctrl+b
+checkpoint 002: explorer toggles closed e3f80eb9193fe073
+key ctrl+b
+checkpoint 003: visible Filter objects 1c19b3e0be139e69
+checkpoint 004: absent ✓ Connected to 92d6b74a9913d9a5
+checkpoint 005: settled 92d6b74a9913d9a5
+precondition 
+visual functional/tablepro_workbench_layout candidate 5947db1ef3bfecc94efddf998b177d167638a318dde8e590e4303d691b9a7074
+capture-only functional/tablepro_workbench_layout: Failure(CheckFailure { test_id: "functional/tablepro_workbench_layout", gate: State, reason: Missing, candidate_sha256: "5947db1ef3bfecc94efddf998b177d167638a318dde8e590e4303d691b9a7074", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-help-layout-22049-1793901635847818000-1/check-artifacts/functional/tablepro_workbench_layout/5947db1ef3bfecc94efddf998b177d167638a318dde8e590e4303d691b9a7074/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-help-layout-22049-1793901635847818000-1/check-artifacts/functional/tablepro_workbench_layout/5947db1ef3bfecc94efddf998b177d167638a318dde8e590e4303d691b9a7074/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-help-layout-22049-1793901635847818000-1/check-artifacts/functional/tablepro_workbench_layout/5947db1ef3bfecc94efddf998b177d167638a318dde8e590e4303d691b9a7074/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key escape
+key ctrl+q
+clean exit 0

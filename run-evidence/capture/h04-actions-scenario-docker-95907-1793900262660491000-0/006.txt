@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   Stop the Compose project                                                                             scope ‹ here ›  
+                                                                                                                        
+    Results · 2                                                                  Stop the Compose proj… docker · here   
+  › Stop the Compose project   docker  here  project containers only             ────────────────────────────────────   
+    Start the Compose project  docker  here  project containers                  Does       docker compose down for     
+                       ╭──────────────────────────────────────────────────────────────────── × ─╮ct acme ·              
+                       │                                                                        │iners and the          
+                       │  Stop the Compose project                                              │rk are removed ·       
+                       │                                                                        │es are kept (no        
+                       │  Action        docker compose down for project acme · containers and   │umes)                  
+                       │                the network are removed · volumes are kept (no          │r compose down         
+                       │                --volumes)                                              │k/stack                
+                       │  Host          mbp · local                                             │ local                 
+                       │  In            ~/work/stack                                            │                       
+                       │  Scope         here                                                    │ct containers only     
+                       │  Changes       project containers and network removed · named volumes  │ct containers and      
+                       │                stay                                                    │rk removed · named     
+                       │  Risk          mutating                                                │es stay                
+                       │  Data          live · 0 s ago                                          │ing                    
+                       │  Confirmation  one explicit confirmation · not remembered              │· 0 s ago              
+                       │                                                                        │onfirmation            
+                       │  docker compose down                                                   │ Alias · Why here?     
+                       │                                                                        │                       
+                       │                                                        Cancel   ▎Run   │                       
+                       │                                                                        │                       
+                       ╰────────────────────────────────────────────────────────────────────────╯                       
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/stack                                                                                        truecolor · 120×40 
+ ←→ Choose  Enter Run  Esc Cancel                                                                                       

@@ -1,0 +1,24 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "launch-failure", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: failed frontend b579f9c8eff366d3
+resize 121x40
+checkpoint 001: nudge 18615f5bdebe6a07
+resize 120x40
+checkpoint 002: restored b579f9c8eff366d3
+checkpoint 003: settled b579f9c8eff366d3
+precondition 
+visual pre_refactor/h03_output/h03_output_states_120x40 candidate ad2b86ee6a9804c7c1c4a0e448928583b7a42481d9f612dd62ca580f575ae6ac
+capture-only pre_refactor/h03_output/h03_output_states_120x40: Failure(CheckFailure { test_id: "pre_refactor/h03_output/h03_output_states_120x40", gate: State, reason: Missing, candidate_sha256: "ad2b86ee6a9804c7c1c4a0e448928583b7a42481d9f612dd62ca580f575ae6ac", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-output-states-failed-92751-1793900238399655000-1/check-artifacts/pre_refactor/h03_output/h03_output_states_120x40/ad2b86ee6a9804c7c1c4a0e448928583b7a42481d9f612dd62ca580f575ae6ac/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-output-states-failed-92751-1793900238399655000-1/check-artifacts/pre_refactor/h03_output/h03_output_states_120x40/ad2b86ee6a9804c7c1c4a0e448928583b7a42481d9f612dd62ca580f575ae6ac/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-output-states-failed-92751-1793900238399655000-1/check-artifacts/pre_refactor/h03_output/h03_output_states_120x40/ad2b86ee6a9804c7c1c4a0e448928583b7a42481d9f612dd62ca580f575ae6ac/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 004: narrow failed 90854910c8040e25
+resize 81x24
+checkpoint 005: nudge 3e9d7d5e57f19490
+resize 80x24
+checkpoint 006: restored 510c0ce1837f7437
+checkpoint 007: settled 90854910c8040e25
+precondition 
+visual pre_refactor/h03_output/h03_output_states_narrow candidate 4138636032a38ce6aa7de0545161c47cb2c77a8ce1877b405f01ee72c4828523
+capture-only pre_refactor/h03_output/h03_output_states_narrow: Failure(CheckFailure { test_id: "pre_refactor/h03_output/h03_output_states_narrow", gate: State, reason: Missing, candidate_sha256: "4138636032a38ce6aa7de0545161c47cb2c77a8ce1877b405f01ee72c4828523", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-output-states-failed-92751-1793900238399655000-1/check-artifacts/pre_refactor/h03_output/h03_output_states_narrow/4138636032a38ce6aa7de0545161c47cb2c77a8ce1877b405f01ee72c4828523/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-output-states-failed-92751-1793900238399655000-1/check-artifacts/pre_refactor/h03_output/h03_output_states_narrow/4138636032a38ce6aa7de0545161c47cb2c77a8ce1877b405f01ee72c4828523/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-output-states-failed-92751-1793900238399655000-1/check-artifacts/pre_refactor/h03_output/h03_output_states_narrow/4138636032a38ce6aa7de0545161c47cb2c77a8ce1877b405f01ee72c4828523/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 008: wide restored b579f9c8eff366d3
+key ctrl+q
+clean exit 0

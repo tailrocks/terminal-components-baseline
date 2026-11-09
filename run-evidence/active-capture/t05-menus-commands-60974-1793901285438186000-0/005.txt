@@ -1,0 +1,40 @@
+  ▪  TablePro  Connections  6 saved                                                         truecolor · 120×40  ? help  
+                                                                                                                        
+ ╭─ Connections ─────────────────── 6 ─╮    Development                                                                 
+ │                                     │    ──────────────────────────────────────────────────────────────────          
+ │   Filter connections                │    Engine       PostgreSQL                                                     
+ │  ▾ Personal                         │    Host         dev-db.internal.acme.io:5432                                   
+ │        Local PostgreSQL         pg  │    Database     acme_dev                                                       
+ │        Scratch              sqlite  │    User         acme_app                                                       
+ │  ▾ Acme                             │    Environment  development                                                    
+ │      · Development              pg  │    Safe Mode    Silent · Writes run without asking. Destructive                
+ │ ╭────────────────────────────╮  pg  │                 statements still confirm.                                      
+ │ │  Development               │ysql  │    SSL          ✓ on                                                           
+ │ │  Connect             Enter │  pg  │    SSH          off                                                            
+ │ │ ────────────────────────── │      │    Last used    yesterday                                                      
+ │ │  Edit…                   e │      │                                                                                
+ │ │  Duplicate           Alt+D │      │                                                                                
+ │ │  Delete…                 d │      │                                                                                
+ │ │ ────────────────────────── │      │     Connect    Edit    Duplicate    Delete…                                    
+ │ │  New connection…    Ctrl+N │      │                                                                                
+ │ │  Filter                  / │      │                                                                                
+ │ ╰────────────────────────────╯      │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ ╰─────────────────────────────────────╯                                                                                
+                                                                                                                        
+ ↑↓ Move  Enter Choose  Esc Close                                                                                       

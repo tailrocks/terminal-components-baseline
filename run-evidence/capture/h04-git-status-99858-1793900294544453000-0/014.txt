@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         holla · Rust project  mbp · local  
+  Here › Modified files                                                                                                 
+  Here › Modified files                                                                                                 
+ ━━━━━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────── 
+  Modified files                                                                         ~/work/holla · live · 1 s ago  
+                                                                                                                        
+  Branch    main                                                                                                        
+  Upstream  origin/main · 3 behind · 0 ahead                                                                            
+  Primary   main · resolved from origin/HEAD                                                                            
+  Worktree  0 staged · 4 unstaged · 1 untracked · 0 conflicts · 1 stashed                                               
+                                                                                                                        
+ ╭─ Status ───────────────────────────────────────────────────────────────────────────────────── 13 lines · y copies ─╮ 
+ │  $ git -C /Users/alex/work/holla status --porcelain=v2 --branch --show-stash                                       │ 
+ │   M src/bin/holla/screens/here.rs                                                                                  │ 
+ │   M src/bin/holla/app.rs                                                                                           │ 
+ │   M DESIGN.md                                                                                                      │ 
+ │   M holla-project/notes/00-decisions.md                                                                            │ 
+ │  ?? … 1 untracked                                                                                                  │ 
+ │                                                                                                                    │ 
+ │  $ git diff --stat                                                                                                 │ 
+ │   src/bin/holla/screens/here.rs                    |  12 +++                                                       │ 
+ │   src/bin/holla/app.rs                             |  21 ++++                                                      │ 
+ │   DESIGN.md                                        |  30 +++++                                                     │ 
+ │   holla-project/notes/00-decisions.md              |  39 ++++++                                                    │ 
+ │   4 files changed                                                                                                  │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Pull    Open lazygit                                                                                           
+                                                                                                                        
+ ~/work/holla   main   ↓3   • 5                         snapshot · read-only                         truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                                                          

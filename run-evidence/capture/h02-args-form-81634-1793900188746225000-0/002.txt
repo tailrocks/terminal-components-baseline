@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   poly · Node project · yarn  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Clone a GitHub repository                                                                            scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Clone a GitHub repositor… git · here   
+  › Clone a GitHub repositor…  git  here  logged in as alex-dev                  ────────────────────────────────────   
+                                                                                 Does       choose a repository from    
+                                                                                            alex-dev or its             
+                                                                                            organizations, review       
+                                                                                            owner, protocol,            
+                                                                                            destination and primary     
+                                                                                            branch, then clone          
+                                                                                 Runs       gh repo clone '<…ation>'    
+                                                                                 In         ~/work/poly                 
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        logged in as alex-dev       
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       cached · 40 s ago           
+                                                                                 Gate       one confirmation            
+                                                                                 Args       owner = alex-dev ·          
+                                                                                            repository · protocol =     
+                                                                                            ssh · destination =         
+                                                                                            ~/work/poly                 
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/poly                                                                                         truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Confirm…  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear    Clone a GitHu… 

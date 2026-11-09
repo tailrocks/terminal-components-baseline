@@ -1,0 +1,24 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent        …  
+                                                                                
+  ≡ Quer╭─ Keyboard shortcuts ──────────────────────── 5–20 of 40 ─ × ─╮    +   
+ ━━━━━━━│  Ctrl+R         Run the statement at the cursor             ┆│─────── 
+ › ╭─ Qu│  F5             Run, or refresh the table                   ┆│──────╮ 
+   │   R│  Alt+R Shift+F5 Run all statements                          ┃│      │ 
+ E │   ›│  Ctrl+X         EXPLAIN                                     ┃│      │ 
+ x │    │  Alt+X Shift+F7 EXPLAIN ANALYZE                             ┃│      │ 
+ p │    │  Ctrl+T         New query tab                               ┃│      │ 
+ l │    │  Ctrl+W         Close tab                                   ┃│      │ 
+ o │  ──│  Ctrl+O Ctrl+P  Open Quickly                                ┃│───── │ 
+ r │    │  Ctrl+G         Tab list                                    ┆│      │ 
+ e │    │  Ctrl+Y         Query history                               ┆│      │ 
+ r │    │  Ctrl+B         Show or hide the explorer                   ┆│      │ 
+   │    │  Ctrl+L         Safe Mode                                   ┆│      │ 
+   │    │  Ctrl+D         Data / Structure                            ┆│      │ 
+   │    │  Ctrl+S         Save pending changes                        ┆│      │ 
+   │    │  Ctrl+F         Filter or find                              ┆│      │ 
+   │    │  z              Maximize the pane                           ┆│      │ 
+   │    │                                                      ▎Done   │      │ 
+   │    ╰──────────────────────────────────────────────────────────────╯      │ 
+   ╰──────────────────────────────────────────────────────────────────────────╯ 
+                                                                                
+ ↑↓ Scroll  Esc Close                                ✓ Connected to Development 

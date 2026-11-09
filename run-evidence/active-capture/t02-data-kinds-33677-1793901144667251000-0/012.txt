@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent          • 1 pending  truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T organizations ×                                                                                  +   
+ ───────────────━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › organizations ──────────────────────────────────────────────────── 9 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││         ⚷ id                                  name               slug           7›   │ 
+ │      ▾ Tables             │││    •  1 be6dd084-a1f4-4d47-ae53-915ac89debab  KindEdit           tessellate        ┃ │ 
+ │        ▸ T or╭──────────────────────────────────────────────────────────────────────────────────────╮ind-labs    ┆ │ 
+ │        ▸ T cu│ Open Quickly                                                         All · Tab scope │ind-labs    ┆ │ 
+ │        ▸ T pr│ ▎ Search tables, views, schemas, tabs, queries…                                      │r-home      ┆ │ 
+ │        ▸ T or│                                                                                      │--co        ┆ │ 
+ │        ▸ T or│  T change_log                        audit · Development            Tables         ┃ │--co        ┆ │ 
+ │        ▸ T pa│  T customers                         public · Development                          ┃ │analyti…    ┆ │ 
+ │        ▸ T su│  T daily_revenue                     analytics · Development                       ┃ │l-health    ┆ │ 
+ │      ▸ Views │  T events                            analytics · Development                       ┃ │n-logis…    ┆ │ 
+ │      ▸ Functi│  T login_attempts                    audit · Development                           ┃ │--co        ┆ │ 
+ │      ▸ Sequen│  T order_items                       public · Development                          ┃ │ind-labs    ┆ │ 
+ │    ▸ S analyt│  T orders                            public · Development                          ┃ │analyti…    ┆ │ 
+ │    ▸ S audit │  T organizations                     public · Development     open                 ┆ │an-foods    ┆ │ 
+ │              │  T payments                          public · Development                          ┆ │an-foods    ┆ │ 
+ │              │  T products                          public · Development                          ┆ │an-foods    ┆ │ 
+ │              │  T subscriptions                     public · Development                          ┆ │late        ┆ │ 
+ │              │  V active_customers                  public · Development           Views          ┆ │an-foods    ┆ │ 
+ │              │  V cohort_retention                  analytics · Development                       ┆ │an-foods    ┆ │ 
+ │              │ ↑↓ Move · Enter Open · Alt+Enter New tab · Tab Scope · Esc Clear / Close             │l-health    ┆ │ 
+ │              ╰──────────────────────────────────────────────────────────────────────────────────────╯late        ┆ │ 
+ │                           │││      21 e6925e20-a8c6-47dd-b02c-424c499cf6e9  Bluefin Logistics  bluefin-logis…    ┆ │ 
+ │                           │││      22 01299bc7-26a8-4ca8-adad-561d6637139c  Juniper Home       juniper-home      ┆ │ 
+ │                           │││      23 feb1fb96-0d27-4379-9b96-f158b804141a  Tessellate         tessellate        ┆ │ 
+ │                           │││      24 adf1a6c1-4012-4ab0-981d-e51b05c48f83  Halden & Co        halden--co        ┆ │ 
+ │                           │││         ━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││                                                                                      │ 
+ │                           │││   • 1 pending · 1 update                              Preview SQL   Discard   Save   │ 
+ │                           │││   rows 1–24 of 500 loaded · 1,240 total · cols 1–2 of 9                              │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Type Filter  ↑↓ Move  Enter Choose  Esc Cancel                                             Opened public.organizations 

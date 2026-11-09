@@ -1,0 +1,40 @@
+  jackin❯    File   Go   Help             Accounts › Claude › Spare  ⠋ refreshing 1  inside the Construct  ● 2 running  
+                                                                                                                        
+ ╭─ Accounts ───────── 13 · 4 ▲ · 4 ! ─╮ │  Claude · Spare                                               account · ok   
+ │     Overview                        │ │  ─────────────────────────────────────────────────────────────────────────   
+ │   ▾ Claude                      !   │ │  Provider            Anthropic / Claude                                      
+ │     ★ Personal                      │ │  Agent runtime       Claude Code                                             
+ │       Archived contractor laptop …  │ │  Usage surface       Claude                                                  
+ │ ▎     Spare                         │ │  Identity            alexey@chainargos.com                                   
+ │       Work                      !   │ │  Plan                Team                                                    
+ │   ▾ Codex                           │ │  Credential          API key · …1234 · fingerprint a605d51c                  
+ │     ★ Primary                       │ │                      ••••••••…1234                                           
+ │       Experiments                   │ │  Provenance          configured source · confidence authoritative ·          
+ │   ▾ Amp                         ▲   │ │                      registered                                              
+ │       discovered                ▲   │ │  Lifecycle           available                                               
+ │   ▾ Grok                            │ │  Default             no                                                      
+ │     ★ Team                          │ │  Enabled             yes                                                     
+ │   ▾ Z.AI                        ▲   │ │                                                                              
+ │       discovered                ▲   │ │  Quota                                         current · refreshed 0 s ago   
+ │   ▾ Kimi                        !   │ │  Session · 5-hour      38%                                 resets in 3 h …   
+ │       discovered                !   │ │  Weekly · all models   33%                                 resets Sun 19:…   
+ │   ▾ MiniMax                     !   │ │  Weekly · Sonnet       21%                                 resets Sun 19:…   
+ │       discovered                !   │ │  Weekly · Opus         54%                                 resets Sun 19:…   
+ │   ▾ OpenCode                    !   │ │                                                                              
+ │     ★ Go subscription           !   │ │  Validation          ✓ material   ✓ identity   ✓ quota access · quota        
+ │       ci-bot · discovered           │ │                                   readable                                   
+ │     Unsupported                     │ │                                                                              
+ │     + Add account…                  │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │  Refresh    Validate    Edit…    Set default    Disable    Remove…           
+ ╰─────────────────────────────────────╯ │                                                                              
+                                                                                                                        
+ Enter Details  r Refresh  e Edit…  Space Default  t Disable  v Validate  d Remove…  Esc Back  …   Saved Claude · Spare 

@@ -1,0 +1,28 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-platforms", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 8b7507b82a7b381b
+paste 17 UTF-8 bytes
+checkpoint 001: finder row selected 69e217ac8fb391bb
+key enter
+checkpoint 002: snapshot open 8b3ce14e2bdf2ad1
+resize 121x40
+checkpoint 003: nudge 10255d53bfc587c9
+resize 120x40
+checkpoint 004: restored ed75bf7a54b2a1fe
+checkpoint 005: settled b66f8c7d473168d7
+precondition 
+visual pre_refactor/h04_snapshots_services/h04_snapshots-services_services_120x40 candidate a76c9ad0ce9f1a29452008797359f00164ddfd96f579b1ae70d66fda04920e24
+capture-only pre_refactor/h04_snapshots_services/h04_snapshots-services_services_120x40: Failure(CheckFailure { test_id: "pre_refactor/h04_snapshots_services/h04_snapshots-services_services_120x40", gate: State, reason: Missing, candidate_sha256: "a76c9ad0ce9f1a29452008797359f00164ddfd96f579b1ae70d66fda04920e24", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-services-mac-4579-1793900308140459000-3/check-artifacts/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_120x40/a76c9ad0ce9f1a29452008797359f00164ddfd96f579b1ae70d66fda04920e24/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-services-mac-4579-1793900308140459000-3/check-artifacts/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_120x40/a76c9ad0ce9f1a29452008797359f00164ddfd96f579b1ae70d66fda04920e24/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-services-mac-4579-1793900308140459000-3/check-artifacts/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_120x40/a76c9ad0ce9f1a29452008797359f00164ddfd96f579b1ae70d66fda04920e24/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 006: brew at 80x24 896c02f4f8b22258
+resize 81x24
+checkpoint 007: nudge 5240667342d9f72c
+resize 80x24
+checkpoint 008: restored b9922f0d865d9e95
+checkpoint 009: settled 896c02f4f8b22258
+precondition 
+visual pre_refactor/h04_snapshots_services/h04_snapshots-services_services_narrow candidate da1924667038d424e4fdcf537e9064cb5432755163528e6af46b83cb622e00c1
+capture-only pre_refactor/h04_snapshots_services/h04_snapshots-services_services_narrow: Failure(CheckFailure { test_id: "pre_refactor/h04_snapshots_services/h04_snapshots-services_services_narrow", gate: State, reason: Missing, candidate_sha256: "da1924667038d424e4fdcf537e9064cb5432755163528e6af46b83cb622e00c1", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-services-mac-4579-1793900308140459000-3/check-artifacts/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_narrow/da1924667038d424e4fdcf537e9064cb5432755163528e6af46b83cb622e00c1/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-services-mac-4579-1793900308140459000-3/check-artifacts/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_narrow/da1924667038d424e4fdcf537e9064cb5432755163528e6af46b83cb622e00c1/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-services-mac-4579-1793900308140459000-3/check-artifacts/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_narrow/da1924667038d424e4fdcf537e9064cb5432755163528e6af46b83cb622e00c1/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 010: brew back at 120x40 b66f8c7d473168d7
+key ctrl+q
+clean exit 0

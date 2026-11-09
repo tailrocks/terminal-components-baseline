@@ -1,0 +1,50 @@
+ ▪ Junie Design system  Overview                                                                                     truecolor · 160×50   i Inspector   ? Help  
+                                                                                                                                                                
+ Components           54  Overview  Tokens and principles behind every component                                                                                
+ ───────────────────────                                                                                                                                        
+ ▎› Overview               Playground    Options    States                                                                                      the live widget 
+  ▸ App shell             ━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ▸ Inputs & forms                                                                                                                                              
+  ▸ Tables                  Tokens · planes and text                                          Tokens · accent and status                                       ┃
+  ▸ Navigation              ─────────────────────────────────────────────────────────────     ──────────────────────────────────────────────────────────────   ┃
+  ▸ Overlays                    ▏ canvas                                          #000000         ▏ accent                                           #48e054   ┃
+  ▸ Feedback                    ▏ surface                                         #111111         ▏ accent.hover                                     #3ab343   ┃
+  ▸ Layout                      ▏ surface.elevated                                #18181b         ▏ accent.pressed                                   #2e9a38   ┃
+  ▸ Text & code                 ▏ surface.overlay                                 #27272a         ▏ accent.bg                                        #173f1c   ┃
+  ▸ Screens                     ▏ field                                           #1e1e22         ▏ accent.bg.subtle                                 #0a1c0c   ┃
+                                ▏ field.hover                                     #2f2f34         ▏ accent.bg.hover                                  #1e5024   ┃
+                                ▏ popover                                         #3f3f46         ▏ focus                                            #48e054   ┃
+                                ▏ highlight                                       #2f5aa8         ▏ link                                             #79b8ff   ┃
+                                ▏ highlight.danger                                #7a2a2a         ▏ success                                          #3fb950   ┃
+                                ▏ selection                                       #1f3460         ▏ success.strong                                   #56d364   ┃
+                                ▏ border.subtle                                   #3a3a3a         ▏ info                                             #79b8ff   ┃
+                                ▏ border.strong                                   #4d4d4d         ▏ warning                                          #f59e09   ┃
+                                ▏ scroll.track                                    #474747         ▏ error                                            #f05d5d   ┃
+                                ▏ text.primary                                    #ffffff         ▏ error.bg                                         #2e0f0f   ┃
+                                ▏ text.secondary                                  #b3b3b3         ▏ error.soft                                       #e8a0a0   ┆
+                                ▏ text.muted                                      #8a8a8a         ▏ error.strong                                     #ff8a8a   ┆
+                                ▏ text.faint                                      #737373         ▏ danger                                           #ff6b6b   ┆
+                                ▏ text.ghost                                      #262626         ▏ syntax.keyword                                   #79b8ff   ┆
+                                ▏ text.on_accent                                  #19191c         ▏ syntax.string                                    #8bd5ca   ┆
+                                ▏ disabled                                        #4d4d4d         ▏ syntax.literal                                   #c6a0f6   ┆
+                                                                                                                                                               ┆
+                                                                                                                                                               ┆
+                            Glyphs and strings                                                Ladders · theme.ladders                                          ┆
+                            ─────────────────────────────────────────────────────────────     ──────────────────────────────────────────────────────────────   ┆
+                            Glyphs         UNICODE           ASCII                            Ladder: rest hover pressed · Plane::up                           ┆
+                            checks         [✓] [ ] [–]       [x] [ ] [-]                      Canvas                          → Raised                         ┆
+                            radio, toggle  (●) ( ) ──● ○──   (*) ( ) --* o--                  Surface                         → Raised                         ┆
+                            chevrons       ▴ ▾ ▾ ▸           ^ v v >                          Card                            → Raised                         ┆
+                            status         ✓ ✗ ▲ i           + X ! i                          Field                           → Raised                         ┆
+                            scrollbar      ┆┃┆               :#:                              Raised                          → Popover                        ┆
+                            meter          ━━─               ==-                              Popover                         → Popover                        ┆
+                            more, close    … ▾ ×             ~ v x                            Highlight                       → Highlight                      ┆
+                                                                                              HighlightDanger                 → HighlightDanger                ┆
+                            Strings        DEFAULT           override                         Accent                          → Accent                         ┆
+                            more_cut       … {} more         ... {} more                      Danger                          → Danger                         ┆
+                            search         Type to search…   Type to search...                handle           ┃    ┃    ┃                                     ┆
+                            empty_list     Nothing here yet  Nothing here yet                 seam             │    │    │                                     ┆
+                            loading        Loading rows…     Loading rows...                                                                                   ┆
+                                                                                                                                                               ┆
+                                                                                                                                                                
+ ↑↓ Move  Enter Open  / Filter  Tab Into page  q Quit                                                                                                           

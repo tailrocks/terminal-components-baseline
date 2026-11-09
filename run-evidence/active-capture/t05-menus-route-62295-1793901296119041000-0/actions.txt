@@ -1,0 +1,26 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+key down
+checkpoint 001: connection cursor moved 77b1ee3085c8570b
+key down
+checkpoint 002: connection cursor moved 23afca19a02c7bb7
+key down
+checkpoint 003: connection cursor moved 8c74765db906c1ba
+key down
+checkpoint 004: connection cursor moved bf155f39e57929aa
+key shift+f10
+checkpoint 005: menu Duplicate 53565770f844927f
+key esc
+checkpoint 006: closed New connection… 416b78b387f904ae
+checkpoint 007: settled 416b78b387f904ae
+mouse Press { x: 5, y: 0, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 5, y: 0, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 008: connections app menu 7d0cf9d875fee994
+key esc
+checkpoint 009: closed Quit TablePro fa148c197856d7e1
+key down
+checkpoint 010: connection cursor moved 416b78b387f904ae
+key enter
+checkpoint 011: development connected 1615509862a77c56
+key ctrl+q
+clean exit 0

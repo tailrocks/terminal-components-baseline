@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   batch · project collection  mbp · local  
+                                                                                                                        
+  Here    emit a mixed stream ✓ ×                                                                                       
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Emit a mixed stream                                                                                  scope ‹ here ›  
+                                                                                                                        
+    Results · 2                                                                  Emit a mixed stream    custom · here   
+  › Emit a mixed stream  custom    here  Current folder · trusted                ────────────────────────────────────   
+    emit a mixed stream  activity  here  ✓ succeeded · 0 s                       Does       CRLF, ANSI, invalid         
+                                                                                            UTF-8 and a final           
+                                                                                            fragment                    
+                                                                                 Runs       ./emit-stream               
+                                                                                 In         ~/work/batch                
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        Current folder · trusted    
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Set an alias… · Show        
+                                                                                            configuration               
+                                                                                            diagnostics · Pin ·         
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/batch                                                                                        truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Esc Clear  …           emit a mixed stream finished · exit 0 

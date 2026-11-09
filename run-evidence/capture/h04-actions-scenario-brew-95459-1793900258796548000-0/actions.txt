@@ -1,0 +1,8 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-brew-services", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions ef2f2f7b4761472e
+paste 10 UTF-8 bytes
+checkpoint 001: Stop svc02 selected 921c9503fd067170
+key enter
+checkpoint 002: svc02 stop failed cb3f0ed01dfbb581
+key ctrl+q
+clean exit 0

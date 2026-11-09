@@ -1,0 +1,24 @@
+ │        ▸ T subscriptions  │││       8 70adfd05-229a-4d06-8716-8d62a7c72091  K
+ │      ▸ Views              │││       9 bfd92b61-2ae1-4bf3-9e72-d5eb3706de35  B
+ │      ▸ Functions          │││      10 89ebec4c-a8ed-4f15-911e-4d3cb70f93bf  H
+ │      ▸ Sequences          │││      11 cc12e61e-7508-4aea-a38a-5590c719c9f3  N
+ │    ▾ S analytics          │││      12 1e232b53-16cf-4fc9-8e84-99581d384d6a  F
+ │      ▾ Tables             │││      13 0718645a-3448-4bb1-bbac-b6c71e7abdfb  M
+ │        ▸ T events         │││      14 9fd3158c-168a-4419-b6aa-9dae28745c63  M
+ │        ▸ T daily_revenue  │││      15 7d64a631-326d-4911-a454-1f388901678c  M
+ │      ▸ Views              │││      16 c0a84803-0195-4636-968c-d9107d79c41f  T
+ │    ▸ S audit              │││      17 6c5ed460-d362-4469-b068-36a0618a683a  M
+ │                           │││      18 771e01b3-aa94-4fd2-ab51-c04e2cd45099  M
+ │                           │││      19 24e788a3-1d10-4270-a347-b501237f66dc  K
+ │                           │││      20 761f8055-46b8-42e1-b75b-6687649d9955  T
+ │                           │││      21 e6925e20-a8c6-47dd-b02c-424c499cf6e9  B
+ │                           │││      22 01299bc7-26a8-4ca8-adad-561d6637139c  J
+ │                           │││      23 feb1fb96-0d27-4379-9b96-f158b804141a  T
+ │                           │││      24 adf1a6c1-4012-4ab0-981d-e51b05c48f83  H
+ │                           │││      25 8d4074f0-9c60-4e00-b4ad-0eb74b270e0f  H
+ │                           │││      26 c32ddbef-531b-45ed-a503-c39d05a68d82  L
+ │                           │││         ━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+ │                           │││   rows 1–26 of 500 loaded · 1,240 total · cols 
+ ╰───────────────────────────╯│╰────────────────────────────────────────────────
+                                                                                
+ ↑↓ Move  Enter Open  → Expand  / Filter  Ctrl+O Quick open  Shift+F10 Menu  Tab

@@ -1,0 +1,31 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-task-sources", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible ~/work/poly 3f868e4075a1394a
+checkpoint 001: visible Node project · yarn 3f868e4075a1394a
+paste 8 UTF-8 bytes
+checkpoint 002: visible yarn dev 04c81747d815f1c9
+key escape
+key escape
+checkpoint 003: visible Search actions and resources 23b1ff1aab3b3a36
+paste 10 UTF-8 bytes
+checkpoint 004: visible .justfile 23b1ff1aab3b3a36
+key escape
+key escape
+checkpoint 005: visible Search actions and resources 23b1ff1aab3b3a36
+paste 11 UTF-8 bytes
+checkpoint 006: visible make deploy-prod 7b9767fc989c763c
+key escape
+key escape
+checkpoint 007: visible Search actions and resources 23b1ff1aab3b3a36
+paste 8 UTF-8 bytes
+checkpoint 008: visible Taskfile.yaml 24ab2b7cf06df662
+key escape
+key escape
+checkpoint 009: visible Search actions and resources 23b1ff1aab3b3a36
+paste 25 UTF-8 bytes
+checkpoint 010: clone row is selected 2c3a8938532efe2f
+key enter
+checkpoint 011: arguments form is open 4707608623acfe8d
+key escape
+checkpoint 012: scenario form closed 2c3a8938532efe2f
+key ctrl+q
+clean exit 0

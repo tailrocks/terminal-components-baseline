@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         probe · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ docker                                                                                               scope ‹ here ›  
+                                                                                                                        
+                                                                                 Preview                                
+                                                                                 ────────────────────────────────────   
+                                                                                          Nothing to preview            
+                                                                                                                        
+                                                                                         Esc clears the query           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                           No matches for “docker”                                                                      
+                                                                                                                        
+           Esc clears the query · Ctrl+↑ widens to the parent scope                                                     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/probe   main   ↓1   ⠋ discovering filesystem, git, mise, … · 0 of 9    ▲ 2 config warnings   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

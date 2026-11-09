@@ -1,0 +1,18 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--connect", "Local PostgreSQL", "--motion", "reduced", "--color", "none"] 120x40 color=Some("none") clock=false
+checkpoint 000: visible Query 1 7f298401e43dd9a5
+key ctrl+t
+checkpoint 001: visible Query 2 35f16863c18baf4d
+key f6
+key ctrl+g
+checkpoint 002: Open tabs picker 9429c4def0aa4af1
+key delete
+checkpoint 003: clean tab closed in the picker 14568e4a8a6ec1dd
+key enter
+checkpoint 004: remaining tab can still be activated e52a6f94fe37326b
+checkpoint 005: absent ✓ Connected to 7ca86c7c7c4c43db
+checkpoint 006: settled 7ca86c7c7c4c43db
+precondition 
+visual functional/tablepro_clean_picker candidate 30a35406400cd837abe8e7ab040729aacac60fa23e4d5a9b05f06fb20722226e
+capture-only functional/tablepro_clean_picker: Failure(CheckFailure { test_id: "functional/tablepro_clean_picker", gate: State, reason: Missing, candidate_sha256: "30a35406400cd837abe8e7ab040729aacac60fa23e4d5a9b05f06fb20722226e", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-clean-picker-17259-1793901586774440000-0/check-artifacts/functional/tablepro_clean_picker/30a35406400cd837abe8e7ab040729aacac60fa23e4d5a9b05f06fb20722226e/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-clean-picker-17259-1793901586774440000-0/check-artifacts/functional/tablepro_clean_picker/30a35406400cd837abe8e7ab040729aacac60fa23e4d5a9b05f06fb20722226e/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-clean-picker-17259-1793901586774440000-0/check-artifacts/functional/tablepro_clean_picker/30a35406400cd837abe8e7ab040729aacac60fa23e4d5a9b05f06fb20722226e/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

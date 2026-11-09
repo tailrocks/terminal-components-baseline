@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          no project  devbox · development  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Upgrade everything… plan · on devbox   
+  › Upgrade everything on th…  plan     on devbox  14 upgradabl…  privileged     ────────────────────────────────────   
+                                                                                 Does       Debian packages and         
+    Recent here                                                                             global mise tools on        
+    nothing used here yet                                                                   devbox as a dependency      
+                                                                                            graph: preflight,           
+    Explore                                                                                 parallel discovery,         
+     Tasks   Git   Files   Disk   Services   System                                         review, apply, optional     
+    System · devbox            explore  on devbox  available on…                            cleanup, verification       
+                                                                                 Runs       sudo apt-get update         
+                                                                                            apt list --upgradable       
+                                                                                            sudo apt-get upgrade -y     
+                                                                                            mise outdated --json        
+                                                                                            mise upgrade                
+                                                                                            sudo apt-get aut…urge -y    
+                                                                                 In         devbox · host-wide          
+                                                                                 Host       devbox · development ·      
+                                                                                            over SSH                    
+                                                                                 Scope      on devbox                   
+                                                                                 Why        14 upgradable · 2           
+                                                                                            security                    
+                                                                                 Changes    14 Debian packages · 4      
+                                                                                            mise tools · reboot         
+                                                                                            required                    
+                                                                                 Risk       privileged                  
+                                                                                 Data       live · 3 s ago              
+                                                                                 Gate       one confirmation            
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~                                                                                                   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Review plan  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  …            06 restored 

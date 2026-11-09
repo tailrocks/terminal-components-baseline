@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         holla · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Show git status                                                                                      scope ‹ here ›  
+                                                                                                                        
+    Results · 2                                                                  Show git status           git · here   
+  › Show git status    git  here  on main                                        ────────────────────────────────────   
+    Show short status  git  here  available                                      Does       full git status of          
+                                                                                            ~/work/holla: branch,       
+                                                                                            upstream, staged,           
+                                                                                            unstaged, untracked,        
+                                                                                            stash                       
+                                                                                 Runs       git -C /Users/al… status    
+                                                                                 In         ~/work/holla                
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        on main                     
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Short status · Pin ·        
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/holla   main   ↓3   • 5                                                                      truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                       

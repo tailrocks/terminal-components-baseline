@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                    no project  mbp · local 
+  Here › System resources                                                                                               
+  Here › System resources                                                                                               
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────
+  System resources                                                                         mbp · macOS · live · 1 s ago 
+                                                                                                                        
+  CPU           78%                             ▲                                                                       
+  Memory        77%                             ▲                                                                       
+  Disk /        91%                             !                                                                       
+                                                                                                                        
+  Load         9.4 7.8 5.1                                                                                              
+  Cores        91% 84% 70% 66% 88% 79% 71% 75%                                                                          
+  Memory       12.4 of 16 GB · swap 1.1 GB                                                                              
+  Pressure     4 min of sustained CPU pressure (no PSI on macOS)                                                        
+  Disk I/O     disk0 · 14.2 MB/s read · 3.1 MB/s write                                                                  
+  Network      en0 · rx 1.2 MB/s · tx 240 KB/s                                                                          
+  Temperature  87 °C                                                                                                    
+                                                                                                                        
+ ╭─ Processes ──────────────────────────────────────────────────────────────────────────────────── 5 lines · y copies ─╮
+ │  pid     name                   cpu      mem   state                                                                │
+ │  4812    rust-analyzer          41%   2900 MB   running                                                             │
+ │  9120    cargo                  32%   1100 MB   running                                                             │
+ │  2201    Docker                  9%   3800 MB   sleeping                                                            │
+ │  7731    node (vite)             6%    420 MB   sleeping · port 5173                                                │
+ │                                                                                                                     │
+ │                                                                                                                     │
+ │                                                                                                                     │
+ │                                                                                                                     │
+ │                                                                                                                     │
+ │                                                                                                                     │
+ │                                                                                                                     │
+ │                                                                                                                     │
+ │                                                                                                                     │
+ │                                                                                                                     │
+ ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+                                                                                                                        
+  Next   Open btm    Stop a process…                                                                                    
+                                                                                                                        
+ ~/scratch                         snapshot · read-only                         / ━━━━━━━━━━─ 91% ▲   truecolor · 121×40
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                                                          

@@ -1,0 +1,11 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/jackin ["--scenario", "first-use", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=true
+checkpoint 000: visible Stand up, operator 93e36bb4df6fd3d4
+key space
+checkpoint 001: visible Current directory b2c1147ce8650d31
+checkpoint 002: settled eda956abb05fc465
+checkpoint 003: settled eda956abb05fc465
+precondition 
+visual functional/jackin_first_use_empty candidate 8b053d21db3198559783996f7266a6e1efc1f27d21bd907db5348a6de649c01f
+capture-only functional/jackin_first_use_empty: Failure(CheckFailure { test_id: "functional/jackin_first_use_empty", gate: State, reason: Missing, candidate_sha256: "8b053d21db3198559783996f7266a6e1efc1f27d21bd907db5348a6de649c01f", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-first-use-38399-1793901690505722000-0/check-artifacts/functional/jackin_first_use_empty/8b053d21db3198559783996f7266a6e1efc1f27d21bd907db5348a6de649c01f/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-first-use-38399-1793901690505722000-0/check-artifacts/functional/jackin_first_use_empty/8b053d21db3198559783996f7266a6e1efc1f27d21bd907db5348a6de649c01f/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-first-use-38399-1793901690505722000-0/check-artifacts/functional/jackin_first_use_empty/8b053d21db3198559783996f7266a6e1efc1f27d21bd907db5348a6de649c01f/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

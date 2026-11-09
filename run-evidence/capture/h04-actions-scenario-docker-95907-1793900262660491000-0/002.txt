@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+  Here › Compose · acme                                                                                                 
+  Here › Compose · acme                                                                                                 
+ ━━━━━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────── 
+  Compose · acme                                                                                  mbp · live · 1 s ago  
+                                                                                                                        
+  Containers   6 · 5 running                                                                                            
+  Images       23 · 6.4 GB · 5 dangling                                                                                 
+  Volumes      3 · 3 named · 2.4 GB                                                                                     
+  Build cache  2.9 GB                                                                                                   
+  Reclaimable  ~7.1 GB                                                                                                  
+                                                                                                                        
+ ╭─ Containers ────────────────────────────────────────────────────────────────────────────────── 7 lines · y copies ─╮ 
+ │  name                image                   state     ports       project                                         │ 
+ │  acme-db-1           postgres:17.2           healthy   5432→5432   acme                                            │ 
+ │  acme-redis-1        redis:7.4-alpine        healthy   6379→6379   acme                                            │ 
+ │  acme-api-1          acme/api:dev            unhealthy 8080→8080   acme                                            │ 
+ │  acme-worker-1       acme/worker:dev         running               acme                                            │ 
+ │  acme-scheduler-1    acme/scheduler:dev      running               acme                                            │ 
+ │  pgadmin             dpage/pgadmin4:9        exited                –                                               │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Clean Docker completely    Stop all containers                                                                 
+                                                                                                                        
+ ~/work/stack                                  snapshot · read-only                                  truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                                                          

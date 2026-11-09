@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                        acme › frontend · Node project · pnpm  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Follow acme-api-1 l… docker · parent   
+    Inspect 3 GB of generate…  disk     here    3 GB generated artifacts         ────────────────────────────────────   
+    Install missing tools · …  task     here    1 tool missing                   Does       stream the last 10          
+    Run tests                  task     here    2 files changed since the l…                minutes and follow ·        
+  › Follow acme-api-1 logs     docker   parent  service is unhealthy                        acme/api:dev · running      
+    Review 2 modified files    git      parent  2 modified · 0 untracked         Runs       docker logs -f -…e-api-1    
+                                                                                 In         ~/work/acme                 
+    Recent here                                                                  Host       mbp · local                 
+    nothing used here yet                                                        Scope      parent                      
+                                                                                 Why        service is unhealthy        
+    From acme · the parent root                                                  Changes    none · read-only            
+    Start development ecosys…  task     parent  defined by ~/work/acme/mise…     Risk       read-only                   
+    Start required containers  task     parent  defined by ~/work/acme/mise…     Data       live · 1 min ago            
+                                                                                 Gate       runs directly               
+    Explore                                                                      Alt+Enter  Restart · Stop · Pin ·      
+     Tasks   Git   Files   Disk   Services   System                                         Alias · Why here?           
+    Parent · acme (mise mono…  explore  parent  workspace root above this f…                                            
+    System · mbp               explore  host    available on this host                                                  
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/acme/apps/frontend   main   ↑1   • 2                                                         truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  …        Scope here · ~/work/acme/apps/frontend 

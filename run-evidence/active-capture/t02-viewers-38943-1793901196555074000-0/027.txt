@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T orders ×    T customers ×                                                                        +   
+ ─────────────────────────────━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › customers ─────────────────────────────────────────────────────── 11 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   ‹1    organization_id                       email                             8›   │ 
+ │      ▾ Tables             │││     476 95d8f176-f21c-4c09-beb…50d89e28f46 →  hana.okafor@halden.co                ┆ │ 
+ │        ▸ T organizations  │││     477 74029601-8789-4c52-b0e…5e73de3f8ae →  omar.fischer@juniper.home            ┆ │ 
+ │        ▸ T customers      │││     478 3de3f8ae-35e7-40ec-88c…c4652ec9011 →  leon.iyer@halden.co                  ┆ │ 
+ │        ▸ T products       │││     479 9b7260ce-fb90-4eab-b1f…d56874c4889 →  omar.brandt@orbit.studio             ┆ │ 
+ │        ▸ T orders         │││     480 9d0a0c92-0eda-4107-a49…95b39bc9d27 →  jonas.iyer@northwind.io              ┆ │ 
+ │        ▸ T order_items    │││     481 3105e8f1-6c99-402e-b60…7868b09e70a →  leon.brandt@meridian.foods           ┆ │ 
+ │        ▸ T payments       │││     482 52f40abc-9e69-4208-bcf…a48594a8dab →  ingrid.rossi@halden.co               ┆ │ 
+ │        ▸ T subscriptions  │││     483 0b29a407-179a-4110-ad1…cb4e0b6f4fb →  ingrid.nguyen@bluefin.dev            ┆ │ 
+ │      ▸ Views              │││     484 52852971-acb2-41a3-b29…73b1b1ea021 →  elena.novak@meridian.foods           ┆ │ 
+ │      ▸ Functions          │││     485 21f98aa1-9657-456b-a00…d89e811cd4a →  kai.fischer@bluefin.dev              ┆ │ 
+ │      ▸ Sequences          │││     486 be01e35a-c274-4fb6-80e…96dfaa2bb7c →  leon.mehta@meridian.foods            ┆ │ 
+ │    ▸ S analytics          │││     487 258519a2-e1cf-4679-8e1…73d7093e30b →  hana.fischer@tessellate.app          ┆ │ 
+ │    ▸ S audit              │││     488 7093e30b-b73d-4e17-a75…26130ec9144 →  leon.haddad@kestrel.health           ┆ │ 
+ │                           │││     489 63441fb6-e1d9-4a55-a44…ef75acee332 →  leon.mori@bluefin.dev                ┆ │ 
+ │                           │││     490 f1559967-6c4c-4a92-bda…5ef1b5b29b3 →  ravi.tanaka@northwind.io             ┆ │ 
+ │                           │││     491 8fe3d876-ab6c-40cd-a9c…078c22747d7 →  yuki.iyer@orbit.studio               ┆ │ 
+ │                           │││     492 c22747d7-5078-49c9-b95…708488741d0 →  priya.rossi@bluefin.dev              ┆ │ 
+ │                           │││     493 d22e7b65-f6b8-43e9-82c…5d5413a83b2 →  elena.tanaka@fjord.ai                ┆ │ 
+ │                           │││     494 d87e58c5-89e6-4001-b62…a7679144f27 →  yuki.petrov@halden.co                ┆ │ 
+ │                           │││     495 e99d5440-7d1c-46f9-97c…10e8f6af425 →  diego.haddad@fjord.ai                ┆ │ 
+ │                           │││     496 c24a56ba-848d-463e-bc8…15497b64fc1 →  hana.mehta@juniper.home              ┆ │ 
+ │                           │││     497 97b64fc1-4154-4c8d-b7a…e10ecd89a81 →  ravi.mori@bluefin.dev                ┆ │ 
+ │                           │││     498 98032f1b-ce5b-43e2-99f…e8474e409d6 →  felix.costa@northwind.io             ┆ │ 
+ │                           │││     499 bfcd516b-b4f6-452c-ae5…a60af2c2f51 →  ravi.berg@meridian.foods             ┆ │ 
+ │                           │││     500 506cd5de-f8f5-4cfe-ae2…d5034c17380 →  ingrid.weber@tessellate.app          ┆ │ 
+ │                           │││  ▎      ⠋ fetching…                                                                ┃ │ 
+ │                           │││         ┄┄┄┄┄┄┄━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 476–500 of 500 loaded · 48,912 total · cols 2–3 of 11                         │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓←→ Cell  Alt+D Duplicate row  s Sort  f Filter  Space Select row  Shift+F10 Menu  Tab Next                 Refreshed 

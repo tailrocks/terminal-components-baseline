@@ -1,0 +1,14 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "menus", "--motion", "paused", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Actions ▾ 37c949c42ec0f7fe
+mouse Press { x: 79, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 79, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 001: actions menu opens 87a3fbd0d0238ed8
+mouse Press { x: 33, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 33, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: outside click dismisses the menu 87a3fbd0d0238ed8
+checkpoint 003: settled 6dec90f6b40b6abf
+precondition 
+visual functional/showcase_menu_dismiss candidate 24eb94587057df332ec9bfe9349ffe659d7ad6f55cab482e07b4d171859cf31e
+capture-only functional/showcase_menu_dismiss: Failure(CheckFailure { test_id: "functional/showcase_menu_dismiss", gate: State, reason: Missing, candidate_sha256: "24eb94587057df332ec9bfe9349ffe659d7ad6f55cab482e07b4d171859cf31e", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-menus-99227-1793901450234647000-0/check-artifacts/functional/showcase_menu_dismiss/24eb94587057df332ec9bfe9349ffe659d7ad6f55cab482e07b4d171859cf31e/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-menus-99227-1793901450234647000-0/check-artifacts/functional/showcase_menu_dismiss/24eb94587057df332ec9bfe9349ffe659d7ad6f55cab482e07b4d171859cf31e/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-menus-99227-1793901450234647000-0/check-artifacts/functional/showcase_menu_dismiss/24eb94587057df332ec9bfe9349ffe659d7ad6f55cab482e07b4d171859cf31e/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

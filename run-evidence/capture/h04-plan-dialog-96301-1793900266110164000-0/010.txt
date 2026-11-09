@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          no project  devbox · development  
+  Here › Upgrade everything                                                                                             
+  Here › Upgrade everything                                                                                             
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────── 
+  Upgrade everything ·╭────────────────────────────────────────────────────────────────────── × ─╮· 0 excluded · ~16 s  
+  upgrade Debian packa│                                                                          │                      
+                      │  Start upgrade everything?                                               │                      
+         step         │                                                                          │           required   
+  [✓] 01 Preflight    │  Plan       Upgrade everything · upgrade Debian packages and global      │───────────────────   
+  [✓] 02 Refresh Debia│             mise tools on devbox                                         │elease                
+  [✓] 03 Review Debian│  Host       devbox                                                       │                      
+  [✓] 04 Apply Debian │  Steps      8 included · 0 excluded · ~16 s                              │                      
+  [✓] 05 Inspect globa│  Privilege  sudo · cached for this session                               │/lock-frontend        
+  [✓] 06 Upgrade selec│  Debian     14 upgradable · 2 security                                   │                      
+  [✓] 07 Package clean│  mise       4 outdated global tools · go excluded                        │run/reboot-required   
+  [✓] 08 Final verific│  Reboot     required after the kernel upgrade                            │                      
+                      │                                                                          │rts first             
+    6 required · 2 opt│  cat /etc/os-release                                                     │bian metadata · 05    
+                      │  sudo -n true                                                            │l mise tools          
+                      │  fuser /var/lib/dpkg/lock-frontend                                       │ered                  
+                      │  df -h /                                                                 │                      
+                      │  test -f /var/run/reboot-required                                        │ivileges, package     
+                      │  sudo apt-get update                                                     │, free space,         
+                      │  apt list --upgradable                                                   │t                     
+                      │  sudo apt-get upgrade -y                                                 │                      
+                      │  mise outdated --json                                                    │                      
+                      │  mise upgrade --exclude go                                               │                      
+                      │  sudo apt-get autoremove --purge -y                                      │                      
+                      │  apt list --upgradable                                                   │                      
+                      │  mise ls --json                                                          │                      
+                      │  systemctl --failed                                                      │                      
+                      │  test -f /var/run/reboot-required                                        │                      
+                      │                                                                          │                      
+                      │                                                  ▎Cancel    Start plan   │                      
+                      │                                                                          │                      
+                      ╰──────────────────────────────────────────────────────────────────────────╯                      
+                                                                                               Cancel    Confirm plan   
+                                                                                                                        
+ ~                              review · 8 steps · 2 branches parallel                               truecolor · 120×40 
+ ←→ Choose  Enter Cancel  Esc Cancel                                                                                    

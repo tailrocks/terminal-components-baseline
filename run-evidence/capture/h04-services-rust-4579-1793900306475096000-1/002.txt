@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         holla · Rust project  mbp · local  
+  Here › mise configuration                                                                                             
+  Here › mise configuration                                                                                             
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────── 
+  mise configuration                                                                    mise 2026.9.3 · live · 1 s ago  
+                                                                                                                        
+  Chain     ~/work/holla/mise.toml                                                                                      
+  Monorepo  none                                                                                                        
+  Trust     holla trusted                                                                                               
+                                                                                                                        
+ ╭─ Tools and tasks ──────────────────────────────────────────────────────────────────────────── 12 lines · y copies ─╮ 
+ │  tool          requested active      latest      scope                                                             │ 
+ │  rust          1.90      1.90.0      1.90.0      ~/work/holla/mise.toml                                            │ 
+ │  cargo-nextest 0.9       0.9.101     0.9.104     ~/work/holla/mise.toml                                            │ 
+ │  node          26        26.0.1      26.1.0      global                                                            │ 
+ │  python        3.13      3.13.5      3.13.7      global                                                            │ 
+ │                                                                                                                    │ 
+ │  task                                    runs in                 depends                                           │ 
+ │  test                                    ~/work/holla                                                              │ 
+ │  lint                                    ~/work/holla                                                              │ 
+ │  fmt                                     ~/work/holla                                                              │ 
+ │  check                                   ~/work/holla                                                              │ 
+ │  shots                                   ~/work/holla            check                                             │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Upgrade outdated tools                                                                                         
+                                                                                                                        
+ ~/work/holla   main   ↓3   • 5                         snapshot · read-only                         truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                                                          

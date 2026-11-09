@@ -1,0 +1,12 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "launch-failure", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: launch failed b579f9c8eff366d3
+key tab
+checkpoint 001: visible ▎Find the process on port 5173 ae483e86fa3160be
+key enter
+checkpoint 002: visible Port 5173 7a1becd781f1b3e9
+key esc
+checkpoint 003: visible Search actions 22a87ceac067dc55
+key alt+1
+checkpoint 004: failed output restored 5eb9b8e4df9a6e03
+key ctrl+q
+clean exit 0

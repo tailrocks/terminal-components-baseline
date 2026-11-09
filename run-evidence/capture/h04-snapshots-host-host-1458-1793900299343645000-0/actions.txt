@@ -1,0 +1,80 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "first-use", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources 17665f1cc3f887ef
+paste 21 UTF-8 bytes
+checkpoint 001: row selected 8aca19469a91b3b7
+key enter
+checkpoint 002: system snapshot 3fcabc162f18ca07
+resize 121x40
+checkpoint 003: nudge 0a7e6a5f425021ab
+resize 120x40
+checkpoint 004: restored 8f947718091d443b
+checkpoint 005: settled 596a28324a4916ee
+precondition 
+visual pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40 candidate 4b41865c2d529760cf399020b586b35e55f1590d25f13c056c32daa369186f6f
+capture-only pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40: Failure(CheckFailure { test_id: "pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40", gate: State, reason: Missing, candidate_sha256: "4b41865c2d529760cf399020b586b35e55f1590d25f13c056c32daa369186f6f", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-snapshots-host-host-1458-1793900299343645000-0/check-artifacts/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40/4b41865c2d529760cf399020b586b35e55f1590d25f13c056c32daa369186f6f/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-snapshots-host-host-1458-1793900299343645000-0/check-artifacts/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40/4b41865c2d529760cf399020b586b35e55f1590d25f13c056c32daa369186f6f/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-snapshots-host-host-1458-1793900299343645000-0/check-artifacts/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40/4b41865c2d529760cf399020b586b35e55f1590d25f13c056c32daa369186f6f/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 006: system at 80x24 e09f1e3389a6be1f
+resize 81x24
+checkpoint 007: nudge d1c62e35b38a6f6b
+resize 80x24
+checkpoint 008: restored e09f1e3389a6be1f
+checkpoint 009: settled e09f1e3389a6be1f
+precondition 
+visual pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow candidate 3be2fd2487fc1ac98a2d6f462dc98f065e9234e9f19699eb4ba73ade149cf161
+capture-only pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow: Failure(CheckFailure { test_id: "pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow", gate: State, reason: Missing, candidate_sha256: "3be2fd2487fc1ac98a2d6f462dc98f065e9234e9f19699eb4ba73ade149cf161", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-snapshots-host-host-1458-1793900299343645000-0/check-artifacts/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow/3be2fd2487fc1ac98a2d6f462dc98f065e9234e9f19699eb4ba73ade149cf161/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-snapshots-host-host-1458-1793900299343645000-0/check-artifacts/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow/3be2fd2487fc1ac98a2d6f462dc98f065e9234e9f19699eb4ba73ade149cf161/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-snapshots-host-host-1458-1793900299343645000-0/check-artifacts/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow/3be2fd2487fc1ac98a2d6f462dc98f065e9234e9f19699eb4ba73ade149cf161/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 010: system back at 120x40 f013de15fa40ab33
+key escape
+checkpoint 011: back on the finder 04b0f52be4f05dfa
+key escape
+key escape
+key escape
+checkpoint 012: finder query cleared 0c67f46f4fecdcdd
+paste 17 UTF-8 bytes
+checkpoint 013: row selected 4cf48817e1f8fb14
+key enter
+checkpoint 014: process tree c81bfdb41deb42d3
+key escape
+checkpoint 015: back on the finder 4cf48817e1f8fb14
+key escape
+key escape
+key escape
+checkpoint 016: finder query cleared 0c67f46f4fecdcdd
+paste 29 UTF-8 bytes
+checkpoint 017: row selected fd9c642e942510c6
+key enter
+checkpoint 018: port arguments 2d431fec43672656
+key ctrl+s
+checkpoint 019: port snapshot c8e466369ef4cb92
+key escape
+checkpoint 020: back on the finder fd9c642e942510c6
+key escape
+key escape
+key escape
+checkpoint 021: finder query cleared 0c67f46f4fecdcdd
+paste 20 UTF-8 bytes
+checkpoint 022: row selected 4f7c1ab59b3d08eb
+key enter
+checkpoint 023: cleanup history 7a2ef53897d90d6b
+key escape
+checkpoint 024: back on the finder 4f7c1ab59b3d08eb
+key escape
+key escape
+key escape
+checkpoint 025: finder query cleared 0c67f46f4fecdcdd
+paste 17 UTF-8 bytes
+checkpoint 026: row selected 07ab30dd1cf54234
+key alt+enter
+checkpoint 027: visible Show the resolved configuration db8dd4b6daaecbbb
+key down
+checkpoint 028: copy command focused 46f3165fc8d0f10e
+key down
+checkpoint 029: insert focused 292eef82fd767d24
+key down
+checkpoint 030: resolved configuration focused 822657a47d378046
+key enter
+checkpoint 031: visible ssh devbox · resolved 723457aeb86dac9d
+key escape
+checkpoint 032: back on the finder 07ab30dd1cf54234
+key ctrl+q
+observed exit 0

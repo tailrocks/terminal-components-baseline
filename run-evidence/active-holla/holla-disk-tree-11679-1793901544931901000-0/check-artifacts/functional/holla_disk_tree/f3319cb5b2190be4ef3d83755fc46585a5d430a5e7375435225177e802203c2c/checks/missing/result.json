@@ -1,0 +1,1 @@
+{"schema":"tuiscotti.check.v1","test_id":"functional/holla_disk_tree","gate":"state","reason":"missing","candidate_sha256":"f3319cb5b2190be4ef3d83755fc46585a5d430a5e7375435225177e802203c2c","baseline_sha256":"missing","changed_fields":["baseline"],"changed_cells":[],"changed_cell_total":0,"title_values":null,"pixel_changed_pixels":0,"pixel_compared_pixels":0,"pixel_bounds":null}

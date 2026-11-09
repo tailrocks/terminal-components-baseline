@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local  
+                                                                                                                        
+  Here    frontend dev ⠹ ×    api dev ⠹ ×    api tests ✓ ×    logs · api worker sched… ⠹ ×    btm ○ ×                   
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Follow acme-api-1 logs docker · here   
+  › Follow acme-api-1 logs     docker    here   service is unhealthy             ────────────────────────────────────   
+    Inspect 10 GB of generat…  disk      here   10 GB generated artifacts        Does       stream the last 10          
+    Install missing tools · …  task      here   1 tool missing                              minutes and follow ·        
+    Review cleanup candidates  cleanup   host   10.6 GiB across 4 categories                acme/api:dev · running      
+    Deploy preview             custom    here   Current folder…                  Runs       docker logs -f -…e-api-1    
+                                                                                 In         ~/work/acme                 
+    Recent here                                                                  Host       mbp · local                 
+    nothing used here yet        ╭──────────────────────────────────────────────── × ─╮     here                        
+                                 │                                                    │     service is unhealthy        
+    Running                      │  Quit holla❯?                                      │s    none · read-only            
+    logs · api worker schedu…  ac│                                                    │     read-only                   
+    api dev                    ac│  4 activities are still running. Quitting stops    │     live · 4 s ago              
+    btm                        ac│  what holla started; detached monitors keep        │     runs directly               
+    frontend dev               ac│  running.                                          │ter  Restart · Stop · Pin ·      
+                                 │                                                    │     Alias · Why here?           
+    Explore                      │                            Stay   ▎Stop and quit   │                                 
+     Tasks   Git   Files   Disk  │                                                    │                                 
+    Children · 3 projects      ex╰────────────────────────────────────────────────────╯                                 
+    System · mbp               explore   host   available on this host                                                  
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/acme   main   ↑1                                                              ⠹ 4 running    truecolor · 120×40 
+ ←→ Choose  Enter Stop and quit  Esc Stay                                                                               

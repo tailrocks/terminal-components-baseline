@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   batch · project collection  mbp · local  
+  Here › Status across child projects                                                                                   
+  Here › Status across child projects                                                                                   
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────── 
+  Status across child projects                                                           ~/work/batch · live · 1 s ago  
+                                                                                                                        
+  Projects   3 · 0 worktree deduplicated · 0 submodule                                                                  
+  Inspected  in parallel · 4 at a time                                                                                  
+                                                                                                                        
+ ╭─ Projects ──────────────────────────────────────────────────────────────────────────────────── 4 lines · y copies ─╮ 
+ │  project       branch      state               eligibility                                                         │ 
+ │  one           main        main ↓1             pull and switch eligible                                            │ 
+ │  two           main        main                pull and switch eligible                                            │ 
+ │  three         main        main                pull and switch eligible                                            │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Pull every child project    Switch every project to its primary branch                                         
+                                                                                                                        
+ ~/work/batch                                  snapshot · read-only                                  truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                                                          

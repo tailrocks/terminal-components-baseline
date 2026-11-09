@@ -1,0 +1,21 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-executor", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: parity landing 542e6677431e81c7
+key enter
+checkpoint 001: visible two f9713d80b19464c9
+key esc
+checkpoint 002: visible Emit a mixed stream 542e6677431e81c7
+paste 19 UTF-8 bytes
+checkpoint 003: visible CRLF, ANSI, invalid 9330267c23de409b
+key enter
+checkpoint 004: stream finished 8f230f57ec8da991
+key esc
+checkpoint 005: visible Esc Clear a459e8bb20140145
+key esc
+checkpoint 006: query cleared 267c80ba56a601a0
+paste 12 UTF-8 bytes
+key enter
+checkpoint 007: burst finished 4563a725609e4a84
+key alt+1
+checkpoint 008: visible last fragment fba9004f30603bc1
+key ctrl+q
+clean exit 0

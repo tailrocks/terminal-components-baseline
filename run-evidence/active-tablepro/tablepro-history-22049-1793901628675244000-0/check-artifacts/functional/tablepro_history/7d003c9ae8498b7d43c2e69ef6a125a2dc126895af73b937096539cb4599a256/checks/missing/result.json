@@ -1,0 +1,1 @@
+{"schema":"tuiscotti.check.v1","test_id":"functional/tablepro_history","gate":"state","reason":"missing","candidate_sha256":"7d003c9ae8498b7d43c2e69ef6a125a2dc126895af73b937096539cb4599a256","baseline_sha256":"missing","changed_fields":["baseline"],"changed_cells":[],"changed_cell_total":0,"title_values":null,"pixel_changed_pixels":0,"pixel_compared_pixels":0,"pixel_bounds":null}

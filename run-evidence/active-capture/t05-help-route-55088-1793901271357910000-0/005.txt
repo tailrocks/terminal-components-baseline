@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×                                                                                                       +   
+ ━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer╭─ Keyboard shortcuts ──────────────────────────────────────────────────────── 1–29 of 33 ─ × ─╮──────────╮ 
+ │          │  Shell and workbench                          Grid and editor                               ┃│          │ 
+ │   Filter │  ] Ctrl+PgDn    Next page                     Enter F2       Edit a cell · Esc cancels      ┃│          │ 
+ │  ▾ D acme│  [ Ctrl+PgUp    Previous page                 Ctrl+F         Filter (grid) or find          ┃│          │ 
+ │    ▾ S pu│  Esc            Cancel the running query                     (editor)                       ┃│          │ 
+ │      ▾ Ta│  Ctrl+R         Run the statement at the      p              Preview the SQL of pending     ┃│          │ 
+ │        ▸ │                 cursor                                       changes                        ┃│          │ 
+ │        ▸ │  F5             Run, or refresh the table     z              Zoom the focused pane          ┃│          │ 
+ │        ▸ │  Alt+R Shift+F5 Run all statements            Shift+F10      Menu of the focused row,       ┃│          │ 
+ │        ▸ │  Ctrl+X         EXPLAIN                                      cell or tab                    ┃│          │ 
+ │        ▸ │  Alt+X Shift+F7 EXPLAIN ANALYZE               Right-click    The same menu at the pointer   ┃│          │ 
+ │        ▸ │  Ctrl+T         New query tab                                                               ┃│          │ 
+ │        ▸ │  Ctrl+W         Close tab                                                                   ┃│───────── │ 
+ │      ▸ Vi│  Ctrl+O Ctrl+P  Open Quickly                                                                ┃│          │ 
+ │      ▸ Fu│  Ctrl+G         Tab list                                                                    ┃│          │ 
+ │      ▸ Se│  Ctrl+Y         Query history                                                               ┃│          │ 
+ │    ▸ S an│  Ctrl+B         Show or hide the explorer                                                   ┃│          │ 
+ │    ▸ S au│  Ctrl+L         Safe Mode                                                                   ┃│          │ 
+ │          │  Ctrl+D         Data / Structure                                                            ┃│          │ 
+ │          │  Ctrl+S         Save pending changes                                                        ┃│          │ 
+ │          │  Ctrl+F         Filter or find                                                              ┃│          │ 
+ │          │  z              Maximize the pane                                                           ┃│          │ 
+ │          │  Ctrl+↑         Grow the results                                                            ┃│          │ 
+ │          │  Ctrl+↓         Grow the editor                                                             ┃│          │ 
+ │          │  Ctrl+N         New connection                                                              ┃│          │ 
+ │          │  F1 ?           This reference                                                              ┃│          │ 
+ │          │  F10 Ctrl+F2    Menu bar                                                                    ┆│          │ 
+ │          │  0              Focus the explorer                                                          ┆│          │ 
+ │          │  Tab            Next control                                                                ┆│          │ 
+ │          │  Shift+Tab      Previous control                                                            ┆│          │ 
+ │          │                                                                                      ▎Done   │          │ 
+ │          ╰──────────────────────────────────────────────────────────────────────────────────────────────╯          │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓ Scroll  Esc Close                                                                        ✓ Connected to Development 

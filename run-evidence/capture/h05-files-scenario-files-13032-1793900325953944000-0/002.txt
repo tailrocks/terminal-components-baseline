@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+  Here › Files › notes                                                                                                  
+  Here › Files › notes                                                                                                  
+ ━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────── 
+  Files · ~/work/notes                                                                                                  
+  2 entries · 0 hidden hidden · Ctrl+H shows · directories first                                                        
+                                                                                                                        
+ ▎  README.md                           13 B  2026-09-01 08:41      ╭─ ~/work/notes/README.md ───────── 13 B of 13 B ─╮ 
+    todo.md                             10 B  2026-09-09 08:41      │      1 notes readme                             │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    │                                                 │ 
+                                                                    ╰─────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/notes                               ~/work/notes · hidden off                                truecolor · 120×40 
+ ↑↓ Move  Enter Open / preview  ← Parent  g Go to path  Ctrl+H Show hidden  Alt+Enter Alternatives…  / Find  Esc Back   

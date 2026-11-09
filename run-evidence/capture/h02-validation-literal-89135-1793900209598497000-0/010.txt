@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                           no project  mbp · local  
+  Here › Arguments                                                              
+  Here › Arguments                                                              
+ ━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────── 
+  Find the process on a port… · arguments                                       
+  field name, expected value, default and validation · secrets stay masked      
+                                                                                
+   port *                                                                       
+ ▎ 5173;$(id)                                                                   
+                                                                                
+                                                                                
+   Command                                                                      
+   ─────────────────────────────────────────────────────────────────────────    
+   lsof -nP '-iTCP:5173;$(id)' -sTCP:LISTEN                                     
+                                                                                
+                                                                Cancel    Run   
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+ ~/scratch                              / ━━━━━━━━━━─ 91% ▲   truecolor · 80×24 
+  EDIT   Enter Apply  Esc Cancel  Tab Next field                                

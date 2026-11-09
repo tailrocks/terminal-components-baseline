@@ -1,0 +1,86 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.11s
+────────────
+ Nextest run ID f5f32881-a176-4cfc-9031-8527d266891b with nextest profile: default
+    Starting 10 tests across 1 binary (1086 tests skipped)
+       START [         ] ( 1/10) junie-tui::functional jackin::jackin_account_required_masked_save_cancel_and_remove
+
+running 1 test
+test jackin::jackin_account_required_masked_save_cancel_and_remove ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.70s
+
+        PASS [   2.717s] ( 1/10) junie-tui::functional jackin::jackin_account_required_masked_save_cancel_and_remove
+       START [         ] ( 2/10) junie-tui::functional jackin::jackin_cockpit_ctrl_c_returns_to_manager
+
+running 1 test
+test jackin::jackin_cockpit_ctrl_c_returns_to_manager ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.31s
+
+        PASS [   0.323s] ( 2/10) junie-tui::functional jackin::jackin_cockpit_ctrl_c_returns_to_manager
+       START [         ] ( 3/10) junie-tui::functional jackin::jackin_cockpit_launch_failure_acknowledges
+
+running 1 test
+test jackin::jackin_cockpit_launch_failure_acknowledges ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.38s
+
+        PASS [   1.397s] ( 3/10) junie-tui::functional jackin::jackin_cockpit_launch_failure_acknowledges
+       START [         ] ( 4/10) junie-tui::functional jackin::jackin_editor_cancel_keeps_unsaved_name_and_discard_restores
+
+running 1 test
+test jackin::jackin_editor_cancel_keeps_unsaved_name_and_discard_restores ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 7.14s
+
+        PASS [   7.153s] ( 4/10) junie-tui::functional jackin::jackin_editor_cancel_keeps_unsaved_name_and_discard_restores
+       START [         ] ( 5/10) junie-tui::functional jackin::jackin_first_use_empty_manager_and_intro
+
+running 1 test
+test jackin::jackin_first_use_empty_manager_and_intro ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 12.49s
+
+        PASS [  12.502s] ( 5/10) junie-tui::functional jackin::jackin_first_use_empty_manager_and_intro
+       START [         ] ( 6/10) junie-tui::functional jackin::jackin_help_owns_keys_and_wheel_then_restores_manager_focus
+
+running 1 test
+test jackin::jackin_help_owns_keys_and_wheel_then_restores_manager_focus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.81s
+
+        PASS [   1.824s] ( 6/10) junie-tui::functional jackin::jackin_help_owns_keys_and_wheel_then_restores_manager_focus
+       START [         ] ( 7/10) junie-tui::functional jackin::jackin_launch_detach_reconnect_preserves_capsule
+
+running 1 test
+test jackin::jackin_launch_detach_reconnect_preserves_capsule ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.95s
+
+        PASS [   5.963s] ( 7/10) junie-tui::functional jackin::jackin_launch_detach_reconnect_preserves_capsule
+       START [         ] ( 8/10) junie-tui::functional jackin::jackin_manager_stop_cancel_then_confirm
+
+running 1 test
+test jackin::jackin_manager_stop_cancel_then_confirm ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.60s
+
+        PASS [   1.607s] ( 8/10) junie-tui::functional jackin::jackin_manager_stop_cancel_then_confirm
+       START [         ] ( 9/10) junie-tui::functional jackin::jackin_settings_unsaved_leave_cancel_then_discard
+
+running 1 test
+test jackin::jackin_settings_unsaved_leave_cancel_then_discard ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.67s
+
+        PASS [   1.684s] ( 9/10) junie-tui::functional jackin::jackin_settings_unsaved_leave_cancel_then_discard
+       START [         ] (10/10) junie-tui::functional jackin::jackin_workspace_save_has_pointer_states_and_survives_reopening
+
+running 1 test
+test jackin::jackin_workspace_save_has_pointer_states_and_survives_reopening ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.51s
+
+        PASS [   2.520s] (10/10) junie-tui::functional jackin::jackin_workspace_save_has_pointer_states_and_survives_reopening
+────────────
+     Summary [  37.693s] 10 tests run: 10 passed, 1086 skipped

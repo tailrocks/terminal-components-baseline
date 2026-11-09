@@ -1,0 +1,19 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "splits", "--motion", "paused", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: splits page with Editor and splitter.rs f9c846a5aed4a5e6
+mouse Press { x: 53, y: 16, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Drag { x: 55, y: 16, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 001: seam drag step moves the Editor pane 352ff90affcc8204
+mouse Drag { x: 57, y: 16, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: seam drag step moves the Editor pane 81d989fde0429e7b
+mouse Drag { x: 59, y: 16, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 003: seam drag step moves the Editor pane 2726b79c4a7a8e14
+mouse Drag { x: 61, y: 16, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: seam drag step moves the Editor pane 898a660e3dfe986e
+mouse Release { x: 61, y: 16, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 005: dragging the seam moves the Editor pane 898a660e3dfe986e
+checkpoint 006: settled 9804dd3e177820ad
+precondition 
+visual functional/showcase_splitter_drag candidate 80456924cd03442bbbd8f056a8acb8b123b02e1fb24a779324c83c8aa1a193b9
+capture-only functional/showcase_splitter_drag: Failure(CheckFailure { test_id: "functional/showcase_splitter_drag", gate: State, reason: Missing, candidate_sha256: "80456924cd03442bbbd8f056a8acb8b123b02e1fb24a779324c83c8aa1a193b9", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-splits-8072-1793901518220619000-0/check-artifacts/functional/showcase_splitter_drag/80456924cd03442bbbd8f056a8acb8b123b02e1fb24a779324c83c8aa1a193b9/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-splits-8072-1793901518220619000-0/check-artifacts/functional/showcase_splitter_drag/80456924cd03442bbbd8f056a8acb8b123b02e1fb24a779324c83c8aa1a193b9/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-splits-8072-1793901518220619000-0/check-artifacts/functional/showcase_splitter_drag/80456924cd03442bbbd8f056a8acb8b123b02e1fb24a779324c83c8aa1a193b9/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

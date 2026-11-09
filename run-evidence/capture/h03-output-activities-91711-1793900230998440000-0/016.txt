@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local  
+                                                                                                                        
+  Here    frontend dev ⠦ ×    api dev ⠦ ×    api tests ✓ ×    logs · api worker sched… ⠦ ×    btm ○ ×    test ✓ ×       
+ ───────────────────────────────────────────━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────── 
+  api tests · succeeded · 2 s · exit 0                                                     project · ~/work/acme · mbp  
+  started by Run api tests                                                                                              
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ cargo nextest run                                                                                               │ 
+ │     Compiling holla v0.3.1 (/Users/alex/work/holla)                                                                │ 
+ │      Finished `test` profile [unoptimized + debuginfo] target(s) in 1.80s                                          │ 
+ │      Starting 128 tests across 3 binaries                                                                          │ 
+ │          PASS [   0.012s] holla ranking::tests::aliases_beat_everything                                            │ 
+ │          PASS [   0.010s] holla plan::tests::exclusion_cascades                                                    │ 
+ │          PASS [   0.04╭────────────────────────────────────────────────────────────────────╮                       │ 
+ │          PASS [   0.00│ Activities                                                  4 live │                       │ 
+ │          PASS [   0.22│  ⠋ frontend dev                 running · child · 5 s  activities  │                       │ 
+ │          PASS [   0.01│  ⠋ api dev                      running · child · 5 s              │                       │ 
+ │       Summary [   2.30│  ✓ api tests                    succeeded · project …              │                       │ 
+ │                       │  ⠋ logs · api worker scheduler  running · here · 5 s               │                       │ 
+ │                       │  ○ btm                          detached · host · 5 s              │                       │ 
+ │                       │  ✓ test                         succeeded · here · 0…              │                       │ 
+ │                       │                                                                    │                       │ 
+ │                       │                                                                    │                       │ 
+ │                       ╰────────────────────────────────────────────────────────────────────╯                       │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Open the failing test    Run tests again    Review 4 modified files                                            
+                                                                                                                        
+ ~/work/acme   main   ↑1                       succeeded · 2 s                        ⠦ 4 running    truecolor · 120×40 
+ ↑↓ Move  Enter Switch  Esc Cancel                                                               test finished · exit 0 

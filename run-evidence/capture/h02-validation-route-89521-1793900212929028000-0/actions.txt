@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "first-use", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources 17665f1cc3f887ef
+paste 4 UTF-8 bytes
+checkpoint 001: port row selected 5d2d5079b6528210
+key enter
+checkpoint 002: arguments form 78387e31ac587749
+key escape
+checkpoint 003: finder keeps the port row 5d2d5079b6528210
+key ctrl+q
+clean exit 0

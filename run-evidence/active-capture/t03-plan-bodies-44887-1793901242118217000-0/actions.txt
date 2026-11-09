@@ -1,0 +1,42 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+checkpoint 005: visible Type SQL 1615509862a77c56
+mouse Press { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: editor focused 328dfa4f70d0366e
+type 24 UTF-8 bytes
+checkpoint 007: visible SELECT sku FROM products 30901ee2f12f4d6a
+key ctrl+x
+checkpoint 008: explain tree 5a58d2363f84ffff
+checkpoint 009: visible Seq Scan 5a58d2363f84ffff
+mouse Press { x: 37, y: 21, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 37, y: 21, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+key r
+checkpoint 010: raw plan f9c5f2784d3bcc1f
+checkpoint 011: settled f9c5f2784d3bcc1f
+precondition 
+visual pre_refactor/t03_plan/t03_plan_plan_120x40 candidate 3e48034281dc7b70562d54773b08716b6c6d1b49c02777d73be5aa50c8e9c310
+capture-only pre_refactor/t03_plan/t03_plan_plan_120x40: Failure(CheckFailure { test_id: "pre_refactor/t03_plan/t03_plan_plan_120x40", gate: State, reason: Missing, candidate_sha256: "3e48034281dc7b70562d54773b08716b6c6d1b49c02777d73be5aa50c8e9c310", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-plan-bodies-44887-1793901242118217000-0/check-artifacts/pre_refactor/t03_plan/t03_plan_plan_120x40/3e48034281dc7b70562d54773b08716b6c6d1b49c02777d73be5aa50c8e9c310/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-plan-bodies-44887-1793901242118217000-0/check-artifacts/pre_refactor/t03_plan/t03_plan_plan_120x40/3e48034281dc7b70562d54773b08716b6c6d1b49c02777d73be5aa50c8e9c310/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-plan-bodies-44887-1793901242118217000-0/check-artifacts/pre_refactor/t03_plan/t03_plan_plan_120x40/3e48034281dc7b70562d54773b08716b6c6d1b49c02777d73be5aa50c8e9c310/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 012: raw plan at 80x24 8d751e13ed09c3db
+checkpoint 013: settled 8d751e13ed09c3db
+precondition 
+visual pre_refactor/t03_plan/t03_plan_plan_narrow candidate 7ecbd535c12a04da5e84bc8476761c12a155163e866ccb0d8cf04de95e2e6b91
+capture-only pre_refactor/t03_plan/t03_plan_plan_narrow: Failure(CheckFailure { test_id: "pre_refactor/t03_plan/t03_plan_plan_narrow", gate: State, reason: Missing, candidate_sha256: "7ecbd535c12a04da5e84bc8476761c12a155163e866ccb0d8cf04de95e2e6b91", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-plan-bodies-44887-1793901242118217000-0/check-artifacts/pre_refactor/t03_plan/t03_plan_plan_narrow/7ecbd535c12a04da5e84bc8476761c12a155163e866ccb0d8cf04de95e2e6b91/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-plan-bodies-44887-1793901242118217000-0/check-artifacts/pre_refactor/t03_plan/t03_plan_plan_narrow/7ecbd535c12a04da5e84bc8476761c12a155163e866ccb0d8cf04de95e2e6b91/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-plan-bodies-44887-1793901242118217000-0/check-artifacts/pre_refactor/t03_plan/t03_plan_plan_narrow/7ecbd535c12a04da5e84bc8476761c12a155163e866ccb0d8cf04de95e2e6b91/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 014: raw plan back at 120x40 4631d9c079c0351f
+key alt+x
+checkpoint 015: explain analyze c6b2aa8f23f8cb16
+key ctrl+q
+checkpoint 016: visible Quit TablePro? 3f80eeb96ee05a27
+key right
+key enter
+observed exit 0

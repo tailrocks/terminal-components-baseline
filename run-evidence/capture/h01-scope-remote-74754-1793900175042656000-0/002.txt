@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                     payments · service checkout  ◆ prod-eu-1 · production  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                      scope ‹ system ›  
+                                                                                                                        
+    System · prod-eu-1 · 27 entries                                              Follow paymen… system · on prod-eu-1   
+  › Follow payments-worker journal  system   on prod-eu-1                        ────────────────────────────────────   
+    Open btm                        system   on prod-eu-1                        Does       journalctl -u               
+    Show payments-worker status     system   on prod-eu-1                                   payments-worker -f          
+    Show system resources           system   on prod-eu-1                        Runs       journalctl -u pa… -n 200    
+    Show nginx status               system   on prod-eu-1                        In         prod-eu-1 · host-wide       
+    Show payments status            system   on prod-eu-1                        Host       prod-eu-1 · production ·    
+    Show postgresql status          system   on prod-eu-1                                   over SSH                    
+    Analyze a custom path…          disk     on prod-eu-1                        Scope      on prod-eu-1                
+    Clean Project artifacts · 0 B   cleanup  on prod-eu-1                        Why        unit is restarting          
+    Connect to bastion              ssh      host                                Changes    none · read-only            
+    Connect to devbox               ssh      host                                Risk       read-only                   
+    Connect to production-db        ssh      host                 privileged     Data       live · 1 min ago            
+    Disk overview                   disk     on prod-eu-1                        Gate       runs directly               
+    Find files under home…          file     host                                Alt+Enter  Pin · Alias · Why here?     
+    Find the process on a port…     system   on prod-eu-1                                                               
+    Follow nginx journal            system   on prod-eu-1                                                               
+    Follow payments journal         system   on prod-eu-1                                                               
+    Follow postgresql journal       system   on prod-eu-1                                                               
+    Restart nginx                   system   on prod-eu-1         privileged                                            
+    Restart payments                system   on prod-eu-1         privileged                                            
+    Restart payments-worker         system   on prod-eu-1         privileged                                            
+    Restart postgresql              system   on prod-eu-1         privileged                                            
+    Review cleanup candidates       cleanup  on prod-eu-1                                                               
+    Show process tree               system   on prod-eu-1                                                               
+    Stop a process…                 system   on prod-eu-1        destructive                                            
+    Top files on this Mac           disk     on prod-eu-1                                                               
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ /srv/payments   detached @ v2.14.3                     scope system · prod-eu-1                     truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Esc Back to Here  …    Scope system · prod-eu-1 

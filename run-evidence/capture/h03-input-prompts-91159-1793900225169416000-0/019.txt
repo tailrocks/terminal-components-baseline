@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                             app · service checkout  ◆ devbox · production  
+                                                                                                                        
+  Here    deploy the release ! ×    quick no-op ✓ ×    the stubborn worker ⠼ ×                                          
+ ─────────────────────────────────────────────────────━━━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────── 
+  the stubborn worker · running · 0 s                                                         here · /srv/app · devbox  
+  $ ./stubborn · started by Run the stubborn worker                                                                     
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ ./stubborn                                                                                                      │ 
+ │  ignoring SIGTERM…                                                                                                 │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ /srv/app                                   ⠼ 0 s                                     ⠼ 1 running    truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  i Type input  Esc Back to Here  …         Started the stubborn worker in /srv/app 

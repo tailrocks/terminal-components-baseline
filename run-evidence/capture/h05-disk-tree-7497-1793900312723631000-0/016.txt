@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                           big · Rust project  mbp · local  
+  Here › Disk › Usage                                                                                                   
+  Here › Disk › Usage                                                                                                   
+ ━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────── 
+  Disk usage · ~/work/big                                                                                               
+  scan complete · 2.3 MiB allocated · 21 entries · 1 selected (160.0 KiB)                                               
+                                                                                                                        
+    Filesystems                                                                                                         
+    /                       ━━━━━━━━━━━━────── 66%    611 of 926 GB                                                     
+                                                                                                                        
+    largest first · allocated · noise folded                                 vm.img                              file   
+  ▾ ◐ big                                                 2.3 MiB · 100%     ────────────────────────────────────────   
+        target                                   2.0 MiB ·  85% · folded     Path       ~/work/big/vm.img               
+    ▸   noise                                           176.0 KiB ·   7%     Allocated  160.0 KiB                       
+ ▎    ✓ vm.img                                          160.0 KiB ·   7%     Apparent   3.5 MiB · sparse                
+    ▸   docs                                              8.0 KiB ·   0%     Entries    1 · hardlinks counted once      
+    ▸   src                                               8.0 KiB ·   0%     Modified   2026-09-05 08:41                
+        Cargo.toml                                        4.0 KiB ·   0%     Freshness  live · complete                 
+                                                                             Selection  selected · Space unselects      
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/big                                  1 selected · 160.0 KiB                                  truecolor · 120×40 
+ ↑↓ Move  ←→ Fold / open  Space Select  s Sort  f Fold noise  Esc Back  …        Noise folders folded · sizes unchanged 

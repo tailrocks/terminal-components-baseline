@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          team · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Custom action configuration                                                                          scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Custom action configu… custom · here   
+  › Custom action configurat…  custom  here  some entries were skipped           ────────────────────────────────────   
+                                                                                 Does       5 valid actions · 2         
+                                                                                            diagnostics ·               
+                                                                                            ~/.config/holla/actions.    
+                                                                                            toml ·                      
+                                                                                            ~/work/team/.holla.toml     
+                                                                                 Runs       no command · opens          
+                                                                                            inside holla                
+                                                                                 In         ~/work/team                 
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        some entries were           
+                                                                                            skipped                     
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       partial · 5 of 7 sources    
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/team   main                                                            ▲ 2 config warnings   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear    Custom action conf… 

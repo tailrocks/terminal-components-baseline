@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         holla · Rust project  mbp · local  
+                                                                                                                        
+  Here    cargo check ✓ ×                                                                                               
+ ────────━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────── 
+  cargo check · succeeded · 1 s · exit 0                                                     here · ~/work/holla · mbp  
+  $ cargo check · started by cargo check                                                                                
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ cargo check                                                                                                     │ 
+ │     Compiling holla v0.3.1 (/Users/alex/work/holla)                                                                │ 
+ │      Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.21s                                           │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                       ╭────────────────────────────────────────────────────────────────────╮                       │ 
+ │                       │ Activities                                                  0 live │                       │ 
+ │                       │  ✓ cargo check  succeeded · here · 1 s                 activities  │                       │ 
+ │                       │                                                                    │                       │ 
+ │                       │                                                                    │                       │ 
+ │                       ╰────────────────────────────────────────────────────────────────────╯                       │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/holla   main                                 succeeded · 1 s                                 truecolor · 120×40 
+ ↑↓ Move  Enter Switch  Esc Cancel                                                        cargo check finished · exit 0 

@@ -1,0 +1,3 @@
+spawn /bin/sh ["-c", "cat"] 80x24 color=None clock=true
+paste 27 UTF-8 bytes
+checkpoint 000: visible junie-tui:advance-clock: a50d51d45c5f2548

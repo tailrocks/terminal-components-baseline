@@ -1,0 +1,13 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "upgrade-plan", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Upgrade everything 98f7cc9a6ada7a80
+key esc
+checkpoint 001: visible Search actions and resources 82c899df2799d75e
+paste 33 UTF-8 bytes
+checkpoint 002: finder lists the upgrade plan 4c61fdb7c75aaa51
+key enter
+checkpoint 003: visible upgrade Debian packages and global mise tools on devbox 98f7cc9a6ada7a80
+checkpoint 004: review from the finder 98f7cc9a6ada7a80
+key esc
+checkpoint 005: finder keeps the upgrade row 4c61fdb7c75aaa51
+key ctrl+q
+observed exit 0

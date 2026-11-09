@@ -1,0 +1,44 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-browser", "--motion", "reduced"] 120x40 color=Some("nocolor") clock=false
+checkpoint 000: visible holla❯ cd0ce537ecf5ae0d
+type 18 UTF-8 bytes
+key enter
+checkpoint 001: visible 16 entries 2cab2935fd604abb
+key ctrl+h
+checkpoint 002: visible Hidden entries shown 30cf3919cff33cba
+checkpoint 003: visible .env 30cf3919cff33cba
+key ctrl+h
+checkpoint 004: visible Hidden entries hidden a578e8827e711238
+key home
+key down
+key down
+key down
+checkpoint 005: visible first 2000 lines 0d30a2f5dbf53fea
+checkpoint 006: visible line 5 0d30a2f5dbf53fea
+mouse Motion { x: 77, y: 13 }
+wheel Point { x: 77, y: 13 } down=true amount=3
+checkpoint 007: preview content advances after wheel 4cb7565c3f084099
+mouse Motion { x: 77, y: 13 }
+wheel Point { x: 77, y: 13 } down=false amount=3
+checkpoint 008: preview wheel up restores original content 42f4328dbf7b85a5
+key g
+checkpoint 009: visible type a path or a name 56f9ad0704d28a4e
+type 4 UTF-8 bytes
+key enter
+checkpoint 010: visible no such file or directory 240742e9d6080554
+key escape
+checkpoint 011: absent no such file or directory 56f9ad0704d28a4e
+checkpoint 012: visible type a path or a name 56f9ad0704d28a4e
+key escape
+checkpoint 013: absent type a path or a name e7e1523afd980e01
+checkpoint 014: visible 16 entries e7e1523afd980e01
+key home
+key g
+checkpoint 015: visible type a path or a name 2199285896251203
+key escape
+checkpoint 016: absent type a path or a name c8b65b35a2ef0ea5
+checkpoint 017: settled c8b65b35a2ef0ea5
+precondition 
+visual functional/holla_browser_hidden_files candidate 8cb03e7784ac7b62c5a62c8807f1ae342c4f0461ed77a451c801e10f2fed33e6
+capture-only functional/holla_browser_hidden_files: Failure(CheckFailure { test_id: "functional/holla_browser_hidden_files", gate: State, reason: Missing, candidate_sha256: "8cb03e7784ac7b62c5a62c8807f1ae342c4f0461ed77a451c801e10f2fed33e6", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-browser-10586-1793901538709350000-0/check-artifacts/functional/holla_browser_hidden_files/8cb03e7784ac7b62c5a62c8807f1ae342c4f0461ed77a451c801e10f2fed33e6/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-browser-10586-1793901538709350000-0/check-artifacts/functional/holla_browser_hidden_files/8cb03e7784ac7b62c5a62c8807f1ae342c4f0461ed77a451c801e10f2fed33e6/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-browser-10586-1793901538709350000-0/check-artifacts/functional/holla_browser_hidden_files/8cb03e7784ac7b62c5a62c8807f1ae342c4f0461ed77a451c801e10f2fed33e6/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

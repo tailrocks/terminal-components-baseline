@@ -1,0 +1,18 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "forms", "--motion", "reduced", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Short imperative summary 9c761d9fcc785b61
+mouse Press { x: 32, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 32, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+type 14 UTF-8 bytes
+checkpoint 001: visible Ship login fix 3d622d484af40e39
+mouse Press { x: 46, y: 32, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 46, y: 32, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible Form reset 92bc98c9a41e130b
+mouse Press { x: 32, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 32, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+type 14 UTF-8 bytes
+checkpoint 003: visible Ship login fix 5d8a2f400692f836
+mouse Press { x: 31, y: 32, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 31, y: 32, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: visible Task created ✓ 901523da542540a2
+key ctrl+q
+clean exit 0

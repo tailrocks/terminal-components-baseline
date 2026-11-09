@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent          • 1 pending  truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T organizations ×                                                                                  +   
+ ───────────────━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › organizations ──────────────────────────────────────────────────── 9 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││         ⚷ id                                  name               slug           7›   │ 
+ │      ▾ Tables             │││    •  1 be6dd084-a1f4-4d47-ae53-915ac89debab  DiscardEdit        tessellate        ┃ │ 
+ │        ▸ T organizations  │││       2 d97fe685-9880-4103-b4bb-63f04f7511b3  Northwind Labs     northwind-labs    ┆ │ 
+ │        ▸ T customers      │││       3 fae0a7e8-6c0a-4d12-8383-f1b42ba59a27  Northwind Labs     northwind-labs    ┆ │ 
+ │        ▸ T products       │││       4 627f38d8-eddd-4a34-98e7-6eb1f70e56cc  Juniper Home       juniper-home      ┆ │ 
+ │        ▸ T orders         │││       5 f25d1e2a-218d-4645-b0e4-76ffeb325485  Halden & Co        halden--co        ┆ │ 
+ │        ▸ T order_items    │││       6 e038f23c-9711-427e-a701-88dafc2862d7  Halden & Co        halden--co        ┆ │ 
+ │        ▸ T payments       │││ ╭──────────────────────────────────────────────── × ─╮alytics    fjord-analyti…    ┆ │ 
+ │        ▸ T subscriptions  │││ │                                                    │Health     kestrel-health    ┆ │ 
+ │      ▸ Views              │││ │  Discard unsaved changes?                          │Logistics  bluefin-logis…    ┆ │ 
+ │      ▸ Functions          │││ │                                                    │ Co        halden--co        ┆ │ 
+ │      ▸ Sequences          │││ │  1 pending change will be dropped. The rows are    │d Labs     northwind-labs    ┆ │ 
+ │    ▸ S analytics          │││ │  reloaded from the server.                         │alytics    fjord-analyti…    ┆ │ 
+ │    ▸ S audit              │││ │                                                    │ Foods     meridian-foods    ┆ │ 
+ │                           │││ │                                Cancel   ▎Discard   │ Foods     meridian-foods    ┆ │ 
+ │                           │││ │                                                    │ Foods     meridian-foods    ┆ │ 
+ │                           │││ ╰────────────────────────────────────────────────────╯te         tessellate        ┆ │ 
+ │                           │││      17 6c5ed460-d362-4469-b068-36a0618a683a  Meridian Foods     meridian-foods    ┆ │ 
+ │                           │││      18 771e01b3-aa94-4fd2-ab51-c04e2cd45099  Meridian Foods     meridian-foods    ┆ │ 
+ │                           │││      19 24e788a3-1d10-4270-a347-b501237f66dc  Kestrel Health     kestrel-health    ┆ │ 
+ │                           │││      20 761f8055-46b8-42e1-b75b-6687649d9955  Tessellate         tessellate        ┆ │ 
+ │                           │││      21 e6925e20-a8c6-47dd-b02c-424c499cf6e9  Bluefin Logistics  bluefin-logis…    ┆ │ 
+ │                           │││      22 01299bc7-26a8-4ca8-adad-561d6637139c  Juniper Home       juniper-home      ┆ │ 
+ │                           │││      23 feb1fb96-0d27-4379-9b96-f158b804141a  Tessellate         tessellate        ┆ │ 
+ │                           │││      24 adf1a6c1-4012-4ab0-981d-e51b05c48f83  Halden & Co        halden--co        ┆ │ 
+ │                           │││         ━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││                                                                                      │ 
+ │                           │││   • 1 pending · 1 update                              Preview SQL   Discard   Save   │ 
+ │                           │││   rows 1–24 of 500 loaded · 1,240 total · cols 1–2 of 9                              │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ←→ Choose  Enter Discard  Esc Cancel                                                       Opened public.organizations 

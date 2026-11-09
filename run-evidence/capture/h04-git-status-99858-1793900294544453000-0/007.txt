@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                  holla · Rust project  mbp · local  
+  Here › Git status                                                              
+  Here › Git status                                                              
+ ━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────── 
+  Git status                                      ~/work/holla · live · 1 s ago  
+                                                                                 
+  Branch    main                                                                 
+  Upstream  origin/main · 3 behind · 0 ahead                                     
+  Primary   main · resolved from origin/HEAD                                     
+  Worktree  0 staged · 4 unstaged · 1 untracked · 0 conflicts · 1 stashed        
+                                                                                 
+ ╭─ Status ─────────────────────────────────────────────── 6 lines · y copies ─╮ 
+ │  $ git -C /Users/alex/work/holla status --porcelain=v2 --branch --show-sta… │ 
+ │   M src/bin/holla/screens/here.rs                                           │ 
+ │   M src/bin/holla/app.rs                                                    │ 
+ │   M DESIGN.md                                                               │ 
+ │   M holla-project/notes/00-decisions.md                                     │ 
+ │  ?? … 1 untracked                                                           │ 
+ ╰─────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                 
+  Next   Pull    Open lazygit                                                    
+                                                                                 
+ ~/work/holla   main   ↓3   • 5      snapshot · read-only      truecolor · 81×24 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                   

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                     payments · service checkout  ◆ prod-eu-1 · production  
+  Here › payments.service                                                                                               
+  Here › payments.service                                                                                               
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────── 
+  payments.service                                                           ◆ prod-eu-1 · production · live · 1 s ago  
+                                                                                                                        
+  Active    active (running)                                                                                            
+  Main PID  1288 · payments                                                                                             
+  Memory    3.9 GB                                                                                                      
+  Since     Thu 2026-09-10 08:33:45 +07                                                                                 
+                                                                                                                        
+ ╭─ Journal ───────────────────────────────────────────────────────────────────────────────────── 2 lines · y copies ─╮ 
+ │  $ systemctl status payments                                                                                       │ 
+ │  Sep 10 06:41:02 systemd[1]: Started payments.service.                                                             │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Follow payments journal    Restart payments                                                                    
+                                                                                                                        
+ /srv/payments   detached @ v2.14.3                       snapshot · read-only                       truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                                                          

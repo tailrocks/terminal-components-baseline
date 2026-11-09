@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   repos · project collection  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   origin and GitLab                                                                                    scope ‹ here ›  
+                                                                                                                        
+    Results · 1        ╭──────────────────────────────────────────────────────────────────── × ─╮ies to … git · child   
+  › Push 4 repositories│                                                                        │────────────────────   
+                       │  Push 4 repositories to origin and GitLab                              │origin always; push    
+                       │                                                                        │b where `git remote    
+                       │  Action        push origin always; push gitlab where `git remote       │rl gitlab` succeeds    
+                       │                get-url gitlab` succeeds (1 of 4) · no other remote is  │ 4) · no other         
+                       │                pushed                                                  │e is pushed            
+                       │  Host          mbp · local                                             │C /Users/al… origin    
+                       │  In            ~/work/repos                                            │C /Users/al… gitlab    
+                       │  Scope         child                                                   │C /Users/al… origin    
+                       │  Changes       origin in 4 repositories · gitlab in 1                  │ped: no git…remote'    
+                       │  Risk          mutating                                                │C /Users/al… origin    
+                       │  Data          live · 0 s ago                                          │ped: no git…remote'    
+                       │  Confirmation  one explicit confirmation · not remembered              │ore                    
+                       │                                                                        │k/repos                
+                       │  git -C /Users/alex/work/repos/alpha push origin                       │ local                 
+                       │  git -C /Users/alex/work/repos/alpha push gitlab                       │                       
+                       │  git -C /Users/alex/work/repos/beta push origin                        │ositories have a       
+                       │  'skipped: no gitlab remote'                                           │b remote               
+                       │  git -C /Users/alex/work/repos/delta push origin                       │n in 4 repositories    
+                       │  'skipped: no gitlab remote'                                           │lab in 1               
+                       │  git -C /Users/alex/work/repos/gamma push origin                       │ing                    
+                       │  'skipped: no gitlab remote'                                           │· 0 s ago              
+                       │                                                                        │onfirmation            
+                       │                                                        Cancel   ▎Run   │ Alias · Why here?     
+                       │                                                                        │                       
+                       ╰────────────────────────────────────────────────────────────────────────╯                       
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/repos                                                                                        truecolor · 120×40 
+ ←→ Choose  Enter Run  Esc Cancel                                                                                       

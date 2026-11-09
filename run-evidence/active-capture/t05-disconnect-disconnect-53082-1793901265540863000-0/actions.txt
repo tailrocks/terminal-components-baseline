@@ -1,0 +1,44 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+mouse Press { x: 5, y: 0, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 5, y: 0, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 005: visible Open tabs 6fe6585f980fe754
+mouse Press { x: 7, y: 4, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 7, y: 4, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: clean disconnect cb2a3cc608a1969b
+checkpoint 007: visible Development cb2a3cc608a1969b
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 008: visible dev-db.internal.acme.io cb2a3cc608a1969b
+checkpoint 009: settled 5eb619500989593d
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 010: development connected 1615509862a77c56
+checkpoint 011: visible Type SQL 1615509862a77c56
+mouse Press { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 012: visible Ctrl+Space 328dfa4f70d0366e
+type 38 UTF-8 bytes
+checkpoint 013: visible t05_disconnect_keep 5a7d05daf185d12c
+key escape
+checkpoint 014: completion dismissed 5a7d05daf185d12c
+key escape
+checkpoint 015: editor left the draft c54225ee034f6c15
+mouse Press { x: 5, y: 0, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 5, y: 0, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 016: visible Open tabs 4aea2807114d2886
+mouse Press { x: 7, y: 4, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 7, y: 4, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 017: visible Disconnect from Development? 5639409371e354f8
+resize 121x40
+checkpoint 018: visible 121×40 1a8dad141b76be5e
+resize 120x40
+checkpoint 019: visible 120×40 7d6f3ec3a6b34d05

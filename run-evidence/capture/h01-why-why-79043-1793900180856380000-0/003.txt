@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Open btm               system · host   
+    Analyze disk usage     disk     here  / is 91% full                          ────────────────────────────────────   
+  › Open btm               system   host  sustained pressure…                    Does       persistent deep             
+    Sho╭─────────────────────╮tem   host  CPU 78% for 4 min                                 monitoring in the           
+       │  Open btm           │                                                              specialist tool; the        
+    Rec│  Run now      Enter │                                                              activity keeps running      
+    not│  Copy command     y │                                                              while you return to         
+       │  Insert into shell  │                                                              holla                       
+    Exp│ ─────────────────── │                                                   Runs       btm                         
+     Ta│  Pin here           │k   Services   System                              In         mbp · host-wide             
+    Sys│  Set alias…         │lore  host  available on this host                 Host       mbp · local                 
+       │  Hide here          │                                                   Scope      host                        
+       │  Reset ranking      │                                                   Why        sustained pressure ·        
+       │ ─────────────────── │                                                              continuous view fits        
+       │  Why is this here?  │                                                   Changes    none · read-only            
+       ╰─────────────────────╯                                                   Risk       read-only                   
+                                                                                 Data       live · 3 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Prefers    btm                         
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/scratch                                                                     / ━━━━━━━━━━─ 91% ▲   truecolor · 120×40 
+ ↑↓ Move  Type to jump  Enter Choose  Esc Close                                                                         

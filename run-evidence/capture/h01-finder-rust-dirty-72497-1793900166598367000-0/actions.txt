@@ -1,0 +1,4 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "rust-dirty", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources f4dcff1afb0c0c1f
+key ctrl+q
+clean exit 0

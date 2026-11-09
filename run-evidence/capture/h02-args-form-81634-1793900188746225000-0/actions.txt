@@ -1,0 +1,40 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-task-sources", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible ~/work/poly 3f868e4075a1394a
+checkpoint 001: visible Node project · yarn 3f868e4075a1394a
+paste 25 UTF-8 bytes
+checkpoint 002: clone row is selected b1b4c8f918765bea
+key enter
+checkpoint 003: arguments form is open 566d8c599fff41a6
+key ctrl+s
+checkpoint 004: required repository rejected 1626f0a2a596bfac
+type 9 UTF-8 bytes
+checkpoint 005: visible args-repo 9e1e05964ec312f0
+key tab
+key h
+checkpoint 006: protocol is https and the command matches 56637c2d0ce0a29f
+resize 121x40
+checkpoint 007: visible 121×40 28b4c3964f3cd903
+resize 120x40
+checkpoint 008: visible 120×40 501b2c8b8ab3adfc
+checkpoint 009: settled 501b2c8b8ab3adfc
+precondition 
+visual pre_refactor/h02_args/h02_args_args_120x40 candidate 11cf3cb57c1049cb2dacd470b46837890dc0f929ed335af58a02a240e6f4ef54
+capture-only pre_refactor/h02_args/h02_args_args_120x40: Failure(CheckFailure { test_id: "pre_refactor/h02_args/h02_args_args_120x40", gate: State, reason: Missing, candidate_sha256: "11cf3cb57c1049cb2dacd470b46837890dc0f929ed335af58a02a240e6f4ef54", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-args-form-81634-1793900188746225000-0/check-artifacts/pre_refactor/h02_args/h02_args_args_120x40/11cf3cb57c1049cb2dacd470b46837890dc0f929ed335af58a02a240e6f4ef54/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-args-form-81634-1793900188746225000-0/check-artifacts/pre_refactor/h02_args/h02_args_args_120x40/11cf3cb57c1049cb2dacd470b46837890dc0f929ed335af58a02a240e6f4ef54/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-args-form-81634-1793900188746225000-0/check-artifacts/pre_refactor/h02_args/h02_args_args_120x40/11cf3cb57c1049cb2dacd470b46837890dc0f929ed335af58a02a240e6f4ef54/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 010: arguments form at 80x24 01bb0373fbbeb2cf
+resize 81x24
+checkpoint 011: narrow nudge 6180a8ad1ef53ed5
+resize 80x24
+checkpoint 012: narrow restored d52a81b8b3770e73
+checkpoint 013: settled 01bb0373fbbeb2cf
+precondition 
+visual pre_refactor/h02_args/h02_args_args_narrow candidate 6634f694d7e17c2494289878d90430bcc3a61101228a396630dbd078e82fa478
+capture-only pre_refactor/h02_args/h02_args_args_narrow: Failure(CheckFailure { test_id: "pre_refactor/h02_args/h02_args_args_narrow", gate: State, reason: Missing, candidate_sha256: "6634f694d7e17c2494289878d90430bcc3a61101228a396630dbd078e82fa478", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-args-form-81634-1793900188746225000-0/check-artifacts/pre_refactor/h02_args/h02_args_args_narrow/6634f694d7e17c2494289878d90430bcc3a61101228a396630dbd078e82fa478/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-args-form-81634-1793900188746225000-0/check-artifacts/pre_refactor/h02_args/h02_args_args_narrow/6634f694d7e17c2494289878d90430bcc3a61101228a396630dbd078e82fa478/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-args-form-81634-1793900188746225000-0/check-artifacts/pre_refactor/h02_args/h02_args_args_narrow/6634f694d7e17c2494289878d90430bcc3a61101228a396630dbd078e82fa478/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 014: arguments form back at 120x40 501b2c8b8ab3adfc
+key tab
+key tab
+key enter
+checkpoint 015: cancel leaves the finder b828618ea48fbfb5
+key ctrl+q
+clean exit 0

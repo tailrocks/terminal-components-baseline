@@ -1,0 +1,25 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-docker", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 8065a4ec3836cf2f
+paste 21 UTF-8 bytes
+checkpoint 001: Show Compose services selected 8cad80891a558202
+key enter
+checkpoint 002: compose services d43c57c1f3379345
+key escape
+checkpoint 003: finder 8cad80891a558202
+key escape
+checkpoint 004: visible Search actions 8065a4ec3836cf2f
+paste 24 UTF-8 bytes
+checkpoint 005: Stop the Compose project selected dbe8f75af371c345
+key enter
+checkpoint 006: compose confirmation 7e2aa3750a206fe5
+key escape
+key escape
+checkpoint 007: visible Search actions b393f51ceaf5fccb
+paste 15 UTF-8 bytes
+checkpoint 008: Stop acme-api-1 selected 5dfb95323f87840d
+key enter
+checkpoint 009: stop confirmation 16fae4b1d1229744
+key enter
+checkpoint 010: stop failed 023fce2469830e81
+key ctrl+q
+clean exit 0

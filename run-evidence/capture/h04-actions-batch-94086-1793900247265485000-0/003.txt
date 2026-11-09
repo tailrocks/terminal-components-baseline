@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   repos · project collection  mbp · local  
+                                                                                                                        
+  Here    push origin · alpha ✓ ×                                                                                       
+ ────────━━━━━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────── 
+  push origin · alpha · succeeded · 0 s · exit 0                                      child · ~/work/repos/alpha · mbp  
+  $ git -C /Users/alex/work/repos/alpha push origin · started by Push 4 repositories to origin and GitLab · batch git…  
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ git -C /Users/alex/work/repos/alpha push origin                                                                 │ 
+ │  Enumerating objects: 5, done.                                                                                     │ 
+ │  To github.com:acme/alpha.git                                                                                      │ 
+ │     a1b2c3d..b2c3d4e  main -> main                                                                                 │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/repos                                    succeeded · 0 s                                     truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  …      ! Push 4 repositories to origin and GitLab · 4 ok · 4 failed · 0 cancelled 

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Show system resources                                                                                scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Show system resources  system · host   
+  › Show system resources  system  host  CPU 78% for 4 min                       ────────────────────────────────────   
+                                                                                 Does       CPU, load, memory, swap,    
+                                                                                            pressure, disk and          
+                                                                                            network snapshot; then      
+                                                                                            hand off to btm for         
+                                                                                            continuous monitoring       
+                                                                                 Runs       'holla snapshot system'     
+                                                                                 In         mbp · host-wide             
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      host                        
+                                                                                 Why        CPU 78% for 4 min           
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 1 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Open btm · Show process     
+                                                                                            tree · Pin · Alias · Why    
+                                                                                            here?                       
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/scratch                                                                     / ━━━━━━━━━━─ 91% ▲   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                       

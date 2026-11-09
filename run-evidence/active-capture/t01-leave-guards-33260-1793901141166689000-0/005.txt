@@ -1,0 +1,40 @@
+  ▪  TablePro  Connections  6 saved                                                         truecolor · 120×40  ? help  
+                                                                                                                        
+ ╭─ Connections ─────────────────── 6 ─╮    Edit connection                                               Ctrl+S Save   
+ │                                     │    ─────────────────────────────────────────────────────────────────────────   
+ │   Filter connections                │     Basic    Advanced                                                          
+ │  ▾ Personal                         │    ━━━━━━━━─────────────────────────────────────────────────────────────────   
+ │        Local PostgreSQL         pg  │                                                                                
+ │        Scratch              sqlite  │      Name *                                      Environment                   
+ │  ▾ Acme                             │    ▎ Production                                 ( ) local                      
+ │      · Development              pg  │                                                 ( ) development                
+ │      ◇ Staging                  pg  │      Engine                                     ( ) staging                    
+ │      ◆ Analytics             mysql  │      PostgreSQL                          ▾      (●) production                 
+ │      ◆ Production               pg  │                                                                                
+ │                                     │      Host  optional              Port            Group                         
+ │                                     │      prod-db-1.acme.io           5432            Acme                     ▾    
+ │                                     │      Blank: driver default                                                     
+ │                                     │      Database  optional                          Safe Mode                     
+ │                                     │      acme_prod                                  ( ) Silent                     
+ │                                     │      Required for PostgreSQL                    ( ) Alert                      
+ │                                     │      Username  optional                         ( ) Alert (Full)               
+ │                                     │      acme_ops                                   (●) Safe Mode                  
+ │                                     │                                                 ( ) Safe Mode (Full)           
+ │                                     │      Password  optional                         ( ) Read-Only                  
+ │                                     │      stored in the keychain                      Writes ask for confirmation   
+ │                                     │      Never written to connections.json           and a deliberate …            
+ │                                     │     [ ] Prompt for password on connect                                         
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │     Test connection    Cancel    Save    Save & connect                        
+ ╰─────────────────────────────────────╯                                                                                
+                                                                                                                        
+  EDIT   Enter Apply  Esc Cancel  Tab Next field                                                                        

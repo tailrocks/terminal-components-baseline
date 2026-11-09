@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                           big · Rust project  mbp · local  
+  Here › Disk › Usage › Disk                                                                                            
+  Here › Disk › Usage › Disk                                                                                            
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Disk overview                                                                                        scope ‹ here ›  
+                                                                                                                        
+    Disk · 1 entry                                                               Disk overview            disk · host   
+  › Disk overview  disk  host  available                                         ────────────────────────────────────   
+                                                                                 Does       immediate home folders      
+                                                                                            alphabetically, then        
+                                                                                            detected insight roots ·    
+                                                                                            cached sizes with their     
+                                                                                            age, unscanned otherwise    
+                                                                                            · choosing a row starts     
+                                                                                            a live analysis             
+                                                                                 Runs       'holla disk overview'       
+                                                                                 In         mbp · host-wide             
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      host                        
+                                                                                 Why        available                   
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       opens a review · the        
+                                                                                            deletion is gated there     
+                                                                                            (typed phrase)              
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/big                                    discovery complete                                    truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Esc Clear  …         Noise folders folded · sizes unchanged 

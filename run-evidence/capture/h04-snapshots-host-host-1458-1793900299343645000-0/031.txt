@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+  Here › ssh devbox · resolved                                                                                          
+  Here › ssh devbox · resolved                                                                                          
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────── 
+  ssh devbox · resolved                                                          ~/.ssh/config.d/work · live · 1 s ago  
+                                                                                                                        
+  Destination   alex@devbox.internal:22                                                                                 
+  Jump          none                                                                                                    
+  Identities    ~/.ssh/id_ed25519 · identities only                                                                     
+  Forwarding    -L 5432:localhost:5432                                                                                  
+  Host key      ask · known                                                                                             
+  Multiplexing  master connection open · reused                                                                         
+  Role          development                                                                                             
+  Runs          ssh devbox · the alias itself, never a rebuilt command                                                  
+                                                                                                                        
+ ╭─ ssh -G ────────────────────────────────────────────────────────────────────────────────────── 6 lines · y copies ─╮ 
+ │  $ ssh -G devbox                                                                                                   │ 
+ │  hostname devbox.internal                                                                                          │ 
+ │  user alex                                                                                                         │ 
+ │  port 22                                                                                                           │ 
+ │  identityfile ~/.ssh/id_ed25519                                                                                    │ 
+ │  stricthostkeychecking ask                                                                                         │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Connect to devbox                                                                                              
+                                                                                                                        
+ ~/scratch                        snapshot · read-only                         / ━━━━━━━━━━─ 91% ▲   truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                           Esc never quits · Ctrl+Q quits 

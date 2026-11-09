@@ -1,0 +1,29 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "docker-cleanup", "--motion", "reduced", "--frame", "40", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Clean Docker completely 5f88e1c9e7c403c6
+key enter
+checkpoint 001: visible Here › Clean Docker completely a1f0ccf565a6cd80
+key c
+checkpoint 002: first confirmation gate a4ebbdb6abf8b4f7
+key right
+key enter
+checkpoint 003: second confirmation gate fd0ea979320b09d0
+type 19 UTF-8 bytes
+key enter
+checkpoint 004: wrong phrase keeps the second gate fd0ea979320b09d0
+key ctrl+u
+paste 46 UTF-8 bytes
+key enter
+checkpoint 005: visible confirmation invalidated, review again 084652f04f56ede0
+checkpoint 006: settled 084652f04f56ede0
+precondition 
+visual functional/holla_second_gate_execute candidate a10c2b9940de563eee91640bca956d57a544fedc5dcb9003107e967ca0559ca8
+capture-only functional/holla_second_gate_execute: Failure(CheckFailure { test_id: "functional/holla_second_gate_execute", gate: State, reason: Missing, candidate_sha256: "a10c2b9940de563eee91640bca956d57a544fedc5dcb9003107e967ca0559ca8", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-second-gate-execute-13348-1793901557419583000-0/check-artifacts/functional/holla_second_gate_execute/a10c2b9940de563eee91640bca956d57a544fedc5dcb9003107e967ca0559ca8/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-second-gate-execute-13348-1793901557419583000-0/check-artifacts/functional/holla_second_gate_execute/a10c2b9940de563eee91640bca956d57a544fedc5dcb9003107e967ca0559ca8/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-holla/holla-second-gate-execute-13348-1793901557419583000-0/check-artifacts/functional/holla_second_gate_execute/a10c2b9940de563eee91640bca956d57a544fedc5dcb9003107e967ca0559ca8/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key right
+key enter
+checkpoint 007: second gate after the plan change c7b5d224165e4c97
+paste 46 UTF-8 bytes
+key enter
+checkpoint 008: visible Stop running containers d598911fc68072da
+checkpoint 009: exact phrase finishes the docker plan 847504bf065b57ef
+key ctrl+q
+clean exit 0

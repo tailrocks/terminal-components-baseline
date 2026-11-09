@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          team · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Open notes                                                                                           scope ‹ here ›  
+                                                                                                                        
+    Results · 2                                                                  Open notes             custom · here   
+  › Open notes                 custom  here  Custom · trusted                    ────────────────────────────────────   
+    Stop and remove all cont…  docker  host  no containers…      destructive     Does       global action from          
+                                                                                            ~/.config/holla/actions.    
+                                                                                            toml                        
+                                                                                 Runs       open /Users/alex…otes.md    
+                                                                                 In         ~/work/team                 
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        Custom · trusted            
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Set an alias… · Show        
+                                                                                            configuration               
+                                                                                            diagnostics · Pin ·         
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/team   main                                                            ▲ 2 config warnings   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

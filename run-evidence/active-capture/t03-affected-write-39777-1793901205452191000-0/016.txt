@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×                                                                                                       +   
+ ━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query 1 ──────────────────────────────────────────────────────────────────── 12 ms ─╮ 
+ │                           │││   Run   Run all   Explain                                                            │ 
+ │   Filter objects          │││  ▎›  1 UPDATE products SET name = name WHERE sku = 't03-affected'                    │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││                                                                                      │ 
+ │      ▾ Tables             │││                                                                                      │ 
+ │        ▸ T organizations  │││                                                                                      │ 
+ │        ▸ T customers      │││                                                                                      │ 
+ │        ▸ T products       │││                                                                                      │ 
+ │        ▸ T orders         │││                                                                                      │ 
+ │        ▸ T order_items    │││                                                                                      │ 
+ │        ▸ T payments       │││                                                                     ln 1/1 · col 59  │ 
+ │        ▸ T subscriptions  │││  ─────────────────────────────────────────────────────────────────────────────────── │ 
+ │      ▸ Views              │││   UPDATE products (2) ×                                                              │ 
+ │      ▸ Functions          │││  ━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────── │ 
+ │      ▸ Sequences          │││   ✓ UPDATE products · 2 rows affected · 12 ms                                        │ 
+ │    ▸ S analytics          │││    Statement executed                                                                │ 
+ │    ▸ S audit              │││    ────────────────────────────────────────────────────────                          │ 
+ │                           │││    Statement      UPDATE products                                                    │ 
+ │                           │││    Rows affected  2                                                                  │ 
+ │                           │││    Duration       12 ms                                                              │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  EDIT   Ctrl+R Run  Alt+R Run all  Ctrl+Space Complete  Tab Indent  F6 Leave  Esc Done      ✓ Connected to Development 

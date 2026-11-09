@@ -1,0 +1,30 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-git-current", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 66e0c820f1c28617
+paste 4 UTF-8 bytes
+checkpoint 001: Push selected 5fbfe38477d51968
+key enter
+checkpoint 002: push confirmation d748ea5ab8d6cd45
+resize 121x40
+checkpoint 003: nudged c56fbd3bb78b2d39
+resize 120x40
+checkpoint 004: size restored b5634ce8e1e78d49
+checkpoint 005: settled b5634ce8e1e78d49
+precondition 
+visual pre_refactor/h04_actions/h04_actions_families_120x40 candidate d4eb29bfd25b8a13240454495d3750916a5f2c8991876e990df8d6b3655ca303
+capture-only pre_refactor/h04_actions/h04_actions_families_120x40: Failure(CheckFailure { test_id: "pre_refactor/h04_actions/h04_actions_families_120x40", gate: State, reason: Missing, candidate_sha256: "d4eb29bfd25b8a13240454495d3750916a5f2c8991876e990df8d6b3655ca303", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-actions-git-94086-1793900254985689000-8/check-artifacts/pre_refactor/h04_actions/h04_actions_families_120x40/d4eb29bfd25b8a13240454495d3750916a5f2c8991876e990df8d6b3655ca303/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-actions-git-94086-1793900254985689000-8/check-artifacts/pre_refactor/h04_actions/h04_actions_families_120x40/d4eb29bfd25b8a13240454495d3750916a5f2c8991876e990df8d6b3655ca303/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-actions-git-94086-1793900254985689000-8/check-artifacts/pre_refactor/h04_actions/h04_actions_families_120x40/d4eb29bfd25b8a13240454495d3750916a5f2c8991876e990df8d6b3655ca303/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 006: push at 80x24 83bc0514d58fda1a
+resize 81x24
+checkpoint 007: nudged 884d242e1fce28ff
+resize 80x24
+checkpoint 008: size restored a8c9788ca44d8c33
+checkpoint 009: settled a8c9788ca44d8c33
+precondition 
+visual pre_refactor/h04_actions/h04_actions_families_narrow candidate 865d8ace9e83bdb9342a7331aed9388b551124e170e627b0740edf96851623db
+capture-only pre_refactor/h04_actions/h04_actions_families_narrow: Failure(CheckFailure { test_id: "pre_refactor/h04_actions/h04_actions_families_narrow", gate: State, reason: Missing, candidate_sha256: "865d8ace9e83bdb9342a7331aed9388b551124e170e627b0740edf96851623db", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-actions-git-94086-1793900254985689000-8/check-artifacts/pre_refactor/h04_actions/h04_actions_families_narrow/865d8ace9e83bdb9342a7331aed9388b551124e170e627b0740edf96851623db/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-actions-git-94086-1793900254985689000-8/check-artifacts/pre_refactor/h04_actions/h04_actions_families_narrow/865d8ace9e83bdb9342a7331aed9388b551124e170e627b0740edf96851623db/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-actions-git-94086-1793900254985689000-8/check-artifacts/pre_refactor/h04_actions/h04_actions_families_narrow/865d8ace9e83bdb9342a7331aed9388b551124e170e627b0740edf96851623db/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 010: push back at 120x40 23b41aeeeffaf8df
+key enter
+checkpoint 011: push rejected eb3c738580d170be
+key ctrl+q
+clean exit 0

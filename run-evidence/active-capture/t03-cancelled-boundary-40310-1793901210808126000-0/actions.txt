@@ -1,0 +1,44 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+checkpoint 005: visible Type SQL 1615509862a77c56
+mouse Press { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: editor focused 328dfa4f70d0366e
+type 59 UTF-8 bytes
+key enter
+type 61 UTF-8 bytes
+checkpoint 007: both statements 2908d6e738d96ec5
+key alt+r
+checkpoint 008: batch running line 8ca30c228a826636
+key esc
+checkpoint 009: cancelled body ff20f1bf62106ae7
+checkpoint 010: cancelled body stays ff20f1bf62106ae7
+checkpoint 011: settled ff20f1bf62106ae7
+precondition 
+visual pre_refactor/t03_cancelled/t03_cancelled_boundary_120x40 candidate 88766b258e130c5edfff376b6e375b2f73b09e99f93aa316c43b3d524af892d4
+capture-only pre_refactor/t03_cancelled/t03_cancelled_boundary_120x40: Failure(CheckFailure { test_id: "pre_refactor/t03_cancelled/t03_cancelled_boundary_120x40", gate: State, reason: Missing, candidate_sha256: "88766b258e130c5edfff376b6e375b2f73b09e99f93aa316c43b3d524af892d4", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-cancelled-boundary-40310-1793901210808126000-0/check-artifacts/pre_refactor/t03_cancelled/t03_cancelled_boundary_120x40/88766b258e130c5edfff376b6e375b2f73b09e99f93aa316c43b3d524af892d4/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-cancelled-boundary-40310-1793901210808126000-0/check-artifacts/pre_refactor/t03_cancelled/t03_cancelled_boundary_120x40/88766b258e130c5edfff376b6e375b2f73b09e99f93aa316c43b3d524af892d4/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-cancelled-boundary-40310-1793901210808126000-0/check-artifacts/pre_refactor/t03_cancelled/t03_cancelled_boundary_120x40/88766b258e130c5edfff376b6e375b2f73b09e99f93aa316c43b3d524af892d4/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 012: cancelled body at 80x24 38acdf202527f1b3
+checkpoint 013: settled 38acdf202527f1b3
+precondition 
+visual pre_refactor/t03_cancelled/t03_cancelled_boundary_narrow candidate 836ceeeaa89f55a84952eac9e9b6ea5b5222fd50c267a54cf552ba4864080a6f
+capture-only pre_refactor/t03_cancelled/t03_cancelled_boundary_narrow: Failure(CheckFailure { test_id: "pre_refactor/t03_cancelled/t03_cancelled_boundary_narrow", gate: State, reason: Missing, candidate_sha256: "836ceeeaa89f55a84952eac9e9b6ea5b5222fd50c267a54cf552ba4864080a6f", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-cancelled-boundary-40310-1793901210808126000-0/check-artifacts/pre_refactor/t03_cancelled/t03_cancelled_boundary_narrow/836ceeeaa89f55a84952eac9e9b6ea5b5222fd50c267a54cf552ba4864080a6f/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-cancelled-boundary-40310-1793901210808126000-0/check-artifacts/pre_refactor/t03_cancelled/t03_cancelled_boundary_narrow/836ceeeaa89f55a84952eac9e9b6ea5b5222fd50c267a54cf552ba4864080a6f/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-cancelled-boundary-40310-1793901210808126000-0/check-artifacts/pre_refactor/t03_cancelled/t03_cancelled_boundary_narrow/836ceeeaa89f55a84952eac9e9b6ea5b5222fd50c267a54cf552ba4864080a6f/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 014: cancelled body back at 120x40 220c7dd8abfc2054
+key ctrl+y
+checkpoint 015: history omits both cancelled statements 65e31bba2ce542c5
+key ctrl+w
+checkpoint 016: query 1 after closing history c7d37be62de3287c
+key ctrl+q
+checkpoint 017: visible Quit TablePro? eac6688733e05b97
+key right
+key enter
+observed exit 0

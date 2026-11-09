@@ -1,0 +1,1048 @@
+     Locking 5 packages to highest Rust 1.99 compatible versions
+      Adding jobserver v0.1.35
+      Adding pkg-config v0.3.34
+      Adding tuiscotti v0.4.0 (/private/tmp/tuiscotti-goal-current-20261106/crates/tuiscotti)
+      Adding zstd-safe v8.2.0
+      Adding zstd-sys v2.1.2+zstd.1.5.7
+   Compiling proc-macro2 v1.0.107
+   Compiling libc v0.2.190
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.27
+   Compiling serde_core v1.0.229
+   Compiling cfg-if v1.0.5
+   Compiling log v0.4.34
+   Compiling rustversion v1.0.23
+   Compiling strsim v0.11.1
+   Compiling unicode-segmentation v1.13.3
+   Compiling rustix v1.1.5
+   Compiling heck v0.5.0
+   Compiling itoa v1.0.18
+   Compiling parking_lot_core v0.9.12
+   Compiling foldhash v0.2.0
+   Compiling ident_case v1.0.1
+   Compiling unicode-width v0.2.2
+   Compiling equivalent v1.0.3
+   Compiling static_assertions v1.1.0
+   Compiling smallvec v1.16.3
+   Compiling allocator-api2 v0.2.21
+   Compiling thiserror v2.0.21
+   Compiling version_check v0.9.5
+   Compiling either v1.19.0
+   Compiling scopeguard v1.2.0
+   Compiling signal-hook v0.3.18
+   Compiling typenum v1.20.1
+   Compiling ryu v1.0.23
+   Compiling convert_case v0.10.0
+   Compiling hashbrown v0.17.1
+   Compiling indoc v2.0.8
+   Compiling itertools v0.14.0
+   Compiling critical-section v1.2.0
+   Compiling lock_api v0.4.14
+   Compiling litrs v1.0.1
+   Compiling deranged v0.5.9
+   Compiling powerfmt v0.2.1
+   Compiling lru v0.18.5
+   Compiling num-conv v0.2.2
+   Compiling time-core v0.1.9
+   Compiling unicode-truncate v2.0.1
+   Compiling document-features v0.2.12
+   Compiling utf8parse v0.2.2
+   Compiling find-msvc-tools v0.1.14
+   Compiling simd-adler32 v0.3.10
+   Compiling shlex v2.0.1
+   Compiling generic-array v0.14.7
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling memchr v2.8.3
+   Compiling anstyle-parse v1.0.0
+   Compiling colorchoice v1.0.5
+   Compiling anstyle v1.0.14
+   Compiling crc32fast v1.5.2
+   Compiling anstyle-query v1.1.5
+   Compiling libm v0.2.16
+   Compiling adler2 v2.0.1
+   Compiling pkg-config v0.3.34
+   Compiling clap_lex v1.1.1
+   Compiling autocfg v1.5.1
+   Compiling anstream v1.0.0
+   Compiling miniz_oxide v0.9.1
+   Compiling zmij v1.0.23
+   Compiling thiserror v1.0.69
+   Compiling cfg_aliases v0.1.1
+   Compiling clap_builder v4.6.7
+   Compiling bytemuck v1.25.2
+   Compiling serde v1.0.229
+   Compiling nix v0.28.0
+   Compiling num-traits v0.2.19
+   Compiling miniz_oxide v0.8.9
+   Compiling aho-corasick v1.1.5
+   Compiling fdeflate v0.3.7
+   Compiling hybrid-array v0.4.15
+   Compiling slotmap v1.1.1
+   Compiling anyhow v1.0.104
+   Compiling signal-hook v0.4.6
+   Compiling regex-syntax v0.8.11
+   Compiling arrayvec v0.7.8
+   Compiling regex-automata v0.4.18
+   Compiling bitflags v2.13.2
+   Compiling core_maths v0.1.1
+   Compiling castaway v0.2.4
+   Compiling color_quant v1.1.0
+   Compiling strict-num v0.1.1
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+   Compiling line-clipping v0.3.8
+   Compiling compact_str v0.9.1
+   Compiling ttf-parser v0.25.1
+   Compiling arrayref v0.3.9
+   Compiling option-ext v0.2.0
+   Compiling cursor-icon v1.2.0
+   Compiling weezl v0.1.12
+   Compiling winnow v1.0.4
+   Compiling darling_core v0.24.1
+   Compiling serde_json v1.0.154
+   Compiling thiserror-impl v2.0.21
+   Compiling clap_derive v4.6.7
+   Compiling serde_derive v1.0.229
+   Compiling strum_macros v0.28.0
+   Compiling derive_more-impl v2.1.1
+   Compiling thiserror-impl v1.0.69
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling toml_parser v1.1.5+spec-1.1.0
+   Compiling gif v0.14.2
+   Compiling flate2 v1.1.10
+   Compiling clap v4.6.7
+   Compiling tiny-skia-path v0.11.4
+   Compiling derive_more v2.1.1
+   Compiling digest v0.10.7
+   Compiling toml_datetime v0.7.5+spec-1.1.0
+   Compiling darling_macro v0.24.1
+   Compiling strum v0.28.0
+   Compiling serde_spanned v1.1.2
+   Compiling crypto-common v0.2.2
+   Compiling kasuari v0.4.13
+   Compiling jobserver v0.1.35
+   Compiling block-buffer v0.12.1
+   Compiling unicode-bidi-mirroring v0.4.0
+   Compiling zstd-safe v8.2.0
+   Compiling errno v0.3.14
+   Compiling mio v1.2.4
+   Compiling num_threads v0.1.7
+   Compiling filedescriptor v0.8.3
+   Compiling serial2 v0.2.38
+   Compiling dirs-sys v0.5.0
+   Compiling ratatui-core v0.1.2
+   Compiling vte v0.15.0
+   Compiling cpufeatures v0.2.17
+   Compiling darling v0.24.1
+   Compiling cc v1.8.0
+   Compiling signal-hook-registry v1.4.8
+   Compiling winnow v0.7.15
+   Compiling parking_lot v0.12.5
+   Compiling bitflags v1.3.2
+   Compiling unicode-script v0.5.8
+   Compiling time v0.3.55
+   Compiling tinyvec v1.13.3
+   Compiling toml_writer v1.1.3+spec-1.1.0
+   Compiling home v0.5.12
+   Compiling const-oid v0.10.2
+   Compiling unicode-properties v0.1.5
+   Compiling pxfm v0.1.30
+   Compiling base64 v0.22.1
+   Compiling instability v0.3.14
+   Compiling downcast-rs v1.2.1
+   Compiling zstd-sys v2.1.2+zstd.1.5.7
+   Compiling unicode-ccc v0.4.0
+   Compiling shell-words v1.1.1
+   Compiling fontdb v0.23.0
+   Compiling toml v0.9.12+spec-1.1.0
+   Compiling tuiscotti v0.4.0 (/private/tmp/tuiscotti-goal-current-20261106/crates/tuiscotti)
+   Compiling png v0.17.16
+   Compiling digest v0.11.3
+   Compiling sha2 v0.10.9
+   Compiling dirs v6.0.0
+   Compiling compact_str v0.10.0
+   Compiling ratatui-widgets v0.3.2
+   Compiling portable-pty v0.9.0
+   Compiling signal-hook-mio v0.2.5
+   Compiling rustybuzz v0.20.1
+   Compiling rustix-openpty v0.2.0
+   Compiling polling v3.11.0
+   Compiling cpufeatures v0.3.1
+   Compiling tiny-skia v0.11.4
+   Compiling png v0.18.1
+   Compiling regex v1.13.1
+   Compiling byteorder-lite v0.1.0
+   Compiling crossterm v0.29.0
+   Compiling fs2 v0.4.3
+   Compiling base64 v0.23.1
+   Compiling ratatui-macros v0.7.2
+   Compiling moxcms v0.8.1
+   Compiling sha2 v0.11.1
+   Compiling alacritty_terminal v0.26.0
+   Compiling ratatui-crossterm v0.1.2
+   Compiling tuiscotti-tui-test v0.2.1
+   Compiling ratatui v0.30.2
+   Compiling image v0.25.10
+   Compiling junie-tui v0.1.0 (/private/tmp/tuiscotti-bulk-pr2-20261106)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.78s
+────────────
+ Nextest run ID fe4da7fa-bc26-4c9a-9e7d-3f00a3304df0 with nextest profile: default
+    Starting 1096 tests across 1 binary
+       START [         ] (   1/1096) junie-tui::functional cases::g02_harness::harness_changed_baseline_fails
+
+running 1 test
+
+thread 'cases::g02_harness::harness_changed_baseline_fails' (677104983) panicked at tests/functional/cases/g02_harness.rs:235:13:
+assertion `left != right` failed
+  left: Missing
+ right: Missing
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+functional evidence: /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/harness-changed-baseline-60222-1793900130868360000-0
+test cases::g02_harness::harness_changed_baseline_fails ... FAILED
+
+failures:
+
+failures:
+    cases::g02_harness::harness_changed_baseline_fails
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.65s
+
+        FAIL [   1.666s] (   1/1096) junie-tui::functional cases::g02_harness::harness_changed_baseline_fails
+       START [         ] (   2/1096) junie-tui::functional cases::g02_harness::harness_changing_screen_fails_stability_deadline
+
+running 1 test
+
+thread 'cases::g02_harness::harness_changing_screen_fails_stability_deadline' (677106935) panicked at tests/functional/support.rs:192:17:
+stability deadline /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/harness-changing-60821-1793900132520363000-0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test cases::g02_harness::harness_changing_screen_fails_stability_deadline ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.10s
+
+        PASS [   5.107s] (   2/1096) junie-tui::functional cases::g02_harness::harness_changing_screen_fails_stability_deadline
+       START [         ] (   3/1096) junie-tui::functional cases::g02_harness::harness_clock_paste_reaches_a_capable_session
+
+running 1 test
+test cases::g02_harness::harness_clock_paste_reaches_a_capable_session ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.15s
+
+        PASS [   0.155s] (   3/1096) junie-tui::functional cases::g02_harness::harness_clock_paste_reaches_a_capable_session
+       START [         ] (   4/1096) junie-tui::functional cases::g02_harness::harness_clock_paste_stays_out_of_user_text_without_capability
+
+running 1 test
+test cases::g02_harness::harness_clock_paste_stays_out_of_user_text_without_capability ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.92s
+
+        PASS [   0.927s] (   4/1096) junie-tui::functional cases::g02_harness::harness_clock_paste_stays_out_of_user_text_without_capability
+       START [         ] (   5/1096) junie-tui::functional cases::g02_harness::harness_dead_child_fails_wait
+
+running 1 test
+
+thread 'cases::g02_harness::harness_dead_child_fails_wait' (677113641) panicked at tests/functional/support.rs:578:9:
+application exited while dead child: code=Some(0) signal=None
+dead-child-marker                                                               
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'cases::g02_harness::harness_dead_child_fails_wait' (677113641) panicked at tests/functional/support.rs:578:9:
+application exited while stability: code=Some(0) signal=None
+dead-child-marker                                                               
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+test cases::g02_harness::harness_dead_child_fails_wait ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.10s
+
+        PASS [   0.110s] (   5/1096) junie-tui::functional cases::g02_harness::harness_dead_child_fails_wait
+       START [         ] (   6/1096) junie-tui::functional cases::g02_harness::harness_history_fixture_omits_holla_no_history
+
+running 1 test
+test cases::g02_harness::harness_history_fixture_omits_holla_no_history ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.22s
+
+        PASS [   0.230s] (   6/1096) junie-tui::functional cases::g02_harness::harness_history_fixture_omits_holla_no_history
+       START [         ] (   7/1096) junie-tui::functional cases::g02_harness::harness_killed_child_is_not_a_clean_exit
+
+running 1 test
+
+thread 'cases::g02_harness::harness_killed_child_is_not_a_clean_exit' (677113954) panicked at tests/functional/support.rs:578:9:
+application exited while before Ctrl+Q: code=Some(1) signal=Some("Hangup: 1")
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test cases::g02_harness::harness_killed_child_is_not_a_clean_exit ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.11s
+
+        PASS [   0.122s] (   7/1096) junie-tui::functional cases::g02_harness::harness_killed_child_is_not_a_clean_exit
+       START [         ] (   8/1096) junie-tui::functional cases::g02_harness::harness_missing_baseline_fails
+
+running 1 test
+test cases::g02_harness::harness_missing_baseline_fails ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.22s
+
+        PASS [   1.226s] (   8/1096) junie-tui::functional cases::g02_harness::harness_missing_baseline_fails
+       START [         ] (   9/1096) junie-tui::functional cases::g02_harness::harness_scoped_locator_finds_the_label_inside_the_region
+
+running 1 test
+test cases::g02_harness::harness_scoped_locator_finds_the_label_inside_the_region ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.00s
+
+        PASS [   0.015s] (   9/1096) junie-tui::functional cases::g02_harness::harness_scoped_locator_finds_the_label_inside_the_region
+       START [         ] (  10/1096) junie-tui::functional cases::g02_harness::harness_startup_failure_is_saved
+
+running 1 test
+test cases::g02_harness::harness_startup_failure_is_saved ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.00s
+
+        PASS [   0.018s] (  10/1096) junie-tui::functional cases::g02_harness::harness_startup_failure_is_saved
+       START [         ] (  11/1096) junie-tui::functional cases::g02_harness::harness_wide_glyph_locator_uses_the_leading_cell
+
+running 1 test
+test cases::g02_harness::harness_wide_glyph_locator_uses_the_leading_cell ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.00s
+
+        PASS [   0.010s] (  11/1096) junie-tui::functional cases::g02_harness::harness_wide_glyph_locator_uses_the_leading_cell
+       START [         ] (  12/1096) junie-tui::functional cases::g05_reference::g05_acceptance_receipts_match_reference_baselines
+
+running 1 test
+test cases::g05_reference::g05_acceptance_receipts_match_reference_baselines ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.21s
+
+        PASS [   0.216s] (  12/1096) junie-tui::functional cases::g05_reference::g05_acceptance_receipts_match_reference_baselines
+       START [         ] (  13/1096) junie-tui::functional cases::g05_reference::g05_candidate_refuses_reference_binary
+
+running 1 test
+test cases::g05_reference::g05_candidate_refuses_reference_binary ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.27s
+
+        PASS [   0.278s] (  13/1096) junie-tui::functional cases::g05_reference::g05_candidate_refuses_reference_binary
+       START [         ] (  14/1096) junie-tui::functional cases::g05_reference::g05_check_visual_does_not_write_baselines
+
+running 1 test
+test cases::g05_reference::g05_check_visual_does_not_write_baselines ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 13.17s
+
+        PASS [  13.186s] (  14/1096) junie-tui::functional cases::g05_reference::g05_check_visual_does_not_write_baselines
+       START [         ] (  15/1096) junie-tui::functional cases::g05_reference::g05_reference_mode_requires_manifest_identity
+
+running 1 test
+test cases::g05_reference::g05_reference_mode_requires_manifest_identity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.13s
+
+        PASS [   0.141s] (  15/1096) junie-tui::functional cases::g05_reference::g05_reference_mode_requires_manifest_identity
+       START [         ] (  16/1096) junie-tui::functional cases::g05_reference::g05_reference_session_receipt_records_identity
+
+running 1 test
+
+thread 'cases::g05_reference::g05_reference_session_receipt_records_identity' (677128385) panicked at tests/functional/cases/g05_reference.rs:411:5:
+assertion failed: evidence.starts_with(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("target/functional"))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+functional evidence: /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/g05-reference-session-68445-1793900154333299000-0
+test cases::g05_reference::g05_reference_session_receipt_records_identity ... FAILED
+
+failures:
+
+failures:
+    cases::g05_reference::g05_reference_session_receipt_records_identity
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.72s
+
+        FAIL [   0.725s] (  16/1096) junie-tui::functional cases::g05_reference::g05_reference_session_receipt_records_identity
+       START [         ] (  17/1096) junie-tui::functional cases::g05_reference::g05_tests_do_not_invoke_accept
+
+running 1 test
+test cases::g05_reference::g05_tests_do_not_invoke_accept ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.11s
+
+        PASS [   1.123s] (  17/1096) junie-tui::functional cases::g05_reference::g05_tests_do_not_invoke_accept
+       START [         ] (  18/1096) junie-tui::functional cases::h01_alternatives::h01_alternatives_lists_the_selected_rows_action
+
+running 1 test
+test cases::h01_alternatives::h01_alternatives_lists_the_selected_rows_action ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.56s
+
+        PASS [   4.574s] (  18/1096) junie-tui::functional cases::h01_alternatives::h01_alternatives_lists_the_selected_rows_action
+       START [         ] (  19/1096) junie-tui::functional cases::h01_alternatives::h01_alternatives_route_returns_to_the_finder_row
+
+running 1 test
+test cases::h01_alternatives::h01_alternatives_route_returns_to_the_finder_row ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.54s
+
+        PASS [   0.555s] (  19/1096) junie-tui::functional cases::h01_alternatives::h01_alternatives_route_returns_to_the_finder_row
+       START [         ] (  20/1096) junie-tui::functional cases::h01_finder::finder_discovery_keeps_the_selected_identity
+
+running 1 test
+test cases::h01_finder::finder_discovery_keeps_the_selected_identity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.37s
+
+        PASS [   4.381s] (  20/1096) junie-tui::functional cases::h01_finder::finder_discovery_keeps_the_selected_identity
+       START [         ] (  21/1096) junie-tui::functional cases::h01_finder::finder_route_reaches_the_finder
+
+running 1 test
+test cases::h01_finder::finder_route_reaches_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.22s
+
+        PASS [   0.235s] (  21/1096) junie-tui::functional cases::h01_finder::finder_route_reaches_the_finder
+       START [         ] (  22/1096) junie-tui::functional cases::h01_finder::finder_scenario_first_use
+
+running 1 test
+test cases::h01_finder::finder_scenario_first_use ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.24s
+
+        PASS [   0.253s] (  22/1096) junie-tui::functional cases::h01_finder::finder_scenario_first_use
+       START [         ] (  23/1096) junie-tui::functional cases::h01_finder::finder_scenario_monorepo_root
+
+running 1 test
+test cases::h01_finder::finder_scenario_monorepo_root ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.23s
+
+        PASS [   0.242s] (  23/1096) junie-tui::functional cases::h01_finder::finder_scenario_monorepo_root
+       START [         ] (  24/1096) junie-tui::functional cases::h01_finder::finder_scenario_parity_discovery
+
+running 1 test
+test cases::h01_finder::finder_scenario_parity_discovery ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.23s
+
+        PASS [   0.243s] (  24/1096) junie-tui::functional cases::h01_finder::finder_scenario_parity_discovery
+       START [         ] (  25/1096) junie-tui::functional cases::h01_finder::finder_scenario_rust_dirty
+
+running 1 test
+test cases::h01_finder::finder_scenario_rust_dirty ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.24s
+
+        PASS [   0.253s] (  25/1096) junie-tui::functional cases::h01_finder::finder_scenario_rust_dirty
+       START [         ] (  26/1096) junie-tui::functional cases::h01_memory::memory_search_keeps_the_query
+
+running 1 test
+test cases::h01_memory::memory_search_keeps_the_query ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.13s
+
+        PASS [   4.138s] (  26/1096) junie-tui::functional cases::h01_memory::memory_search_keeps_the_query
+       START [         ] (  27/1096) junie-tui::functional cases::h01_memory::route_opens_memory_finder_and_quits
+
+running 1 test
+test cases::h01_memory::route_opens_memory_finder_and_quits ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.70s
+
+        PASS [   0.713s] (  27/1096) junie-tui::functional cases::h01_memory::route_opens_memory_finder_and_quits
+       START [         ] (  28/1096) junie-tui::functional cases::h01_memory::scenario_shows_parity_history_memory
+
+running 1 test
+test cases::h01_memory::scenario_shows_parity_history_memory ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.68s
+
+        PASS [   0.688s] (  28/1096) junie-tui::functional cases::h01_memory::scenario_shows_parity_history_memory
+       START [         ] (  29/1096) junie-tui::functional cases::h01_scope::h01_scope_route
+
+running 1 test
+test cases::h01_scope::h01_scope_route ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.36s
+
+        PASS [   1.375s] (  29/1096) junie-tui::functional cases::h01_scope::h01_scope_route
+       START [         ] (  30/1096) junie-tui::functional cases::h01_scope::h01_scope_scenario_monorepo_child
+
+running 1 test
+test cases::h01_scope::h01_scope_scenario_monorepo_child ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.26s
+
+        PASS [   1.279s] (  30/1096) junie-tui::functional cases::h01_scope::h01_scope_scenario_monorepo_child
+       START [         ] (  31/1096) junie-tui::functional cases::h01_scope::h01_scope_scenario_remote_host
+
+running 1 test
+test cases::h01_scope::h01_scope_scenario_remote_host ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.89s
+
+        PASS [   0.903s] (  31/1096) junie-tui::functional cases::h01_scope::h01_scope_scenario_remote_host
+       START [         ] (  32/1096) junie-tui::functional cases::h01_scope::h01_scope_scope
+
+running 1 test
+test cases::h01_scope::h01_scope_scope ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.90s
+
+        PASS [   4.911s] (  32/1096) junie-tui::functional cases::h01_scope::h01_scope_scope
+       START [         ] (  33/1096) junie-tui::functional cases::h01_why::holla_why_explains_the_selected_item
+
+running 1 test
+test cases::h01_why::holla_why_explains_the_selected_item ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 7.28s
+
+        PASS [   7.288s] (  33/1096) junie-tui::functional cases::h01_why::holla_why_explains_the_selected_item
+       START [         ] (  34/1096) junie-tui::functional cases::h01_why::holla_why_route_returns_to_the_finder_row
+
+running 1 test
+test cases::h01_why::holla_why_route_returns_to_the_finder_row ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.59s
+
+        PASS [   0.600s] (  34/1096) junie-tui::functional cases::h01_why::holla_why_route_returns_to_the_finder_row
+       START [         ] (  35/1096) junie-tui::functional cases::h02_args::h02_args_rejects_a_blank_repository_then_cancels
+
+running 1 test
+test cases::h02_args::h02_args_rejects_a_blank_repository_then_cancels ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.28s
+
+        PASS [   3.290s] (  35/1096) junie-tui::functional cases::h02_args::h02_args_rejects_a_blank_repository_then_cancels
+       START [         ] (  36/1096) junie-tui::functional cases::h02_args::h02_args_route_returns_to_the_clone_row
+
+running 1 test
+test cases::h02_args::h02_args_route_returns_to_the_clone_row ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.46s
+
+        PASS [   0.472s] (  36/1096) junie-tui::functional cases::h02_args::h02_args_route_returns_to_the_clone_row
+       START [         ] (  37/1096) junie-tui::functional cases::h02_args::h02_args_scenario_parity_task_sources
+
+running 1 test
+test cases::h02_args::h02_args_scenario_parity_task_sources ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.01s
+
+        PASS [   1.020s] (  37/1096) junie-tui::functional cases::h02_args::h02_args_scenario_parity_task_sources
+       START [         ] (  38/1096) junie-tui::functional cases::h02_config::config_names_bad_actions_and_refuses_unavailable
+
+running 1 test
+test cases::h02_config::config_names_bad_actions_and_refuses_unavailable ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.71s
+
+        PASS [   3.722s] (  38/1096) junie-tui::functional cases::h02_config::config_names_bad_actions_and_refuses_unavailable
+       START [         ] (  39/1096) junie-tui::functional cases::h02_config::route_opens_config_and_returns
+
+running 1 test
+test cases::h02_config::route_opens_config_and_returns ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.48s
+
+        PASS [   0.487s] (  39/1096) junie-tui::functional cases::h02_config::route_opens_config_and_returns
+       START [         ] (  40/1096) junie-tui::functional cases::h02_config::scenario_shows_hard_cases
+
+running 1 test
+test cases::h02_config::scenario_shows_hard_cases ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.26s
+
+        PASS [   0.267s] (  40/1096) junie-tui::functional cases::h02_config::scenario_shows_hard_cases
+       START [         ] (  41/1096) junie-tui::functional cases::h02_config::scenario_shows_parity_custom_actions
+
+running 1 test
+test cases::h02_config::scenario_shows_parity_custom_actions ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.59s
+
+        PASS [   0.601s] (  41/1096) junie-tui::functional cases::h02_config::scenario_shows_parity_custom_actions
+       START [         ] (  42/1096) junie-tui::functional cases::h02_reload::holla_reload_rereads_and_revokes_without_running
+
+running 1 test
+test cases::h02_reload::holla_reload_rereads_and_revokes_without_running ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.22s
+
+        PASS [   3.228s] (  42/1096) junie-tui::functional cases::h02_reload::holla_reload_rereads_and_revokes_without_running
+       START [         ] (  43/1096) junie-tui::functional cases::h02_reload::holla_reload_route_returns_to_the_finder
+
+running 1 test
+test cases::h02_reload::holla_reload_route_returns_to_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.42s
+
+        PASS [   0.433s] (  43/1096) junie-tui::functional cases::h02_reload::holla_reload_route_returns_to_the_finder
+       START [         ] (  44/1096) junie-tui::functional cases::h02_trust::holla_trust_cancel_then_confirm_applies_to_the_reviewed_file
+
+running 1 test
+test cases::h02_trust::holla_trust_cancel_then_confirm_applies_to_the_reviewed_file ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 6.83s
+
+        PASS [   6.853s] (  44/1096) junie-tui::functional cases::h02_trust::holla_trust_cancel_then_confirm_applies_to_the_reviewed_file
+       START [         ] (  45/1096) junie-tui::functional cases::h02_trust::holla_trust_route_returns_to_the_child_task
+
+running 1 test
+test cases::h02_trust::holla_trust_route_returns_to_the_child_task ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.46s
+
+        PASS [   0.476s] (  45/1096) junie-tui::functional cases::h02_trust::holla_trust_route_returns_to_the_child_task
+       START [         ] (  46/1096) junie-tui::functional cases::h02_validation::h02_validation_literal_keeps_shell_metacharacters
+
+running 1 test
+test cases::h02_validation::h02_validation_literal_keeps_shell_metacharacters ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.32s
+
+        PASS [   3.332s] (  46/1096) junie-tui::functional cases::h02_validation::h02_validation_literal_keeps_shell_metacharacters
+       START [         ] (  47/1096) junie-tui::functional cases::h02_validation::h02_validation_route_returns_to_the_finder
+
+running 1 test
+test cases::h02_validation::h02_validation_route_returns_to_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.43s
+
+        PASS [   0.443s] (  47/1096) junie-tui::functional cases::h02_validation::h02_validation_route_returns_to_the_finder
+       START [         ] (  48/1096) junie-tui::functional cases::h03_attach::holla_attach_detaches_without_stopping_then_escalates
+
+running 1 test
+test cases::h03_attach::holla_attach_detaches_without_stopping_then_escalates ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.05s
+
+        PASS [   5.063s] (  48/1096) junie-tui::functional cases::h03_attach::holla_attach_detaches_without_stopping_then_escalates
+       START [         ] (  49/1096) junie-tui::functional cases::h03_attach::holla_attach_route_returns_to_the_finder
+
+running 1 test
+test cases::h03_attach::holla_attach_route_returns_to_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.63s
+
+        PASS [   0.645s] (  49/1096) junie-tui::functional cases::h03_attach::holla_attach_route_returns_to_the_finder
+       START [         ] (  50/1096) junie-tui::functional cases::h03_guards::holla_guards_quit_stays_then_stops
+
+running 1 test
+test cases::h03_guards::holla_guards_quit_stays_then_stops ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.08s
+
+        PASS [   5.096s] (  50/1096) junie-tui::functional cases::h03_guards::holla_guards_quit_stays_then_stops
+       START [         ] (  51/1096) junie-tui::functional cases::h03_guards::holla_guards_route_keeps_here_and_a_running_tab
+
+running 1 test
+test cases::h03_guards::holla_guards_route_keeps_here_and_a_running_tab ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.98s
+
+        PASS [   0.994s] (  51/1096) junie-tui::functional cases::h03_guards::holla_guards_route_keeps_here_and_a_running_tab
+       START [         ] (  52/1096) junie-tui::functional cases::h03_input::h03_input_prompts_mask_secret_and_refuse_when_closed
+
+running 1 test
+test cases::h03_input::h03_input_prompts_mask_secret_and_refuse_when_closed ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.92s
+
+        PASS [   2.934s] (  52/1096) junie-tui::functional cases::h03_input::h03_input_prompts_mask_secret_and_refuse_when_closed
+       START [         ] (  53/1096) junie-tui::functional cases::h03_input::h03_input_route_returns_to_the_finder
+
+running 1 test
+test cases::h03_input::h03_input_route_returns_to_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.01s
+
+        PASS [   1.017s] (  53/1096) junie-tui::functional cases::h03_input::h03_input_route_returns_to_the_finder
+       START [         ] (  54/1096) junie-tui::functional cases::h03_input::h03_input_scenario_parity_task_input
+
+running 1 test
+test cases::h03_input::h03_input_scenario_parity_task_input ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.09s
+
+        PASS [   1.099s] (  54/1096) junie-tui::functional cases::h03_input::h03_input_scenario_parity_task_input
+       START [         ] (  55/1096) junie-tui::functional cases::h03_output::h03_output_route
+
+running 1 test
+test cases::h03_output::h03_output_route ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.77s
+
+        PASS [   0.777s] (  55/1096) junie-tui::functional cases::h03_output::h03_output_route
+       START [         ] (  56/1096) junie-tui::functional cases::h03_output::h03_output_scenario_activities_multi
+
+running 1 test
+test cases::h03_output::h03_output_scenario_activities_multi ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.03s
+
+        PASS [   2.038s] (  56/1096) junie-tui::functional cases::h03_output::h03_output_scenario_activities_multi
+       START [         ] (  57/1096) junie-tui::functional cases::h03_output::h03_output_scenario_launch_failure
+
+running 1 test
+test cases::h03_output::h03_output_scenario_launch_failure ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.03s
+
+        PASS [   2.040s] (  57/1096) junie-tui::functional cases::h03_output::h03_output_scenario_launch_failure
+       START [         ] (  58/1096) junie-tui::functional cases::h03_output::h03_output_scenario_parity_executor
+
+running 1 test
+test cases::h03_output::h03_output_scenario_parity_executor ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.22s
+
+        PASS [   2.227s] (  58/1096) junie-tui::functional cases::h03_output::h03_output_scenario_parity_executor
+       START [         ] (  59/1096) junie-tui::functional cases::h03_output::h03_output_states
+
+running 1 test
+test cases::h03_output::h03_output_states ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.51s
+
+        PASS [   5.521s] (  59/1096) junie-tui::functional cases::h03_output::h03_output_states
+       START [         ] (  60/1096) junie-tui::functional cases::h03_picker::holla_picker_opens_the_highlighted_activity
+
+running 1 test
+test cases::h03_picker::holla_picker_opens_the_highlighted_activity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.72s
+
+        PASS [   3.732s] (  60/1096) junie-tui::functional cases::h03_picker::holla_picker_opens_the_highlighted_activity
+       START [         ] (  61/1096) junie-tui::functional cases::h03_picker::holla_picker_route_returns_to_the_finder
+
+running 1 test
+test cases::h03_picker::holla_picker_route_returns_to_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.70s
+
+        PASS [   0.709s] (  61/1096) junie-tui::functional cases::h03_picker::holla_picker_route_returns_to_the_finder
+       START [         ] (  62/1096) junie-tui::functional cases::h04_actions::h04_actions_families
+
+running 1 test
+test cases::h04_actions::h04_actions_families ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 11.07s
+
+        PASS [  11.077s] (  62/1096) junie-tui::functional cases::h04_actions::h04_actions_families
+       START [         ] (  63/1096) junie-tui::functional cases::h04_actions::h04_actions_route
+
+running 1 test
+test cases::h04_actions::h04_actions_route ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.44s
+
+        PASS [   0.452s] (  63/1096) junie-tui::functional cases::h04_actions::h04_actions_route
+       START [         ] (  64/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_brew_services
+
+running 1 test
+test cases::h04_actions::h04_actions_scenario_parity_brew_services ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.51s
+
+        PASS [   0.526s] (  64/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_brew_services
+       START [         ] (  65/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_cargo
+
+running 1 test
+test cases::h04_actions::h04_actions_scenario_parity_cargo ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.33s
+
+        PASS [   3.339s] (  65/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_cargo
+       START [         ] (  66/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_docker
+
+running 1 test
+test cases::h04_actions::h04_actions_scenario_parity_docker ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.13s
+
+        PASS [   1.145s] (  66/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_docker
+       START [         ] (  67/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_git_batch
+
+running 1 test
+test cases::h04_actions::h04_actions_scenario_parity_git_batch ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.76s
+
+        PASS [   0.770s] (  67/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_git_batch
+       START [         ] (  68/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_git_current
+
+running 1 test
+test cases::h04_actions::h04_actions_scenario_parity_git_current ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.38s
+
+        PASS [   0.387s] (  68/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_git_current
+       START [         ] (  69/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_upgrade_managers
+
+running 1 test
+test cases::h04_actions::h04_actions_scenario_parity_upgrade_managers ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.13s
+
+        PASS [   1.147s] (  69/1096) junie-tui::functional cases::h04_actions::h04_actions_scenario_parity_upgrade_managers
+       START [         ] (  70/1096) junie-tui::functional cases::h04_plan::h04_plan_plan
+
+running 1 test
+test cases::h04_plan::h04_plan_plan ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 21.71s
+
+        PASS [  21.719s] (  70/1096) junie-tui::functional cases::h04_plan::h04_plan_plan
+       START [         ] (  71/1096) junie-tui::functional cases::h04_plan::h04_plan_route
+
+running 1 test
+test cases::h04_plan::h04_plan_route ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.63s
+
+        PASS [   0.646s] (  71/1096) junie-tui::functional cases::h04_plan::h04_plan_route
+       START [         ] (  72/1096) junie-tui::functional cases::h04_plan::h04_plan_scenario_upgrade_plan
+
+running 1 test
+test cases::h04_plan::h04_plan_scenario_upgrade_plan ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.42s
+
+        PASS [   0.432s] (  72/1096) junie-tui::functional cases::h04_plan::h04_plan_scenario_upgrade_plan
+       START [         ] (  73/1096) junie-tui::functional cases::h04_snapshots_docker::h04_snapshots_docker_docker
+
+running 1 test
+test cases::h04_snapshots_docker::h04_snapshots_docker_docker ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.55s
+
+        PASS [   4.566s] (  73/1096) junie-tui::functional cases::h04_snapshots_docker::h04_snapshots_docker_docker
+       START [         ] (  74/1096) junie-tui::functional cases::h04_snapshots_docker::h04_snapshots_docker_route
+
+running 1 test
+test cases::h04_snapshots_docker::h04_snapshots_docker_route ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.58s
+
+        PASS [   0.589s] (  74/1096) junie-tui::functional cases::h04_snapshots_docker::h04_snapshots_docker_route
+       START [         ] (  75/1096) junie-tui::functional cases::h04_snapshots_docker::h04_snapshots_docker_scenario_docker_cleanup
+
+running 1 test
+test cases::h04_snapshots_docker::h04_snapshots_docker_scenario_docker_cleanup ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.47s
+
+        PASS [   0.481s] (  75/1096) junie-tui::functional cases::h04_snapshots_docker::h04_snapshots_docker_scenario_docker_cleanup
+       START [         ] (  76/1096) junie-tui::functional cases::h04_snapshots_git::h04_snapshots_git_git
+
+running 1 test
+test cases::h04_snapshots_git::h04_snapshots_git_git ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.32s
+
+        PASS [   4.333s] (  76/1096) junie-tui::functional cases::h04_snapshots_git::h04_snapshots_git_git
+       START [         ] (  77/1096) junie-tui::functional cases::h04_snapshots_git::h04_snapshots_git_route
+
+running 1 test
+test cases::h04_snapshots_git::h04_snapshots_git_route ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.45s
+
+        PASS [   0.463s] (  77/1096) junie-tui::functional cases::h04_snapshots_git::h04_snapshots_git_route
+       START [         ] (  78/1096) junie-tui::functional cases::h04_snapshots_host::h04_snapshots_host_host
+
+running 1 test
+test cases::h04_snapshots_host::h04_snapshots_host_host ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.64s
+
+        PASS [   4.650s] (  78/1096) junie-tui::functional cases::h04_snapshots_host::h04_snapshots_host_host
+       START [         ] (  79/1096) junie-tui::functional cases::h04_snapshots_host::h04_snapshots_host_route
+
+running 1 test
+test cases::h04_snapshots_host::h04_snapshots_host_route ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.54s
+
+        PASS [   0.548s] (  79/1096) junie-tui::functional cases::h04_snapshots_host::h04_snapshots_host_route
+       START [         ] (  80/1096) junie-tui::functional cases::h04_snapshots_services::h04_snapshots_services_route
+
+running 1 test
+test cases::h04_snapshots_services::h04_snapshots_services_route ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.48s
+
+        PASS [   0.492s] (  80/1096) junie-tui::functional cases::h04_snapshots_services::h04_snapshots_services_route
+       START [         ] (  81/1096) junie-tui::functional cases::h04_snapshots_services::h04_snapshots_services_scenario_parity_platforms
+
+running 1 test
+test cases::h04_snapshots_services::h04_snapshots_services_scenario_parity_platforms ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.40s
+
+        PASS [   0.409s] (  81/1096) junie-tui::functional cases::h04_snapshots_services::h04_snapshots_services_scenario_parity_platforms
+       START [         ] (  82/1096) junie-tui::functional cases::h04_snapshots_services::h04_snapshots_services_scenario_parity_platforms_linux
+
+running 1 test
+test cases::h04_snapshots_services::h04_snapshots_services_scenario_parity_platforms_linux ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.38s
+
+        PASS [   0.395s] (  82/1096) junie-tui::functional cases::h04_snapshots_services::h04_snapshots_services_scenario_parity_platforms_linux
+       START [         ] (  83/1096) junie-tui::functional cases::h04_snapshots_services::h04_snapshots_services_services
+
+running 1 test
+test cases::h04_snapshots_services::h04_snapshots_services_services ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.43s
+
+        PASS [   5.439s] (  83/1096) junie-tui::functional cases::h04_snapshots_services::h04_snapshots_services_services
+       START [         ] (  84/1096) junie-tui::functional cases::h05_disk::h05_disk_route_returns_to_the_finder
+
+running 1 test
+test cases::h05_disk::h05_disk_route_returns_to_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.47s
+
+        PASS [   0.489s] (  84/1096) junie-tui::functional cases::h05_disk::h05_disk_route_returns_to_the_finder
+       START [         ] (  85/1096) junie-tui::functional cases::h05_disk::h05_disk_scenario_parity_insights
+
+running 1 test
+test cases::h05_disk::h05_disk_scenario_parity_insights ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.95s
+
+        PASS [   0.959s] (  85/1096) junie-tui::functional cases::h05_disk::h05_disk_scenario_parity_insights
+       START [         ] (  86/1096) junie-tui::functional cases::h05_disk::h05_disk_tree_sort_selection_and_return
+
+running 1 test
+test cases::h05_disk::h05_disk_tree_sort_selection_and_return ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 9.00s
+
+        PASS [   9.011s] (  86/1096) junie-tui::functional cases::h05_disk::h05_disk_tree_sort_selection_and_return
+       START [         ] (  87/1096) junie-tui::functional cases::h05_files::h05_files_nav
+
+running 1 test
+test cases::h05_files::h05_files_nav ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.40s
+
+        PASS [   3.409s] (  87/1096) junie-tui::functional cases::h05_files::h05_files_nav
+       START [         ] (  88/1096) junie-tui::functional cases::h05_files::h05_files_route
+
+running 1 test
+test cases::h05_files::h05_files_route ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.46s
+
+        PASS [   0.468s] (  88/1096) junie-tui::functional cases::h05_files::h05_files_route
+       START [         ] (  89/1096) junie-tui::functional cases::h05_files::h05_files_scenario_parity_browser
+
+running 1 test
+test cases::h05_files::h05_files_scenario_parity_browser ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.33s
+
+        PASS [   0.343s] (  89/1096) junie-tui::functional cases::h05_files::h05_files_scenario_parity_browser
+       START [         ] (  90/1096) junie-tui::functional cases::h05_files::h05_files_scenario_parity_files
+
+running 1 test
+test cases::h05_files::h05_files_scenario_parity_files ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.36s
+
+        PASS [   0.372s] (  90/1096) junie-tui::functional cases::h05_files::h05_files_scenario_parity_files
+       START [         ] (  91/1096) junie-tui::functional cases::h05_find::h05_find_find_opens_the_selected_directory
+
+running 1 test
+test cases::h05_find::h05_find_find_opens_the_selected_directory ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.58s
+
+        PASS [   3.590s] (  91/1096) junie-tui::functional cases::h05_find::h05_find_find_opens_the_selected_directory
+       START [         ] (  92/1096) junie-tui::functional cases::h05_find::h05_find_route_returns_to_the_finder
+
+running 1 test
+test cases::h05_find::h05_find_route_returns_to_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.57s
+
+        PASS [   0.576s] (  92/1096) junie-tui::functional cases::h05_find::h05_find_route_returns_to_the_finder
+       START [         ] (  93/1096) junie-tui::functional cases::h05_previews::h05_previews_preview
+
+running 1 test
+  Cancelling due to signal: 1 test still running
+     SIGTERM [  10.472s] (  93/1096) junie-tui::functional cases::h05_previews::h05_previews_preview
+────────────
+     Summary [ 210.113s] 93/1096 tests run: 90 passed, 3 failed, 0 skipped
+        FAIL [   1.666s] (   1/1096) junie-tui::functional cases::g02_harness::harness_changed_baseline_fails
+        FAIL [   0.725s] (  16/1096) junie-tui::functional cases::g05_reference::g05_reference_session_receipt_records_identity
+     SIGTERM [  10.472s] (  93/1096) junie-tui::functional cases::h05_previews::h05_previews_preview
+warning: 1003/1096 tests were not run due to signal
+error: test run failed

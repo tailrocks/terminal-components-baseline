@@ -1,0 +1,56 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-task-input", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible /srv/app 1e9cd1ad0c648932
+checkpoint 001: visible devbox 1e9cd1ad0c648932
+paste 18 UTF-8 bytes
+checkpoint 002: visible asks for a password 83e36d62f2acb2dc
+key enter
+checkpoint 003: visible $ ./deploy.sh 43c7e539fa486a98
+checkpoint 004: visible Password: b700fa3e54c7047a
+key i
+checkpoint 005: visible Release keyboard 29fbcf9440184a4f
+type 10 UTF-8 bytes
+checkpoint 006: secret prompt stays masked 29fbcf9440184a4f
+resize 80x24
+checkpoint 007: secret prompt at 80x24 cf1e55f1464d184d
+resize 120x40
+checkpoint 008: secret prompt back at 120x40 9a664b7c9b7ceb8a
+key enter
+checkpoint 009: visible Proceed with rollout? [y/N] d7f61f02b977828d
+type 4 UTF-8 bytes
+checkpoint 010: public answer is visible 6b2f9f1c04c5ebd7
+key enter
+checkpoint 011: visible rollout cancelled by operator 7688589d29ad7816
+key escape
+key escape
+checkpoint 012: visible Search actions and resources 6cdbcf6f6aa79825
+paste 11 UTF-8 bytes
+checkpoint 013: visible Quick no-op 6cdbcf6f6aa79825
+key enter
+checkpoint 014: quick no-op has finished 71ca57c419fa83b8
+key i
+checkpoint 015: visible The program has finished · nothing reads input 4903ea594514fc44
+type 7 UTF-8 bytes
+checkpoint 016: refused text is not an output line 4903ea594514fc44
+key escape
+key escape
+checkpoint 017: visible Search actions and resources 202ce13b5f1d475a
+paste 23 UTF-8 bytes
+checkpoint 018: visible ignores SIGTERM 83d8130edf48a4a5
+key enter
+checkpoint 019: visible $ ./stubborn 9af21b5bf6ecadde
+checkpoint 020: visible ignoring SIGTERM 9af21b5bf6ecadde
+key i
+checkpoint 021: visible Release keyboard 19b2300e715ae06b
+key escape
+checkpoint 022: visible Keyboard returned to holla db6a7c2cbeb7bf26
+type 1 UTF-8 bytes
+checkpoint 023: plain letter stays out of the program db6a7c2cbeb7bf26
+key i
+checkpoint 024: visible Release keyboard 74a96982ffea803d
+key ctrl+c
+checkpoint 025: ctrl+c delivered to the task e7257bbb2bfcbfae
+checkpoint 026: visible descendants reaped 480beb2a3af5b003
+key escape
+checkpoint 027: visible Type Search 63c46dd5ae349548
+key ctrl+q
+clean exit 0

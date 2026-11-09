@@ -1,0 +1,8 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-files", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Type Search 7cc0a7bac30549db
+paste 19 UTF-8 bytes
+checkpoint 001: browse row cf04b86d14094da4
+key enter
+checkpoint 002: notes directory 6621d753ca6818ac
+key ctrl+q
+clean exit 0

@@ -1,0 +1,12 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/jackin ["--scenario", "launch-failure", "--motion", "paused", "--frame", "40", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=true
+checkpoint 000: visible Loading the-architect into workspace 5465b109808877d3
+paste 29 UTF-8 bytes
+checkpoint 001: visible Launch failed abea4a53602d5e6b
+checkpoint 002: settled abea4a53602d5e6b
+precondition 
+visual functional/jackin_launch_failed candidate 8fb4ae337e221985d6167192f1939712cb3ef209b8c889f73f9edde765c7a66e
+capture-only functional/jackin_launch_failed: Failure(CheckFailure { test_id: "functional/jackin_launch_failed", gate: State, reason: Missing, candidate_sha256: "8fb4ae337e221985d6167192f1939712cb3ef209b8c889f73f9edde765c7a66e", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-launch-failure-36011-1793901681961551000-0/check-artifacts/functional/jackin_launch_failed/8fb4ae337e221985d6167192f1939712cb3ef209b8c889f73f9edde765c7a66e/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-launch-failure-36011-1793901681961551000-0/check-artifacts/functional/jackin_launch_failed/8fb4ae337e221985d6167192f1939712cb3ef209b8c889f73f9edde765c7a66e/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-launch-failure-36011-1793901681961551000-0/check-artifacts/functional/jackin_launch_failed/8fb4ae337e221985d6167192f1939712cb3ef209b8c889f73f9edde765c7a66e/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key escape
+checkpoint 003: visible Current directory e8f80c28adba4118
+key ctrl+q
+clean exit 0

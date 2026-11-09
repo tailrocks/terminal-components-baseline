@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help     northwind-traders-platform-migration › inventory…ory-reconciliation-core  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Stop all containers                                                                                  scope ‹ here ›  
+                                                                                                                        
+    Results · 3                                                                  Stop all containers    docker · host   
+  › Stop all containers        docker  host  0 running on mbp                    ────────────────────────────────────   
+    Stop and remove all cont…  docker  host  no containers…      destructive     Does       stop the 0 running          
+    Browse ~/work/clients/no…  file    here  always available                               containers on mbp           
+                                                                                            gracefully · nothing is     
+                                                                                            removed                     
+                                                                                 Runs       docker ps -q                
+                                                                                 In         mbp · host-wide             
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      host                        
+                                                                                 Why        0 running on mbp            
+                                                                                 Changes    0 containers stop · data    
+                                                                                            and images stay             
+                                                                                 Risk       mutating                    
+                                                                                 Data       unavailable · Cannot        
+                                                                                            connect to the Docker       
+                                                                                            daemon at                   
+                                                                                            unix:///var/run/docker.s    
+                                                                                            ock                         
+                                                                                 Gate       one confirmation            
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/clients/northwind-trad…iation-service   ↓14 ↑3   • 7   2 conflicts   rebase   ! docker, github unavailable    … 
+ …            ! Stop all containers is unavailable · Cannot connect to the Docker daemon at unix:///var/run/docker.sock 

@@ -1,0 +1,40 @@
+  jackin❯    File   Go   Help             Accounts › Claude › Spare  ⠋ refreshing 1  inside the Construct  ● 2 running  
+                                                                                                                        
+ ╭─ Accounts ───────── 13 · 4 ▲ · 4 ! ─╮ │  Claude · Spare                                               account · ok   
+ │     Overview                        │ │  ─────────────────────────────────────────────────────────────────────────   
+ │   ▾ Claude                      !   │ │  Provider            Anthropic / Claude                                      
+ │     ★ Personal                      │ │  Agent runtime       Claude Code                                             
+ │       Archived contractor laptop …  │ │  Usage surface       Claude                                                  
+ │       Spare                         │ │  Identity            alexey@chainargos.com                                   
+ │       Work                      !   │ │  Plan                Team                                                    
+ │   ▾ Codex                           │ │  Credential          API key · …1234 · fingerprint a605d51c                  
+ │     ★ Primary                       │ │                      ••••••••…1234                                           
+ │       Experiments                   │ │  Provenance          configured source · confidence authoritative ·          
+ │   ▾ Amp                         ▲   │ │                      registered                                              
+ │       discovered                ▲   │ │  Lifecycle           available                                               
+ │   ▾ Grok                      ╭──────────────────────────────────────────────── × ─╮                                 
+ │     ★ Team                    │                                                    │                                 
+ │   ▾ Z.AI                      │  Remove account Spare?                             │                                 
+ │       discovered              │                                                    │   current · refreshed 0 s ago   
+ │   ▾ Kimi                      │  Claude · Spare is removed from the registry. No   │               resets in 3 h …   
+ │       discovered              │  Workspace or Role selections that point at it     │               resets Sun 19:…   
+ │   ▾ MiniMax                   │  fall back to the provider default. The            │               resets Sun 19:…   
+ │       discovered              │  credential source itself is untouched.            │               resets Sun 19:…   
+ │   ▾ OpenCode                  │                                                    │                                 
+ │     ★ Go subscription         │                                ▎Cancel    Remove   │   ✓ quota access · quota        
+ │       ci-bot · discovered     │                                                    │                                 
+ │     Unsupported               ╰────────────────────────────────────────────────────╯                                 
+ │     + Add account…                  │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │                                                                              
+ │                                     │ │  Refresh    Validate    Edit…    Set default    Disable    Remove…           
+ ╰─────────────────────────────────────╯ │                                                                              
+                                                                                                                        
+ ←→ Choose  Enter Cancel  Esc Cancel                                                           Cancelled · account kept 

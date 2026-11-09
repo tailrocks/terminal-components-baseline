@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "first-use", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources 17665f1cc3f887ef
+paste 21 UTF-8 bytes
+checkpoint 001: row selected 8aca19469a91b3b7
+key enter
+checkpoint 002: system snapshot 3fcabc162f18ca07
+key escape
+checkpoint 003: finder keeps the system row 8aca19469a91b3b7
+key ctrl+q
+observed exit 0

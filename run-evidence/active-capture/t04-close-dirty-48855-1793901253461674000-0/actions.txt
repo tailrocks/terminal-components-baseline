@@ -1,0 +1,57 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+checkpoint 005: visible Type SQL 1615509862a77c56
+mouse Press { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: visible Ctrl+Space 328dfa4f70d0366e
+type 33 UTF-8 bytes
+checkpoint 007: visible SELECT 't04_close_keep' AS marker b8e096288a9fa349
+key ctrl+t
+checkpoint 008: query 2 editor f3fd81539a802a50
+type 33 UTF-8 bytes
+checkpoint 009: visible SELECT 't04_close_drop' AS marker 516e311b96b000f5
+mouse Press { x: 4, y: 2, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 4, y: 2, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 010: query 1 active 14c04e77f1e25397
+key escape
+checkpoint 011: editor left 9bfb78fd8fd3d53a
+key ctrl+w
+checkpoint 012: visible Close tab with unsaved work? f695c3c825b572c1
+key ctrl+w
+checkpoint 013: second close refused f695c3c825b572c1
+resize 121x40
+checkpoint 014: visible 121×40 8476fc41929b0f3c
+resize 120x40
+checkpoint 015: visible 120×40 4589ab0ac323c5d3
+capture-only pre_refactor/t04_close/t04_close_dirty_120x40: Failure(CheckFailure { test_id: "pre_refactor/t04_close/t04_close_dirty_120x40", gate: State, reason: Missing, candidate_sha256: "91cbef0156759647473b57f70a5cedd016adc6e4d9013c596fb9fe26a804bf28", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t04-close-dirty-48855-1793901253461674000-0/check-artifacts/pre_refactor/t04_close/t04_close_dirty_120x40/91cbef0156759647473b57f70a5cedd016adc6e4d9013c596fb9fe26a804bf28/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t04-close-dirty-48855-1793901253461674000-0/check-artifacts/pre_refactor/t04_close/t04_close_dirty_120x40/91cbef0156759647473b57f70a5cedd016adc6e4d9013c596fb9fe26a804bf28/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t04-close-dirty-48855-1793901253461674000-0/check-artifacts/pre_refactor/t04_close/t04_close_dirty_120x40/91cbef0156759647473b57f70a5cedd016adc6e4d9013c596fb9fe26a804bf28/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 016: dirty close dialog at 80x24 a56a0a13a1ba8c6b
+capture-only pre_refactor/t04_close/t04_close_dirty_narrow: Failure(CheckFailure { test_id: "pre_refactor/t04_close/t04_close_dirty_narrow", gate: State, reason: Missing, candidate_sha256: "b077bde3ad872d0347ba7c509bc85d25a0e274430df939494ad8e5ca913ba301", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t04-close-dirty-48855-1793901253461674000-0/check-artifacts/pre_refactor/t04_close/t04_close_dirty_narrow/b077bde3ad872d0347ba7c509bc85d25a0e274430df939494ad8e5ca913ba301/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t04-close-dirty-48855-1793901253461674000-0/check-artifacts/pre_refactor/t04_close/t04_close_dirty_narrow/b077bde3ad872d0347ba7c509bc85d25a0e274430df939494ad8e5ca913ba301/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t04-close-dirty-48855-1793901253461674000-0/check-artifacts/pre_refactor/t04_close/t04_close_dirty_narrow/b077bde3ad872d0347ba7c509bc85d25a0e274430df939494ad8e5ca913ba301/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 017: dirty close dialog back at 120x40 4589ab0ac323c5d3
+key enter
+checkpoint 018: cancel keeps the sql 663934345d3ddfb6
+mouse Press { x: 21, y: 2, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 21, y: 2, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 019: query 2 active f4f779db2678b0a1
+key escape
+checkpoint 020: editor left dd8ca65fdc43e08c
+key ctrl+w
+checkpoint 021: visible Close tab with unsaved work? 1db4e4eadd72f567
+key right
+checkpoint 022: close anyway focused 3531a90f08d046db
+key enter
+checkpoint 023: query 2 discarded 8e718b16bea28e52
+key ctrl+q
+checkpoint 024: visible Quit TablePro? 7ae8a50f0db15830
+key right
+key enter
+observed exit 0

@@ -1,0 +1,40 @@
+ ▪ Junie Design system  Overlays › Dialog kinds                              truecolor · 120×40   i Inspector   ? Help  
+                                                                                                                        
+ Components           54  Dialog kinds  Forms, info, choices and help: the purpose-built modals on one layer stack      
+ ───────────────────────                                                                                                
+    Overview               Playground    Options    States                                              the live widget 
+  ▸ App shell             ━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────
+  ▸ Inputs & forms                                                                                                      
+  ▸ Tables                  Open a dialog                                                                               
+  ▸ Navigation              ────────────────────────────────────────────────────────────────────────────────────────────
+  ▾ Overlays                 Add connection…       Server info           Release channel…      Keyboard help            
+      Dialogs               every field kind      copy rows with y      toned radios          keys by section           
+      Pickers                                                                                                           
+ ▎  › Dialog kinds                                                                                                      
+      Popups & tooltips     Applied                                                                          read back f
+      File browser          ────────────────────────────────────────────────────────────────────────────────────────────
+  ▸ Feedback                Form fields  Input · Select · Input · Input · Radio · Check · Chooser · Note · Note · values
+  ▸ Layout                  Form         width 62 · meta production · hidden key · actions test · Save closes           
+  ▸ Text & code             Info         width 66 · meta read-only · intro · detail 3 rows · actions 1 · error title off
+  ▸ Screens                 Info keys    q Close · y Copy                                                               
+                            Choice       width 54 · line · stepper on · tones on · buttons Cancel/Next                  
+                            All          nav desktop · × default · button row wrap off                                  
+                                                                                                                        
+                                                                                                                        
+                            Returned                                                                                    
+                            ────────────────────────────────────────────────────────────────────────────────────────────
+                            Nothing yet · Form(Save | Cancel | Changed | Choose | Action) · Info(Closed | Copy | Action)
+                            None)                                                                                       
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+                                                                                                                        
+ ↑↓ Move  Enter Open  / Filter  Tab Into page  q Quit                                                                   

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                        engine · Rust project  mbp · local  
+                                                                                                                        
+  Here    cargo test ! ×    cargo clippy ✓ ×                                                                            
+ ──────────────────────────━━━━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────── 
+  cargo clippy · succeeded · 0 s · exit 0                                                   here · ~/work/engine · mbp  
+  $ cargo clippy --all-targets --all-features · started by cargo clippy                                                 
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ cargo clippy --all-targets --all-features                                                                       │ 
+ │      Checking engine v0.3.1 (/Users/alex/work/engine)                                                              │ 
+ │  warning: unused variable: `scope_0`                                                                               │ 
+ │    --> src/bin/holla/screens/here.rs:412:13                                                                        │ 
+ │  warning: unused variable: `scope_1`                                                                               │ 
+ │    --> src/bin/holla/screens/here.rs:412:13                                                                        │ 
+ │      Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.02s · 2 warnings                              │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/engine   main                                succeeded · 0 s                                 truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  r Restart  x Close  Esc Back to Here  …            cargo clippy finished · exit 0 

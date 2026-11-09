@@ -1,0 +1,29 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "docker-cleanup", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Type Search a502829a0ed58b6a
+key esc
+key esc
+checkpoint 001: visible Search actions and resources fcc8d3793ddbd9fd
+paste 15 UTF-8 bytes
+checkpoint 002: row selected 181f4539cf1ca9c3
+key enter
+checkpoint 003: containers f50780196851182b
+key esc
+checkpoint 004: visible Type Search 181f4539cf1ca9c3
+key esc
+key esc
+checkpoint 005: visible Search actions and resources fcc8d3793ddbd9fd
+paste 22 UTF-8 bytes
+checkpoint 006: row selected 0fd99acc687f93ba
+key enter
+checkpoint 007: disk usage 21c165cdf1759527
+key esc
+checkpoint 008: visible Type Search 0fd99acc687f93ba
+key esc
+key esc
+checkpoint 009: visible Search actions and resources fcc8d3793ddbd9fd
+paste 21 UTF-8 bytes
+checkpoint 010: visible No matches for e39eee536ce20726
+key enter
+checkpoint 011: compose row is absent e39eee536ce20726
+key ctrl+q
+clean exit 0

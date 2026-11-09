@@ -1,0 +1,40 @@
+ ▪ Junie Design system  Inputs & forms › Chips & selects                     truecolor · 120×40   i Inspector   ? Help  
+                                                                                                                        
+ Components           54  Chips & selects  Removable chips, a popup select, and strips that drop what does not fit      
+ ───────────────────────                                                                                                
+    Overview               Playground    Options    States                                              the live widget 
+  ▸ App shell             ━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────
+  ▾ Inputs & forms                                                                                                      
+      Buttons               Filters                                                                                    ┃
+      Inputs                ────────────────────────────────────────────────────────────────────────────────────────── ┃
+      Text areas             match all ▾   status = 'pending' ×    total > 100 ×    country in (DE, FR) ×    amount >  ┃
+    › Chips & selects                                                                                                  ┃
+      Forms                 last action: nothing yet                                                                   ┃
+      Checks & radios                                                                                                  ┃
+      Toolbars                                                                                                         ┃
+  ▸ Tables                  Streams                                                                        not removab ┃
+  ▸ Navigation              ────────────────────────────────────────────────────────────────────────────────────────── ┃
+  ▸ Overlays                 streams   api    worker    db    cron                                                     ┃
+  ▸ Feedback                                                                                                           ┃
+  ▸ Layout                                                                                                             ┃
+  ▸ Text & code                                                                                                        ┃
+  ▸ Screens                 Selects                                                                                    ┃
+                            ────────────────────────────────────────────────────────────────────────────────────────── ┃
+                              Sort by                               Page size                             Engine       ┃
+                            ▎ created_at                      ▾     50                              ▾     PostgreSQL   ┃
+                              Applies to the next query                                                   Fixed by the ┃
+                                                                                                                       ┃
+                                                                                                                       ┃
+                                                                                                                       ┃
+                                                                                                                       ┃
+                            Segment strip                                                                              ┃
+                            ────────────────────────────────────────────────────────────────────────────────────────── ┆
+                              ▪  Acme  ◆ production  acme_prod › public  safe                          3 pending  true ┆
+                                                                                                                       ┆
+                              ▪  Acme  ◆ production  safe            …                                                 ┆
+                            the same strip at 44 columns: low-priority segments leave first, from the right            ┆
+                                                                                                                       ┆
+                                                                                                                       ┆
+                          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ 
+                                                                                                                        
+ Enter Open  ↑↓ Choose  Esc Close  Tab Next                                                                             

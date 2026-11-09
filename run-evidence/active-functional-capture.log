@@ -1,0 +1,581 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.09s
+────────────
+ Nextest run ID 71ffe6a9-7f77-479b-9555-742d79bc8162 with nextest profile: default
+    Starting 152 tests across 1 binary (944 tests skipped)
+       START [         ] (  1/152) junie-tui::functional cases::g02_harness::harness_history_fixture_omits_holla_no_history
+
+running 1 test
+test cases::g02_harness::harness_history_fixture_omits_holla_no_history ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.24s
+
+        PASS [   0.246s] (  1/152) junie-tui::functional cases::g02_harness::harness_history_fixture_omits_holla_no_history
+       START [         ] (  2/152) junie-tui::functional cases::h01_why::holla_why_explains_the_selected_item
+
+running 1 test
+test cases::h01_why::holla_why_explains_the_selected_item ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 7.63s
+
+        PASS [   7.634s] (  2/152) junie-tui::functional cases::h01_why::holla_why_explains_the_selected_item
+       START [         ] (  3/152) junie-tui::functional cases::h01_why::holla_why_route_returns_to_the_finder_row
+
+running 1 test
+test cases::h01_why::holla_why_route_returns_to_the_finder_row ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.58s
+
+        PASS [   0.587s] (  3/152) junie-tui::functional cases::h01_why::holla_why_route_returns_to_the_finder_row
+       START [         ] (  4/152) junie-tui::functional cases::h02_reload::holla_reload_rereads_and_revokes_without_running
+
+running 1 test
+test cases::h02_reload::holla_reload_rereads_and_revokes_without_running ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.27s
+
+        PASS [   3.277s] (  4/152) junie-tui::functional cases::h02_reload::holla_reload_rereads_and_revokes_without_running
+       START [         ] (  5/152) junie-tui::functional cases::h02_reload::holla_reload_route_returns_to_the_finder
+
+running 1 test
+test cases::h02_reload::holla_reload_route_returns_to_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.42s
+
+        PASS [   0.429s] (  5/152) junie-tui::functional cases::h02_reload::holla_reload_route_returns_to_the_finder
+       START [         ] (  6/152) junie-tui::functional cases::h02_trust::holla_trust_cancel_then_confirm_applies_to_the_reviewed_file
+
+running 1 test
+test cases::h02_trust::holla_trust_cancel_then_confirm_applies_to_the_reviewed_file ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 6.56s
+
+        PASS [   6.564s] (  6/152) junie-tui::functional cases::h02_trust::holla_trust_cancel_then_confirm_applies_to_the_reviewed_file
+       START [         ] (  7/152) junie-tui::functional cases::h02_trust::holla_trust_route_returns_to_the_child_task
+
+running 1 test
+test cases::h02_trust::holla_trust_route_returns_to_the_child_task ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.44s
+
+        PASS [   0.445s] (  7/152) junie-tui::functional cases::h02_trust::holla_trust_route_returns_to_the_child_task
+       START [         ] (  8/152) junie-tui::functional cases::h03_attach::holla_attach_detaches_without_stopping_then_escalates
+
+running 1 test
+test cases::h03_attach::holla_attach_detaches_without_stopping_then_escalates ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.09s
+
+        PASS [   5.099s] (  8/152) junie-tui::functional cases::h03_attach::holla_attach_detaches_without_stopping_then_escalates
+       START [         ] (  9/152) junie-tui::functional cases::h03_attach::holla_attach_route_returns_to_the_finder
+
+running 1 test
+test cases::h03_attach::holla_attach_route_returns_to_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.34s
+
+        PASS [   1.351s] (  9/152) junie-tui::functional cases::h03_attach::holla_attach_route_returns_to_the_finder
+       START [         ] ( 10/152) junie-tui::functional cases::h03_guards::holla_guards_quit_stays_then_stops
+
+running 1 test
+test cases::h03_guards::holla_guards_quit_stays_then_stops ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 6.00s
+
+        PASS [   6.019s] ( 10/152) junie-tui::functional cases::h03_guards::holla_guards_quit_stays_then_stops
+       START [         ] ( 11/152) junie-tui::functional cases::h03_guards::holla_guards_route_keeps_here_and_a_running_tab
+
+running 1 test
+test cases::h03_guards::holla_guards_route_keeps_here_and_a_running_tab ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.00s
+
+        PASS [   1.015s] ( 11/152) junie-tui::functional cases::h03_guards::holla_guards_route_keeps_here_and_a_running_tab
+       START [         ] ( 12/152) junie-tui::functional cases::h03_picker::holla_picker_opens_the_highlighted_activity
+
+running 1 test
+test cases::h03_picker::holla_picker_opens_the_highlighted_activity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.73s
+
+        PASS [   3.741s] ( 12/152) junie-tui::functional cases::h03_picker::holla_picker_opens_the_highlighted_activity
+       START [         ] ( 13/152) junie-tui::functional cases::h03_picker::holla_picker_route_returns_to_the_finder
+
+running 1 test
+test cases::h03_picker::holla_picker_route_returns_to_the_finder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 0.70s
+
+        PASS [   0.714s] ( 13/152) junie-tui::functional cases::h03_picker::holla_picker_route_returns_to_the_finder
+       START [         ] ( 14/152) junie-tui::functional cases::t01_connections::tablepro_connections_route_opens_on_the_saved_list
+
+running 1 test
+test cases::t01_connections::tablepro_connections_route_opens_on_the_saved_list ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.73s
+
+        PASS [   1.740s] ( 14/152) junie-tui::functional cases::t01_connections::tablepro_connections_route_opens_on_the_saved_list
+       START [         ] ( 15/152) junie-tui::functional cases::t01_connections::tablepro_connections_selection_follows_the_leaf_and_keeps_it_through_search
+
+running 1 test
+test cases::t01_connections::tablepro_connections_selection_follows_the_leaf_and_keeps_it_through_search ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.50s
+
+        PASS [   2.516s] ( 15/152) junie-tui::functional cases::t01_connections::tablepro_connections_selection_follows_the_leaf_and_keeps_it_through_search
+       START [         ] ( 16/152) junie-tui::functional cases::t01_connections::tablepro_connections_status_stays_on_the_selected_connection
+
+running 1 test
+test cases::t01_connections::tablepro_connections_status_stays_on_the_selected_connection ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 6.23s
+
+        PASS [   6.243s] ( 16/152) junie-tui::functional cases::t01_connections::tablepro_connections_status_stays_on_the_selected_connection
+       START [         ] ( 17/152) junie-tui::functional cases::t01_leave::tablepro_leave_guards_keep_the_draft_until_a_choice
+
+running 1 test
+
+thread 'cases::t01_leave::tablepro_leave_guards_keep_the_draft_until_a_choice' (677944980) panicked at tests/functional/cases/t01_leave.rs:153:5:
+visual mismatch for pre_refactor/t01_leave/t01_leave_guards_120x40: Failure(CheckFailure { test_id: "pre_refactor/t01_leave/t01_leave_guards_120x40", gate: State, reason: Missing, candidate_sha256: "04de29a2c931f8aa5376b15e8af628efcb04505b0d298490e1e4ed02001c0e1b", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t01-leave-guards-33260-1793901141166689000-0/check-artifacts/pre_refactor/t01_leave/t01_leave_guards_120x40/04de29a2c931f8aa5376b15e8af628efcb04505b0d298490e1e4ed02001c0e1b/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t01-leave-guards-33260-1793901141166689000-0/check-artifacts/pre_refactor/t01_leave/t01_leave_guards_120x40/04de29a2c931f8aa5376b15e8af628efcb04505b0d298490e1e4ed02001c0e1b/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t01-leave-guards-33260-1793901141166689000-0/check-artifacts/pre_refactor/t01_leave/t01_leave_guards_120x40/04de29a2c931f8aa5376b15e8af628efcb04505b0d298490e1e4ed02001c0e1b/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+functional evidence: /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t01-leave-guards-33260-1793901141166689000-0
+test cases::t01_leave::tablepro_leave_guards_keep_the_draft_until_a_choice ... FAILED
+
+failures:
+
+failures:
+    cases::t01_leave::tablepro_leave_guards_keep_the_draft_until_a_choice
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.08s
+
+        FAIL [   2.090s] ( 17/152) junie-tui::functional cases::t01_leave::tablepro_leave_guards_keep_the_draft_until_a_choice
+       START [         ] ( 18/152) junie-tui::functional cases::t01_leave::tablepro_leave_route_opens_connections_without_a_page_flag
+
+running 1 test
+
+thread 'cases::t01_leave::tablepro_leave_route_opens_connections_without_a_page_flag' (677946213) panicked at tests/functional/cases/t01_leave.rs:153:5:
+visual mismatch for pre_refactor/t01_leave/t01_leave_route_120x40: Failure(CheckFailure { test_id: "pre_refactor/t01_leave/t01_leave_route_120x40", gate: State, reason: Missing, candidate_sha256: "92e00bf6e080a1f0fa88f405261007ada62c583a0c13d855f5c086a852949255", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t01-leave-route-33517-1793901143256522000-0/check-artifacts/pre_refactor/t01_leave/t01_leave_route_120x40/92e00bf6e080a1f0fa88f405261007ada62c583a0c13d855f5c086a852949255/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t01-leave-route-33517-1793901143256522000-0/check-artifacts/pre_refactor/t01_leave/t01_leave_route_120x40/92e00bf6e080a1f0fa88f405261007ada62c583a0c13d855f5c086a852949255/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t01-leave-route-33517-1793901143256522000-0/check-artifacts/pre_refactor/t01_leave/t01_leave_route_120x40/92e00bf6e080a1f0fa88f405261007ada62c583a0c13d855f5c086a852949255/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+functional evidence: /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t01-leave-route-33517-1793901143256522000-0
+test cases::t01_leave::tablepro_leave_route_opens_connections_without_a_page_flag ... FAILED
+
+failures:
+
+failures:
+    cases::t01_leave::tablepro_leave_route_opens_connections_without_a_page_flag
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.40s
+
+        FAIL [   1.411s] ( 18/152) junie-tui::functional cases::t01_leave::tablepro_leave_route_opens_connections_without_a_page_flag
+       START [         ] ( 19/152) junie-tui::functional cases::t02_data::tablepro_data_kinds_edit_a_table_and_reject_readonly_objects
+
+running 1 test
+test cases::t02_data::tablepro_data_kinds_edit_a_table_and_reject_readonly_objects ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.14s
+
+        PASS [   5.147s] ( 19/152) junie-tui::functional cases::t02_data::tablepro_data_kinds_edit_a_table_and_reject_readonly_objects
+       START [         ] ( 20/152) junie-tui::functional cases::t02_data::tablepro_data_route_opens_an_editable_table_and_returns
+
+running 1 test
+test cases::t02_data::tablepro_data_route_opens_an_editable_table_and_returns ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.83s
+
+        PASS [   1.834s] ( 20/152) junie-tui::functional cases::t02_data::tablepro_data_route_opens_an_editable_table_and_returns
+       START [         ] ( 21/152) junie-tui::functional cases::t02_discard::tablepro_discard_cancel_keeps_the_edit_and_confirm_restores_it
+
+running 1 test
+test cases::t02_discard::tablepro_discard_cancel_keeps_the_edit_and_confirm_restores_it ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.88s
+
+        PASS [   4.892s] ( 21/152) junie-tui::functional cases::t02_discard::tablepro_discard_cancel_keeps_the_edit_and_confirm_restores_it
+       START [         ] ( 22/152) junie-tui::functional cases::t02_discard::tablepro_discard_route_returns_from_a_clean_grid
+
+running 1 test
+test cases::t02_discard::tablepro_discard_route_returns_from_a_clean_grid ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.85s
+
+        PASS [   1.869s] ( 22/152) junie-tui::functional cases::t02_discard::tablepro_discard_route_returns_from_a_clean_grid
+       START [         ] ( 23/152) junie-tui::functional cases::t02_editors::tablepro_editors_route_opens_orders_and_returns_to_query
+
+running 1 test
+test cases::t02_editors::tablepro_editors_route_opens_orders_and_returns_to_query ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 8.31s
+
+        PASS [   8.323s] ( 23/152) junie-tui::functional cases::t02_editors::tablepro_editors_route_opens_orders_and_returns_to_query
+       START [         ] ( 24/152) junie-tui::functional cases::t02_editors::tablepro_editors_types_accept_and_reject_each_family
+
+running 1 test
+test cases::t02_editors::tablepro_editors_types_accept_and_reject_each_family ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 12.67s
+
+        PASS [  12.684s] ( 24/152) junie-tui::functional cases::t02_editors::tablepro_editors_types_accept_and_reject_each_family
+       START [         ] ( 25/152) junie-tui::functional cases::t02_explorer::tablepro_explorer_route_connects_development_and_quits
+
+running 1 test
+test cases::t02_explorer::tablepro_explorer_route_connects_development_and_quits ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.75s
+
+        PASS [   1.763s] ( 25/152) junie-tui::functional cases::t02_explorer::tablepro_explorer_route_connects_development_and_quits
+       START [         ] ( 26/152) junie-tui::functional cases::t02_explorer::tablepro_explorer_tree_keeps_the_selected_object
+
+running 1 test
+test cases::t02_explorer::tablepro_explorer_tree_keeps_the_selected_object ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.35s
+
+        PASS [   5.357s] ( 26/152) junie-tui::functional cases::t02_explorer::tablepro_explorer_tree_keeps_the_selected_object
+       START [         ] ( 27/152) junie-tui::functional cases::t02_filters::tablepro_filters_change_the_visible_organizations
+
+running 1 test
+
+thread 'cases::t02_filters::tablepro_filters_change_the_visible_organizations' (677956271) panicked at tests/functional/cases/t02_filters.rs:112:5:
+visual mismatch for pre_refactor/t02_filters/t02_filters_filters_120x40: Failure(CheckFailure { test_id: "pre_refactor/t02_filters/t02_filters_filters_120x40", gate: State, reason: Missing, candidate_sha256: "ad71c1b8d0a82b915cc205048e02eb7c9bb21f0d69edb8f3aefd245a5306c84d", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-filters-37623-1793901186539366000-0/check-artifacts/pre_refactor/t02_filters/t02_filters_filters_120x40/ad71c1b8d0a82b915cc205048e02eb7c9bb21f0d69edb8f3aefd245a5306c84d/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-filters-37623-1793901186539366000-0/check-artifacts/pre_refactor/t02_filters/t02_filters_filters_120x40/ad71c1b8d0a82b915cc205048e02eb7c9bb21f0d69edb8f3aefd245a5306c84d/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-filters-37623-1793901186539366000-0/check-artifacts/pre_refactor/t02_filters/t02_filters_filters_120x40/ad71c1b8d0a82b915cc205048e02eb7c9bb21f0d69edb8f3aefd245a5306c84d/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+functional evidence: /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-filters-37623-1793901186539366000-0
+test cases::t02_filters::tablepro_filters_change_the_visible_organizations ... FAILED
+
+failures:
+
+failures:
+    cases::t02_filters::tablepro_filters_change_the_visible_organizations
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 8.34s
+
+        FAIL [   8.350s] ( 27/152) junie-tui::functional cases::t02_filters::tablepro_filters_change_the_visible_organizations
+       START [         ] ( 28/152) junie-tui::functional cases::t02_filters::tablepro_filters_route_closes_the_organizations_tab
+
+running 1 test
+test cases::t02_filters::tablepro_filters_route_closes_the_organizations_tab ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.65s
+
+        PASS [   1.660s] ( 28/152) junie-tui::functional cases::t02_filters::tablepro_filters_route_closes_the_organizations_tab
+       START [         ] ( 29/152) junie-tui::functional cases::t02_viewers::tablepro_viewers_keeps_the_selected_cell
+
+running 1 test
+test cases::t02_viewers::tablepro_viewers_keeps_the_selected_cell ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.45s
+
+        PASS [   5.468s] ( 29/152) junie-tui::functional cases::t02_viewers::tablepro_viewers_keeps_the_selected_cell
+       START [         ] ( 30/152) junie-tui::functional cases::t02_viewers::tablepro_viewers_route_returns_to_query
+
+running 1 test
+test cases::t02_viewers::tablepro_viewers_route_returns_to_query ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.85s
+
+        PASS [   1.856s] ( 30/152) junie-tui::functional cases::t02_viewers::tablepro_viewers_route_returns_to_query
+       START [         ] ( 31/152) junie-tui::functional cases::t03_affected::tablepro_affected_route_reaches_query_1
+
+running 1 test
+test cases::t03_affected::tablepro_affected_route_reaches_query_1 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.57s
+
+        PASS [   1.579s] ( 31/152) junie-tui::functional cases::t03_affected::tablepro_affected_route_reaches_query_1
+       START [         ] ( 32/152) junie-tui::functional cases::t03_affected::tablepro_affected_write_shows_the_affected_body
+
+running 1 test
+test cases::t03_affected::tablepro_affected_write_shows_the_affected_body ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.35s
+
+        PASS [   5.357s] ( 32/152) junie-tui::functional cases::t03_affected::tablepro_affected_write_shows_the_affected_body
+       START [         ] ( 33/152) junie-tui::functional cases::t03_cancelled::tablepro_cancelled_batch_keeps_the_cancelled_body
+
+running 1 test
+test cases::t03_cancelled::tablepro_cancelled_batch_keeps_the_cancelled_body ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.21s
+
+        PASS [   4.215s] ( 33/152) junie-tui::functional cases::t03_cancelled::tablepro_cancelled_batch_keeps_the_cancelled_body
+       START [         ] ( 34/152) junie-tui::functional cases::t03_cancelled::tablepro_cancelled_route_reaches_query_1
+
+running 1 test
+test cases::t03_cancelled::tablepro_cancelled_route_reaches_query_1 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.59s
+
+        PASS [   1.604s] ( 34/152) junie-tui::functional cases::t03_cancelled::tablepro_cancelled_route_reaches_query_1
+       START [         ] ( 35/152) junie-tui::functional cases::t03_confirm::tablepro_confirm_gates_accept_only_the_exact_phrase_once
+
+running 1 test
+test cases::t03_confirm::tablepro_confirm_gates_accept_only_the_exact_phrase_once ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 16.77s
+
+        PASS [  16.782s] ( 35/152) junie-tui::functional cases::t03_confirm::tablepro_confirm_gates_accept_only_the_exact_phrase_once
+       START [         ] ( 36/152) junie-tui::functional cases::t03_confirm::tablepro_confirm_route_returns_to_query
+
+running 1 test
+test cases::t03_confirm::tablepro_confirm_route_returns_to_query ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.63s
+
+        PASS [   1.645s] ( 36/152) junie-tui::functional cases::t03_confirm::tablepro_confirm_route_returns_to_query
+       START [         ] ( 37/152) junie-tui::functional cases::t03_error::tablepro_error_recover_replaces_the_syntax_error
+
+running 1 test
+test cases::t03_error::tablepro_error_recover_replaces_the_syntax_error ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.41s
+
+        PASS [   5.421s] ( 37/152) junie-tui::functional cases::t03_error::tablepro_error_recover_replaces_the_syntax_error
+       START [         ] ( 38/152) junie-tui::functional cases::t03_error::tablepro_error_route_reaches_query_1
+
+running 1 test
+test cases::t03_error::tablepro_error_route_reaches_query_1 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.63s
+
+        PASS [   1.640s] ( 38/152) junie-tui::functional cases::t03_error::tablepro_error_route_reaches_query_1
+       START [         ] ( 39/152) junie-tui::functional cases::t03_plan::tablepro_plan_raw_is_distinct_from_the_tree_and_analysis
+
+running 1 test
+test cases::t03_plan::tablepro_plan_raw_is_distinct_from_the_tree_and_analysis ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 5.13s
+
+        PASS [   5.145s] ( 39/152) junie-tui::functional cases::t03_plan::tablepro_plan_raw_is_distinct_from_the_tree_and_analysis
+       START [         ] ( 40/152) junie-tui::functional cases::t03_plan::tablepro_plan_route_reaches_query_1
+
+running 1 test
+test cases::t03_plan::tablepro_plan_route_reaches_query_1 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.59s
+
+        PASS [   1.602s] ( 40/152) junie-tui::functional cases::t03_plan::tablepro_plan_route_reaches_query_1
+       START [         ] ( 41/152) junie-tui::functional cases::t03_running::tablepro_running_cancel_refuses_a_duplicate_and_keeps_the_cancelled_result
+
+running 1 test
+test cases::t03_running::tablepro_running_cancel_refuses_a_duplicate_and_keeps_the_cancelled_result ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.93s
+
+        PASS [   2.946s] ( 41/152) junie-tui::functional cases::t03_running::tablepro_running_cancel_refuses_a_duplicate_and_keeps_the_cancelled_result
+       START [         ] ( 42/152) junie-tui::functional cases::t03_running::tablepro_running_route_reaches_query_1
+
+running 1 test
+test cases::t03_running::tablepro_running_route_reaches_query_1 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.64s
+
+        PASS [   1.651s] ( 42/152) junie-tui::functional cases::t03_running::tablepro_running_route_reaches_query_1
+       START [         ] ( 43/152) junie-tui::functional cases::t04_close::tablepro_close_dirty_cancel_keeps_sql_and_blocks_the_neighbour
+
+running 1 test
+test cases::t04_close::tablepro_close_dirty_cancel_keeps_sql_and_blocks_the_neighbour ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.88s
+
+        PASS [   3.895s] ( 43/152) junie-tui::functional cases::t04_close::tablepro_close_dirty_cancel_keeps_sql_and_blocks_the_neighbour
+       START [         ] ( 44/152) junie-tui::functional cases::t04_close::tablepro_close_route_reaches_query_and_quits
+
+running 1 test
+test cases::t04_close::tablepro_close_route_reaches_query_and_quits ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.73s
+
+        PASS [   1.752s] ( 44/152) junie-tui::functional cases::t04_close::tablepro_close_route_reaches_query_and_quits
+       START [         ] ( 45/152) junie-tui::functional cases::t05_context::tablepro_context_actions_use_the_selected_object
+
+running 1 test
+test cases::t05_context::tablepro_context_actions_use_the_selected_object ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.45s
+
+        PASS [   4.462s] ( 45/152) junie-tui::functional cases::t05_context::tablepro_context_actions_use_the_selected_object
+       START [         ] ( 46/152) junie-tui::functional cases::t05_context::tablepro_context_route_returns_to_the_row
+
+running 1 test
+test cases::t05_context::tablepro_context_route_returns_to_the_row ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.95s
+
+        PASS [   1.968s] ( 46/152) junie-tui::functional cases::t05_context::tablepro_context_route_returns_to_the_row
+       START [         ] ( 47/152) junie-tui::functional cases::t05_disconnect::tablepro_disconnect_clean_returns_and_dirty_cancel_keeps_the_draft
+
+running 1 test
+
+thread 'cases::t05_disconnect::tablepro_disconnect_clean_returns_and_dirty_cancel_keeps_the_draft' (677991559) panicked at tests/functional/cases/t05_disconnect.rs:211:9:
+pre_refactor/t05_disconnect/t05_disconnect_disconnect_120x40 missing sha 71e83aa0d761c2c208ab352a06034e45f529f84c0d1d9c9c0abb6ab6a6eb8562 path /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-disconnect-disconnect-53082-1793901265540863000-0/check-artifacts/pre_refactor/t05_disconnect/t05_disconnect_disconnect_120x40/71e83aa0d761c2c208ab352a06034e45f529f84c0d1d9c9c0abb6ab6a6eb8562/sample.tui.pb cells 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+functional evidence: /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-disconnect-disconnect-53082-1793901265540863000-0
+test cases::t05_disconnect::tablepro_disconnect_clean_returns_and_dirty_cancel_keeps_the_draft ... FAILED
+
+failures:
+
+failures:
+    cases::t05_disconnect::tablepro_disconnect_clean_returns_and_dirty_cancel_keeps_the_draft
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.15s
+
+        FAIL [   4.162s] ( 47/152) junie-tui::functional cases::t05_disconnect::tablepro_disconnect_clean_returns_and_dirty_cancel_keeps_the_draft
+       START [         ] ( 48/152) junie-tui::functional cases::t05_disconnect::tablepro_disconnect_route_reaches_query_1
+
+running 1 test
+test cases::t05_disconnect::tablepro_disconnect_route_reaches_query_1 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.64s
+
+        PASS [   1.654s] ( 48/152) junie-tui::functional cases::t05_disconnect::tablepro_disconnect_route_reaches_query_1
+       START [         ] ( 49/152) junie-tui::functional cases::t05_help::tablepro_help_route_returns_to_query_1
+
+running 1 test
+test cases::t05_help::tablepro_help_route_returns_to_query_1 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.70s
+
+        PASS [   1.716s] ( 49/152) junie-tui::functional cases::t05_help::tablepro_help_route_returns_to_query_1
+       START [         ] ( 50/152) junie-tui::functional cases::t05_help::tablepro_help_scrolls_and_returns_to_the_opener
+
+running 1 test
+test cases::t05_help::tablepro_help_scrolls_and_returns_to_the_opener ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.49s
+
+        PASS [   4.498s] ( 50/152) junie-tui::functional cases::t05_help::tablepro_help_scrolls_and_returns_to_the_opener
+       START [         ] ( 51/152) junie-tui::functional cases::t05_maximize::tablepro_maximize_restores_the_same_layout
+
+running 1 test
+test cases::t05_maximize::tablepro_maximize_restores_the_same_layout ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 6.24s
+
+        PASS [   6.250s] ( 51/152) junie-tui::functional cases::t05_maximize::tablepro_maximize_restores_the_same_layout
+       START [         ] ( 52/152) junie-tui::functional cases::t05_maximize::tablepro_maximize_route_reaches_the_workbench
+
+running 1 test
+test cases::t05_maximize::tablepro_maximize_route_reaches_the_workbench ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.60s
+
+        PASS [   1.617s] ( 52/152) junie-tui::functional cases::t05_maximize::tablepro_maximize_route_reaches_the_workbench
+       START [         ] ( 53/152) junie-tui::functional cases::t05_menus::tablepro_menus_highlighted_command_is_the_one_that_runs
+
+running 1 test
+test cases::t05_menus::tablepro_menus_highlighted_command_is_the_one_that_runs ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 10.66s
+
+        PASS [  10.675s] ( 53/152) junie-tui::functional cases::t05_menus::tablepro_menus_highlighted_command_is_the_one_that_runs
+       START [         ] ( 54/152) junie-tui::functional cases::t05_menus::tablepro_menus_route_reaches_query_1
+
+running 1 test
+test cases::t05_menus::tablepro_menus_route_reaches_query_1 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.03s
+
+        PASS [   2.046s] ( 54/152) junie-tui::functional cases::t05_menus::tablepro_menus_route_reaches_query_1
+       START [         ] ( 55/152) junie-tui::functional cases::t05_quit::tablepro_quit_dirty_cancel_keeps_sql_then_confirms
+
+running 1 test
+
+thread 'cases::t05_quit::tablepro_quit_dirty_cancel_keeps_sql_then_confirms' (678008774) panicked at tests/functional/cases/t05_quit.rs:175:9:
+pre_refactor/t05_quit/t05_quit_quit_120x40 missing sha 3105a0bffe6dbb815a259c7d3ebb69069e1d3e048c98de62188512d26188899d path /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-quit-dirty-62475-1793901298161397000-0/check-artifacts/pre_refactor/t05_quit/t05_quit_quit_120x40/3105a0bffe6dbb815a259c7d3ebb69069e1d3e048c98de62188512d26188899d/sample.tui.pb cells 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+functional evidence: /private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-quit-dirty-62475-1793901298161397000-0
+test cases::t05_quit::tablepro_quit_dirty_cancel_keeps_sql_then_confirms ... FAILED
+
+failures:
+
+failures:
+    cases::t05_quit::tablepro_quit_dirty_cancel_keeps_sql_then_confirms
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.55s
+
+        FAIL [   2.564s] ( 55/152) junie-tui::functional cases::t05_quit::tablepro_quit_dirty_cancel_keeps_sql_then_confirms
+       START [         ] ( 56/152) junie-tui::functional cases::t05_quit::tablepro_quit_route_exits_clean
+
+running 1 test
+test cases::t05_quit::tablepro_quit_route_exits_clean ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.62s
+
+        PASS [   1.631s] ( 56/152) junie-tui::functional cases::t05_quit::tablepro_quit_route_exits_clean
+       START [         ] ( 57/152) junie-tui::functional cases::t05_viewers::tablepro_viewers_copies_the_open_cell
+
+running 1 test
+test cases::t05_viewers::tablepro_viewers_copies_the_open_cell ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.89s
+
+        PASS [   4.904s] ( 57/152) junie-tui::functional cases::t05_viewers::tablepro_viewers_copies_the_open_cell
+       START [         ] ( 58/152) junie-tui::functional cases::t05_viewers::tablepro_viewers_route_reaches_the_products_table
+
+running 1 test
+test cases::t05_viewers::tablepro_viewers_route_reaches_the_products_table ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.90s
+
+        PASS [   1.908s] ( 58/152) junie-tui::functional cases::t05_viewers::tablepro_viewers_route_reaches_the_products_table
+       START [         ] ( 59/152) junie-tui::functional holla::holla_browser_hidden_files_preview_scroll_and_bad_path_recovery
+
+running 1 test
+test holla::holla_browser_hidden_files_preview_scroll_and_bad_path_recovery ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.35s
+
+        PASS [   2.360s] ( 59/152) junie-tui::functional holla::holla_browser_hidden_files_preview_scroll_and_bad_path_recovery
+       START [         ] ( 60/152) junie-tui::functional holla::holla_browser_pointer_selection_loads_preview_and_hidden_toggle
+
+running 1 test
+test holla::holla_browser_pointer_selection_loads_preview_and_hidden_toggle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.72s
+
+        PASS [   1.727s] ( 60/152) junie-tui::functional holla::holla_browser_pointer_selection_loads_preview_and_hidden_toggle
+       START [         ] ( 61/152) junie-tui::functional holla::holla_cancelling_second_gate_leaves_no_started_activity
+
+running 1 test
+test holla::holla_cancelling_second_gate_leaves_no_started_activity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.73s
+
+        PASS [   1.741s] ( 61/152) junie-tui::functional holla::holla_cancelling_second_gate_leaves_no_started_activity
+       START [         ] ( 62/152) junie-tui::functional holla::holla_disk_tree_and_plan_review_flows
+
+running 1 test
+test holla::holla_disk_tree_and_plan_review_flows ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.87s
+
+        PASS [   2.883s] ( 62/152) junie-tui::functional holla::holla_disk_tree_and_plan_review_flows
+       START [         ] ( 63/152) junie-tui::functional holla::holla_finder_search_runs_selected_task_and_records_result
+
+running 1 test
+test holla::holla_finder_search_runs_selected_task_and_records_result ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 3.17s
+
+        PASS [   3.177s] ( 63/152) junie-tui::functional holla::holla_finder_search_runs_selected_task_and_records_result
+       START [         ] ( 64/152) junie-tui::functional holla::holla_first_use_idle_and_no_results
+
+running 1 test
+test holla::holla_first_use_idle_and_no_results ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.36s
+
+        PASS [   1.374s] ( 64/152) junie-tui::functional holla::holla_first_use_idle_and_no_results
+       START [         ] ( 65/152) junie-tui::functional holla::holla_help_overlay
+
+running 1 test
+  Cancelling due to signal: 1 test still running
+     SIGTERM [   0.764s] ( 65/152) junie-tui::functional holla::holla_help_overlay
+────────────
+     Summary [ 229.652s] 65/152 tests run: 59 passed, 6 failed, 944 skipped
+        FAIL [   2.090s] ( 17/152) junie-tui::functional cases::t01_leave::tablepro_leave_guards_keep_the_draft_until_a_choice
+        FAIL [   1.411s] ( 18/152) junie-tui::functional cases::t01_leave::tablepro_leave_route_opens_connections_without_a_page_flag
+        FAIL [   8.350s] ( 27/152) junie-tui::functional cases::t02_filters::tablepro_filters_change_the_visible_organizations
+        FAIL [   4.162s] ( 47/152) junie-tui::functional cases::t05_disconnect::tablepro_disconnect_clean_returns_and_dirty_cancel_keeps_the_draft
+        FAIL [   2.564s] ( 55/152) junie-tui::functional cases::t05_quit::tablepro_quit_dirty_cancel_keeps_sql_then_confirms
+     SIGTERM [   0.764s] ( 65/152) junie-tui::functional holla::holla_help_overlay
+warning: 87/152 tests were not run due to signal
+error: test run failed

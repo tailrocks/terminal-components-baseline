@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   Search ac╭─ Key reference ─────────────────────────────────────────────────────────────────── Here ─ × ─╮e ‹ here ›  
+            │  Finder                                       Pages                                          │            
+    Suggeste│  Type            search actions and           Disk            ↑↓ move · Space select · a     │sk · here   
+  › Analyze │                  resources together ·                         all · Enter drill · c          │─────────   
+    Open btm│                  @parent @children @system                    cleanup plan · p details       │ee of       
+    Show sys│                  @all narrow the scope        Plan review     Space include or exclude ·     │ deepens    
+            │  ↑↓              move · PgUp PgDn Home End                    u undo · Enter step facts ·    │ams;        
+    Recent h│  Enter           primary action ·                             c confirm                      │ or         
+    nothing │                  destructive rows open a      Gates           Gate 1 reviews facts and       │facts       
+            │                  review instead                               the full sequence · Gate 2     │            
+    Explore │  Alt+Enter       alternatives · run, copy,                    types the target-bound         │yze'        
+     Tasks  │                  insert, arguments, pin,                      phrase                         │            
+    System ·│                  alias, hide, why                                                            │            
+            │  Tab             preview › tab strip ›        Everywhere                                     │            
+            │                  finder                       Alt+0           Here                           │            
+            │  Ctrl+↑ / Ctrl+↓ scope outward (parent,       Ctrl+W          Close tab                      │            
+            │                  system) / inward (children)  Ctrl+G          Activities                     │            
+            │  Esc             clear query › scope back to  F1 ?            This reference                 │            
+            │                  here › back a page           F10 Ctrl+F2     Menu bar                       │ the        
+            │  Aliases         gp pull · du disk usage ·    Ctrl+PgDn       Next page                      │d there     
+            │                  test the test task here · d  Ctrl+PgUp       Previous page                  │            
+            │                  then u · dc docker cleanup   Tab             Next control                   │ome         
+            │                                               Shift+Tab       Previous control               │ze a        
+            │  Mouse                                        Esc             Back                           │op files    
+            │  Click           select                       Ctrl+Q          Quit                           │n ·         
+            │  Double-click    run                          Ctrl+C          Copy, else quit                │?           
+            │  Right-click     alternatives                 Alt+1–9         Show that tab                  │            
+            │  Wheel           scroll under the pointer                                                    │            
+            │                                                                                              │            
+            │                                                                                              │            
+            │                                                                                      ▎Done   │            
+            ╰──────────────────────────────────────────────────────────────────────────────────────────────╯            
+                                                                                                                        
+                                                                                                                        
+ ~/scratch                                                                     / ━━━━━━━━━━─ 91% ▲   truecolor · 120×40 
+ ↑↓ Scroll  Esc Close                                                                                                   

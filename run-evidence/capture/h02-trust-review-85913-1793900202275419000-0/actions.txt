@@ -1,0 +1,58 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "monorepo-child", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible From acme · the parent root 255a187156f18435
+type 14 UTF-8 bytes
+checkpoint 001: visible trust required · 5045a50e3d7f7f69
+key enter
+checkpoint 002: custom trust dialog 68ec7651881b1095
+resize 121x40
+checkpoint 003: visible 121×40 fdd08069a4e6e929
+resize 120x40
+checkpoint 004: visible 120×40 dc9a14aa4fafa7b1
+checkpoint 005: settled wide trust dialog dc9a14aa4fafa7b1
+checkpoint 006: settled dc9a14aa4fafa7b1
+precondition 
+visual pre_refactor/h02_trust/h02_trust_trust_120x40 candidate b59d880b4bb68b2d28a33f800b8981e611d1637b90af76b8cad3f79a02bd3de4
+capture-only pre_refactor/h02_trust/h02_trust_trust_120x40: Failure(CheckFailure { test_id: "pre_refactor/h02_trust/h02_trust_trust_120x40", gate: State, reason: Missing, candidate_sha256: "b59d880b4bb68b2d28a33f800b8981e611d1637b90af76b8cad3f79a02bd3de4", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-trust-review-85913-1793900202275419000-0/check-artifacts/pre_refactor/h02_trust/h02_trust_trust_120x40/b59d880b4bb68b2d28a33f800b8981e611d1637b90af76b8cad3f79a02bd3de4/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-trust-review-85913-1793900202275419000-0/check-artifacts/pre_refactor/h02_trust/h02_trust_trust_120x40/b59d880b4bb68b2d28a33f800b8981e611d1637b90af76b8cad3f79a02bd3de4/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-trust-review-85913-1793900202275419000-0/check-artifacts/pre_refactor/h02_trust/h02_trust_trust_120x40/b59d880b4bb68b2d28a33f800b8981e611d1637b90af76b8cad3f79a02bd3de4/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 007: custom trust dialog at 80x24 e074f4af9653cbe1
+resize 81x24
+checkpoint 008: narrow nudge daba56872332d787
+resize 80x24
+checkpoint 009: narrow restored 5b6d286e0b9d7253
+checkpoint 010: settled narrow trust dialog e074f4af9653cbe1
+checkpoint 011: settled e074f4af9653cbe1
+precondition 
+visual pre_refactor/h02_trust/h02_trust_trust_narrow candidate 487861a1f53d5c9d5fde00a6a6f82cd308d866ce79952bb96c13645b0b84a0fe
+capture-only pre_refactor/h02_trust/h02_trust_trust_narrow: Failure(CheckFailure { test_id: "pre_refactor/h02_trust/h02_trust_trust_narrow", gate: State, reason: Missing, candidate_sha256: "487861a1f53d5c9d5fde00a6a6f82cd308d866ce79952bb96c13645b0b84a0fe", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-trust-review-85913-1793900202275419000-0/check-artifacts/pre_refactor/h02_trust/h02_trust_trust_narrow/487861a1f53d5c9d5fde00a6a6f82cd308d866ce79952bb96c13645b0b84a0fe/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-trust-review-85913-1793900202275419000-0/check-artifacts/pre_refactor/h02_trust/h02_trust_trust_narrow/487861a1f53d5c9d5fde00a6a6f82cd308d866ce79952bb96c13645b0b84a0fe/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-trust-review-85913-1793900202275419000-0/check-artifacts/pre_refactor/h02_trust/h02_trust_trust_narrow/487861a1f53d5c9d5fde00a6a6f82cd308d866ce79952bb96c13645b0b84a0fe/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 012: custom trust dialog back at 120x40 dc9a14aa4fafa7b1
+key escape
+checkpoint 013: absent Trust ~/work/acme/.holla.toml? b8da82b56fe600a0
+key enter
+checkpoint 014: custom trust dialog reopened 6094e4f323fbe1be
+key right
+checkpoint 015: trust this file focused c0df75f5dc8558f3
+key enter
+checkpoint 016: reviewed command ran in the config directory f149000f50b6cbcd
+key escape
+checkpoint 017: finder after the reviewed run d8178c26fc1aaa20
+key escape
+checkpoint 018: visible From acme · the parent root b530daefd5bcd353
+type 4 UTF-8 bytes
+checkpoint 019: visible alias test 620163e8da7cbfaa
+key enter
+checkpoint 020: mise trust dialog e4cecd9c913ed2ff
+key escape
+checkpoint 021: absent Trust ~/work/acme/apps/frontend/mise.toml? a447922afa3be057
+key enter
+checkpoint 022: mise trust dialog again 362e69939142396c
+key right
+checkpoint 023: trust file focused a8f25a81bf3c962c
+key enter
+checkpoint 024: visible arguments 158ec3cb421b38da
+key ctrl+s
+checkpoint 025: frontend test has its own activity and output a785344b541eb0e0
+checkpoint 026: visible 19 passed (19) 62797e0e2c4c1485
+checkpoint 027: visible succeeded 5cb3239c72e72f60
+key ctrl+q
+clean exit 0

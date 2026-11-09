@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T orders ×                                                                                         +   
+ ───────────────━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › orders ────────────────────────────────────────────────────────── 14 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││         ⚷ id                                    order_number  customer_id       12›  │ 
+ │      ▾ Tables             │││  ▎    1 1d9f28fc-3e09-4488-bae7-d3aeb39b01c4           10000  f92c5e53-3…a7e9 →    ┃ │ 
+ │        ▸ T organizations  │││       2 9157cff3-d585-4ed1-b900-a90377df59dc           10001  1b3a6759-b…4812 →    ┆ │ 
+ │        ▸ T customers      │││       3 9610f538-04b4-4b15-8071-e05260977d47           10002  64e6f4de-3…2551 →    ┆ │ 
+ │        ▸ T products       │││       4 c6c944e8-d295-4d46-9b36-d266f4f75ce1           10003  32143a01-1…4378 →    ┆ │ 
+ │        ▸ T orders         │││       5 2bd03496-f7c6-428c-95cc-12ef815fbb5d           10004  1c78fd05-5…5f6a →    ┆ │ 
+ │        ▸ T order_items    │││       6 a1cc5725-426b-4be8-b1d5-b4c2d5a36aa8           10005  59fec2d8-1…9ee0 →    ┆ │ 
+ │        ▸ T pa│  T orders                                 public · Development       Tables          │              │ 
+ │        ▸ T su│  Q ALTER TABLE orders ADD COLUMN is_gif…  Development · 1 d ago      Recent queries  │───────────── │ 
+ │      ▸ Views │  Q EXPLAIN ANALYZE SELECT * FROM orders…  Production · 15 min ago                    │              │ 
+ │      ▸ Functi│  Q SELECT * FROM orders WHERE status = …  Production · 4 min ago                     │              │ 
+ │      ▸ Sequen│  Q SELECT count(*) FROM orders WHERE cr…  Production · 12 min ago                    │              │ 
+ │    ▸ S analyt│  Q UPDATE orders SET status = 'shipped'…  Production · 58 min ago                    │              │ 
+ │    ▸ S audit │  T order_items                            public · Development       Tables          │              │ 
+ │              │  V order_totals_by_day                    public · Development       Views           │              │ 
+ │              │  Q SELECT * FROM customers ORDER BY cre…  Production · 40 min ago    Recent queries  │              │ 
+ │              │  Q SELECT * FROM payments WHERE status …  Production · 1 d ago                       │              │ 
+ │              │                                                                                      │              │ 
+ │              │ ↑↓ Move · Enter Open · Alt+Enter New tab · Tab Scope · Esc Clear / Close             │              │ 
+ │              ╰──────────────────────────────────────────────────────────────────────────────────────╯l             │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Type Filter  ↑↓ Move  Enter Choose  Esc Clear                                               ✓ Connected to Development 

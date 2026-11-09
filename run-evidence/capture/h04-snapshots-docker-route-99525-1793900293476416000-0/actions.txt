@@ -1,0 +1,14 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "docker-cleanup", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Type Search a502829a0ed58b6a
+key esc
+key esc
+checkpoint 001: visible Search actions and resources fcc8d3793ddbd9fd
+paste 15 UTF-8 bytes
+checkpoint 002: row selected 181f4539cf1ca9c3
+key enter
+checkpoint 003: containers f50780196851182b
+key esc
+checkpoint 004: visible Type Search 181f4539cf1ca9c3
+checkpoint 005: finder keeps the row 181f4539cf1ca9c3
+key ctrl+q
+clean exit 0

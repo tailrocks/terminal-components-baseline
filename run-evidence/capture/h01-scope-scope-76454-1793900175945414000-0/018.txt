@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                        acme › frontend · Node project · pnpm  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   acme-api-1                                                                                         scope ‹ parent ›  
+                                                                                                                        
+    Results · 1                                                                  Follow acme-api-1 l… docker · parent   
+  › Follow acme-api-1 logs  docker  parent  hidden here · pinned here…           ────────────────────────────────────   
+       ╭──────────────────────────╮                                              Does       stream the last 10          
+       │  Follow acme-api-1 logs  │                                                         minutes and follow ·        
+       │  Run now           Enter │                                                         acme/api:dev · running      
+       │  Copy command          y │                                              Runs       docker logs -f -…e-api-1    
+       │  Insert into shell       │                                              In         ~/work/acme                 
+       │ ──────────────────────── │                                              Host       mbp · local                 
+       │  Restart                 │                                              Scope      parent                      
+       │  Stop                    │                                              Why        pinned here · service is    
+       │ ──────────────────────── │                                                         unhealthy                   
+       │  Unpin here              │                                              Changes    none · read-only            
+       │  Set alias…              │                                              Risk       read-only                   
+       │  Restore here            │                                              Data       live · 1 min ago            
+       │  Reset ranking           │                                              Gate       runs directly               
+       │ ──────────────────────── │                                              Alt+Enter  Restart · Stop · Pin ·      
+       │  Why is this here?       │                                                         Alias · Why here?           
+       ╰──────────────────────────╯                                                                                     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/acme/apps/frontend   main   ↑1   • 2                   scope parent · acme                   truecolor · 120×40 
+ ↑↓ Move  Type to jump  Enter Choose  Esc Close    Hidden here · still reachable by search · Restore from the same menu 

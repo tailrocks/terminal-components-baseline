@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          no project  devbox · development  
+  Here › Docker disk usage                                                                                              
+  Here › Docker disk usage                                                                                              
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────── 
+  Docker disk usage                                                                            devbox · live · 1 s ago  
+                                                                                                                        
+  Containers   12 · 5 running                                                                                           
+  Images       41 · 9.8 GB · 12 dangling                                                                                
+  Volumes      7 · 5 named · 4.1 GB                                                                                     
+  Build cache  6.1 GB                                                                                                   
+  Reclaimable  ~18.4 GB                                                                                                 
+                                                                                                                        
+ ╭─ Containers ───────────────────────────────────────────────────────────────────────────────── 13 lines · y copies ─╮ 
+ │  name                image                   state     ports       project                                         │ 
+ │  acme-api-1          acme/api:dev            healthy   8080→8080   acme                                            │ 
+ │  acme-worker-1       acme/worker:dev         running               acme                                            │ 
+ │  acme-scheduler-1    acme/scheduler:dev      running               acme                                            │ 
+ │  acme-db-1           postgres:17.2           healthy   5432→5432   acme                                            │ 
+ │  acme-redis-1        redis:7.4-alpine        healthy   6379→6379   acme                                            │ 
+ │  build-cache-7f2     moby/buildkit:v0.18     exited                –                                               │ 
+ │  registry-mirror     registry:2              exited    5000→5000   –                                               │ 
+ │  tmp-shell           debian:13               exited                –                                               │ 
+ │  tmp-shell-2         debian:13               exited                –                                               │ 
+ │  pgadmin             dpage/pgadmin4:9        exited                –                                               │ 
+ │  grafana             grafana/grafana:11      exited    3000→3000   monitoring                                      │ 
+ │  loki                grafana/loki:3          exited                monitoring                                      │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Clean Docker completely    Stop all containers                                                                 
+                                                                                                                        
+ /work/scratch                                 snapshot · read-only                                  truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                           Esc never quits · Ctrl+Q quits 

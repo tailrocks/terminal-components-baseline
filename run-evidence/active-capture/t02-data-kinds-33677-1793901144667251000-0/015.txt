@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent          • 1 pending  truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T organizations • ×    T active_customers ×                                                        +   
+ ──────────────────────────────────────━━━━━━━━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › active_customers ───────────────────────────────────────────────── 4 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││         id                                    email                             2›   │ 
+ │      ▾ Tables             │││  ▎    1 46be7724-3a8b-4970-b87d-2df47ab765c9  omar.nguyen@kestrel.health           ┃ │ 
+ │        ▸ T organizations  │││       2 7ab765c9-2df4-487d-a651-212e89329458  lucas.mehta@orbit.studio             ┆ │ 
+ │        ▸ T customers      │││       3 f1c9267b-0044-44a1-ac8f-99f951935f07  greta.haddad@halden.co               ┆ │ 
+ │        ▸ T products       │││       4 51935f07-99f9-4c8f-97c6-38eccb6c583c  omar.sato@bluefin.dev                ┆ │ 
+ │        ▸ T orders         │││       5 cb6c583c-38ec-47c6-bb76-ef3f83a6a525  hana.tanaka@tessellate.app           ┆ │ 
+ │        ▸ T order_items    │││       6 0f7aac10-9493-401e-a23e-6621bf24833b  greta.costa@tessellate.app           ┆ │ 
+ │        ▸ T payments       │││       7 bf24833b-6621-423e-af53-76fddfcd3778  ana.silva@orbit.studio               ┆ │ 
+ │        ▸ T subscriptions  │││       8 88840b05-03aa-46da-bae4-978988de106d  sofia.brandt@juniper.home            ┆ │ 
+ │      ▸ Views              │││       9 88de106d-9789-4ae4-820c-64ac0581753f  felix.iyer@kestrel.health            ┆ │ 
+ │      ▸ Functions          │││      10 0581753f-64ac-420c-8a8b-8672bb0a56b2  priya.nguyen@tessellate.app          ┆ │ 
+ │      ▸ Sequences          │││      11 6f4043dd-3e56-43f2-a025-a1d023580a9f  greta.rossi@juniper.home             ┆ │ 
+ │    ▸ S analytics          │││      12 23580a9f-a1d0-4025-9340-b8dc2deed8a7  sofia.iyer@tessellate.app            ┆ │ 
+ │    ▸ S audit              │││      13 f8678bb5-7167-4083-9529-3017512fa6c1  ravi.costa@bluefin.dev               ┆ │ 
+ │                           │││      14 512fa6c1-3017-4529-922e-fa2b57d532d5  ana.brandt@kestrel.health            ┆ │ 
+ │                           │││      15 57d532d5-fa2b-422e-9c13-66a77066e10d  felix.nguyen@tessellate.app          ┆ │ 
+ │                           │││      16 625e1b4c-663a-40c9-acaa-f6858a64db3d  kai.okafor@orbit.studio              ┆ │ 
+ │                           │││      17 8a64db3d-f685-4caa-8654-b1c9216b5098  mira.karim@orbit.studio              ┆ │ 
+ │                           │││      18 308961c0-0879-43a9-9069-ff512f499783  tomas.weber@juniper.home             ┆ │ 
+ │                           │││      19 2f499783-ff51-4069-b837-694c9e580b8f  jonas.mori@northwind.io              ┆ │ 
+ │                           │││      20 9e580b8f-694c-4837-9a36-8225d79191eb  yuki.okafor@tessellate.app           ┆ │ 
+ │                           │││      21 39c44596-7378-48be-be28-45870ed7c06d  priya.novak@juniper.home             ┆ │ 
+ │                           │││      22 0ed7c06d-4587-4e28-b132-23dddda50712  tomas.iyer@fjord.ai                  ┆ │ 
+ │                           │││      23 5f43f203-de39-441c-b942-b815bd6532c2  ravi.haddad@meridian.foods           ┆ │ 
+ │                           │││      24 bd6532c2-b815-4942-9919-cf60475c8d8a  omar.fischer@lumen.shop              ┆ │ 
+ │                           │││      25 475c8d8a-cf60-4919-88f3-94c5be8d2606  leon.alvarez@orbit.studio            ┆ │ 
+ │                           │││      26 356a7529-b516-424f-884f-26936e8555e4  nadia.costa@orbit.studio             ┆ │ 
+ │                           │││         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 500 loaded · 41,207 total                                             │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓←→ Cell  s Sort  f Filter  Space Select row  …                  These rows come from a view, which cannot be edited. 

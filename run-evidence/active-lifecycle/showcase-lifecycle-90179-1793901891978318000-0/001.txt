@@ -1,0 +1,40 @@
+ ▪ Junie Design system  Overview                                             truecolor · 120×40   i Inspector   ? Help  
+                                                                                                                        
+ Components           54  Overview  Tokens and principles behind every component                                        
+ ───────────────────────                                                                                                
+  › Overview╭─ Keyboard & mouse ──────────────────────────────────────────────────────────── Showcase ─ × ─╮live widget 
+  ▸ App shel│  Shell                                        Sidebar                                        │────────────
+  ▸ Inputs &│  F1 ?        This reference                   ↑↓          Move                               │            
+  ▸ Tables  │  F10 Ctrl+F2 Menu bar                         PgUp PgDn   Page                               │           ┃
+  ▸ Navigati│  Ctrl+PgDn ] Next page                        Home End    First / last                       │────────   ┃
+  ▸ Overlays│  Ctrl+PgUp [ Previous page                    a–z         Jump to a row by name              │ #000000   ┃
+  ▸ Feedback│  0           Jump to navigation               ←→          Fold / unfold                      │ #111111   ┃
+  ▸ Layout  │  i           The Inspector                    Enter       Activate                           │ #18181b   ┃
+  ▸ Text & c│  Tab         Next control                     *           Expand all                         │ #27272a   ┆
+  ▸ Screens │  Shift+Tab   Previous control                 -           Collapse all                       │ #1e1e22   ┆
+            │  Esc         Back                             /           Filter (Esc clears)                │ #2f2f34   ┆
+            │  Ctrl+Q q    Quit                                                                            │ #3f3f46   ┆
+            │  Ctrl+C      Copy, else quit                                                                 │ #2f5aa8   ┆
+            │                                                                                              │ #7a2a2a   ┆
+            │  Mouse                                                                                       │ #1f3460   ┆
+            │  Hover       Preview                                                                         │ #3a3a3a   ┆
+            │  Click       Focus and activate                                                              │ #4d4d4d   ┆
+            │  Wheel       Scroll                                                                          │ #474747   ┆
+            │  Drag        A scrollbar thumb                                                               │ #ffffff   ┆
+            │                                                                                              │ #b3b3b3   ┆
+            │                                                                                              │ #8a8a8a   ┆
+            │                                                                                              │ #737373   ┆
+            │                                                                                              │ #262626   ┆
+            │                                                                                              │ #19191c   ┆
+            │                                                                                              │ #4d4d4d   ┆
+            │                                                                                              │           ┆
+            │                                                                                              │           ┆
+            │                                                                                              │           ┆
+            │                                                                                              │────────   ┆
+            │                                                                                              │ #48e054   ┆
+            │                                                                                      ▎Done   │ #3ab343   ┆
+            ╰──────────────────────────────────────────────────────────────────────────────────────────────╯ #2e9a38   ┆
+                                ▏ accent.bg                                                                  #173f1c   ┆
+                                ▏ accent.bg.subtle                                                           #0a1c0c   ┆
+                                                                                                                        
+ ↑↓ Scroll  Esc Close                                                                                                   

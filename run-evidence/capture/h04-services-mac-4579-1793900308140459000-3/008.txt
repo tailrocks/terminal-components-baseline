@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                            no project  mbp · local 
+  Here › Homebrew services                                                      
+  Here › Homebrew services                                                      
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────
+  Homebrew services                                        mbp · live · 1 s ago 
+                                                                                
+  Source    brew services list --json · live                                    
+  Cache     none · the first listing writes one                                 
+  Services  1                                                                   
+                                                                                
+ ╭─ Detail ─────────────────────────────────────────────── 2 lines · y copies ─╮
+ │  service                     status      actions                            │
+ │  redis                       started     start · stop · restart             │
+ │                                                                             │
+ │                                                                             │
+ │                                                                             │
+ │                                                                             │
+ │                                                                             │
+ ╰─────────────────────────────────────────────────────────────────────────────╯
+                                                                                
+  Next   Restart redis                                                          
+                                                                                
+ ~/work/mac                snapshot · read-only                truecolor · 81×24
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                  

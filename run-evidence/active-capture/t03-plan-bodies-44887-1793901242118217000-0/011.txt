@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×                                                                                                       +   
+ ━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query 1 ───────────────────────────────────────────────────────────────────── 2 ms ─╮ 
+ │                           │││   Run   Run all   Explain                                                            │ 
+ │   Filter objects          │││   ›  1 SELECT sku FROM products                                                      │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││                                                                                      │ 
+ │      ▾ Tables             │││                                                                                      │ 
+ │        ▸ T organizations  │││                                                                                      │ 
+ │        ▸ T customers      │││                                                                                      │ 
+ │        ▸ T products       │││                                                                                      │ 
+ │        ▸ T orders         │││                                                                                      │ 
+ │        ▸ T order_items    │││                                                                                      │ 
+ │        ▸ T payments       │││                                                                                      │ 
+ │        ▸ T subscriptions  │││  ─────────────────────────────────────────────────────────────────────────────────── │ 
+ │      ▸ Views              │││  ▎EXPLAIN ×                                                                          │ 
+ │      ▸ Functions          │││  ━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────── │ 
+ │      ▸ Sequences          │││   Planning 0.210 ms · r Raw                                                          │ 
+ │    ▸ S analytics          │││    EXPLAIN · raw                                                            r Tree   │ 
+ │    ▸ S audit              │││    ───────────────────────────────────────────────────────────────────────────────   │ 
+ │                           │││    Seq Scan on public.products  (cost=0.00..15.90 rows=312 width=64)                 │ 
+ │                           │││    Planning Time: 0.210 ms                                                           │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ←→ Result  p Pin  x Close  Enter Go to statement  Tab Next                                  ✓ Connected to Development 

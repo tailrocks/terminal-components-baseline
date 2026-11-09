@@ -1,0 +1,8 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-insights", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 8634a4b474e53bcc
+paste 18 UTF-8 bytes
+checkpoint 001: visible ▎ Analyze disk usage 5f94927599901a06
+key enter
+checkpoint 002: insights tree 10b8d32a4c951f29
+key ctrl+q
+clean exit 0

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                        acme › frontend · Node project · pnpm  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ acme-api-1                                                                                         scope ‹ parent ›  
+                                                                                                                        
+    Results · 1                                                                  Follow acme-api-1 l… docker · parent   
+  › Follow acme-api-1 logs  docker  parent  pinned here · pinned here            ────────────────────────────────────   
+                                                                                 Does       stream the last 10          
+                                                                                            minutes and follow ·        
+                                                                                            acme/api:dev · running      
+                                                                                 Runs       docker logs -f -…e-api-1    
+                                                                                 In         ~/work/acme                 
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      parent                      
+                                                                                 Why        pinned here · service is    
+                                                                                            unhealthy                   
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 1 min ago            
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Restart · Stop · Pin ·      
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/acme/apps/frontend   main   ↑1   • 2                   scope parent · acme                   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear          Restored here 

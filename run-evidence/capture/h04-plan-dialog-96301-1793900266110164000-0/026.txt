@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                          no project  devbox · development  
+                                                                                                                        
+  Here    Upgrade everything ! ×                                                                                        
+ ────────━━━━━━━━━━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────────────────── 
+  Upgrade everything · 6 of 8 done · 1 blocked · 1 failed                                     finished · 16 s · devbox  
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━─────────────  75% !                                                          
+                                                                                                                        
+        step                                                         ╭─ 02 Refresh Debian metadata ─────── succeeded ─╮ 
+   ✓ 01 Preflight                    –      ·     1 s                │  $ sudo apt-get update                         │ 
+ ▎ ✓ 02 Refresh Debian metadata      01     a     2 s                │  Hit:1 http://deb.debian.org/debian trixie InR │ 
+   ✓ 03 Review Debian upgrades       02     a     1 s                │  elease                                        │ 
+   ✓ 04 Apply Debian upgrades        03     a     8 s                │  Get:2 http://security.debian.org/debian-secur │ 
+   ✓ 05 Inspect global mise tools    01     b     2 s                │  ity trixie-security InRelease [48.0 kB]       │ 
+   ! 06 Upgrade selected mise tools  05     b     5 s · exit 1…      │  Get:3 http://deb.debian.org/debian trixie-upd │ 
+   ✓ 07 Package cleanup              04     a     2 s                │  ates InRelease [52.1 kB]                      │ 
+   · 08 Final verification           04 06  join  blocked…           │  Fetched 100 kB in 1s (84.2 kB/s)              │ 
+                                                                     │  Reading package lists… Done                   │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     │                                                │ 
+                                                                     ╰────────────────────────────────────────────────╯ 
+                                                                                                                        
+  6 succeeded · 1 failed · 1 never started                                                                              
+  Next   Outdated tools                                                                                                 
+                                                                                                                        
+ ~                                    finished · 6 ok · 1 failed                                     truecolor · 120×40 
+ ↑↓ Step  Enter Expand output  x Close  Esc Back to Here                                                                

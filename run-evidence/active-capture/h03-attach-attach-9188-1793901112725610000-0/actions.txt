@@ -1,0 +1,45 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "activities-multi", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 6416971520ec4bcd
+key ctrl+g
+checkpoint 001: activities open 8f8dddf55b0b80c4
+key down
+key down
+key down
+key down
+checkpoint 002: btm highlighted 6f8c15facf45b4ea
+key enter
+checkpoint 003: btm output c3fb5aae9a785ecb
+key enter
+checkpoint 004: attached to btm 0ca8a7568f7332b7
+resize 121x40
+checkpoint 005: nudged faf5d6331a5c540c
+resize 120x40
+checkpoint 006: size restored 7e7c93e1c655711b
+checkpoint 007: settled 0ca8a7568f7332b7
+precondition 
+visual pre_refactor/h03_attach/h03_attach_attach_120x40 candidate a1c6e81de3522389b383fba13992fd3be763246417ff28ee8cbf8d7dd6e94d1b
+capture-only pre_refactor/h03_attach/h03_attach_attach_120x40: Failure(CheckFailure { test_id: "pre_refactor/h03_attach/h03_attach_attach_120x40", gate: State, reason: Missing, candidate_sha256: "a1c6e81de3522389b383fba13992fd3be763246417ff28ee8cbf8d7dd6e94d1b", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-attach-attach-9188-1793901112725610000-0/check-artifacts/pre_refactor/h03_attach/h03_attach_attach_120x40/a1c6e81de3522389b383fba13992fd3be763246417ff28ee8cbf8d7dd6e94d1b/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-attach-attach-9188-1793901112725610000-0/check-artifacts/pre_refactor/h03_attach/h03_attach_attach_120x40/a1c6e81de3522389b383fba13992fd3be763246417ff28ee8cbf8d7dd6e94d1b/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-attach-attach-9188-1793901112725610000-0/check-artifacts/pre_refactor/h03_attach/h03_attach_attach_120x40/a1c6e81de3522389b383fba13992fd3be763246417ff28ee8cbf8d7dd6e94d1b/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 008: attached at 80x24 6853a3d1904a6be6
+resize 81x24
+checkpoint 009: nudged 72c6562d537c961a
+resize 80x24
+checkpoint 010: size restored f581e505b3499f5a
+checkpoint 011: settled 6853a3d1904a6be6
+precondition 
+visual pre_refactor/h03_attach/h03_attach_attach_narrow candidate ae202c3edbb4dcb24d1ca019e2a38f68dd4cb0d5e1fec0b42bc0f947237cebe2
+capture-only pre_refactor/h03_attach/h03_attach_attach_narrow: Failure(CheckFailure { test_id: "pre_refactor/h03_attach/h03_attach_attach_narrow", gate: State, reason: Missing, candidate_sha256: "ae202c3edbb4dcb24d1ca019e2a38f68dd4cb0d5e1fec0b42bc0f947237cebe2", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-attach-attach-9188-1793901112725610000-0/check-artifacts/pre_refactor/h03_attach/h03_attach_attach_narrow/ae202c3edbb4dcb24d1ca019e2a38f68dd4cb0d5e1fec0b42bc0f947237cebe2/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-attach-attach-9188-1793901112725610000-0/check-artifacts/pre_refactor/h03_attach/h03_attach_attach_narrow/ae202c3edbb4dcb24d1ca019e2a38f68dd4cb0d5e1fec0b42bc0f947237cebe2/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-attach-attach-9188-1793901112725610000-0/check-artifacts/pre_refactor/h03_attach/h03_attach_attach_narrow/ae202c3edbb4dcb24d1ca019e2a38f68dd4cb0d5e1fec0b42bc0f947237cebe2/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 012: attached back at 120x40 0ca8a7568f7332b7
+key ctrl+]
+checkpoint 013: detached 87009310533b540c
+key s
+checkpoint 014: stopping btm c276cde837fab4c2
+key ctrl+g
+checkpoint 015: activities after stop 182621780abd4b85
+key escape
+checkpoint 016: picker closed 29574e0d4b8fc743
+key ctrl+q
+checkpoint 017: stop and quit 90f854118b049bb9
+key escape
+checkpoint 018: stayed 29574e0d4b8fc743

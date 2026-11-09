@@ -1,0 +1,45 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "activities-multi", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 6416971520ec4bcd
+key ctrl+g
+checkpoint 001: activity list 8f8dddf55b0b80c4
+key escape
+checkpoint 002: activity list closed 6416971520ec4bcd
+key ctrl+g
+checkpoint 003: activities 8f8dddf55b0b80c4
+key enter
+checkpoint 004: frontend dev open 315af9367e20d886
+key ctrl+q
+checkpoint 005: quit dialog 7cc13fe1784bbc51
+resize 121x40
+checkpoint 006: nudged 00ee91b9192375da
+resize 120x40
+checkpoint 007: size restored db117b5bc3f3ae59
+checkpoint 008: settled 609b460f9167f297
+precondition 
+visual pre_refactor/h03_guards/h03_guards_quit_120x40 candidate 18f3229006a7191c7e94ec85ada1aaad8debbfea8d5c9cc79e84806a0e03b753
+capture-only pre_refactor/h03_guards/h03_guards_quit_120x40: Failure(CheckFailure { test_id: "pre_refactor/h03_guards/h03_guards_quit_120x40", gate: State, reason: Missing, candidate_sha256: "18f3229006a7191c7e94ec85ada1aaad8debbfea8d5c9cc79e84806a0e03b753", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-guards-quit-90372-1793900219079381000-0/check-artifacts/pre_refactor/h03_guards/h03_guards_quit_120x40/18f3229006a7191c7e94ec85ada1aaad8debbfea8d5c9cc79e84806a0e03b753/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-guards-quit-90372-1793900219079381000-0/check-artifacts/pre_refactor/h03_guards/h03_guards_quit_120x40/18f3229006a7191c7e94ec85ada1aaad8debbfea8d5c9cc79e84806a0e03b753/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-guards-quit-90372-1793900219079381000-0/check-artifacts/pre_refactor/h03_guards/h03_guards_quit_120x40/18f3229006a7191c7e94ec85ada1aaad8debbfea8d5c9cc79e84806a0e03b753/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 009: quit at 80x24 c8e2df738c38a7b7
+resize 81x24
+checkpoint 010: nudged c515d3b564d954e5
+resize 80x24
+checkpoint 011: size restored 54925c6aada24052
+checkpoint 012: settled c8e2df738c38a7b7
+precondition 
+visual pre_refactor/h03_guards/h03_guards_quit_narrow candidate cab9b426c90286ade49c072fe9fcb9bfb3a78e23df20dff94f3a92d570658297
+capture-only pre_refactor/h03_guards/h03_guards_quit_narrow: Failure(CheckFailure { test_id: "pre_refactor/h03_guards/h03_guards_quit_narrow", gate: State, reason: Missing, candidate_sha256: "cab9b426c90286ade49c072fe9fcb9bfb3a78e23df20dff94f3a92d570658297", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-guards-quit-90372-1793900219079381000-0/check-artifacts/pre_refactor/h03_guards/h03_guards_quit_narrow/cab9b426c90286ade49c072fe9fcb9bfb3a78e23df20dff94f3a92d570658297/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-guards-quit-90372-1793900219079381000-0/check-artifacts/pre_refactor/h03_guards/h03_guards_quit_narrow/cab9b426c90286ade49c072fe9fcb9bfb3a78e23df20dff94f3a92d570658297/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h03-guards-quit-90372-1793900219079381000-0/check-artifacts/pre_refactor/h03_guards/h03_guards_quit_narrow/cab9b426c90286ade49c072fe9fcb9bfb3a78e23df20dff94f3a92d570658297/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 013: quit back at 120x40 609b460f9167f297
+key enter
+checkpoint 014: stayed 315af9367e20d886
+key escape
+checkpoint 015: here 6416971520ec4bcd
+key q
+checkpoint 016: q is query text 8775af94d946a3ee
+key backspace
+checkpoint 017: query cleared 6416971520ec4bcd
+key ctrl+q
+checkpoint 018: quit guard 3a9ebffac7966c48
+key right
+key enter
+checkpoint 019: stop accepted 36732f8980e1524d

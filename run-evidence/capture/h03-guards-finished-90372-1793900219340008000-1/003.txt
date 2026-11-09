@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                             app · service checkout  ◆ devbox · production  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Quick no-op                                                                                          scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Quick no-op            custom · here   
+  › Quick no-op  custom  here  Current folder · trusted                          ────────────────────────────────────   
+                                                                                 Does       project action from         
+                                                                                            /srv/app/.holla.toml        
+                                                                                 Runs       true                        
+                                                                                 In         /srv/app                    
+                                                                                 Host       devbox · production ·       
+                                                                                            over SSH                    
+                                                                                 Scope      here                        
+                                                                                 Why        Current folder · trusted    
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Set an alias… · Show        
+                                                                                            configuration               
+                                                                                            diagnostics · Pin ·         
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ /srv/app                                                                                            truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Esc Clear  …      quick no-op finished · exit 0 

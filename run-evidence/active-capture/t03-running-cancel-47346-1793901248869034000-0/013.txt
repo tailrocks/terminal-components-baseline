@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×                                                                                                     +   
+ ━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query 1 ────────────────────────────────────────────────────────────────────────────╮ 
+ │                           │││   Run   Run all   Explain                                                            │ 
+ │   Filter objects          │││   ›  1 SELECT 1 AS t03_running_marker                                                │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││                                                                                      │ 
+ │      ▾ Tables             │││                                                                                      │ 
+ │        ▸ T organizations  │││                                                                                      │ 
+ │        ▸ T customers      │││                                                                                      │ 
+ │        ▸ T products       │││                                                                                      │ 
+ │        ▸ T orders         │││                                                                                      │ 
+ │        ▸ T order_items    │││                                                                                      │ 
+ │        ▸ T payments       │││                                                                                      │ 
+ │        ▸ T subscriptions  │││ ╭──────────────────────────────────────────────── × ─╮────────────────────────────── │ 
+ │      ▸ Views              │││ │                                                    │                               │ 
+ │      ▸ Functions          │││ │  Quit TablePro?                                    │────────────────────────────── │ 
+ │      ▸ Sequences          │││ │                                                    │                               │ 
+ │    ▸ S analytics          │││ │  1 unsaved query will be lost.                     │                               │ 
+ │    ▸ S audit              │││ │                                                    │                               │ 
+ │                           │││ │                                  ▎Cancel    Quit   │                               │ 
+ │                           │││ │                                                    │                               │ 
+ │                           │││ ╰────────────────────────────────────────────────────╯                               │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                       Cancelled                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││          The statement was stopped before it finished; nothing was recorded          │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ←→ Choose  Enter Cancel  Esc Cancel                                                                  i Query cancelled 

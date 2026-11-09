@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T orders ×    T customers ×                                                                        +   
+ ─────────────────────────────━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › customers ─────────────────────────────────────────────────────── 11 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   ‹1    organization_id                       email                             8›   │ 
+ │      ▾ Tables             │││  ▎    1 af3e2db9-3aa5-4f25-91e…db9875cdecc →  jonas.silva@kestrel.health           ┃ │ 
+ │        ▸ T organizations  │││       2 db302dd4-fc5c-48ad-a0b…993e5bd1641 →  felix.costa@orbit.studio             ┆ │ 
+ │        ▸ T customers      │││       3 8c0b3a16-e803-49c3-b66…8f59e3d2906 →  ravi.sato@halden.co                  ┆ │ 
+ │        ▸ T products       │││       4 d397a1ad-9a3f-4479-a84…c89465cf0f3 →  omar.haddad@juniper.home             ┆ │ 
+ │        ▸ T orders         │││       5 465cf0f3-1c89-4842-899…304ab5f42c2 →  omar.iyer@juniper.home               ┆ │ 
+ │        ▸ T order_items    │││       6 565027aa-4602-4c61-8e3…c9b550a59e8 →  sofia.weber@tessellate.app           ┆ │ 
+ │        ▸ T payments       │││       7 121dc5d6-4040-4ebe-be0…77464901374 →  priya.karim@kestrel.health           ┆ │ 
+ │        ▸ T subscriptions  │││       8 0ea2bf91-9c30-4bbe-a10…907a6baba91 →  yuki.lindqvist@orbit.studio          ┆ │ 
+ │      ▸ Views              │││       9 f00c7344-1b91-4d86-938…b98819f12b7 →  lucas.silva@tessellate.app           ┆ │ 
+ │      ▸ Functions          │││      10 819f12b7-ab98-4386-995…f7734d5938f →  mateo.silva@tessellate.app           ┆ │ 
+ │      ▸ Sequences          │││      11 26da3d97-fd04-4ae9-afe…17b84c54a4d →  nadia.rossi@fjord.ai                 ┆ │ 
+ │    ▸ S analytics          │││      12 9049adaa-1754-46ad-a46…b7af501af39 →  elena.okafor@juniper.home            ┆ │ 
+ │    ▸ S audit              │││      13 a6dfe790-d9cb-48ee-849…babe455acd7 →  elena.haddad@lumen.shop              ┆ │ 
+ │                           │││      14 e455acd7-cbab-449f-823…18ed3a899d1 →  omar.weber@bluefin.dev               ┆ │ 
+ │                           │││      15 b1d2ca11-773a-41bd-ab7…82032ec7929 →  omar.haddad@meridian.foods           ┆ │ 
+ │                           │││      16 eaa5ffbf-591c-4d27-9bd…54c823fb5c0 →  ingrid.nguyen@meridian.foo…          ┆ │ 
+ │                           │││      17 358526e7-3ea2-47b4-819…ae21721490d →  tomas.tanaka@lumen.shop              ┆ │ 
+ │                           │││      18 6ae17172-05f2-4e75-991…7b0d3a4555a →  tomas.silva@juniper.home             ┆ │ 
+ │                           │││      19 3a8a0b4d-f8de-4dc9-951…a519719ec44 →  leon.nguyen@lumen.shop               ┆ │ 
+ │                           │││      20 35fad262-7115-4394-b03…1499bde3fd2 →  tomas.okafor@fjord.ai                ┆ │ 
+ │                           │││      21 2f101d0d-7f7b-41dc-921…b6ad810e6d1 →  diego.novak@tessellate.app           ┆ │ 
+ │                           │││      22 62abff5f-4cbf-4de8-987…165b78d1ca5 →  ravi.weber@halden.co                 ┆ │ 
+ │                           │││      23 9e263dd1-bc15-42c8-8d1…22ce797f396 →  nadia.costa@kestrel.health           ┆ │ 
+ │                           │││      24 e797f396-f22c-4d13-b6b…2ca21160865 →  ana.nguyen@halden.co                 ┆ │ 
+ │                           │││      25 57c18c1e-4b90-4086-ba9…5372406c793 →  diego.nguyen@lumen.shop              ┆ │ 
+ │                           │││      26 41332fe2-4600-4208-97f…4857755fc0f →  jonas.novak@juniper.home             ┆ │ 
+ │                           │││         ┄┄┄┄┄┄┄━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 500 loaded · 48,912 total · cols 2–3 of 11                            │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓←→ Cell  Enter Edit  Alt+D Duplicate row  s Sort  f Filter  Space Select row  …              Opened public.customers 

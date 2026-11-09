@@ -1,0 +1,91 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+checkpoint 005: sql to focus 1615509862a77c56
+mouse Press { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: visible Ctrl+Space 328dfa4f70d0366e
+type 20 UTF-8 bytes
+checkpoint 007: first statement c9ad0c20d714d832
+key ctrl+t
+checkpoint 008: second query f3fd81539a802a50
+type 20 UTF-8 bytes
+checkpoint 009: second statement 98580758d125c0f6
+key ctrl+b
+checkpoint 010: explorer hidden 67a595c4ffeb7493
+key ctrl+b
+checkpoint 011: explorer shown 6e43b1b8b2bc517c
+key [
+checkpoint 012: query 1 still open c06a23a8d013f886
+key ]
+checkpoint 013: query 2 still open 5d61fdbe47b197b4
+mouse Motion { x: 75, y: 16 }
+checkpoint 014: seam hover d57339fbb46bbb1f
+mouse Press { x: 75, y: 16, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Drag { x: 75, y: 19, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 015: seam held 9c1eefc4bcd50d72
+mouse Release { x: 75, y: 19, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 016: settled 5b728a564216f3c7
+mouse Motion { x: 2, y: 0 }
+checkpoint 017: seam at rest 5b728a564216f3c7
+mouse Motion { x: 30, y: 6 }
+checkpoint 018: seam hover 350e5d6349215108
+mouse Press { x: 30, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Drag { x: 34, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 019: seam held eb70117be51950e7
+mouse Release { x: 34, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 020: settled 08fc70d8097697aa
+mouse Motion { x: 2, y: 0 }
+checkpoint 021: seam at rest 08fc70d8097697aa
+checkpoint 022: sql to focus 00240ec5c85f7e56
+mouse Press { x: 44, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 44, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 023: visible Ctrl+Space 1ebbdbaa4abb306c
+key esc
+checkpoint 024: editor released a40db58722795675
+resize 121x40
+checkpoint 025: visible 121×40 2f754c563632a5a1
+resize 120x40
+checkpoint 026: visible 120×40 d96d57e518dfe8af
+key z
+checkpoint 027: editor maximized 3de31d92a11f68b8
+checkpoint 028: settled 3de31d92a11f68b8
+precondition 
+visual pre_refactor/t05_maximize/t05_maximize_layout_120x40 candidate 0750e755062e8dda2505c2f44f6120bc29963d11792bbb1900182839f0bc7395
+capture-only pre_refactor/t05_maximize/t05_maximize_layout_120x40: Failure(CheckFailure { test_id: "pre_refactor/t05_maximize/t05_maximize_layout_120x40", gate: State, reason: Missing, candidate_sha256: "0750e755062e8dda2505c2f44f6120bc29963d11792bbb1900182839f0bc7395", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-maximize-layout-57639-1793901277571095000-0/check-artifacts/pre_refactor/t05_maximize/t05_maximize_layout_120x40/0750e755062e8dda2505c2f44f6120bc29963d11792bbb1900182839f0bc7395/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-maximize-layout-57639-1793901277571095000-0/check-artifacts/pre_refactor/t05_maximize/t05_maximize_layout_120x40/0750e755062e8dda2505c2f44f6120bc29963d11792bbb1900182839f0bc7395/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-maximize-layout-57639-1793901277571095000-0/check-artifacts/pre_refactor/t05_maximize/t05_maximize_layout_120x40/0750e755062e8dda2505c2f44f6120bc29963d11792bbb1900182839f0bc7395/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 029: editor maximized at 80x24 10c708097d8df1b0
+checkpoint 030: settled 10c708097d8df1b0
+precondition 
+visual pre_refactor/t05_maximize/t05_maximize_layout_narrow candidate 3503e5cf6a55256668b9ebe2a292bc9fbd93ef2fae67786e8c7286868adc4ca8
+capture-only pre_refactor/t05_maximize/t05_maximize_layout_narrow: Failure(CheckFailure { test_id: "pre_refactor/t05_maximize/t05_maximize_layout_narrow", gate: State, reason: Missing, candidate_sha256: "3503e5cf6a55256668b9ebe2a292bc9fbd93ef2fae67786e8c7286868adc4ca8", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-maximize-layout-57639-1793901277571095000-0/check-artifacts/pre_refactor/t05_maximize/t05_maximize_layout_narrow/3503e5cf6a55256668b9ebe2a292bc9fbd93ef2fae67786e8c7286868adc4ca8/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-maximize-layout-57639-1793901277571095000-0/check-artifacts/pre_refactor/t05_maximize/t05_maximize_layout_narrow/3503e5cf6a55256668b9ebe2a292bc9fbd93ef2fae67786e8c7286868adc4ca8/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-maximize-layout-57639-1793901277571095000-0/check-artifacts/pre_refactor/t05_maximize/t05_maximize_layout_narrow/3503e5cf6a55256668b9ebe2a292bc9fbd93ef2fae67786e8c7286868adc4ca8/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 031: editor maximized back at 120x40 ddd054cf92d839df
+key z
+checkpoint 032: layout restored 15af4545d6aaf4ec
+key [
+checkpoint 033: query 1 after restore edf1a2814e7da5d8
+key esc
+checkpoint 034: editor released c7f7a1ca75a73d29
+key ]
+checkpoint 035: query 2 after restore ac4a91b3df2c967e
+key esc
+checkpoint 036: editor released ac4a91b3df2c967e
+key 0
+checkpoint 037: explorer focused f42ff0e2bb17423c
+key z
+checkpoint 038: results maximized 66a6addad3a82772
+key z
+checkpoint 039: results restored 0ddd51881da0f593
+key ctrl+q
+checkpoint 040: visible Quit TablePro? 2ea3cdc7f15c35b1
+key right
+key enter
+observed exit 0

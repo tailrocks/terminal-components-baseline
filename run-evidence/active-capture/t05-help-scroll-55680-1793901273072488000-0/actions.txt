@@ -1,0 +1,47 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+checkpoint 005: visible Type SQL 1615509862a77c56
+mouse Press { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: editor focused 328dfa4f70d0366e
+type 55 UTF-8 bytes
+checkpoint 007: opener sql a62c0951fa6c058f
+key ctrl+t
+checkpoint 008: query 2 f3fd81539a802a50
+key ctrl+pageup
+checkpoint 009: query 1 opener 823bdab8aae21676
+key f1
+checkpoint 010: help title f4484cd816f274f3
+key ctrl+pagedown
+checkpoint 011: help holds query 1 fa6ab9e6dfb48c59
+key pageup
+checkpoint 012: help back at the top 0fb38a235a6fd88d
+key pagedown
+checkpoint 013: help scrolled fa6ab9e6dfb48c59
+checkpoint 014: settled fa6ab9e6dfb48c59
+precondition 
+visual pre_refactor/t05_help/t05_help_help_120x40 candidate 47aed622c1ae84b4b87cacbe36c97c451fed45ce3b3cd170d0fd986173aa31be
+capture-only pre_refactor/t05_help/t05_help_help_120x40: Failure(CheckFailure { test_id: "pre_refactor/t05_help/t05_help_help_120x40", gate: State, reason: Missing, candidate_sha256: "47aed622c1ae84b4b87cacbe36c97c451fed45ce3b3cd170d0fd986173aa31be", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-help-scroll-55680-1793901273072488000-0/check-artifacts/pre_refactor/t05_help/t05_help_help_120x40/47aed622c1ae84b4b87cacbe36c97c451fed45ce3b3cd170d0fd986173aa31be/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-help-scroll-55680-1793901273072488000-0/check-artifacts/pre_refactor/t05_help/t05_help_help_120x40/47aed622c1ae84b4b87cacbe36c97c451fed45ce3b3cd170d0fd986173aa31be/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-help-scroll-55680-1793901273072488000-0/check-artifacts/pre_refactor/t05_help/t05_help_help_120x40/47aed622c1ae84b4b87cacbe36c97c451fed45ce3b3cd170d0fd986173aa31be/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 015: help at 80x24 1edab0b33add2485
+checkpoint 016: settled 1edab0b33add2485
+precondition 
+visual pre_refactor/t05_help/t05_help_help_narrow candidate 985f1ad82f03068cc252e8131e1cdb41ee48cdd1b026b76298a57210acfc2118
+capture-only pre_refactor/t05_help/t05_help_help_narrow: Failure(CheckFailure { test_id: "pre_refactor/t05_help/t05_help_help_narrow", gate: State, reason: Missing, candidate_sha256: "985f1ad82f03068cc252e8131e1cdb41ee48cdd1b026b76298a57210acfc2118", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-help-scroll-55680-1793901273072488000-0/check-artifacts/pre_refactor/t05_help/t05_help_help_narrow/985f1ad82f03068cc252e8131e1cdb41ee48cdd1b026b76298a57210acfc2118/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-help-scroll-55680-1793901273072488000-0/check-artifacts/pre_refactor/t05_help/t05_help_help_narrow/985f1ad82f03068cc252e8131e1cdb41ee48cdd1b026b76298a57210acfc2118/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-help-scroll-55680-1793901273072488000-0/check-artifacts/pre_refactor/t05_help/t05_help_help_narrow/985f1ad82f03068cc252e8131e1cdb41ee48cdd1b026b76298a57210acfc2118/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 017: help back at 120x40 ec167dd13ad02f63
+key esc
+checkpoint 018: opener after help 823bdab8aae21676
+key ctrl+q
+checkpoint 019: visible Quit TablePro? 4bcc0814710af063
+key right
+key enter
+observed exit 0

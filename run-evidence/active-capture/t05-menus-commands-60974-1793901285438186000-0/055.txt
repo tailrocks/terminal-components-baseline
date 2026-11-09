@@ -1,0 +1,24 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent        …  
+                                                                                
+  ≡ Query 1 • ×    T products ×    H History ×                              +   
+ ╭──────────────────────────╮────────────────────────────────────────────────── 
+ │  Query 1                 │────────────────────────────────────────── 5 ms ─╮ 
+ │  Switch to tab     Enter │n                                                │ 
+ │  Close tab             x │products WHERE sku = 'SKU-01000' -- t05_menus_m… │ 
+ │ ──────────────────────── │                                                 │ 
+ │  New query tab    Ctrl+T │━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄ │ 
+ │  Tab list…        Ctrl+G │                                                 │ 
+ ╰─ Current tab ────────────╯──────────────────────────────────────────────── │ 
+ r │   SELECT products (1) ×                                                  │ 
+ e │  ━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────── │ 
+ r │   ✓ 1 row · 5 ms                                                         │ 
+   │        name                                                              │ 
+   │      1 Monitor arm                                                       │ 
+   │                                                                          │ 
+   │                                                                          │ 
+   │                                                                          │ 
+   │                                                                          │ 
+   │                                                                          │ 
+   ╰──────────────────────────────────────────────────────────────────────────╯ 
+                                                                                
+ ↑↓ Move  Enter Choose  Esc Close                                               

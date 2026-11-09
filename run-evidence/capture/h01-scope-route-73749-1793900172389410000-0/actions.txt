@@ -1,0 +1,7 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "monorepo-child", "--frame", "1125", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+key ctrl+up
+checkpoint 000: visible scope ‹ parent › f906e1e067faba80
+key ctrl+down
+checkpoint 001: visible scope ‹ here › ed24365f47b71759
+key ctrl+q
+clean exit 0

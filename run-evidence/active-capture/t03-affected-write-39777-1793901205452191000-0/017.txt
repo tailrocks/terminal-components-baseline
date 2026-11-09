@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×    H History ×                                                                                      +   
+ ─────────────────━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query history ───────────────────────────────────────────────────────── 17 entries ─╮ 
+ │                           │││                                                                                      │ 
+ │   Filter objects          │││    Search history · terms are ANDed               scope: Development  ·  status: any │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││  ▎› UPDATE products SE… just now · 12 ms  │  Query               Editor · just now   │ 
+ │      ▾ Tables             │││     SELECT sku FROM pro… just now · 3 ms  │  ─────────────────────────────────────   │ 
+ │        ▸ T organizations  │││   ! SELECT * FROM events WH… 5 d ago · –  │  ›  1 UPDATE products SET name =         │ 
+ │        ▸ T customers      │││     TRUNCATE analytics… 4 d ago · 210 ms  │     2 name WHERE sku =                   │ 
+ │        ▸ T products       │││     SELECT email, full_n… 1 d ago · 7 ms  │     3 't03-affected'                     │ 
+ │        ▸ T orders         │││     ALTER TABLE orders … 1 d ago · 88 ms  │                                          │ 
+ │        ▸ T order_items    │││     DELETE FROM audit.… 5 h ago · 1.82 s  │                                          │ 
+ │        ▸ T payments       │││                                           │  Connection  Development · acme_prod.…   │ 
+ │        ▸ T subscriptions  │││                                           │  Duration    12 ms                       │ 
+ │      ▸ Views              │││                                           │  Rows        2                           │ 
+ │      ▸ Functions          │││                                           │                                          │ 
+ │      ▸ Sequences          │││                                           │   Open in new tab    Run in new tab      │ 
+ │    ▸ S analytics          │││                                           │   Copy                                   │ 
+ │    ▸ S audit              │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Enter Open in new tab  → Full text  r Rerun  y Copy  / Search  c s Scope · Status  …        ✓ Connected to Development 

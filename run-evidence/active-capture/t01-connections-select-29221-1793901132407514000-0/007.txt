@@ -1,0 +1,40 @@
+  ▪  TablePro  Connections  6 saved                                                         truecolor · 120×40  ? help  
+                                                                                                                        
+ ╭─ Connections ─────────────────── 6 ─╮    Analytics                                                                   
+ │                                     │    ──────────────────────────────────────────────────────────────────          
+ │ ▎ Production                        │    Engine       MySQL                                                          
+ │  ▾ Acme                             │    Host         analytics.acme.io:3306                                         
+ │      ◆ Production               pg  │    Database     warehouse                                                      
+ │                                     │    User         analyst                                                        
+ │                                     │    Environment  production                                                     
+ │                                     │    Safe Mode    Read-Only · Writes are refused. Reads and exports              
+ │                                     │                 still work.                                                    
+ │                                     │    SSL          ✓ on                                                           
+ │                                     │    SSH          off                                                            
+ │                                     │    Last used    last week                                                      
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │     Connect    Edit    Duplicate    Delete…                                    
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ │                                     │                                                                                
+ ╰─────────────────────────────────────╯                                                                                
+                                                                                                                        
+  EDIT   Type Filter  ↓ Into list  Esc Clear                                                                            

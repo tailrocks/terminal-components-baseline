@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Browse ~/work/site                                                                                   scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Browse ~/work/site       file · here   
+  › Browse ~/work/site  file  here  always available                             ────────────────────────────────────   
+                                                                                 Does       real directory listing      
+                                                                                            with kind, size,            
+                                                                                            modified time and hidden    
+                                                                                            entries · Enter previews    
+                                                                                            a file safely ·             
+                                                                                            exact-path jump with g      
+                                                                                 Runs       'holla browse'              
+                                                                                 In         ~/work/site                 
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        always available            
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/site                                                                                         truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

@@ -1,0 +1,47 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/jackin ["--scenario", "returning", "--motion", "paused", "--frame", "40", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=true
+checkpoint 000: visible jackin❯ 4ffd734403ea5408
+key down
+key e
+checkpoint 001: visible payments-platform › edit 180b945422890fa8
+key ]
+checkpoint 002: visible Destination d04c44e977276d2f
+checkpoint 003: visible /workspace/payments-platform d04c44e977276d2f
+key enter
+key r
+key i
+checkpoint 004: visible • 1 change 697da656e514645f
+key escape
+key escape
+checkpoint 005: visible Save changes before leaving? 0c3aa2a970541527
+key escape
+checkpoint 006: absent Save changes before leaving? 3fe8c6e1869e7573
+checkpoint 007: visible • 1 change 3fe8c6e1869e7573
+key ctrl+s
+checkpoint 008: visible Save workspace 6e6e4352615f8f49
+checkpoint 009: visible 1 modified 6e6e4352615f8f49
+checkpoint 010: visible Save 6e6e4352615f8f49
+mouse Motion { x: 1, y: 1 }
+checkpoint 011: settled 6e6e4352615f8f49
+mouse Motion { x: 85, y: 25 }
+checkpoint 012: Save button visibly responds to hover 5a77136bdeebea1d
+mouse Press { x: 85, y: 25, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 013: Save button visibly responds while held a6867f0bdf80d5f1
+mouse Release { x: 85, y: 25, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 014: visible Saving payments-platform 6380a204a8c99b11
+paste 28 UTF-8 bytes
+checkpoint 015: visible Workspace payments-platform saved 931ed0a5624d3226
+key e
+checkpoint 016: visible payments-platform › edit 81b9d6977f7c0517
+key ]
+key enter
+checkpoint 017: visible Destination da43e9080df68e7f
+checkpoint 018: visible /workspace/payments-platform da43e9080df68e7f
+key escape
+key escape
+checkpoint 019: absent payments-platform › edit ea974d498de318c9
+checkpoint 020: settled ea974d498de318c9
+precondition 
+visual functional/jackin_workspace_save candidate 79440906e9af369e10f72075e55a75e7f49d1596519b073e3bc0318d62d2c238
+capture-only functional/jackin_workspace_save: Failure(CheckFailure { test_id: "functional/jackin_workspace_save", gate: State, reason: Missing, candidate_sha256: "79440906e9af369e10f72075e55a75e7f49d1596519b073e3bc0318d62d2c238", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-workspace-45692-1793901714083361000-0/check-artifacts/functional/jackin_workspace_save/79440906e9af369e10f72075e55a75e7f49d1596519b073e3bc0318d62d2c238/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-workspace-45692-1793901714083361000-0/check-artifacts/functional/jackin_workspace_save/79440906e9af369e10f72075e55a75e7f49d1596519b073e3bc0318d62d2c238/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-jackin/jackin-workspace-45692-1793901714083361000-0/check-artifacts/functional/jackin_workspace_save/79440906e9af369e10f72075e55a75e7f49d1596519b073e3bc0318d62d2c238/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

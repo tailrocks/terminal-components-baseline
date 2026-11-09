@@ -1,0 +1,43 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "activities-multi", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible api tests 172568979a6417c8
+key alt+3
+checkpoint 001: api tests output 23c29a9d8b8f814e
+key alt+1
+checkpoint 002: frontend dev output 24ee15f2a982e32c
+key alt+3
+checkpoint 003: api tests output again 0439f6046dec29bb
+key /
+type 12 UTF-8 bytes
+checkpoint 004: visible find “aliases_beat” · 1 of 1 e5a9eda24465b9be
+key esc
+checkpoint 005: find closed 85874bd857e218c3
+key ctrl+a
+key y
+checkpoint 006: visible Copied $ cargo nextest run b3c5fac9e9226db0
+key f
+checkpoint 007: visible Following the tail 83e151a067fae230
+key f
+checkpoint 008: visible Follow paused · End resumes 53a6ff874164cf55
+key alt+1
+checkpoint 009: visible VITE v6.3.1 3863e88313fadad3
+key alt+4
+checkpoint 010: visible worker ready · queue=orders concurrency=4 1512ab7efa2b80ec
+key 1
+checkpoint 011: api stream hidden fdbbc0eadaf413c5
+key alt+3
+checkpoint 012: api tests output again b0c0196ab8d7a6b3
+key tab
+checkpoint 013: visible ▎Run tests again 509822cefa396af7
+key enter
+checkpoint 014: visible test · succeeded · 0 s · exit 0 af884d11d20fc1de
+key alt+3
+checkpoint 015: api tests kept a5e179d269e2c0c0
+key ctrl+g
+checkpoint 016: visible Activities a7a3e739621c839f
+key esc
+key ctrl+q
+checkpoint 017: quit dialog fdeb8568772c1f6f
+key right
+checkpoint 018: stop focused 9c20b3a5a3988d2c
+key enter
+observed exit 0

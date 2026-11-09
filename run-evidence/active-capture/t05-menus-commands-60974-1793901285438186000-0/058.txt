@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×    T products ×    H History ×                                                                      +   
+ ╭──────────────────────────╮────────────────────────────────────────────────────────────────────────────────────────── 
+ │  Query 1                 │╮│╭─ Query 1 ───────────────────────────────────────────────────────────────────── 5 ms ─╮ 
+ │  Switch to tab     Enter ││││   Run   Run all   Explain                                                            │ 
+ │  Close tab             x ││││   ›  1 SELECT name FROM products WHERE sku = 'SKU-01000' -- t05_menus_marker         │ 
+ │ ──────────────────────── ││││                                                                                      │ 
+ │  New query tab    Ctrl+T ││││                                                                                      │ 
+ │  Tab list…        Ctrl+G ││││                                                                                      │ 
+ ╰─ Current tab ────────────╯│││                                                                                      │ 
+ │        ▸ T customers      │││                                                                                      │ 
+ │        ▸ T products       │││                                                                                      │ 
+ │        ▸ T orders         │││                                                                                      │ 
+ │        ▸ T order_items    │││                                                                                      │ 
+ │        ▸ T payments       │││                                                                                      │ 
+ │        ▸ T subscriptions  │││  ─────────────────────────────────────────────────────────────────────────────────── │ 
+ │      ▸ Views              │││   SELECT products (1) ×                                                              │ 
+ │      ▸ Functions          │││  ━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────── │ 
+ │      ▸ Sequences          │││   ✓ 1 row · 5 ms                                                                     │ 
+ │    ▸ S analytics          │││        name                                                                          │ 
+ │    ▸ S audit              │││      1 Monitor arm                                                                   │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓ Move  Enter Choose  Esc Close                                                                                       

@@ -1,0 +1,14 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-task-input", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 1e9cd1ad0c648932
+paste 23 UTF-8 bytes
+checkpoint 001: stubborn row 09f85acb018a84a6
+key enter
+checkpoint 002: stubborn output 1cc5dd87c79fd39a
+key s
+checkpoint 003: sigkill 255a187616f726cf
+key ctrl+g
+checkpoint 004: stubborn stopped e466374fd31222c8
+key escape
+checkpoint 005: absent 0 live a1ac928ceb307d92
+key ctrl+q
+clean exit 0

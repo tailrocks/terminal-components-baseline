@@ -1,0 +1,24 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent        …  
+                                                                                
+  ≡ Query 1 • ×    ≡ Query 2 • ×                                            +   
+ ─────────────────━━━━━━━━━━━━━━━━───────────────────────────────────────────── 
+ ╭─ Query 2 ──────────────────────────────────────────────────────────────────╮ 
+ │   Run   Run all   Explain                                                  │ 
+ │  ▎›  1 SELECT 't05_max_two'                                                │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                            ln 1/1 · col 1  │ 
+ ╰────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                
+ Enter Edit  Ctrl+R Run  Alt+R Run all  …            ✓ Connected to Development 

@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T products ×                                                                                       +   
+ ───────────────━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › products ───────────────────────────────────────────────────────── 9 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││   ‹5    currency    is_active    attributes                                     1›   │ 
+ │      ▾ Tables             │││  ▎    1 EUR         true         {"color": "white", "weight_kg": 21.1}             ┃ │ 
+ │        ▸ T organizations  │││       2 USD         false        {"color": "graphite", "weight_kg": 18.8}          ┃ │ 
+ │        ▸ T customers      │││       3 USD         true         {"color": "black", "weight_kg": 8.7}              ┆ │ 
+ │        ▸ T products       │││       4 USD         true         {"color": "walnut", "weight_kg": 23.6}            ┆ │ 
+ │        ▸ T orders         │││       5 EUR         true         {"color": "black", "weight_kg": 16.2}             ┆ │ 
+ │        ▸ T order_items    │││       6 GBP         true         {"color": "graphite", "weight_kg": 22.0}          ┆ │ 
+ │        ▸ T payments       │││       7 USD         true         {"color": "graphite", "weight_kg": 21.3}          ┆ │ 
+ │        ▸ T subscriptions  │││       8 USD         true         {"color": "graphite", "weight_kg": 3.1}           ┆ │ 
+ │      ▸ Views              │││       9 EUR         true         {"color": "white", "weight_kg": 12.4}             ┆ │ 
+ │      ▸ Functions          │││      10 GBP         true         {"color": "black", "weight_kg": 15.5}             ┆ │ 
+ │      ▸ Sequences          │││      11 GBP         true         {"color": "walnut", "weight_kg": 8.3}             ┆ │ 
+ │    ▸ S analytics          │││      12 GBP         true         {"color": "white", "weight_kg": 4.8}              ┆ │ 
+ │    ▸ S audit              │││      13 GBP         true         {"color": "white", "weight_kg": 0.3}              ┆ │ 
+ │                           │││      14 GBP         true         {"color": "white", "weight_kg": 0.3}              ┆ │ 
+ │                           │││      15 USD         true         {"color": "white", "weight_kg": 9.4}              ┆ │ 
+ │                           │││      16 GBP         true         {"color": "graphite", "weight_kg": 10.9}          ┆ │ 
+ │                           │││      17 USD         false        {"color": "walnut", "weight_kg": 11.4}            ┆ │ 
+ │                           │││      18 EUR         false        {"color": "white", "weight_kg": 15.2}             ┆ │ 
+ │                           │││      19 GBP         true         {"color": "black", "weight_kg": 16.8}             ┆ │ 
+ │                           │││      20 GBP         true         {"color": "black", "weight_kg": 1.8}              ┆ │ 
+ │                           │││      21 USD         true         {"color": "walnut", "weight_kg": 21.5}            ┆ │ 
+ │                           │││      22 USD         true         {"color": "walnut", "weight_kg": 17.4}            ┆ │ 
+ │                           │││      23 EUR         true         {"color": "black", "weight_kg": 23.3}             ┆ │ 
+ │                           │││      24 GBP         true         {"color": "white", "weight_kg": 28.4}             ┆ │ 
+ │                           │││      25 USD         true         {"color": "walnut", "weight_kg": 4.3}             ┆ │ 
+ │                           │││      26 USD         true         {"color": "black", "weight_kg": 7.6}              ┆ │ 
+ │                           │││         ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 312 · cols 6–8 of 9                                                   │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓←→ Cell  Enter Edit  Alt+D Duplicate row  s Sort  f Filter  Space Select row  …   Copied 11 characters · Monitor arm 

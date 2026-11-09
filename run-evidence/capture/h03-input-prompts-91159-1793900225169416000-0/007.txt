@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help     app · service checkout  ◆ devbox · production  
+                                                                                
+  Here    deploy the release ⠴ ×                                                
+ ────────━━━━━━━━━━━━━━━━━━━━━━━━━───────────────────────────────────────────── 
+  deploy the release · running · 0 s · waiting for input                        
+  $ ./deploy.sh · started by Deploy the release                                 
+                                                                                
+ ╭─ output ────────────────────────────── typing goes to stdin · Esc returns ─╮ 
+ │  $ ./deploy.sh                                                             │ 
+ │  connecting to release server…                                             │ 
+ │  Password:                                                                 │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ │                                                                            │ 
+ ╰────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                
+ /srv/app          ? input wanted · 0 s          …    attached     ⠴ 1 running  
+ Type To stdin  Esc Release keyboard  …              Typing goes to the program 

@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent            ⠋ running  truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×                                                                                                       +   
+ ━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query 1 ────────────────────────────────────────────────────────────────────────────╮ 
+ │                           │││   Run   Run all   Explain   Cancel                                                   │ 
+ │   Filter objects          │││   ⠋  1 SELECT sku FROM products WHERE sku = 't03_cancelled_first';                   │ 
+ │  ▾ D acme_prod            │││  ▎   2 SELECT name FROM products WHERE name = 't03_cancelled_second'                 │ 
+ │    ▾ S public             │││                                                                                      │ 
+ │      ▾ Tables             │││                                                                                      │ 
+ │        ▸ T organizations  │││                                                                                      │ 
+ │        ▸ T customers      │││                                                                                      │ 
+ │        ▸ T products       │││                                                                                      │ 
+ │        ▸ T orders         │││                                                                                      │ 
+ │        ▸ T order_items    │││                                                                                      │ 
+ │        ▸ T payments       │││                                                                     ln 2/2 · col 62  │ 
+ │        ▸ T subscriptions  │││  ─────────────────────────────────────────────────────────────────────────────────── │ 
+ │      ▸ Views              │││   ⠋ running 80 ms · Esc cancels                                                      │ 
+ │      ▸ Functions          │││                                                                                      │ 
+ │      ▸ Sequences          │││                                                                                      │ 
+ │    ▸ S analytics          │││                                                                                      │ 
+ │    ▸ S audit              │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ │                           │││                                                                                      │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  EDIT   Esc Cancel query                                                                    ✓ Connected to Development 

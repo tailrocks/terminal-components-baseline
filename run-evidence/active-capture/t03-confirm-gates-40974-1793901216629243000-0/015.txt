@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  alert                        truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×    H History ×                                                                                      +   
+ ─────────────────━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────── 
+ › ╭─ Query history ───────────────────────────────────────────────────────────────────────────────────── 15 entries ─╮ 
+   │                                                                                                                  │ 
+ E │    Search history · terms are ANDed                            scope: Development  ·  status: any                │ 
+ x │                                                                                                                  │ 
+ p │  ▎! SELECT * FROM events WHERE event_type… 5 d ago · –  │  Query                              Editor · 5 d ago   │ 
+ l │     TRUNCATE analytics.events         4 d ago · 210 ms  │  ───────────────────────────────────────────────────   │ 
+ o │     SELECT email, full_name FROM custo… 1 d ago · 7 ms  │  ›  1 SELECT * FROM events WHERE event_type =          │ 
+ r │     ALTER TABLE orders ADD COLUMN is_… 1 d ago · 88 ms  │     2 'checkout' LIMIT 100                             │ 
+ e │     DELETE FROM audit.login_attempts… 5 h ago · 1.82 s  │                                                        │ 
+ r │                                                         │                                                        │ 
+   │                                                         │  Connection  Development · acme_dev.public             │ 
+   │                                                         │  Duration    –                                         │ 
+   │                                                         │  Rows        –                                         │ 
+   │                                                         │  Error       canceling statement due to user request   │ 
+   │                                                         │                                                        │ 
+   │                                                         │   Open in new tab    Run in new tab    Copy            │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Enter Open in new tab  → Full text  r Rerun  y Copy  / Search  …                    i Cancelled · nothing was executed 

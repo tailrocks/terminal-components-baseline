@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+   Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Open btm               system · host   
+    Analyze disk usage     disk     here  / is 91% full                          ────────────────────────────────────   
+  › Open btm               system   host  sustained pressure…                    Does       persistent deep             
+    Show system resources  system   host  CPU 78% for 4 min                                 monitoring in the           
+                                                                                            specialist tool; the        
+    Recent here                                                                             activity keeps running      
+    nothing used here yet                                                                   while you return to         
+                       ╭────────────────────────────────────────────────────────────────────────╮                       
+    Explore            │                                                                        │                       
+     Tasks   Git   File│  Why is “Open btm” here?                                               │ host-wide             
+    System · mbp       │                                                                        │ local                 
+                       │  live state  sustained pressure · continuous view fits                 │                       
+                       │  risk        read-only · runs directly · never changes the rank        │ined pressure ·        
+                       │                                                                        │nuous view fits        
+                       │              Ranking order: alias › pin › live state › context ›       │· read-only            
+                       │              query › used here › used anywhere › default. Risk         │only                   
+                       │              changes the gate, never the rank.                         │· 3 s ago              
+                       │                                                                        │directly               
+                       ╰────────────────────────────────────────────────────────────────────────╯                       
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/scratch                                                                     / ━━━━━━━━━━─ 91% ▲   truecolor · 120×40 
+ ↑↓ Scroll  Esc Close                                                                                                   

@@ -1,0 +1,9 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "hard-cases", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: finder ready e7aa4536e9352520
+checkpoint 001: visible ! docker, github unavailable e7aa4536e9352520
+paste 19 UTF-8 bytes
+checkpoint 002: search Stop all containers 4ed7e5b72848c476
+key enter
+checkpoint 003: stop all refused 4c2da8b55665ab51
+key ctrl+q
+clean exit 0

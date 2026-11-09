@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                    web · Node project · pnpm  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Analyze disk usage                                                                                   scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Analyze disk usage       disk · here   
+  › Analyze disk usage  disk  here  / is 66% full                                ────────────────────────────────────   
+                                                                                 Does       largest-first tree of       
+                                                                                            this folder that deepens    
+                                                                                            as the scan streams;        
+                                                                                            select any entry or         
+                                                                                            rebuildable artifacts       
+                                                                                            for cleanup                 
+                                                                                 Runs       'holla disk analyze'        
+                                                                                 In         ~/Projects/web              
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        / is 66% full               
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       opens a review · the        
+                                                                                            deletion is gated there     
+                                                                                            (typed phrase)              
+                                                                                 Alt+Enter  Disk overview (home         
+                                                                                            folders) · Analyze a        
+                                                                                            custom path… · Top files    
+                                                                                            on this Mac · Pin ·         
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/Projects/web                                                                                      truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                       

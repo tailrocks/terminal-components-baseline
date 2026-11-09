@@ -1,0 +1,48 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--connect", "Production", "--motion", "reduced", "--color", "truecolor"] 160x50 color=Some("truecolor") clock=false
+checkpoint 000: visible Query 1 ec3a81480456a610
+key tab
+paste 48 UTF-8 bytes
+checkpoint 001: visible WHERE id = 'x' f91459aa71c93d53
+key escape
+key ctrl+r
+checkpoint 002: visible Type orders to confirm d334bccda87086a1
+mouse Press { x: 4, y: 4, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 4, y: 4, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 003: settled d334bccda87086a1
+key escape
+checkpoint 004: visible Cancelled · nothing was executed 391c5928f9aa900e
+key ctrl+r
+checkpoint 005: visible Type orders to confirm 1b4602a282ebd19f
+type 5 UTF-8 bytes
+checkpoint 006: visible wrong b1e2311708b32865
+mouse Motion { x: 108, y: 31 }
+checkpoint 007: settled b1e2311708b32865
+mouse Press { x: 108, y: 31, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 008: settled b1e2311708b32865
+mouse Release { x: 108, y: 31, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Motion { x: 4, y: 4 }
+checkpoint 009: settled 2129041659e315c1
+key ctrl+l
+type 6 UTF-8 bytes
+checkpoint 010: confirmation token enables Execute c57ad93e0d76f70a
+mouse Motion { x: 108, y: 31 }
+checkpoint 011: enabled Execute responds to hover 67717432ce925ca9
+mouse Press { x: 108, y: 31, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 012: armed Execute visibly responds to held press beb3d634b5b09bac
+mouse Release { x: 108, y: 31, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 013: visible rows affected c3a089a903211c5b
+key escape
+checkpoint 014: visible Ctrl+X Explain 8009c0e2809b8889
+key ctrl+w
+checkpoint 015: visible Close tab with unsaved work? 959f54fc91d9f590
+checkpoint 016: visible Close anyway 959f54fc91d9f590
+mouse Press { x: 91, y: 27, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 91, y: 27, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 017: visible No open tabs 1c4dab34d847cbb5
+checkpoint 018: status flash faded before freeze 14eb899156d600f2
+checkpoint 019: settled 14eb899156d600f2
+precondition 
+visual functional/tablepro_write_gate candidate f0f7d7fcda3f11bb708e116c6b1d4831d7cee9a006c0c10d8da096d83ccaa37a
+capture-only functional/tablepro_write_gate: Failure(CheckFailure { test_id: "functional/tablepro_write_gate", gate: State, reason: Missing, candidate_sha256: "f0f7d7fcda3f11bb708e116c6b1d4831d7cee9a006c0c10d8da096d83ccaa37a", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-write-gate-32025-1793901662993795000-0/check-artifacts/functional/tablepro_write_gate/f0f7d7fcda3f11bb708e116c6b1d4831d7cee9a006c0c10d8da096d83ccaa37a/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-write-gate-32025-1793901662993795000-0/check-artifacts/functional/tablepro_write_gate/f0f7d7fcda3f11bb708e116c6b1d4831d7cee9a006c0c10d8da096d83ccaa37a/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-write-gate-32025-1793901662993795000-0/check-artifacts/functional/tablepro_write_gate/f0f7d7fcda3f11bb708e116c6b1d4831d7cee9a006c0c10d8da096d83ccaa37a/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

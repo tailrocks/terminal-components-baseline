@@ -1,0 +1,40 @@
+ ▪ Junie Design system  Text & code › Code editor                            truecolor · 120×40   i Inspector   ? Help  
+                                                                                                                        
+ Components           54  Code editor  Blocks, tones, diagnostics and completion; the gutter says where you are         
+ ───────────────────────                                                                                                
+    Overview               Playground    Options    States                                              the live widget 
+  ▸ App shell             ━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────
+  ▸ Inputs & forms                                                                                                      
+  ▸ Tables                  retry.rs                                      3 blocks     Find    Run block                
+  ▸ Navigation              ──────────────────────────────────────────────────────                                      
+  ▸ Overlays                 ›  1 // Retry a request with exponential backoff.   ┃      State                           
+  ▸ Feedback                    2 pub async fn fetch(url: &str) -> Result<Body,… ┃      ──────────────────────────────  
+  ▸ Layout                      3     let mut delay = 200;                       ┃      Mode         navigating         
+  ▾ Text & code                 4     for attempt in 1..=5 {                     ┃      Cursor       ln 1 · col 1       
+ ▎  › Code editor               5         match client().get(url).await {        ┃      Block        1 of 3             
+      Diff                      6             Ok(body) => return Ok(body),       ┃      Runs         0                  
+      Terminal                  7             Err(e) if e.is_transient() => {    ┃      Last run     —                  
+      Text utilities            8                 log::warn!("attempt {attempt}… ┃      Diagnostics  0                  
+  ▸ Screens                     9                 sleep(delay).await;            ┃      Completion   closed             
+                               10                 delay *= 2;                    ┃      Find         closed             
+                               11             }                                  ┃                                      
+                               12             Err(e) => return Err(e),           ┃                                      
+                               13         }                                      ┃                                      
+                               14     }                                          ┃      Diagnostics                     
+                               15     Err(Error::Exhausted)                      ┃      ──────────────────────────────  
+                               16 }                                              ┃                                      
+                               17                                                ┆             Nothing flagged          
+                               18 fn client() -> Client {                        ┆                                      
+                               19     Client::builder().timeout(10).gzip(true).… ┆        Run the second block: its     
+                               20 }                                              ┆         unwrap() gets a warning      
+                               21                                                ┆                                      
+                                  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄                                        
+                                                                       1–21 of 26                                       
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ↑↓ Move  Enter Open  / Filter  Tab Into page  q Quit                                                                   

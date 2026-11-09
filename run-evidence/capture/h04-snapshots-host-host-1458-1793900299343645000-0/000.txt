@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                                                                        scope ‹ here ›  
+                                                                                                                        
+    Suggested here                                                               Analyze disk usage       disk · here   
+  › Analyze disk usage     disk     here  / is 91% full                          ────────────────────────────────────   
+    Open btm               system   host  sustained pressure…                    Does       largest-first tree of       
+    Show system resources  system   host  CPU 78% for 4 min                                 this folder that deepens    
+                                                                                            as the scan streams;        
+    Recent here                                                                             select any entry or         
+    nothing used here yet                                                                   rebuildable artifacts       
+                                                                                            for cleanup                 
+    Explore                                                                      Runs       'holla disk analyze'        
+     Tasks   Git   Files   Disk   Services   System                              In         ~/scratch                   
+    System · mbp           explore  host  available on this host                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        / is 91% full               
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       opens a review · the        
+                                                                                            deletion is gated there     
+                                                                                            (typed phrase)              
+                                                                                 Alt+Enter  Disk overview (home         
+                                                                                            folders) · Analyze a        
+                                                                                            custom path… · Top files    
+                                                                                            on this Mac · Pin ·         
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/scratch                                                                     / ━━━━━━━━━━─ 91% ▲   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Ctrl+G Activities               

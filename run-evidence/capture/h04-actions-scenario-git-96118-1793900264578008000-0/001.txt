@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                           svc · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Show git status                                                                                      scope ‹ here ›  
+                                                                                                                        
+    Results · 2                                                                  Show git status         git · parent   
+  › Show git status    git  parent  on feature/x                                 ────────────────────────────────────   
+    Show short status  git  parent  available                                    Does       full git status of          
+                                                                                            ~/work/svc: branch,         
+                                                                                            upstream, staged,           
+                                                                                            unstaged, untracked,        
+                                                                                            stash                       
+                                                                                 Runs       git -C /Users/al… status    
+                                                                                 In         ~/work/svc                  
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      parent                      
+                                                                                 Why        on feature/x                
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Short status · Pin ·        
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/svc/src/api   feature/x   ↓2 ↑1   • 1                                                        truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                       

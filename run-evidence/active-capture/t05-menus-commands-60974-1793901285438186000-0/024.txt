@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T products ×                                                                                       +   
+ ───────────────━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › products ───────────────────────────────────────────────────────── 9 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   Filter objects          │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││         ⚷ id                                  sku        name                   6›   │ 
+ │      ▾ Tables             │││       1 c1b47346-68a4-4af4-9075-49a956607aff  SKU-01000  Monitor arm               ┃ │ 
+ │        ▸ T organizations  │││       2 ╭────────────────────────────╮0df0c5  SKU-01001  Standing desk 140         ┃ │ 
+ │        ▸ T customers      │││       3 │  id · row 1                │e4cd98  SKU-01002  Headset Pro               ┆ │ 
+ │        ▸ T products       │││       4 │  Copy cell               y │389cef  SKU-01003  Standing desk 140         ┆ │ 
+ │        ▸ T orders         │││       5 │  Copy row                Y │f04e64  SKU-01004  Webcam 4K                 ┆ │ 
+ │        ▸ T order_items    │││       6 │ ────────────────────────── │10ba9a  SKU-01005  Headset Pro               ┆ │ 
+ │        ▸ T payments       │││       7 │  Edit cell           Enter │7d075c  SKU-01006  Footrest                  ┆ │ 
+ │        ▸ T subscriptions  │││       8 │  Set NULL              Del │b43c07  SKU-01007  Mechanical keyboard       ┆ │ 
+ │      ▸ Views              │││       9 │ ────────────────────────── │d04564  SKU-01008  Whiteboard 90             ┆ │ 
+ │      ▸ Functions          │││      10 │  Filter by this value    f │7d1d82  SKU-01009  Cable tray                ┆ │ 
+ │      ▸ Sequences          │││      11 │  Sort ascending          s │e21cfd  SKU-01010  Laptop stand              ┆ │ 
+ │    ▸ S analytics          │││      12 │ ────────────────────────── │2a4a88  SKU-01011  Cable tray                ┆ │ 
+ │    ▸ S audit              │││      13 │  Insert row              + │d3e090  SKU-01012  Monitor arm               ┆ │ 
+ │                           │││      14 │  Duplicate row       Alt+D │ffe342  SKU-01013  Laptop stand              ┆ │ 
+ │                           │││      15 │  Delete row              - │031449  SKU-01014  Mechanical keyboard       ┆ │ 
+ │                           │││      16 │ ────────────────────────── │024783  SKU-01015  Whiteboard 90             ┆ │ 
+ │                           │││      17 │  Preview SQL             p │fdb233  SKU-01016  Laptop stand              ┆ │ 
+ │                           │││      18 │  Save changes       Ctrl+S │7274e7  SKU-01017  Headset Pro               ┆ │ 
+ │                           │││      19 │  Discard changes         U │a102dd  SKU-01018  Ergo chair                ┆ │ 
+ │                           │││      20 │  Refresh                 r │7b9b68  SKU-01019  Headset Pro               ┆ │ 
+ │                           │││      21 ╰────────────────────────────╯a0d94f  SKU-01020  Monitor arm               ┆ │ 
+ │                           │││      22 49400fd9-9dfa-466b-a1c4-a936d39f4141  SKU-01021  Whiteboard 90             ┆ │ 
+ │                           │││      23 db90db7a-29c6-4de6-902f-173c392c45cf  SKU-01022  Ergo chair                ┆ │ 
+ │                           │││      24 392c45cf-173c-402f-b34e-1eaee39c91f5  SKU-01023  Webcam 4K                 ┆ │ 
+ │                           │││      25 7685d41a-60ef-4b3d-a0ae-2277b26c0387  SKU-01024  Standing desk 140         ┆ │ 
+ │                           │││      26 4f62d3cc-500d-4b75-af8f-642510883bfc  SKU-01025  Footrest                  ┆ │ 
+ │                           │││         ━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 312 · cols 1–3 of 9                                                   │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓ Move  Enter Choose  Esc Close                                                                Opened public.products 

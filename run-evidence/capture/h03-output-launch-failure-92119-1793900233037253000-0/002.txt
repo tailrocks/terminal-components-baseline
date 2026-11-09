@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                        acme › frontend · Node project · pnpm  mbp · local  
+  Here › Port 5173                                                                                                      
+  Here › Port 5173    frontend dev ! ×                                                                                  
+ ━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────── 
+  Port 5173                                                                                       mbp · live · 1 s ago  
+                                                                                                                        
+  Process  node (vite) · pid 7731 · 420 MB · sleeping                                                                   
+  Process  node (stale vite) · pid 5120 · 310 MB · sleeping                                                             
+                                                                                                                        
+ ╭─ Listeners ─────────────────────────────────────────────────────────────────────────────────── 4 lines · y copies ─╮ 
+ │  $ lsof -nP -iTCP:5173 -sTCP:LISTEN                                                                                │ 
+ │  COMMAND             PID     USER      NAME                                                                        │ 
+ │  node (vite)         7731    alex      *:5173 (LISTEN)                                                             │ 
+ │  node (stale vite)   5120    alex      *:5173 (LISTEN)                                                             │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Stop node (vite) (pid 7731)    Stop node (stale vite) (pid 5120)                                               
+                                                                                                                        
+ ~/work/acme/apps/frontend   main   ↑1   • 2                  snapshot · read-only                   truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                                                          

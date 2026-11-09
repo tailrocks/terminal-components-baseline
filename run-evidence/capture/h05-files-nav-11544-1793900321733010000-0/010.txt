@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help                           no project  mbp · local   
+  Here › Files › app                                                             
+  Here › Files › app                                                             
+ ━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────  
+  Files · ~/work/app                                                             
+  4 entries · 0 hidden hidden · Ctrl+H shows · directories first                 
+                                                                                 
+ ▎▸ node_modules                                 –  2026-08-11 08:41  directo…   
+  ▸ src                                          –  2026-08-11 08:41  directo…   
+  ▸ target                                       –  2026-09-05 08:41  directo…   
+    README.md                                 11 B  2026-09-01 08:41  file       
+                                                                                 
+                                                                                 
+                                                                                 
+                                                                                 
+                                                                                 
+                                                                                 
+                                                                                 
+                                                                                 
+                                                                                 
+                                                                                 
+                                                                                 
+ ~/work/notes             ~/work/app · hidden off             truecolor · 80×24  
+ ↑↓ Move  Enter Open / preview  ← Parent  g Go to path  Esc Back  …              

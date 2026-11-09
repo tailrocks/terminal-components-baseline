@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                no project  devbox · local  
+  Here › Homebrew services                                                                                              
+  Here › Homebrew services                                                                                              
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────── 
+  Homebrew services                                                                            devbox · live · 1 s ago  
+                                                                                                                        
+  Source    brew services list --json · live                                                                            
+  Cache     none · the first listing writes one                                                                         
+  Services  1                                                                                                           
+                                                                                                                        
+ ╭─ Detail ────────────────────────────────────────────────────────────────────────────────────── 2 lines · y copies ─╮ 
+ │  service                     status      actions                                                                   │ 
+ │  postgresql@17               stopped     start · stop · restart                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Restart postgresql@17                                                                                          
+                                                                                                                        
+ ~/work/box                                   snapshot · read-only                                   truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                                                          

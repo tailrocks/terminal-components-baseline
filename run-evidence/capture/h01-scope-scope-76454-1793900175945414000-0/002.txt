@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                         acme › frontend · Node project · pnpm  mbp · local 
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ▎ Search actions and resources…                                                                       scope ‹ parent › 
+                                                                                                                        
+    Parent · acme · 29 entries                                                    Follow acme-api-1 l… docker · parent  
+  › Follow acme-api-1 logs      docker  parent   service is unh…                  ────────────────────────────────────  
+    Review 2 modified files     git     parent   2 modified…                      Does       stream the last 10         
+    Deploy preview              custom  parent   Current folder…                             minutes and follow ·       
+    Follow acme-db-1 logs       docker  parent   running                                     acme/api:dev · running     
+    Follow acme-redis-1 logs    docker  parent   running                          Runs       docker logs -f -…e-api-1   
+    Follow acme-scheduler-1 l…  docker  parent   running                          In         ~/work/acme                
+    Follow acme-worker-1 logs   docker  parent   running                          Host       mbp · local                
+    Pull                        git     parent   blocked…                         Scope      parent                     
+    Push                        git     parent   1 commits ahead                  Why        service is unhealthy       
+    Rotate local secrets        custom  parent   Current folder…  destructive     Changes    none · read-only           
+    Run //services/api:migrate  task    sibling  defined by ~/w…                  Risk       read-only                  
+    Run //services/api:test     task    sibling  defined by ~/w…                  Data       live · 1 min ago           
+    Run //tools/worker:test     task    sibling  defined by ~/w…                  Gate       runs directly              
+    Run test                    task    parent   defined by ~/w…                  Alt+Enter  Restart · Stop · Pin ·     
+    Run workspace setup         task    parent   defined by ~/w…                             Alias · Why here?          
+    Show git status             git     parent   on main                                                                
+    Start development ecosyst…  task    parent   defined by ~/w…                                                        
+    Start development ecosyst…  task    sibling  defined by ~/w…                                                        
+    Start development ecosyst…  task    sibling  defined by ~/w…                                                        
+    Start required containers   task    parent   defined by ~/w…                                                        
+    Fetch and prune             git     parent   available                                                              
+    Garbage-collect the repos…  git     parent   available                                                              
+    Open lazygit                git     parent   installed on t…                                                        
+    Open mise.toml              file    parent   config here                                                            
+    Pull with merge             git     parent   ordinary pull …                                                        
+    Pull with rebase            git     parent   ordinary pull …                                                        
+    Push dry run                git     parent   read-only                                                              
+    Show short status           git     parent   available                                                              
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/acme/apps/frontend   main   ↑1   • 2                   scope parent · acme                    truecolor · 121×40
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Esc Back to Here  …   Scope parent · ~/work/acme

@@ -1,0 +1,6 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/jackin ["--scenario", "launch-failure", "--motion", "paused", "--frame", "40", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=true
+checkpoint 000: visible Loading the-architect into workspace 5465b109808877d3
+key ctrl+c
+checkpoint 001: visible Current directory d75b202b390e5356
+key ctrl+q
+clean exit 0

@@ -1,0 +1,19 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+resize 121x40
+checkpoint 001: visible 121×40 674792c23654f180
+resize 120x40
+checkpoint 002: visible 120×40 ddfae927c9ff25d2
+key enter
+checkpoint 003: development connected 1615509862a77c56
+key down
+key down
+key enter
+checkpoint 004: visible Northwind Labs 2412127e4397dd67
+key right
+key ctrl+w
+checkpoint 005: query tab 7448b2cca69dc1ea
+key ctrl+q
+clean exit 0

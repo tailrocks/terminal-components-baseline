@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local  
+                                                                                                                        
+  Here    frontend dev ⠋ ×    api dev ⠋ ×    api tests ✓ ×    logs · api worker sched… ⠋ ×    btm ○ ×                   
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ q                                                                                                    scope ‹ here ›  
+                                                                                                                        
+    Results · 3                                                                  Install missing tools ·… task · here   
+  › Install missing tools · …  task      here   1 tool missing                   ────────────────────────────────────   
+    Show PostgreSQL activity   postgres  here   6/100 connections                Does       install the tools this      
+    Run //tools/worker:dev     task      child  defined by ~/work/acme/tool…                configuration requests      
+                                                                                            but the host lacks          
+                                                                                 Runs       mise install --i…k-tools    
+                                                                                 In         ~/work/acme                 
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        1 tool missing              
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       one confirmation            
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/acme   main   ↑1                                                              ⠋ 4 running    truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Confirm…  Alt+Enter Alternatives…  Esc Clear  …       Here cannot be closed · Ctrl+Q quits 

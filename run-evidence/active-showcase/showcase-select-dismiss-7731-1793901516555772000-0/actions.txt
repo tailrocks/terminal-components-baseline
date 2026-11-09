@@ -1,0 +1,25 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "chipsselects", "--motion", "paused", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Sort by 99a7c4a16cdbd6ac
+mouse Press { x: 52, y: 23, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 52, y: 23, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 001: visible customer 28a60217f7d9cf47
+mouse Press { x: 30, y: 7, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 30, y: 7, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: outside click closes the select popup e4b18f6f3a8d12d5
+mouse Press { x: 52, y: 23, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 52, y: 23, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 003: visible customer 28a60217f7d9cf47
+key escape
+checkpoint 004: escape closes the select popup e4b18f6f3a8d12d5
+mouse Press { x: 52, y: 23, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 52, y: 23, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 005: visible customer 1b86603a18aeb8e2
+mouse Press { x: 34, y: 26, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 34, y: 26, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: chosen option becomes the value 29e5b3cafe1ddaf0
+checkpoint 007: settled 29e5b3cafe1ddaf0
+precondition 
+visual functional/showcase_select_dismiss candidate 270cc10d7fe924563ed8b51b7d853f45a19887488d07a6e77d5ddc8f57585e37
+capture-only functional/showcase_select_dismiss: Failure(CheckFailure { test_id: "functional/showcase_select_dismiss", gate: State, reason: Missing, candidate_sha256: "270cc10d7fe924563ed8b51b7d853f45a19887488d07a6e77d5ddc8f57585e37", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-select-dismiss-7731-1793901516555772000-0/check-artifacts/functional/showcase_select_dismiss/270cc10d7fe924563ed8b51b7d853f45a19887488d07a6e77d5ddc8f57585e37/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-select-dismiss-7731-1793901516555772000-0/check-artifacts/functional/showcase_select_dismiss/270cc10d7fe924563ed8b51b7d853f45a19887488d07a6e77d5ddc8f57585e37/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-select-dismiss-7731-1793901516555772000-0/check-artifacts/functional/showcase_select_dismiss/270cc10d7fe924563ed8b51b7d853f45a19887488d07a6e77d5ddc8f57585e37/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

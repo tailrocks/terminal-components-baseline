@@ -1,0 +1,40 @@
+  jackin❯    File   Go   Help               Settings › global › General  • 1 change  inside the Construct  ● 2 running  
+                                                                                                                        
+                                                                                                                        
+   General •    Mounts    Environments    Agents    Trust                                                               
+  ━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────────────────────  
+                                                                                                                        
+    Commits                                                                                                             
+    ▎[ ] Add Co-authored-by trailer          •                                                                          
+     [✓] Sign off commits (DCO)                                                                                         
+                                                                                                                        
+    Two independent flags; both apply to every Workspace.                                                               
+                                                                                                                        
+    Trailers                                                                                                            
+    Co-authored-by: <agent> <noreply@…>   ·   Signed-off-by: Alexey Zhokhov <alexey@chainargos.com>                     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                  Cancel     Save…      
+                                                                                                                        
+ Space Toggle  ↑↓ Move  [ ] Switch tab  Ctrl+S Save  Esc Back                                                           

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+  Here › Files › site                                                                                                   
+  Here › Files › site                                                                                                   
+ ━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────── 
+  Files · ~/work/site                                                                                                   
+  16 entries · 2 hidden hidden · Ctrl+H shows · directories first                                                       
+                                                                                                                        
+  ▸ assets                                 –  2026-09-06 08:41      ╭─────── first 2000 lines · 19.4 KiB of 19.4 KiB ─╮ 
+  ▸ private                                –  2026-09-03 08:41      │   1973 line 1972                              ┆ │ 
+    bad.txt                              3 B  2026-09-07 08:41      │   1974 line 1973                              ┆ │ 
+    big.log                         19.4 KiB  2026-09-08 08:41      │   1975 line 1974                              ┆ │ 
+  → broken                               0 B  2026-09-09 08:41      │   1976 line 1975                              ┆ │ 
+    café.txt                            11 B  2026-09-09 08:41      │   1977 line 1976                              ┆ │ 
+    café.txt                            12 B  2026-09-09 08:41      │   1978 line 1977                              ┆ │ 
+    control.txt                         13 B  2026-09-07 08:41      │   1979 line 1978                              ┆ │ 
+  → current                              0 B  2026-09-09 08:41      │   1980 line 1979                              ┆ │ 
+    empty.txt                            0 B  2026-09-09 08:41      │   1981 line 1980                              ┆ │ 
+    index.html                          34 B  2026-09-09 08:41      │   1982 line 1981                              ┆ │ 
+    logo.png                             6 B  2026-09-07 08:41      │   1983 line 1982                              ┆ │ 
+    long.txt                         4.9 KiB  2026-09-08 08:41      │   1984 line 1983                              ┆ │ 
+    package.json                        85 B  2026-09-08 08:41      │   1985 line 1984                              ┆ │ 
+  ◇ pipe                                 0 B  2026-09-10 08:41      │   1986 line 1985                              ┆ │ 
+    pnpm-lock.yaml                      19 B  2026-09-08 08:41      │   1987 line 1986                              ┆ │ 
+                                                                    │   1988 line 1987                              ┆ │ 
+                                                                    │   1989 line 1988                              ┆ │ 
+                                                                    │   1990 line 1989                              ┆ │ 
+                                                                    │   1991 line 1990                              ┆ │ 
+                                                                    │   1992 line 1991                              ┆ │ 
+                                                                    │   1993 line 1992                              ┆ │ 
+                                                                    │   1994 line 1993                              ┆ │ 
+                                                                    │   1995 line 1994                              ┆ │ 
+                                                                    │   1996 line 1995                              ┆ │ 
+                                                                    │   1997 line 1996                              ┆ │ 
+                                                                    │   1998 line 1997                              ┆ │ 
+                                                                    │   1999 line 1998                              ┆ │ 
+                                                                    │   2000 line 1999                              ┃ │ 
+                                                                    ╰─────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/site                                ~/work/site · hidden off                                 truecolor · 120×40 
+ ↑↓ Scroll  Shift+↑↓ Select  y Copy  / Find  Esc Back to list                                     Hidden entries hidden 

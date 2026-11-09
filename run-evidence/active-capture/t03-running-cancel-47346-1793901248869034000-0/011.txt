@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×    H History ×                                                                                      +   
+ ─────────────────━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ Query history ───────────────────────────────────────────────────────── 15 entries ─╮ 
+ │                           │││                                                                                      │ 
+ │   Filter objects          │││    Search history · terms are ANDed               scope: Development  ·  status: any │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││  ▎! SELECT * FROM events WH… 5 d ago · –  │  Query                Editor · 5 d ago   │ 
+ │      ▾ Tables             │││     TRUNCATE analytics… 4 d ago · 210 ms  │  ─────────────────────────────────────   │ 
+ │        ▸ T organizations  │││     SELECT email, full_n… 1 d ago · 7 ms  │  ›  1 SELECT * FROM events WHERE         │ 
+ │        ▸ T customers      │││     ALTER TABLE orders … 1 d ago · 88 ms  │     2 event_type = 'checkout' LIMIT      │ 
+ │        ▸ T products       │││     DELETE FROM audit.… 5 h ago · 1.82 s  │     3 100                                │ 
+ │        ▸ T orders         │││                                           │                                          │ 
+ │        ▸ T order_items    │││                                           │                                          │ 
+ │        ▸ T payments       │││                                           │  Connection  Development · acme_dev.p…   │ 
+ │        ▸ T subscriptions  │││                                           │  Duration    –                           │ 
+ │      ▸ Views              │││                                           │  Rows        –                           │ 
+ │      ▸ Functions          │││                                           │  Error       canceling statement due     │ 
+ │      ▸ Sequences          │││                                           │              to user request             │ 
+ │    ▸ S analytics          │││                                           │                                          │ 
+ │    ▸ S audit              │││                                           │   Open in new tab    Run in new tab      │ 
+ │                           │││                                           │   Copy                                   │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ │                           │││                                           │                                          │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Enter Open in new tab  → Full text  r Rerun  y Copy  / Search  c s Scope · Status  …                 i Query cancelled 

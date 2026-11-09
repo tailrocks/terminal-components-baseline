@@ -1,0 +1,176 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+key down
+checkpoint 001: connection cursor moved 77b1ee3085c8570b
+key down
+checkpoint 002: connection cursor moved 23afca19a02c7bb7
+key down
+checkpoint 003: connection cursor moved 8c74765db906c1ba
+key down
+checkpoint 004: connection cursor moved bf155f39e57929aa
+key enter
+checkpoint 005: development connected 1615509862a77c56
+key ctrl+l
+checkpoint 006: visible Safe Mode · this connection 9aff11c9e22a6609
+key down
+checkpoint 007: safe mode cursor moved c9a9695b8abf0cef
+key enter
+checkpoint 008: safety level saved 17fa31f3f720d9f6
+key ctrl+b
+checkpoint 009: explorer hidden 8ef300ec56237213
+key enter
+checkpoint 010: visible Ctrl+Space 7b682a48eba07a3a
+key ctrl+l
+type 79 UTF-8 bytes
+checkpoint 011: visible CancelMarkerT03 b90b785f0743d28a
+key ctrl+r
+checkpoint 012: visible Execute write query? a27ca4c7e7cd6d3a
+key esc
+checkpoint 013: ordinary confirm cancelled cd8317a2da08cc90
+key esc
+checkpoint 014: editor stopped editing 3e3c1cb31035474a
+key ctrl+y
+checkpoint 015: visible Query history fcfad7cd8514a842
+key c
+checkpoint 016: visible all connections 3a62a4c93565972a
+key /
+type 15 UTF-8 bytes
+checkpoint 017: history has no marker cb29561cd4b9af75
+key tab
+key ctrl+w
+checkpoint 018: history closed af6086c45e297c61
+key ctrl+l
+checkpoint 019: visible Safe Mode · this connection 8d641797d9ae8392
+key down
+checkpoint 020: safe mode cursor moved cf0a094508bb9269
+key down
+checkpoint 021: safe mode cursor moved 1a1c91149d0c7ded
+key enter
+checkpoint 022: safety level saved 17aeb014790069d9
+key enter
+checkpoint 023: visible Ctrl+Space 14b58411927dbb75
+key ctrl+l
+type 78 UTF-8 bytes
+checkpoint 024: visible ExactMarkerT03 f9ba3f76411dc49c
+key ctrl+r
+checkpoint 025: visible Type  363e051c06bcd6b2
+key esc
+checkpoint 026: typed confirm cancelled 45eb80d7a3861ece
+key ctrl+r
+checkpoint 027: typed confirm reopened 197579c306eeead2
+resize 121x40
+checkpoint 028: visible 121×40 808a847cde879cfd
+resize 120x40
+checkpoint 029: visible 120×40 197579c306eeead2
+capture-only pre_refactor/t03_confirm/t03_confirm_gates_120x40: Failure(CheckFailure { test_id: "pre_refactor/t03_confirm/t03_confirm_gates_120x40", gate: State, reason: Missing, candidate_sha256: "64005146634a15cf0e80304d754337c63a5ce417dcf431ebc18933ccfb90705f", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-confirm-gates-40974-1793901216629243000-0/check-artifacts/pre_refactor/t03_confirm/t03_confirm_gates_120x40/64005146634a15cf0e80304d754337c63a5ce417dcf431ebc18933ccfb90705f/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-confirm-gates-40974-1793901216629243000-0/check-artifacts/pre_refactor/t03_confirm/t03_confirm_gates_120x40/64005146634a15cf0e80304d754337c63a5ce417dcf431ebc18933ccfb90705f/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-confirm-gates-40974-1793901216629243000-0/check-artifacts/pre_refactor/t03_confirm/t03_confirm_gates_120x40/64005146634a15cf0e80304d754337c63a5ce417dcf431ebc18933ccfb90705f/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 030: typed confirm at 80x24 c84f7e1dd6f6295f
+resize 81x24
+checkpoint 031: narrow nudge e164f22691417248
+resize 80x24
+checkpoint 032: narrow restored 79f7fc2d67955f2e
+checkpoint 033: typed confirm settled at 80x24 ea1883b0ea34c046
+capture-only pre_refactor/t03_confirm/t03_confirm_gates_narrow: Failure(CheckFailure { test_id: "pre_refactor/t03_confirm/t03_confirm_gates_narrow", gate: State, reason: Missing, candidate_sha256: "1a079fe62b33c8d506c5049ac50d3de37c9155e27e8f78373a9bd235f8fa647e", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-confirm-gates-40974-1793901216629243000-0/check-artifacts/pre_refactor/t03_confirm/t03_confirm_gates_narrow/1a079fe62b33c8d506c5049ac50d3de37c9155e27e8f78373a9bd235f8fa647e/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-confirm-gates-40974-1793901216629243000-0/check-artifacts/pre_refactor/t03_confirm/t03_confirm_gates_narrow/1a079fe62b33c8d506c5049ac50d3de37c9155e27e8f78373a9bd235f8fa647e/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-confirm-gates-40974-1793901216629243000-0/check-artifacts/pre_refactor/t03_confirm/t03_confirm_gates_narrow/1a079fe62b33c8d506c5049ac50d3de37c9155e27e8f78373a9bd235f8fa647e/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 034: typed confirm back at 120x40 03517ef5da203c88
+key esc
+checkpoint 035: gate closed before history 45eb80d7a3861ece
+key esc
+checkpoint 036: editor stopped editing ea0131206205c5c6
+key ctrl+y
+checkpoint 037: visible Query history 4370eb9b0dbf2c60
+key c
+checkpoint 038: visible all connections bc69894c4dbcf0dc
+key /
+type 14 UTF-8 bytes
+checkpoint 039: history has no marker 471420ab7adf7b82
+key tab
+key ctrl+w
+checkpoint 040: history closed 216737a1fad9e49b
+key ctrl+y
+checkpoint 041: visible Query history 4370eb9b0dbf2c60
+key c
+checkpoint 042: visible all connections bc69894c4dbcf0dc
+key /
+type 15 UTF-8 bytes
+checkpoint 043: history has no marker aef1f8bf0b6df36a
+key tab
+key ctrl+w
+checkpoint 044: history closed 216737a1fad9e49b
+key ctrl+r
+checkpoint 045: typed confirm ready to type 197579c306eeead2
+key ctrl+l
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+type 4 UTF-8 bytes
+checkpoint 046: visible nope 1ee1dda124f87886
+key enter
+checkpoint 047: visible Does not match 8c6dfc53cd6729e2
+key ctrl+l
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+type 12 UTF-8 bytes
+checkpoint 048: visible organization 8c6dfc53cd6729e2
+key enter
+checkpoint 049: visible Does not match e099e9954629fa42
+key ctrl+l
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+key backspace
+type 13 UTF-8 bytes
+checkpoint 050: visible organizations e099e9954629fa42
+key enter
+checkpoint 051: exact phrase ran once 7b27d6307b1f4bc5
+key esc
+checkpoint 052: editor stopped editing 8f5ad54b1b4dfd3e
+key ctrl+y
+checkpoint 053: visible Query history a199b4f4bb4aebd5
+key c
+checkpoint 054: visible all connections c989fd3d64519c33
+key /
+type 14 UTF-8 bytes
+checkpoint 055: history has the marker c989fd3d64519c33
+key tab
+key ctrl+w
+checkpoint 056: history closed d323b3dc0615570a
+key ctrl+r
+checkpoint 057: visible Execute write query? d8ca132fce8f52db
+key esc
+checkpoint 058: second gate cancelled 7b27d6307b1f4bc5
+key esc
+checkpoint 059: editor stopped editing 8f5ad54b1b4dfd3e
+key ctrl+y
+checkpoint 060: visible Query history a199b4f4bb4aebd5
+key c
+checkpoint 061: visible all connections c989fd3d64519c33
+key /
+type 14 UTF-8 bytes
+checkpoint 062: history has the marker c989fd3d64519c33
+key tab
+key ctrl+w
+checkpoint 063: history closed d323b3dc0615570a
+key ctrl+q
+checkpoint 064: visible Quit TablePro? 55b327fbeb4517cc
+key right
+key enter
+observed exit 0

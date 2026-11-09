@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         holla · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Upgrade 3 outdated mise tools                                                                        scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Upgrade 3 outdated mise… task · host   
+  › Upgrade 3 outdated mise …  task  host  3 tools have newer versions           ────────────────────────────────────   
+                                                                                 Does       show current, requested     
+                                                                                            and latest versions,        
+                                                                                            then upgrade the            
+                                                                                            selected tools              
+                                                                                 Runs       mise outdated --json        
+                                                                                 In         mbp · host-wide             
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      host                        
+                                                                                 Why        3 tools have newer          
+                                                                                            versions                    
+                                                                                 Changes    cargo-nextest 0.9.101 →     
+                                                                                            0.9.104 · node 26.0.1 →     
+                                                                                            26.1.0 · python 3.13.5 →    
+                                                                                            3.13.7                      
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Upgrade now (mise           
+                                                                                            upgrade) · Pin · Alias ·    
+                                                                                            Why here?                   
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/holla   main   ↓3   • 5                                                                      truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear    Upgrade 3 outdate… 

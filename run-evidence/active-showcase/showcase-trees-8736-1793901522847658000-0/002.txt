@@ -1,0 +1,40 @@
+ ▪ Junie Design system  Navigation › Trees                                   truecolor · 120×40   i Inspector   ? Help  
+                                                                                                                        
+ Components           54  Trees  Indent carries hierarchy; the focus bar never moves                                    
+ ───────────────────────                                                                                                
+    Overview               Playground    Options    States                                              the live widget 
+  ▸ App shell             ━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────
+  ▸ Inputs & forms                                                                                                      
+  ▸ Tables                  Project                                                   Selection                         
+  ▾ Navigation              ────────────────────────────────────────────────────      ────────────────────────────────  
+      Lists                 ▎▸ src                                                    src/config.rs                     
+    › Trees                  ▾ tests                                                  depth 1                           
+      Sidebars                   checkout.rs                             5.3 KB                                         
+      Tabs                       auth_flow.rs                            3.0 KB       cursor  src                       
+      Menus                    ▸ fixtures                                             visible 10 rows                   
+  ▸ Overlays                 ▾ docs                                                   open    4 folders                 
+  ▸ Feedback                     architecture.md                         7.7 KB                                         
+  ▸ Layout                       webhooks.md                             2.2 KB                                         
+  ▸ Text & code                Cargo.toml                                1.4 KB                                         
+  ▸ Screens                    README.md                                 3.5 KB       Connections   → loads a database  
+                                                                                      ────────────────────────────────  
+                                                                                       ▾ ◆ production                   
+                                                                                         ▸ orders-db         postgres   
+                                                                                         ▸ billing-db        postgres   
+                                                                                           replica-eu       lag 4.2 s   
+                                                                                       ▾ ◇ staging                      
+                                                                                         ▸ orders-db         postgres   
+                                                                                       ▾ ○ archive                      
+                                                                                           No connections               
+                                                                                                                        
+                                                                                                                        
+                          branch_activate Toggle · click Double · indent 2 · divider false · alt_click_recursive true · 
+                          reserve_right 0 · show_meta true                                                              
+                          nav default · wrap false · type-ahead on · track_click Page · selected_marker None · *        
+                          TreeCmd::ExpandAll · - TreeCmd::CollapseAll                                                   
+                          last TreeAction: Activate(config.rs)   (TreeAction::Expand on a lazy node ·                   
+                                                                 TreeAction::Activate on a leaf, or a branch per        
+                                                                 branch_activate)                                       
+                                                                                                                        
+                                                                                                                        
+ ↑↓ Move  ←→ Fold / unfold  Enter Open  Home End Ends  * Expand all  Shift+F10 Menu  Tab Next          Opened config.rs 

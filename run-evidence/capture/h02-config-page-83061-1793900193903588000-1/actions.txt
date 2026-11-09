@@ -1,0 +1,44 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-custom-actions", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: finder ready c7355e6d92301a78
+paste 24 UTF-8 bytes
+checkpoint 001: search Duplicate of a global id a5b99b646740d33e
+key enter
+checkpoint 002: enter on duplicate search a5b99b646740d33e
+key escape
+key escape
+key escape
+key escape
+checkpoint 003: visible Search actions and resources 4f80d2752e716588
+paste 6 UTF-8 bytes
+checkpoint 004: search Bad Id 9d484ef89405ca4e
+key escape
+key escape
+key escape
+key escape
+checkpoint 005: visible Search actions and resources 4f80d2752e716588
+paste 27 UTF-8 bytes
+checkpoint 006: search Custom action configuration d43467d9e6a3f3be
+key enter
+checkpoint 007: custom actions page 6bc272143e43ac0f
+resize 121x40
+checkpoint 008: nudged width a7760507c82ee2fc
+resize 120x40
+checkpoint 009: restored size a9389c43541db6e5
+checkpoint 010: settled ec5a6d98382d66f6
+precondition 
+visual pre_refactor/h02_config/h02_config_config_120x40 candidate f8c4728e0b601b5dff08c6984972b72f6b5c92833b501362a83cf182b2f07a58
+capture-only pre_refactor/h02_config/h02_config_config_120x40: Failure(CheckFailure { test_id: "pre_refactor/h02_config/h02_config_config_120x40", gate: State, reason: Missing, candidate_sha256: "f8c4728e0b601b5dff08c6984972b72f6b5c92833b501362a83cf182b2f07a58", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-config-page-83061-1793900193903588000-1/check-artifacts/pre_refactor/h02_config/h02_config_config_120x40/f8c4728e0b601b5dff08c6984972b72f6b5c92833b501362a83cf182b2f07a58/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-config-page-83061-1793900193903588000-1/check-artifacts/pre_refactor/h02_config/h02_config_config_120x40/f8c4728e0b601b5dff08c6984972b72f6b5c92833b501362a83cf182b2f07a58/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-config-page-83061-1793900193903588000-1/check-artifacts/pre_refactor/h02_config/h02_config_config_120x40/f8c4728e0b601b5dff08c6984972b72f6b5c92833b501362a83cf182b2f07a58/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 011: config at 80x24 0ae348ef2358dd4e
+resize 81x24
+checkpoint 012: nudged width 74a50341e4b981a8
+resize 80x24
+checkpoint 013: restored size 934e0cbb7c9f7cab
+checkpoint 014: settled 0ae348ef2358dd4e
+precondition 
+visual pre_refactor/h02_config/h02_config_config_narrow candidate affdecde90edfc579f3f91f49dc181c359ac6b533dc523e303d4f0eb961fe4e3
+capture-only pre_refactor/h02_config/h02_config_config_narrow: Failure(CheckFailure { test_id: "pre_refactor/h02_config/h02_config_config_narrow", gate: State, reason: Missing, candidate_sha256: "affdecde90edfc579f3f91f49dc181c359ac6b533dc523e303d4f0eb961fe4e3", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-config-page-83061-1793900193903588000-1/check-artifacts/pre_refactor/h02_config/h02_config_config_narrow/affdecde90edfc579f3f91f49dc181c359ac6b533dc523e303d4f0eb961fe4e3/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-config-page-83061-1793900193903588000-1/check-artifacts/pre_refactor/h02_config/h02_config_config_narrow/affdecde90edfc579f3f91f49dc181c359ac6b533dc523e303d4f0eb961fe4e3/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h02-config-page-83061-1793900193903588000-1/check-artifacts/pre_refactor/h02_config/h02_config_config_narrow/affdecde90edfc579f3f91f49dc181c359ac6b533dc523e303d4f0eb961fe4e3/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 015: config back at 120x40 ec5a6d98382d66f6
+key ctrl+q
+clean exit 0

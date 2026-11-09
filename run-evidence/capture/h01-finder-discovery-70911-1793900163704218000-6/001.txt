@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         probe · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ cargo                                                                                                scope ‹ here ›  
+                                                                                                                        
+    Results · 9                                                                  cargo test              cargo · here   
+  › cargo test                 cargo    here  Cargo.toml here                    ────────────────────────────────────   
+    cargo build                cargo    here  Cargo.toml here                    Does       run the tests with the      
+    cargo check                cargo    here  Cargo.toml here                               built-in harness ·          
+    cargo clean                cleanup  here  nothing to remove  destructive                failures are named          
+    cargo clippy               cargo    here  Cargo.toml here                    Runs       cargo test                  
+    cargo fmt --check          cargo    here  Cargo.toml here                    In         ~/work/probe                
+    Open Cargo.toml            file     here  manifest here                      Host       mbp · local                 
+    cargo clean dry run        cargo    here  read-only                          Scope      here                        
+    Clean Cargo registry cac…  cleanup  host  safe if old…                       Why        Cargo.toml here             
+                                                                                 Changes    see the command             
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/probe   main   ↓1             ! docker, github unavailable             ▲ 4 config warnings   truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Run  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                        

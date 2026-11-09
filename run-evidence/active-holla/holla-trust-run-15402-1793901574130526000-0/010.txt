@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                        acme › frontend · Node project · pnpm  mbp · local  
+                                                                                                                        
+  Here    frontend test ✓ ×                                                                                             
+ ────────━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────────────────────────────── 
+  frontend test · succeeded · 2 s · exit 0                                      here · ~/work/acme/apps/frontend · mbp  
+  $ mise run //apps/frontend:test · filter  · profile default                                                           
+                                                                                                                        
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  $ mise run //apps/frontend:test                                                                                   │ 
+ │  [mise] resolving //apps/frontend:test · depends on //apps/frontend:build                                          │ 
+ │  [mise] //apps/frontend:build                                                                                      │ 
+ │  > vite build                                                                                                      │ 
+ │  ✓ 214 modules transformed.                                                                                        │ 
+ │  dist/index.html  0.46 kB │ gzip: 0.30 kB                                                                          │ 
+ │  [mise] //apps/frontend:test                                                                                       │ 
+ │  > vitest run                                                                                                      │ 
+ │   ✓ src/lib/api.test.ts (12)                                                                                       │ 
+ │   ✓ src/components/OrderTable.test.tsx (7)                                                                         │ 
+ │   Test Files  2 passed (2)                                                                                         │ 
+ │        Tests  19 passed (19)                                                                                       │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/acme/apps/frontend   main   ↑1   • 2                     succeeded · 2 s                     truecolor · 120×40 
+ ↑↓ Scroll  f Follow  / Find  y Copy  r Restart  x Close  Esc Back to Here  …           frontend test finished · exit 0 

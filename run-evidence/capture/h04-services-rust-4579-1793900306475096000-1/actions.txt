@@ -1,0 +1,32 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "rust-dirty", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions f4dcff1afb0c0c1f
+paste 23 UTF-8 bytes
+checkpoint 001: finder row selected a042d8c2cd7e6b8e
+key enter
+checkpoint 002: snapshot open f07f4bd13467573d
+key esc
+checkpoint 003: finder restored a042d8c2cd7e6b8e
+key esc
+checkpoint 004: visible Search actions and resources f4dcff1afb0c0c1f
+paste 29 UTF-8 bytes
+checkpoint 005: finder row selected 8a60b1bd482380b9
+key enter
+checkpoint 006: snapshot open e2e704a9923ab2c4
+key esc
+checkpoint 007: finder restored 8a60b1bd482380b9
+key esc
+checkpoint 008: visible Search actions and resources f4dcff1afb0c0c1f
+paste 24 UTF-8 bytes
+checkpoint 009: finder row selected 6ef3172efbd9f5aa
+key enter
+checkpoint 010: snapshot open f08fc425e84c27ea
+key esc
+checkpoint 011: finder restored 6ef3172efbd9f5aa
+key esc
+checkpoint 012: visible Search actions and resources f4dcff1afb0c0c1f
+paste 29 UTF-8 bytes
+checkpoint 013: finder row selected 35bccca058fbc6dd
+key enter
+checkpoint 014: snapshot open c7c240abc409d656
+key ctrl+q
+clean exit 0

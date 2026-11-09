@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  alert                        truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 • ×    H History ×                                                                                      +   
+ ─────────────────━━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────────── 
+ › ╭─ Query history ───────────────────────────────────────────────────────────────────────────────────── 15 entries ─╮ 
+   │                                                                                                                  │ 
+ E │    Search history · terms are ANDed                            scope: all connections  ·  status: any            │ 
+ x │                                                                                                                  │ 
+ p │  ▎! SELECT * FROM events WHERE event_type… 5 d ago · –  │  Query                              Editor · 5 d ago   │ 
+ l │     TRUNCATE analytics.events         4 d ago · 210 ms  │  ───────────────────────────────────────────────────   │ 
+ o │     SELECT plan, count(*) FROM subscri… 3 d ago · 5 ms  │  ›  1 SELECT * FROM events WHERE event_type =          │ 
+ r │     SELECT * FROM payments WHERE stat… 1 d ago · 24 ms  │     2 'checkout' LIMIT 100                             │ 
+ e │     SELECT email, full_name FROM custo… 1 d ago · 7 ms  │                                                        │ 
+ r │     ALTER TABLE orders ADD COLUMN is_… 1 d ago · 88 ms  │                                                        │ 
+   │     DELETE FROM audit.login_attempts… 5 h ago · 1.82 s  │  Connection  Development · acme_dev.public             │ 
+   │     SELECT day, revenue, refunds FROM… 3 h ago · 14 ms  │  Duration    –                                         │ 
+   │   ! SELECT * FROM ordres                   1 h ago · –  │  Rows        –                                         │ 
+   │     SELECT o.id, o.total_amount, c.em… 1 h ago · 61 ms  │  Error       canceling statement due to user request   │ 
+   │     UPDATE orders SET status = 'shi… 58 min ago · 3 ms  │                                                        │ 
+   │     SELECT * FROM customers ORDER … 40 min ago · 21 ms  │   Open in new tab    Run in new tab    Copy            │ 
+   │     EXPLAIN ANALYZE SELECT * FROM o… 15 min ago · 9 ms  │                                                        │ 
+   │     SELECT count(*) FROM orders W… 12 min ago · 412 ms  │                                                        │ 
+   │     SELECT * FROM orders WHERE stat… 4 min ago · 38 ms  │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   │                                                         │                                                        │ 
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ Enter Open in new tab  → Full text  r Rerun  y Copy  / Search  …                    i Cancelled · nothing was executed 

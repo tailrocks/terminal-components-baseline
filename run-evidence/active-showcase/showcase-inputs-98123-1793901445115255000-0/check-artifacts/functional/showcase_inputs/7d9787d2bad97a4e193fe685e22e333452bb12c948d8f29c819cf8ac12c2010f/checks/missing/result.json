@@ -1,0 +1,1 @@
+{"schema":"tuiscotti.check.v1","test_id":"functional/showcase_inputs","gate":"state","reason":"missing","candidate_sha256":"7d9787d2bad97a4e193fe685e22e333452bb12c948d8f29c819cf8ac12c2010f","baseline_sha256":"missing","changed_fields":["baseline"],"changed_cells":[],"changed_cell_total":0,"title_values":null,"pixel_changed_pixels":0,"pixel_compared_pixels":0,"pixel_bounds":null}

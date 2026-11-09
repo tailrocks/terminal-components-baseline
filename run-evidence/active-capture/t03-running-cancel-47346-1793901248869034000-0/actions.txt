@@ -1,0 +1,35 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+checkpoint 005: visible Type SQL 1615509862a77c56
+mouse Press { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 40, y: 6, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: editor focused 328dfa4f70d0366e
+type 30 UTF-8 bytes
+checkpoint 007: visible SELECT 1 AS t03_running_marker 18c038a1b1a29ebc
+key ctrl+r
+key ctrl+r
+key esc
+checkpoint 008: cancelled result stays 9e08867cc8d6c996
+capture-only pre_refactor/t03_running/t03_running_cancel_120x40: Failure(CheckFailure { test_id: "pre_refactor/t03_running/t03_running_cancel_120x40", gate: State, reason: Missing, candidate_sha256: "154f0ec69260e353ff37fd32a110bfd92d072f81cf29839b6376319c4ff7e01c", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-running-cancel-47346-1793901248869034000-0/check-artifacts/pre_refactor/t03_running/t03_running_cancel_120x40/154f0ec69260e353ff37fd32a110bfd92d072f81cf29839b6376319c4ff7e01c/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-running-cancel-47346-1793901248869034000-0/check-artifacts/pre_refactor/t03_running/t03_running_cancel_120x40/154f0ec69260e353ff37fd32a110bfd92d072f81cf29839b6376319c4ff7e01c/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-running-cancel-47346-1793901248869034000-0/check-artifacts/pre_refactor/t03_running/t03_running_cancel_120x40/154f0ec69260e353ff37fd32a110bfd92d072f81cf29839b6376319c4ff7e01c/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 009: cancelled result at 80x24 ed99a62a9f2d8b03
+capture-only pre_refactor/t03_running/t03_running_cancel_narrow: Failure(CheckFailure { test_id: "pre_refactor/t03_running/t03_running_cancel_narrow", gate: State, reason: Missing, candidate_sha256: "6e41cbdd107dcb7fa3c9f1c1fd016e71d02cbdc20151144b33288c43115f4b92", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-running-cancel-47346-1793901248869034000-0/check-artifacts/pre_refactor/t03_running/t03_running_cancel_narrow/6e41cbdd107dcb7fa3c9f1c1fd016e71d02cbdc20151144b33288c43115f4b92/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-running-cancel-47346-1793901248869034000-0/check-artifacts/pre_refactor/t03_running/t03_running_cancel_narrow/6e41cbdd107dcb7fa3c9f1c1fd016e71d02cbdc20151144b33288c43115f4b92/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t03-running-cancel-47346-1793901248869034000-0/check-artifacts/pre_refactor/t03_running/t03_running_cancel_narrow/6e41cbdd107dcb7fa3c9f1c1fd016e71d02cbdc20151144b33288c43115f4b92/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 010: cancelled result back at 120x40 9e08867cc8d6c996
+key ctrl+y
+checkpoint 011: history omits the cancelled statement 65e31bba2ce542c5
+key ctrl+w
+checkpoint 012: query 1 after closing history 4b246e6551e94fa3
+key ctrl+q
+checkpoint 013: visible Quit TablePro? 3665e3356a7e597c
+key right
+key enter
+observed exit 0

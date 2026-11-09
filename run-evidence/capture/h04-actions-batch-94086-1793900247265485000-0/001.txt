@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   repos · project collection  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ origin and GitLab                                                                                    scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Push 4 repositories to … git · child   
+  › Push 4 repositories to o…  git  child  1 repositories have a gitlab rem…     ────────────────────────────────────   
+                                                                                 Does       push origin always; push    
+                                                                                            gitlab where `git remote    
+                                                                                            get-url gitlab` succeeds    
+                                                                                            (1 of 4) · no other         
+                                                                                            remote is pushed            
+                                                                                 Runs       git -C /Users/al… origin    
+                                                                                            git -C /Users/al… gitlab    
+                                                                                            git -C /Users/al… origin    
+                                                                                            'skipped: no git…remote'    
+                                                                                            git -C /Users/al… origin    
+                                                                                            'skipped: no git…remote'    
+                                                                                            … 2 more                    
+                                                                                 In         ~/work/repos                
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      child                       
+                                                                                 Why        1 repositories have a       
+                                                                                            gitlab remote               
+                                                                                 Changes    origin in 4 repositories    
+                                                                                            · gitlab in 1               
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       one confirmation            
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/repos                                                                                        truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Confirm…  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear    Push 4 reposi… 

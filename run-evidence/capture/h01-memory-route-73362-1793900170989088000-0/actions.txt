@@ -1,0 +1,4 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-history", "--frame", "800", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: seeded finder d435de3fd503689e
+key ctrl+q
+clean exit 0

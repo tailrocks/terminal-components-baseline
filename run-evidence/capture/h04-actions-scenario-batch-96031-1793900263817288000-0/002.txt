@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                   repos · project collection  mbp · local  
+  Here › Status across child projects                                                                                   
+  Here › Status across child projects                                                                                   
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────── 
+  Status across child projects                                                           ~/work/repos · live · 1 s ago  
+                                                                                                                        
+  Projects   5 · 0 worktree deduplicated · 0 submodule                                                                  
+  Inspected  in parallel · 4 at a time                                                                                  
+                                                                                                                        
+ ╭─ Projects ──────────────────────────────────────────────────────────────────────────────────── 6 lines · y copies ─╮ 
+ │  project       branch      state               eligibility                                                         │ 
+ │  alpha         main        main ↓3 ↑1          pull and switch eligible                                            │ 
+ │  beta          develop     develop             pull and switch eligible                                            │ 
+ │  gamma         main        main                blocked · no upstream                                               │ 
+ │  delta         main        main                pull and switch eligible                                            │ 
+ │  alpha         main        main                pull and switch eligible                                            │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+  Next   Pull every child project    Switch every project to its primary branch                                         
+                                                                                                                        
+ ~/work/repos                                  snapshot · read-only                                  truecolor · 120×40 
+ ↑↓ Scroll  y Copy  Tab Next actions  Esc Back  Shift+F10 Menu                                                          

@@ -1,0 +1,40 @@
+ ▪ Junie Design system  Tables › Columns                                     truecolor · 120×40   i Inspector   ? Help  
+                                                                                                                        
+ Components           54  Columns  Column rules, droppable columns, resizable seams and the header menu                 
+ ───────────────────────                                                                                                
+    Overview               Playground    Options    States                                              the live widget 
+  ▸ App shell             ━━━━━━━━━━━━━─────────────────────────────────────────────────────────────────────────────────
+  ▸ Inputs & forms                                                                                                      
+  ▾ Tables                  Width solver                                                                          Col  ┃
+      Basic table           ────────────────────────────────────────────────────────────────────────────────────────── ┃
+      Editable                 Column    Rule                                                       min  ideal   max   ┃
+      Data grid                Account   content 8–18 · flex 1, max 30                                8     18    30   ┃
+      Selection                Usage     fixed 12                                                    12     12    12   ┃
+      Cell editors             Plan      content 6–10 · droppable 2                                   6     10    10   ┃
+ ▎  › Columns                  Renews    content 10 · droppable 1                                    10     10    10   ┃
+  ▸ Navigation                 Notes     content 6–24 · max 40 · drop 0                               6     24    40   ┃
+  ▸ Overlays                                                                                                           ┃
+  ▸ Feedback                Row at 82 cells: the lowest drop priority goes first                                       ┃
+  ▸ Layout                     Account             Usage         Plan        Renews      Notes                         ┃
+  ▸ Text & code                payments-platform   ██████░░ 74%  enterprise  2026-11-02  seats renew with the pl…      ┃
+  ▸ Screens                                                                                                            ┃
+                            Resizable columns                                                                drag a se ┃
+                            ────────────────────────────────────────────────────────────────────────────────────────── ┃
+                               ID     Task                                  Owner    Status     Branch                 ┃
+                               #1040  Add rate limiting to auth endpoints   mira     Done       feat/rate-limit        ┃
+                               #1041  Migrate sessions table to UUID keys   jonas    ▸ Running  chore/uuid-sessions    ┆
+                               #1042  Fix flaky checkout integration test   ana      Failed     fix/checkout-flake     ┆
+                               #1043  Write release notes for 3.2           mira     Queued     docs/release-3.2       ┆
+                               #1044  Replace deprecated Vue mixins         kai      Done       refactor/mixins        ┆
+                               #1045  Upgrade Postgres driver to 0.9        jonas    Paused     chore/pg-driver        ┆
+                               #1046  Extract billing service module        sofia    Done       refactor/billing       ┆
+                               #1047  Add OpenTelemetry tracing spans       kai      ▸ Running  feat/otel              ┆
+                               #1048  Remove legacy feature flags           ana      Queued     chore/flags            ┆
+                               #1049  Generate API client from OpenAPI      sofia    Done       feat/api-client        ┆
+                               #1050  Harden CSP headers                    mira     Done       sec/csp                ┆
+                               #1051  Speed up cold start of worker         jonas    Failed     perf/worker-boot       ┆
+                               #1052  Localize onboarding emails            kai      Queued     feat/i18n-emails       ┆
+                               #1053  Add pagination to audit log           ana      Done       feat/audit-pages       ┆
+                          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ 
+                                                                                                                        
+ ↑↓ Move  Enter Open  / Filter  Tab Into page  q Quit                                                                   

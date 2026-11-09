@@ -1,0 +1,8 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "remote-host", "--frame", "1125", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: remote here 0ba8f91755142b82
+key ctrl+up
+checkpoint 001: visible No project root above /srv/payments 62985dcc18acb099
+key ctrl+up
+checkpoint 002: visible System · prod-eu-1 259a18d47e019acb
+key ctrl+q
+clean exit 0

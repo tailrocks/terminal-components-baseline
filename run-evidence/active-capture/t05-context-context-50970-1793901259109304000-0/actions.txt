@@ -1,0 +1,44 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: visible dev-db.internal.acme.io 5dd9e65e0663ee39
+checkpoint 003: settled b2e5548eda09242b
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: development connected 1615509862a77c56
+key down
+checkpoint 005: explorer moved toward customers 99365e5c04236ee8
+key down
+checkpoint 006: explorer moved toward customers 4c34bdb7c08ecc95
+key down
+checkpoint 007: explorer moved toward customers 9453f6fb0575be9b
+key down
+checkpoint 008: explorer moved toward products c47c82bd2e702b31
+key shift+f10
+checkpoint 009: visible Filter objects… 2f70b6c31a9d33b0
+key enter
+checkpoint 010: products tab from the row menu 8633921e0f9aa4bb
+checkpoint 011: products sku of row 1 8633921e0f9aa4bb
+key right
+key down
+checkpoint 012: products sku of row 2 b981dea753ce6810
+key shift+f10
+checkpoint 013: open cell menu for sku row 2 25c75ca0611c7af5
+checkpoint 014: settled 25c75ca0611c7af5
+precondition 
+visual pre_refactor/t05_context/t05_context_context_120x40 candidate b572d8536dcf6969e9b15237b699fa928b97d6fcd9442c30e516e236eb53b667
+capture-only pre_refactor/t05_context/t05_context_context_120x40: Failure(CheckFailure { test_id: "pre_refactor/t05_context/t05_context_context_120x40", gate: State, reason: Missing, candidate_sha256: "b572d8536dcf6969e9b15237b699fa928b97d6fcd9442c30e516e236eb53b667", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-context-context-50970-1793901259109304000-0/check-artifacts/pre_refactor/t05_context/t05_context_context_120x40/b572d8536dcf6969e9b15237b699fa928b97d6fcd9442c30e516e236eb53b667/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-context-context-50970-1793901259109304000-0/check-artifacts/pre_refactor/t05_context/t05_context_context_120x40/b572d8536dcf6969e9b15237b699fa928b97d6fcd9442c30e516e236eb53b667/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-context-context-50970-1793901259109304000-0/check-artifacts/pre_refactor/t05_context/t05_context_context_120x40/b572d8536dcf6969e9b15237b699fa928b97d6fcd9442c30e516e236eb53b667/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 015: cell menu at 80x24 0b65256a7f8e1ea6
+checkpoint 016: settled 0b65256a7f8e1ea6
+precondition 
+visual pre_refactor/t05_context/t05_context_context_narrow candidate 96e848a9e701360ef4e9ee825e16c00ff15a83bce2c24e92bf7523b63f98f076
+capture-only pre_refactor/t05_context/t05_context_context_narrow: Failure(CheckFailure { test_id: "pre_refactor/t05_context/t05_context_context_narrow", gate: State, reason: Missing, candidate_sha256: "96e848a9e701360ef4e9ee825e16c00ff15a83bce2c24e92bf7523b63f98f076", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-context-context-50970-1793901259109304000-0/check-artifacts/pre_refactor/t05_context/t05_context_context_narrow/96e848a9e701360ef4e9ee825e16c00ff15a83bce2c24e92bf7523b63f98f076/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-context-context-50970-1793901259109304000-0/check-artifacts/pre_refactor/t05_context/t05_context_context_narrow/96e848a9e701360ef4e9ee825e16c00ff15a83bce2c24e92bf7523b63f98f076/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t05-context-context-50970-1793901259109304000-0/check-artifacts/pre_refactor/t05_context/t05_context_context_narrow/96e848a9e701360ef4e9ee825e16c00ff15a83bce2c24e92bf7523b63f98f076/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 017: cell menu back at 120x40 3401c2621a9494ae
+key enter
+checkpoint 018: copy of the selected sku d393736aea621a95
+key ctrl+q
+clean exit 0

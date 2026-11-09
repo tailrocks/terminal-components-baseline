@@ -1,0 +1,44 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "rust-dirty", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources f4dcff1afb0c0c1f
+paste 15 UTF-8 bytes
+checkpoint 001: listed Show git status 92fd3dcc6b32e334
+key enter
+checkpoint 002: git status 07091b3b1681725b
+resize 121x40
+checkpoint 003: nudge 5c0ad4a062021f76
+resize 120x40
+checkpoint 004: restored 124d3279b9a1cba1
+checkpoint 005: settled 124d3279b9a1cba1
+precondition 
+visual pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40 candidate fe606943045b91caf4f8c9c7f3da8a48d3ba027fe667567adcc91c337e5a5cd7
+capture-only pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40: Failure(CheckFailure { test_id: "pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40", gate: State, reason: Missing, candidate_sha256: "fe606943045b91caf4f8c9c7f3da8a48d3ba027fe667567adcc91c337e5a5cd7", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-git-status-99858-1793900294544453000-0/check-artifacts/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40/fe606943045b91caf4f8c9c7f3da8a48d3ba027fe667567adcc91c337e5a5cd7/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-git-status-99858-1793900294544453000-0/check-artifacts/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40/fe606943045b91caf4f8c9c7f3da8a48d3ba027fe667567adcc91c337e5a5cd7/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-git-status-99858-1793900294544453000-0/check-artifacts/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40/fe606943045b91caf4f8c9c7f3da8a48d3ba027fe667567adcc91c337e5a5cd7/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 006: git status narrow 7f5f8f5403b38c35
+resize 81x24
+checkpoint 007: nudge 5a2f4b8c83d034d0
+resize 80x24
+checkpoint 008: restored 7f5f8f5403b38c35
+checkpoint 009: settled 7f5f8f5403b38c35
+precondition 
+visual pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow candidate 08006c4e351c9a1febef9bfaebcca2142eb169d8b03358465cda1b955b655b42
+capture-only pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow: Failure(CheckFailure { test_id: "pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow", gate: State, reason: Missing, candidate_sha256: "08006c4e351c9a1febef9bfaebcca2142eb169d8b03358465cda1b955b655b42", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-git-status-99858-1793900294544453000-0/check-artifacts/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow/08006c4e351c9a1febef9bfaebcca2142eb169d8b03358465cda1b955b655b42/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-git-status-99858-1793900294544453000-0/check-artifacts/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow/08006c4e351c9a1febef9bfaebcca2142eb169d8b03358465cda1b955b655b42/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/capture/h04-git-status-99858-1793900294544453000-0/check-artifacts/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow/08006c4e351c9a1febef9bfaebcca2142eb169d8b03358465cda1b955b655b42/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 010: git status restored 124d3279b9a1cba1
+key esc
+checkpoint 011: visible full git status d6f2d1282aa3a75f
+key esc
+checkpoint 012: visible Search actions and resources ad491a4392ae73dc
+paste 23 UTF-8 bytes
+checkpoint 013: listed Review 5 modified files 853ba772cb017e12
+key enter
+checkpoint 014: modified files 2609667527ca40b9
+key esc
+checkpoint 015: visible Review 5 modified files 853ba772cb017e12
+key esc
+checkpoint 016: visible Search actions and resources ad491a4392ae73dc
+paste 14 UTF-8 bytes
+checkpoint 017: listed Show stash (1) 3e93d11da0a42d43
+key enter
+checkpoint 018: stash 07091b3b1681725b
+key ctrl+q
+observed exit 0

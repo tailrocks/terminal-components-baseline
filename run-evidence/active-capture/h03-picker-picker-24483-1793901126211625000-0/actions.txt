@@ -1,0 +1,34 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "activities-multi", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 6416971520ec4bcd
+key ctrl+g
+checkpoint 001: activities open 8f8dddf55b0b80c4
+key down
+checkpoint 002: api dev highlighted 732f0d381b41a109
+resize 121x40
+checkpoint 003: nudged b4fc75981d20e6f3
+resize 120x40
+checkpoint 004: size restored 9c0e18ff8d3c8e43
+checkpoint 005: settled 9c0e18ff8d3c8e43
+precondition 
+visual pre_refactor/h03_picker/h03_picker_picker_120x40 candidate a5c229f72d464955ff4e4fe3008a9621278e64411e9c21dac4ba005376f0619f
+capture-only pre_refactor/h03_picker/h03_picker_picker_120x40: Failure(CheckFailure { test_id: "pre_refactor/h03_picker/h03_picker_picker_120x40", gate: State, reason: Missing, candidate_sha256: "a5c229f72d464955ff4e4fe3008a9621278e64411e9c21dac4ba005376f0619f", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-picker-picker-24483-1793901126211625000-0/check-artifacts/pre_refactor/h03_picker/h03_picker_picker_120x40/a5c229f72d464955ff4e4fe3008a9621278e64411e9c21dac4ba005376f0619f/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-picker-picker-24483-1793901126211625000-0/check-artifacts/pre_refactor/h03_picker/h03_picker_picker_120x40/a5c229f72d464955ff4e4fe3008a9621278e64411e9c21dac4ba005376f0619f/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-picker-picker-24483-1793901126211625000-0/check-artifacts/pre_refactor/h03_picker/h03_picker_picker_120x40/a5c229f72d464955ff4e4fe3008a9621278e64411e9c21dac4ba005376f0619f/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 80x24
+checkpoint 006: picker at 80x24 9232a6e14a6c34a5
+resize 81x24
+checkpoint 007: nudged 0811b187761570d6
+resize 80x24
+checkpoint 008: size restored 36cff7742edaf30c
+checkpoint 009: settled 9232a6e14a6c34a5
+precondition 
+visual pre_refactor/h03_picker/h03_picker_picker_narrow candidate 0063f82872383672a07fd9769fc881628094d1713b02f66f58b1dff7c5da81a9
+capture-only pre_refactor/h03_picker/h03_picker_picker_narrow: Failure(CheckFailure { test_id: "pre_refactor/h03_picker/h03_picker_picker_narrow", gate: State, reason: Missing, candidate_sha256: "0063f82872383672a07fd9769fc881628094d1713b02f66f58b1dff7c5da81a9", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-picker-picker-24483-1793901126211625000-0/check-artifacts/pre_refactor/h03_picker/h03_picker_picker_narrow/0063f82872383672a07fd9769fc881628094d1713b02f66f58b1dff7c5da81a9/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-picker-picker-24483-1793901126211625000-0/check-artifacts/pre_refactor/h03_picker/h03_picker_picker_narrow/0063f82872383672a07fd9769fc881628094d1713b02f66f58b1dff7c5da81a9/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/h03-picker-picker-24483-1793901126211625000-0/check-artifacts/pre_refactor/h03_picker/h03_picker_picker_narrow/0063f82872383672a07fd9769fc881628094d1713b02f66f58b1dff7c5da81a9/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+resize 120x40
+checkpoint 010: picker back at 120x40 72f8d1bd4357d71d
+key enter
+checkpoint 011: api dev output 7c08314453dbc7db
+key ctrl+q
+checkpoint 012: quit dialog 48ddbf9071076470
+key right
+checkpoint 013: stop and quit focused 185093594475f6ff
+key enter
+checkpoint 014: stopping a4f66161e8b1dc62

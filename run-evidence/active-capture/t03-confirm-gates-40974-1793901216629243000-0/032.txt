@@ -1,0 +1,24 @@
+  ▪  TablePro  Development  · development  acme_prod › public  ✓ safe         … 
+                                                                                
+  ≡ Query 1 • ×                                                              +  
+ ━━━╭──────────────────────────────────────────────────────────────────── × ─╮──
+ › ╭│                                                                        │─╮
+   ││  Execute write query?                                                  │ │
+ E ││                                                                        │ │
+ x ││  Action      UPDATE                                                    │ │
+ p ││  Target      Development · development · acme_prod · organizations     │ │
+ l ││  Scope       matching rows in organizations                            │ │
+ o ││  Reversible  Reversible by a compensating UPDATE                       │ │
+ r ││  Safe Mode   Safe Mode · type to confirm                               │ │
+ e ││                                                                        │ │
+ r ││  UPDATE organizations SET name = 'ExactMarkerT03' WHERE slug = 'nort…  │ │
+   ││  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄  │ │
+   ││                                                                        │ │
+   ││  Type organizations to confirm                                         │ │
+   ││▎                                                                       │ │
+   ││                                                                        │ │
+   ││                                                    Cancel    Execute   │ │
+   ││                                                                        │ │
+   ╰╰────────────────────────────────────────────────────────────────────────╯─╯
+                                                                                
+ Esc Cancel  …                                i Cancelled · nothing was executed

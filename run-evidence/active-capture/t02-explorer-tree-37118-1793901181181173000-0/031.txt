@@ -1,0 +1,40 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent                       truecolor · 120×40  ? help  
+                                                                                                                        
+  ≡ Query 1 ×    T organizations ×    T customers ×                                                                 +   
+ ────────────────────────────────────━━━━━━━━━━━━━━━━────────────────────────────────────────────────────────────────── 
+ ╭─ Explorer ─── public   ‹ ─╮│╭─ public › customers ─────────────────────────────────────────────────────── 11 cols ─╮ 
+ │                           │││   Data    Structure                                                                  │ 
+ │   customers               │││  ━━━━━━━──────────────────────────────────────────────────────────────────────────── │ 
+ │  ▾ D acme_prod            │││                                                                                      │ 
+ │    ▾ S public             │││         ⚷ id                                  organization_id                   10›  │ 
+ │      ▾ Tables             │││       1 caa708a8-d44e-42f1-a391-4b5d968ec18c  af3e2db9-3aa5-4f25-9…b9875cdecc →    ┃ │ 
+ │ ▎      ▸ T customers      │││       2 82d76121-663b-499d-ac87-8fa60d0dc69f  db302dd4-fc5c-48ad-a…93e5bd1641 →    ┆ │ 
+ │      ▾ Views              │││       3 af3e2db9-3aa5-4f25-91ed-6db9875cdecc  8c0b3a16-e803-49c3-b…f59e3d2906 →    ┆ │ 
+ │        ▸ V active_custo…  │││       4 9d997de4-8499-4096-99c1-263f6c6c1f0e  d397a1ad-9a3f-4479-a…89465cf0f3 →    ┆ │ 
+ │                           │││       5 6c6c1f0e-263f-49c1-8479-9a3fd397a1ad  465cf0f3-1c89-4842-8…04ab5f42c2 →    ┆ │ 
+ │                           │││       6 3b2d6008-9ca1-4ed0-b670-7c564a59570b  565027aa-4602-4c61-8…9b550a59e8 →    ┆ │ 
+ │                           │││       7 465cf0f3-1c89-4842-8998-1304ab5f42c2  121dc5d6-4040-4ebe-b…7464901374 →    ┆ │ 
+ │                           │││       8 da8dba6a-5f40-4cf8-afdd-2e101cfcc819  0ea2bf91-9c30-4bbe-a…07a6baba91 →    ┆ │ 
+ │                           │││       9 3599448f-9bde-4bde-a261-fe991a4f0f59  f00c7344-1b91-4d86-9…98819f12b7 →    ┆ │ 
+ │                           │││      10 1a4f0f59-fe99-4261-bd86-1b91f00c7344  819f12b7-ab98-4386-9…7734d5938f →    ┆ │ 
+ │                           │││      11 b7128b9b-a187-4fc5-bf7c-29da8dcb7d25  26da3d97-fd04-4ae9-a…7b84c54a4d →    ┆ │ 
+ │                           │││      12 0ff64453-8fae-4560-8a77-80cfd5b4b1b7  9049adaa-1754-46ad-a…7af501af39 →    ┆ │ 
+ │                           │││      13 26da3d97-fd04-4ae9-afe1-717b84c54a4d  a6dfe790-d9cb-48ee-8…abe455acd7 →    ┆ │ 
+ │                           │││      14 84c54a4d-717b-4fe1-88ee-d9cba6dfe790  e455acd7-cbab-449f-8…8ed3a899d1 →    ┆ │ 
+ │                           │││      15 3dc76497-39dc-4e89-a002-93254c7bc333  b1d2ca11-773a-41bd-a…2032ec7929 →    ┆ │ 
+ │                           │││      16 f9cedffd-05f6-483a-a6ec-a2ae2c87480c  eaa5ffbf-591c-4d27-9…4c823fb5c0 →    ┆ │ 
+ │                           │││      17 b1d2ca11-773a-41bd-ab70-682032ec7929  358526e7-3ea2-47b4-8…e21721490d →    ┆ │ 
+ │                           │││      18 eaa5ffbf-591c-4d27-9bdc-154c823fb5c0  6ae17172-05f2-4e75-9…b0d3a4555a →    ┆ │ 
+ │                           │││      19 660e840d-4625-4370-b126-f2aa09cf0009  3a8a0b4d-f8de-4dc9-9…519719ec44 →    ┆ │ 
+ │                           │││      20 326de209-9acc-4d9e-943d-19bbfc283dbb  35fad262-7115-4394-b…499bde3fd2 →    ┆ │ 
+ │                           │││      21 3a8a0b4d-f8de-4dc9-951d-5a519719ec44  2f101d0d-7f7b-41dc-9…6ad810e6d1 →    ┆ │ 
+ │                           │││      22 fc8f055f-b6a5-4382-a060-53d0c968b8c5  62abff5f-4cbf-4de8-9…65b78d1ca5 →    ┆ │ 
+ │                           │││      23 5cfdc868-84fe-499f-86ef-4766f6959f10  9e263dd1-bc15-42c8-8…2ce797f396 →    ┆ │ 
+ │                           │││      24 f6959f10-4766-46ef-92c8-bc159e263dd1  e797f396-f22c-4d13-b…ca21160865 →    ┆ │ 
+ │                           │││      25 b78d1ca5-d165-4875-b18f-e5b20232da04  57c18c1e-4b90-4086-b…372406c793 →    ┆ │ 
+ │                           │││      26 5c55a4f2-19b8-4432-a8bb-df5e22e86840  41332fe2-4600-4208-9…857755fc0f →    ┆ │ 
+ │                           │││         ━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄  │ 
+ │                           │││   rows 1–26 of 500 loaded · 48,912 total · cols 1–1 of 11                            │ 
+ ╰───────────────────────────╯│╰──────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ↑↓ Move  Enter Open  → Expand  / Filter  Ctrl+O Quick open  Shift+F10 Menu  Tab Next        ✓ Connected to Development 

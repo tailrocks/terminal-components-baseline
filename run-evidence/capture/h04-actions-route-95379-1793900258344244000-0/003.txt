@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                           svc · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Push                                                                                                 scope ‹ here ›  
+                                                                                                                        
+    Results · 2                                                                  Push                    git · parent   
+  › Push          git  parent  1 commits ahead                                   ────────────────────────────────────   
+    Push dry run  git  parent  read-only                                         Does       push feature/x of           
+                                                                                            ~/work/svc to               
+                                                                                            origin/feature/x            
+                                                                                 Runs       git -C /Users/al…vc push    
+                                                                                 In         ~/work/svc                  
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      parent                      
+                                                                                 Why        1 commits ahead             
+                                                                                 Changes    the remote rejects it       
+                                                                                            (fetch first) · nothing     
+                                                                                            changes                     
+                                                                                 Risk       mutating                    
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       one confirmation            
+                                                                                 Alt+Enter  Push dry run · Pin ·        
+                                                                                            Alias · Why here?           
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/svc/src/api   feature/x   ↓2 ↑1   • 1                                                        truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Confirm…  Alt+Enter Alternatives…  Esc Clear  …           Cancelled · nothing was executed 

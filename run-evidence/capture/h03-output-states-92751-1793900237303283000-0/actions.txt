@@ -1,0 +1,21 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "activities-multi", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible api tests 172568979a6417c8
+key alt+1
+checkpoint 001: visible VITE v6.3.1 ebee467eb5d943d0
+key alt+2
+checkpoint 002: visible listening on 0.0.0.0:8080 38387147c6744854
+key alt+3
+checkpoint 003: api tests output 0439f6046dec29bb
+key alt+5
+checkpoint 004: visible btm 0.11.1 cf4aae982e6163e4
+key alt+1
+checkpoint 005: visible VITE v6.3.1 5723a17a98726e81
+key s
+checkpoint 006: visible frontend dev · cancelling dfe07d7eb721b4d5
+checkpoint 007: visible frontend dev · stopped 3171a20737f44c0b
+key ctrl+q
+checkpoint 008: quit dialog 81914f2c68ef3041
+key right
+checkpoint 009: stop focused 6dfe72bdbe0c1712
+key enter
+observed exit 0

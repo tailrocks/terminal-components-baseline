@@ -1,0 +1,10 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-docker", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 8065a4ec3836cf2f
+paste 24 UTF-8 bytes
+checkpoint 001: Stop the Compose project selected dbe8f75af371c345
+key enter
+checkpoint 002: confirmation 7e2aa3750a206fe5
+key enter
+checkpoint 003: Network acme_default 44c7a5395fcf43a6
+key ctrl+q
+clean exit 0

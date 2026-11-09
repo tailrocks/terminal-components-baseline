@@ -1,0 +1,51 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Filter connections 4bcb5a9f7dcb7be4
+checkpoint 001: visible Development 4bcb5a9f7dcb7be4
+mouse Press { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 10, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+resize 121x40
+checkpoint 002: visible 121×40 74a90ba9771422e0
+resize 120x40
+checkpoint 003: visible 120×40 ddfae927c9ff25d2
+checkpoint 004: visible dev-db.internal.acme.io ddfae927c9ff25d2
+checkpoint 005: settled ddfae927c9ff25d2
+mouse Press { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 45, y: 17, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 006: development connected 1615509862a77c56
+key home
+checkpoint 007: focus home f059be5dec79d3d0
+key down
+checkpoint 008: focus down 2d082784dc7e841f
+key down
+checkpoint 009: focus down 99365e5c04236ee8
+key down
+checkpoint 010: focus down 4c34bdb7c08ecc95
+key down
+checkpoint 011: focus down 9453f6fb0575be9b
+key down
+checkpoint 012: focus down c47c82bd2e702b31
+key down
+checkpoint 013: focus down 5245d373ffff7934
+key enter
+checkpoint 014: visible order_number 37158f77d82923fd
+checkpoint 015: visible 10000 37158f77d82923fd
+key right
+checkpoint 016: settled f09834fa0fd85814
+key right
+checkpoint 017: settled a55c7d6c33e48b01
+key right
+checkpoint 018: settled 3ffb46353a0e258f
+checkpoint 019: visible total_amount 3ffb46353a0e258f
+checkpoint 020: absent Connected to Development ac53f638f290ca6d
+resize 121x40
+checkpoint 021: visible 121×40 b281cf870c24dcac
+resize 120x40
+checkpoint 022: visible 120×40 ac53f638f290ca6d
+checkpoint 023: settled ac53f638f290ca6d
+precondition 
+visual pre_refactor/t02_editors/t02_editors_route_120x40 candidate 385bb068d9faa7709e41414d1dcfc3bb597a7d104947044daa11e716ea0f3984
+capture-only pre_refactor/t02_editors/t02_editors_route_120x40: Failure(CheckFailure { test_id: "pre_refactor/t02_editors/t02_editors_route_120x40", gate: State, reason: Missing, candidate_sha256: "385bb068d9faa7709e41414d1dcfc3bb597a7d104947044daa11e716ea0f3984", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-editors-route-34983-1793901158411531000-0/check-artifacts/pre_refactor/t02_editors/t02_editors_route_120x40/385bb068d9faa7709e41414d1dcfc3bb597a7d104947044daa11e716ea0f3984/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-editors-route-34983-1793901158411531000-0/check-artifacts/pre_refactor/t02_editors/t02_editors_route_120x40/385bb068d9faa7709e41414d1dcfc3bb597a7d104947044daa11e716ea0f3984/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-capture/t02-editors-route-34983-1793901158411531000-0/check-artifacts/pre_refactor/t02_editors/t02_editors_route_120x40/385bb068d9faa7709e41414d1dcfc3bb597a7d104947044daa11e716ea0f3984/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+w
+checkpoint 024: orders tab closed d4fca7146efedaab
+key ctrl+q
+clean exit 0

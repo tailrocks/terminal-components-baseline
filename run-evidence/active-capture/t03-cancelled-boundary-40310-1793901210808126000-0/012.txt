@@ -1,0 +1,24 @@
+  ▪  TablePro  Development  · development  acme_prod › public  silent        …  
+                                                                                
+  ≡ Query 1 ×                                                               +   
+ ━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────── 
+ › ╭─ Query 1 ────────────────────────────────────────────────────────────────╮ 
+   │   Run   Run all   Explain                                                │ 
+ E │      1 SELECT sku FROM products WHERE sku = 't03_cancelled_first';       │ 
+ x │  ▎›  2 SELECT name FROM products WHERE name = 't03_cancelled_second'     │ 
+ p │                                                                          │ 
+ l │                                                         ln 2/2 · col 62  │ 
+ o │  ─────────────────────────────────────────────────────────────────────── │ 
+ r │   Cancelled ×                                                            │ 
+ e │  ━━━━━━━━━━━━━━───────────────────────────────────────────────────────── │ 
+ r │   Cancelled · nothing was recorded                                       │ 
+   │                                                                          │ 
+   │                                                                          │ 
+   │                                 Cancelled                                │ 
+   │                                                                          │ 
+   │    The statement was stopped before it finished; nothing was recorded    │ 
+   │                                                                          │ 
+   │                                                                          │ 
+   ╰──────────────────────────────────────────────────────────────────────────╯ 
+                                                                                
+  EDIT   Ctrl+R Run  Alt+R Run all  Esc Done  …               i Query cancelled 

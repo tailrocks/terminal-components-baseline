@@ -1,0 +1,24 @@
+  holla❯    File   Go   Help     acme › frontend · Nod…ect · pnpm  mbp · local  
+                                                                                
+  Here                                                                          
+ ━━━━━━━─────────────────────────────────────────────────────────────────────── 
+ ▎ Search actions and resources…                              scope ‹ parent ›  
+                                                                                
+    Parent · acme · 29 entries                                                ┃ 
+  › Follow acme-api-1 logs      docker  parent   service is unh…              ┃ 
+    Review 2 modified files     git     parent   2 modified…                  ┃ 
+    Deploy preview              custom  parent   Current folder…              ┃ 
+    Follow acme-db-1 logs       docker  parent   running                      ┃ 
+    Follow acme-redis-1 logs    docker  parent   running                      ┆ 
+    Follow acme-scheduler-1 l…  docker  parent   running                      ┆ 
+    Follow acme-worker-1 logs   docker  parent   running                      ┆ 
+    Pull                        git     parent   blocked…                     ┆ 
+    Push                        git     parent   1 commits ahead              ┆ 
+    Rotate local secrets        custom  parent   Current folder…  destructive ┆ 
+    Run //services/api:migrate  task    sibling  defined by ~/w…              ┆ 
+    Run //services/api:test     task    sibling  defined by ~/w…              ┆ 
+                                                                                
+    → docker logs -f --since 10m acme-api-1 · parent · read-only                
+                                                                                
+ ~/work/acme/apps/frontend   main   ↑1   • 2       scope parent · acme        … 
+ Type Search  ↑↓ Move  Esc Back to Here  …           Scope parent · ~/work/acme 

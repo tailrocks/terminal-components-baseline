@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local  
+                                                                                                                        
+  Here    frontend dev ⠋ ×    api dev ⠋ ×    api tests ⠋ ×    logs · api worker sched… ⠋ ×    btm ⠋ ×                   
+ ────────────────────────────────────────────────────────────────────────────────────────────━━━━━━━━━━──────────────── 
+  btm · cancelling · 0 s                                                                                           mbp  
+  started by Open system monitor                                                                                        
+                                                                                                                        
+ ╭─ btm screen ─────────────────────────────────────────────────────────────────────────────────────────── following ─╮ 
+ │  btm 0.11.1 · attached · q quits the monitor, Ctrl+] returns to holla                                              │ 
+ │  stop requested by holla · SIGTERM to the process group                                                            │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                               ╭──────────────────────────────────────────────── × ─╮                               │ 
+ │                               │                                                    │                               │ 
+ │                               │  Quit holla❯?                                      │                               │ 
+ │                               │                                                    │                               │ 
+ │                               │  5 activities are still running. Quitting stops    │                               │ 
+ │                               │  what holla started; detached monitors keep        │                               │ 
+ │                               │  running.                                          │                               │ 
+ │                               │                                                    │                               │ 
+ │                               │                           ▎Stay    Stop and quit   │                               │ 
+ │                               │                                                    │                               │ 
+ │                               ╰────────────────────────────────────────────────────╯                               │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ │                                                                                                                    │ 
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/acme   main   ↑1                      ⠋ stopping · 0 s                        ⠋ 5 running    truecolor · 120×40 
+ ←→ Choose  Enter Stay  Esc Stay                                              Stopping btm · SIGTERM sent · output kept 

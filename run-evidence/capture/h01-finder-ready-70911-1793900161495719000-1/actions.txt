@@ -1,0 +1,5 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-discovery", "--frame", "8", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions and resources b8b9d672407721cc
+checkpoint 001: frame 8 discovery b8b9d672407721cc
+key ctrl+q
+clean exit 0

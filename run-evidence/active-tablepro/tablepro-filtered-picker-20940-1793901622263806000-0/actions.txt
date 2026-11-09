@@ -1,0 +1,58 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/tablepro ["--connect", "Local PostgreSQL", "--motion", "reduced", "--color", "none"] 120x40 color=Some("none") clock=false
+checkpoint 000: visible Query 1 7f298401e43dd9a5
+key ctrl+t
+checkpoint 001: visible Query 2 35f16863c18baf4d
+paste 35 UTF-8 bytes
+checkpoint 002: visible SELECT 'unsaved_picker_regression'; af9a3884147ccbcb
+key f6
+key ctrl+t
+checkpoint 003: visible Query 3 c476c3bd31e564c0
+paste 30 UTF-8 bytes
+checkpoint 004: visible SELECT 'other_query_survives'; 30c1c6e08d657590
+key f6
+key ctrl+g
+checkpoint 005: Open tabs picker 4fa050c86c878343
+paste 7 UTF-8 bytes
+checkpoint 006: visible query 2 7290c82407a9b20e
+key delete
+checkpoint 007: visible Close tab with unsaved work? fc47d29b58e13c24
+key escape
+checkpoint 008: Cancel preserves the active query e49f198885d7c0be
+key ctrl+g
+checkpoint 009: Open tabs picker 4fa050c86c878343
+paste 7 UTF-8 bytes
+checkpoint 010: visible query 2 7290c82407a9b20e
+key enter
+checkpoint 011: cancelled target retains its SQL ca9e8d12f5eb9f6e
+key ctrl+g
+checkpoint 012: Open tabs picker 073d5e654da1aa60
+paste 7 UTF-8 bytes
+checkpoint 013: visible query 3 e8af733ea6d253af
+key enter
+checkpoint 014: returning to the other dirty query e280bfcf3ed2b69c
+key f6
+key ctrl+g
+checkpoint 015: Open tabs picker 2f190d10a0807b2e
+paste 7 UTF-8 bytes
+checkpoint 016: visible query 2 80d65c86e95354b0
+key delete
+checkpoint 017: visible Close tab with unsaved work? 257514d1f5eb30be
+checkpoint 018: visible Close anyway 257514d1f5eb30be
+mouse Press { x: 71, y: 22, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 71, y: 22, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 019: only the confirmed tab is closed 2205f5816b61721b
+key ctrl+g
+checkpoint 020: Open tabs picker 10592c3c0ecefa0d
+key delete
+checkpoint 021: visible Close tab with unsaved work? 0b98d48cc6d365b3
+checkpoint 022: visible Close anyway 0b98d48cc6d365b3
+mouse Press { x: 71, y: 22, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 71, y: 22, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 023: only the confirmed tab is closed e52a6f94fe37326b
+checkpoint 024: absent ✓ Connected to 7ca86c7c7c4c43db
+checkpoint 025: settled 7ca86c7c7c4c43db
+precondition 
+visual functional/tablepro_filtered_picker candidate bbf788f22fe053c06ef6c2d72b45b7f94c76183ab5a397b318393763f98ea2ac
+capture-only functional/tablepro_filtered_picker: Failure(CheckFailure { test_id: "functional/tablepro_filtered_picker", gate: State, reason: Missing, candidate_sha256: "bbf788f22fe053c06ef6c2d72b45b7f94c76183ab5a397b318393763f98ea2ac", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-filtered-picker-20940-1793901622263806000-0/check-artifacts/functional/tablepro_filtered_picker/bbf788f22fe053c06ef6c2d72b45b7f94c76183ab5a397b318393763f98ea2ac/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-filtered-picker-20940-1793901622263806000-0/check-artifacts/functional/tablepro_filtered_picker/bbf788f22fe053c06ef6c2d72b45b7f94c76183ab5a397b318393763f98ea2ac/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-tablepro/tablepro-filtered-picker-20940-1793901622263806000-0/check-artifacts/functional/tablepro_filtered_picker/bbf788f22fe053c06ef6c2d72b45b7f94c76183ab5a397b318393763f98ea2ac/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key ctrl+q
+clean exit 0

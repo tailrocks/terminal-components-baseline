@@ -1,0 +1,36 @@
+  ▪  TablePro  Connections  6 saved                                      no color · 100×36  ? help  
+                                                                                                    
+ ╭─ Connections ──────────── 6 ─╮    Local PostgreSQL                                               
+ │                              │    ────────────────────────────────────────────────────────────   
+ │   Filter connections         │    Engine       PostgreSQL                                        
+ │ ▎▾ Personal                  │    Host         localhost:5432                                    
+ │        Local PostgreSQL  pg  │    Database     acme_dev                                          
+ │        Scratch       sqlite  │    User         postgres                                          
+ │  ▾ Acme                      │    Environment  local                                             
+ │      · Development       pg  │    Safe Mode    Silent · Writes run without asking. Destructive   
+ │      ◇ Staging           pg  │                 statements still confirm.                         
+ │      ◆ Analytics      mysql  │    SSL          off                                               
+ │      ◆ Production        pg  │    SSH          off                                               
+ │                              │    Last used    2 minutes ago                                     
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │     Connect    Edit    Duplicate    Delete…                       
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ │                              │                                                                   
+ ╰──────────────────────────────╯                                                                   
+                                                                                                    
+ ↑↓ Move  Enter Connect  e Edit…  d Delete…  Alt+D Duplicate  / Filter  Ctrl+N New  …               

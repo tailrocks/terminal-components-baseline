@@ -1,0 +1,12 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-idea", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Search actions 7e174189fd93eddd
+paste 17 UTF-8 bytes
+checkpoint 001: Clean IntelliJ metadata under ~/work/ide selected 7e174189fd93eddd
+key enter
+checkpoint 002: idea review f65feea8049270f0
+key escape
+checkpoint 003: finder 1d7ff44ce94853ce
+key escape
+checkpoint 004: visible Search actions 7e174189fd93eddd
+key ctrl+q
+clean exit 0

@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         acme · mise monorepo  mbp · local   
+                                                                                                                         
+  Here    frontend dev ⠋ ×    api dev ⠋ ×    api tests ⠋ ×    logs · api worker sched… ⠋ ×    btm ○ ×                    
+ ────────━━━━━━━━━━━━━━━━━━━───────────────────────────────────────────────────────────────────────────────────────────  
+  frontend dev · running · 0 s                                                 child · ~/work/acme/apps/frontend · mbp   
+  port 5173 · url http://localhost:5173/ · pid 7731                                                                      
+                                                                                                                         
+ ╭─ output ─────────────────────────────────────────────────────────────────────────────────────────────── following ─╮  
+ │  $ mise run dev  (apps/frontend)                                                                                   │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                               ╭──────────────────────────────────────────────── × ─╮                               │  
+ │                               │                                                    │                               │  
+ │                               │  Quit holla❯?                                      │                               │  
+ │                               │                                                    │                               │  
+ │                               │  5 activities are still running. Quitting stops    │                               │  
+ │                               │  what holla started; detached monitors keep        │                               │  
+ │                               │  running.                                          │                               │  
+ │                               │                                                    │                               │  
+ │                               │                           ▎Stay    Stop and quit   │                               │  
+ │                               │                                                    │                               │  
+ │                               ╰────────────────────────────────────────────────────╯                               │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ │                                                                                                                    │  
+ ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯  
+                                                                                                                         
+ ~/work/acme   main   ↑1                            ⠋ 0 s                             ⠋ 5 running    truecolor · 120×40  
+ ←→ Choose  Enter Stay  Esc Stay                                                                                         

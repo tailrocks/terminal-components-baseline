@@ -1,0 +1,11 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "parity-task-sources", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible ~/work/poly 3f868e4075a1394a
+checkpoint 001: visible Node project · yarn 3f868e4075a1394a
+paste 25 UTF-8 bytes
+checkpoint 002: clone row is selected b1b4c8f918765bea
+key enter
+checkpoint 003: arguments form is open 566d8c599fff41a6
+key escape
+checkpoint 004: arguments form closed b1b4c8f918765bea
+key ctrl+q
+clean exit 0

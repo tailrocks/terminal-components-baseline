@@ -1,0 +1,19 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/showcase ["--page", "dialogs", "--motion", "paused", "--color", "truecolor"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Open a dialog 78b8e04e01db54f0
+mouse Press { x: 31, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 31, y: 9, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 001: visible Run task now? 6298c4ffc995a98e
+checkpoint 002: settled 6298c4ffc995a98e
+precondition 
+visual functional/showcase_dialogs candidate 020e1ff2fc45a8f8ce60622c17a63cebc2fb26be328508d9fccf06c42463cc64
+capture-only functional/showcase_dialogs: Failure(CheckFailure { test_id: "functional/showcase_dialogs", gate: State, reason: Missing, candidate_sha256: "020e1ff2fc45a8f8ce60622c17a63cebc2fb26be328508d9fccf06c42463cc64", baseline_sha256: "missing", candidate_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-dialogs-97064-1793901439785930000-0/check-artifacts/functional/showcase_dialogs/020e1ff2fc45a8f8ce60622c17a63cebc2fb26be328508d9fccf06c42463cc64/sample.tui.pb", evidence_dir: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-dialogs-97064-1793901439785930000-0/check-artifacts/functional/showcase_dialogs/020e1ff2fc45a8f8ce60622c17a63cebc2fb26be328508d9fccf06c42463cc64/checks/missing", report_path: "/private/tmp/tuiscotti-bulk-pr2-20261106/run-evidence/active-showcase/showcase-dialogs-97064-1793901439785930000-0/check-artifacts/functional/showcase_dialogs/020e1ff2fc45a8f8ce60622c17a63cebc2fb26be328508d9fccf06c42463cc64/checks/missing/report.html", changed_fields: ["baseline"], changed_cells: [], changed_cell_total: 0, pixel_changed: 0, pixel_compared: 0, pixel_bounds: None })
+key tab
+checkpoint 003: tab stays inside the confirm dialog 6298c4ffc995a98e
+key shift+tab
+checkpoint 004: shift+tab stays inside the confirm dialog ccf05bb6bf11f51a
+key d
+checkpoint 005: settled 6f61f55edae44bf8
+key escape
+checkpoint 006: escape cancels and returns to the opener fb552406751f2c20
+key ctrl+q
+clean exit 0

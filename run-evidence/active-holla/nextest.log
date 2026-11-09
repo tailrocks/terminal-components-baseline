@@ -1,0 +1,94 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.12s
+────────────
+ Nextest run ID bc52f0b6-704b-4a56-8da9-25941119c36e with nextest profile: default
+    Starting 11 tests across 1 binary (1085 tests skipped)
+       START [         ] ( 1/11) junie-tui::functional holla::holla_browser_hidden_files_preview_scroll_and_bad_path_recovery
+
+running 1 test
+test holla::holla_browser_hidden_files_preview_scroll_and_bad_path_recovery ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.69s
+
+        PASS [   2.697s] ( 1/11) junie-tui::functional holla::holla_browser_hidden_files_preview_scroll_and_bad_path_recovery
+       START [         ] ( 2/11) junie-tui::functional holla::holla_browser_pointer_selection_loads_preview_and_hidden_toggle
+
+running 1 test
+test holla::holla_browser_pointer_selection_loads_preview_and_hidden_toggle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.76s
+
+        PASS [   1.771s] ( 2/11) junie-tui::functional holla::holla_browser_pointer_selection_loads_preview_and_hidden_toggle
+       START [         ] ( 3/11) junie-tui::functional holla::holla_cancelling_second_gate_leaves_no_started_activity
+
+running 1 test
+test holla::holla_cancelling_second_gate_leaves_no_started_activity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.74s
+
+        PASS [   1.750s] ( 3/11) junie-tui::functional holla::holla_cancelling_second_gate_leaves_no_started_activity
+       START [         ] ( 4/11) junie-tui::functional holla::holla_disk_tree_and_plan_review_flows
+
+running 1 test
+test holla::holla_disk_tree_and_plan_review_flows ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.89s
+
+        PASS [   2.902s] ( 4/11) junie-tui::functional holla::holla_disk_tree_and_plan_review_flows
+       START [         ] ( 5/11) junie-tui::functional holla::holla_finder_search_runs_selected_task_and_records_result
+
+running 1 test
+test holla::holla_finder_search_runs_selected_task_and_records_result ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.97s
+
+        PASS [   2.979s] ( 5/11) junie-tui::functional holla::holla_finder_search_runs_selected_task_and_records_result
+       START [         ] ( 6/11) junie-tui::functional holla::holla_first_use_idle_and_no_results
+
+running 1 test
+test holla::holla_first_use_idle_and_no_results ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.39s
+
+        PASS [   1.405s] ( 6/11) junie-tui::functional holla::holla_first_use_idle_and_no_results
+       START [         ] ( 7/11) junie-tui::functional holla::holla_help_overlay
+
+running 1 test
+test holla::holla_help_overlay ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.39s
+
+        PASS [   1.406s] ( 7/11) junie-tui::functional holla::holla_help_overlay
+       START [         ] ( 8/11) junie-tui::functional holla::holla_launch_failure_state_is_visible
+
+running 1 test
+test holla::holla_launch_failure_state_is_visible ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 1.26s
+
+        PASS [   1.274s] ( 8/11) junie-tui::functional holla::holla_launch_failure_state_is_visible
+       START [         ] ( 9/11) junie-tui::functional holla::holla_resize_finder_recovers
+
+running 1 test
+test holla::holla_resize_finder_recovers ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 2.51s
+
+        PASS [   2.523s] ( 9/11) junie-tui::functional holla::holla_resize_finder_recovers
+       START [         ] (10/11) junie-tui::functional holla::holla_second_gate_wrong_phrase_stays_then_reconfirm_executes
+
+running 1 test
+test holla::holla_second_gate_wrong_phrase_stays_then_reconfirm_executes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 16.70s
+
+        PASS [  16.709s] (10/11) junie-tui::functional holla::holla_second_gate_wrong_phrase_stays_then_reconfirm_executes
+       START [         ] (11/11) junie-tui::functional holla::holla_trust_cancel_then_run_uses_the_child_directory
+
+running 1 test
+test holla::holla_trust_cancel_then_run_uses_the_child_directory ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1095 filtered out; finished in 4.31s
+
+        PASS [   4.326s] (11/11) junie-tui::functional holla::holla_trust_cancel_then_run_uses_the_child_directory
+────────────
+     Summary [  39.745s] 11 tests run: 11 passed, 1085 skipped

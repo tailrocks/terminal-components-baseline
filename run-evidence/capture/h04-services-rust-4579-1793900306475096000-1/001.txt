@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                         holla · Rust project  mbp · local  
+                                                                                                                        
+  Here                                                                                                                  
+ ━━━━━━━─────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+ ▎ Show mise configuration                                                                              scope ‹ here ›  
+                                                                                                                        
+    Results · 1                                                                  Show mise configuration  task · here   
+  › Show mise configuration  task  here  1 configuration files in effect         ────────────────────────────────────   
+                                                                                 Does       effective configuration     
+                                                                                            from this folder through    
+                                                                                            its ancestors: tools,       
+                                                                                            tasks, environment,         
+                                                                                            trust                       
+                                                                                 Runs       mise ls --json              
+                                                                                            mise tasks ls --… --json    
+                                                                                            mise trust --show           
+                                                                                 In         ~/work/holla                
+                                                                                 Host       mbp · local                 
+                                                                                 Scope      here                        
+                                                                                 Why        1 configuration files in    
+                                                                                            effect                      
+                                                                                 Changes    none · read-only            
+                                                                                 Risk       read-only                   
+                                                                                 Data       live · 0 s ago              
+                                                                                 Gate       runs directly               
+                                                                                 Alt+Enter  Pin · Alias · Why here?     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ~/work/holla   main   ↓3   • 5                                                                      truecolor · 120×40 
+ Type Search  ↑↓ Move  Enter Open  Alt+Enter Alternatives…  Tab Preview  Ctrl+↑↓ Scope  Esc Clear                       

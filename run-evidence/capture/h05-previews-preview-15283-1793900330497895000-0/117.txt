@@ -1,0 +1,40 @@
+  holla❯    File   Go   Help                                                                   no project  mbp · local  
+  Here › Files › site                                                                                                   
+  Here › Files › site                                                                                                   
+ ━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────────────────────────────────────────────────────── 
+  Files · ~/work/site                                                                                                   
+  16 entries · 2 hidden hidden · Ctrl+H shows · directories first                                                       
+                                                                                                                        
+  ▸ assets                                 –  2026-09-06 08:41      ╭─────── first 2000 lines · 19.4 KiB of 19.4 KiB ─╮ 
+  ▸ private                                –  2026-09-03 08:41      │     29 line 28                                ┃ │ 
+    bad.txt                              3 B  2026-09-07 08:41      │     30 line 29                                ┆ │ 
+    big.log                         19.4 KiB  2026-09-08 08:41      │     31 line 30                                ┆ │ 
+  → broken                               0 B  2026-09-09 08:41      │     32 line 31                                ┆ │ 
+    café.txt                            11 B  2026-09-09 08:41      │     33 line 32                                ┆ │ 
+    café.txt                            12 B  2026-09-09 08:41      │     34 line 33                                ┆ │ 
+    control.txt                         13 B  2026-09-07 08:41      │     35 line 34                                ┆ │ 
+  → current                              0 B  2026-09-09 08:41      │     36 line 35                                ┆ │ 
+    empty.txt                            0 B  2026-09-09 08:41      │     37 line 36                                ┆ │ 
+    index.html                          34 B  2026-09-09 08:41      │     38 line 37                                ┆ │ 
+    logo.png                             6 B  2026-09-07 08:41      │     39 line 38                                ┆ │ 
+    long.txt                         4.9 KiB  2026-09-08 08:41      │     40 line 39                                ┆ │ 
+    package.json                        85 B  2026-09-08 08:41      │     41 line 40                                ┆ │ 
+  ◇ pipe                                 0 B  2026-09-10 08:41      │     42 line 41                                ┆ │ 
+    pnpm-lock.yaml                      19 B  2026-09-08 08:41      │     43 line 42                                ┆ │ 
+                                                                    │     44 line 43                                ┆ │ 
+                                                                    │     45 line 44                                ┆ │ 
+                                                                    │     46 line 45                                ┆ │ 
+                                                                    │     47 line 46                                ┆ │ 
+                                                                    │     48 line 47                                ┆ │ 
+                                                                    │     49 line 48                                ┆ │ 
+                                                                    │     50 line 49                                ┆ │ 
+                                                                    │     51 line 50                                ┆ │ 
+                                                                    │     52 line 51                                ┆ │ 
+                                                                    │     53 line 52                                ┆ │ 
+                                                                    │     54 line 53                                ┆ │ 
+                                                                    │     55 line 54                                ┆ │ 
+                                                                    │     56 line 55                                ┆ │ 
+                                                                    ╰─────────────────────────────────────────────────╯ 
+                                                                                                                        
+ ~/work/site                                ~/work/site · hidden off                                 truecolor · 120×40 
+ ↑↓ Scroll  Shift+↑↓ Select  y Copy  / Find  Esc Back to list                                     Hidden entries hidden 

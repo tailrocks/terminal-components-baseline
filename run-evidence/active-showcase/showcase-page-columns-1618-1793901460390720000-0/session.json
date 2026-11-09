@@ -1,0 +1,23 @@
+{
+  "TERM": "xterm-256color",
+  "args": [
+    "--page",
+    "columns",
+    "--motion",
+    "paused"
+  ],
+  "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/1a5e907f0408879d4deb0012f03bf150dc5224576acc897aa3ff76454a0e8f86/debug/showcase",
+  "binary_sha256": "8f334064a37a1b189030a2204c5523993dd2e3477854422c0859ad3165c79c68",
+  "clock": false,
+  "color": "truecolor",
+  "cols": 120,
+  "comparator_name": "tuiscotti FrozenStore state comparison",
+  "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+  "history": false,
+  "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+  "mode": "candidate",
+  "motion": null,
+  "platform": "macos",
+  "reference_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "rows": 40
+}

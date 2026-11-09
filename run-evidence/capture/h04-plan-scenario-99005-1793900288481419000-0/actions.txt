@@ -1,0 +1,9 @@
+spawn /private/tmp/tuiscotti-bulk-pr2-20261106/target/debug/holla ["--scenario", "upgrade-plan", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Upgrade everything 98f7cc9a6ada7a80
+checkpoint 001: upgrade-plan review 98f7cc9a6ada7a80
+key c
+checkpoint 002: visible Start upgrade everything? b0565187b2f46d4a
+key esc
+checkpoint 003: dialog dismissed 84dccd8f86cdae54
+key ctrl+q
+observed exit 0

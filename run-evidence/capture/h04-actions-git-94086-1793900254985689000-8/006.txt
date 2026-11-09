@@ -1,0 +1,24 @@
+                       │  Host          mbp · local                             
+                       │  In            ~/work/svc                              
+                       │  Scope         parent                                  
+                       │  Changes       the remote rejects it (fetch first) · no
+                       │  Risk          mutating                                
+                       │  Data          live · 0 s ago                          
+                       │  Confirmation  one explicit confirmation · not remember
+                       │                                                        
+                       │  git -C /Users/alex/work/svc push                      
+                       │                                                        
+                       │                                                        
+                       │                                                        
+                       ╰────────────────────────────────────────────────────────
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+ ~/work/svc/src/api   feature/x   ↓2 ↑1   • 1                                   
+ ←→ Choose  Enter Run  Esc Cancel                                               
