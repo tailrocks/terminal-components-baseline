@@ -25,7 +25,7 @@ use jackin_console::launch::{
 };
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::sim::SimBackend;
-use jackin_console::world::{Msg, World};
+use jackin_console::world::{Msg, SaveWarning, World};
 use junie_tui::core::event::Input;
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
@@ -980,6 +980,15 @@ fn ready(instance: Instance) -> LaunchEvent {
     LaunchEvent::Ready(Box::new(ReadyInstance {
         instance: InstanceEntry::available(instance),
         run_id: "R1".into(),
+        warning: None,
+    }))
+}
+
+fn ready_unsynced(instance: Instance) -> LaunchEvent {
+    LaunchEvent::Ready(Box::new(ReadyInstance {
+        instance: InstanceEntry::available(instance),
+        run_id: "R1".into(),
+        warning: Some(SaveWarning::DirectorySync),
     }))
 }
 
@@ -1071,6 +1080,7 @@ fn ready_event_inserts_the_backend_instance() {
         "the cockpit stores the backend's record as it is"
     );
     assert_eq!(app.world.running_count(), 3);
+    assert!(!status(&app).contains("durability uncertain"));
 
     let shown = screen(&mut app);
     assert!(shown.contains("sbx-alpha-5b0x"), "{shown}");
@@ -1087,6 +1097,40 @@ fn ready_event_inserts_the_backend_instance() {
     };
     assert_eq!(pane.agent, Some(Agent::ClaudeCode));
     assert_eq!(pane.account.as_deref(), Some(WORK));
+}
+
+#[test]
+fn a_committed_launch_warning_is_carried_through_ready_and_survives_routine_status() {
+    let mine = launched("jk-5b0x", "sbx-alpha", InstanceStatus::Running);
+    let mut batch = running(0);
+    batch.push(ready_unsynced(mine));
+    let (mut app, _) = scripted(vec![batch], None);
+    tick_until(&mut app, "the capsule", |a| a.route() == Route::Capsule);
+
+    assert_eq!(status(&app), "Saved, durability uncertain");
+    assert_eq!(
+        app.world.committed_save_warning,
+        Some(SaveWarning::DirectorySync)
+    );
+    app.set_status(
+        "Routine refresh complete",
+        junie_tui::theme::Tone::Secondary,
+    );
+    assert_eq!(status(&app), "Saved, durability uncertain");
+}
+
+#[test]
+fn a_ready_warning_from_a_later_poll_survives_handoff() {
+    let mine = launched("jk-5b0x", "sbx-alpha", InstanceStatus::Running);
+    let (mut app, _) = scripted(vec![running(0), vec![ready_unsynced(mine)]], None);
+    assert!(!status(&app).contains("durability uncertain"));
+
+    tick_until(&mut app, "the capsule", |a| a.route() == Route::Capsule);
+    assert_eq!(status(&app), "Saved, durability uncertain");
+    assert_eq!(
+        app.world.committed_save_warning,
+        Some(SaveWarning::DirectorySync)
+    );
 }
 
 #[test]

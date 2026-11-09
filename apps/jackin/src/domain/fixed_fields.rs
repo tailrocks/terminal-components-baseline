@@ -364,6 +364,8 @@ pub fn world_fixed(w: &World) -> FixedFields {
         refresh_started_secs: _,
         refresh_ticket: _,
         saved_ticket: _,
+        committed_save_warning: _,
+        committed_save_status: _,
         pane_policy: _,
     } = w;
     collect(workspaces, roles, instances, global, accounts, surfaces)

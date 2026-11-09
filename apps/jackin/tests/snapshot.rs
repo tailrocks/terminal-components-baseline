@@ -584,7 +584,7 @@ fn the_sim_never_hands_out_a_workspace_id_in_use() {
             panic!("one reply expected, got {msg:?}");
         };
         ids.push(id.expect("an assigned id"));
-        world.apply(*result.clone().expect("saved"));
+        world.apply(*result.clone().expect("saved").snapshot);
     }
     assert_eq!(ids, vec![highest + 1, highest + 2]);
 }

@@ -22,7 +22,9 @@ use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
-use jackin_console::world::{DaemonHealth, GlobalConfig, Msg, SaveFailure, World};
+use jackin_console::world::{
+    DaemonHealth, GlobalConfig, Msg, SaveFailure, SaveSuccess, SaveWarning, Snapshot, World,
+};
 use junie_tui::core::event::{External, Input, Outcome};
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
@@ -150,6 +152,48 @@ fn status(app: &App) -> String {
     app.shell.status.text().unwrap_or_default().to_owned()
 }
 
+fn save_success(snapshot: Snapshot, warning: Option<SaveWarning>) -> SaveSuccess {
+    SaveSuccess {
+        snapshot: Box::new(snapshot),
+        warning,
+    }
+}
+
+fn unsynced(reply: Option<Msg>) -> Option<Msg> {
+    match reply? {
+        Msg::WorkspaceDeleted { id, result } => Some(Msg::WorkspaceDeleted {
+            id,
+            result: result
+                .map(|saved| save_success(*saved.snapshot, Some(SaveWarning::DirectorySync))),
+        }),
+        Msg::RoleBound {
+            role,
+            agent,
+            result,
+        } => Some(Msg::RoleBound {
+            role,
+            agent,
+            result: result
+                .map(|saved| save_success(*saved.snapshot, Some(SaveWarning::DirectorySync))),
+        }),
+        Msg::RoleAdded { location, result } => Some(Msg::RoleAdded {
+            location,
+            result: result.map(|(name, saved)| {
+                (
+                    name,
+                    save_success(*saved.snapshot, Some(SaveWarning::DirectorySync)),
+                )
+            }),
+        }),
+        Msg::RoleRemoved { role, result } => Some(Msg::RoleRemoved {
+            role,
+            result: result
+                .map(|saved| save_success(*saved.snapshot, Some(SaveWarning::DirectorySync))),
+        }),
+        other => Some(other),
+    }
+}
+
 const CANONICAL: &str = "/workspace/backend-canonical";
 
 /// Stores the payload the way a backend would: the record keeps the id it was
@@ -168,8 +212,24 @@ fn store_workspace(effect: &Effect, world: &World) -> Option<Msg> {
     }
     Some(Msg::WorkspaceSaved {
         id: Some(stored.id),
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
+}
+
+fn store_workspace_unsynced(effect: &Effect, world: &World) -> Option<Msg> {
+    match store_workspace(effect, world)? {
+        Msg::WorkspaceSaved {
+            id,
+            result: Ok(mut saved),
+        } => {
+            saved.warning = Some(SaveWarning::DirectorySync);
+            Some(Msg::WorkspaceSaved {
+                id,
+                result: Ok(saved),
+            })
+        }
+        message => Some(message),
+    }
 }
 
 fn fail_workspace(effect: &Effect, _: &World) -> Option<Msg> {
@@ -223,6 +283,27 @@ fn save_workspace_stores_the_payload() {
         !roster.contains(&("x", original.workdir.as_str())),
         "the roster must be the reply snapshot, not the pending copy: {roster:?}"
     );
+}
+
+#[test]
+fn committed_unsynced_workspace_save_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::Returning, store_workspace_unsynced);
+    press(&mut app, "down e enter x ctrl+s");
+    press(&mut app, "right enter");
+    settle(&mut app);
+
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Workspace x saved"
+    );
+    let roster: Vec<(&str, &str)> = app
+        .world
+        .workspaces
+        .iter()
+        .map(|workspace| (workspace.name.as_str(), workspace.workdir.as_str()))
+        .collect();
+    assert!(roster.contains(&("x", CANONICAL)), "{roster:?}");
+    assert!(!screen(&mut app).contains("Save failed"));
 }
 
 #[test]
@@ -301,8 +382,20 @@ fn store_global(effect: &Effect, world: &World) -> Option<Msg> {
     snapshot.global = (**global).clone();
     snapshot.global.dco_signoff = false;
     Some(Msg::GlobalSaved {
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
+}
+
+fn store_global_unsynced(effect: &Effect, world: &World) -> Option<Msg> {
+    match store_global(effect, world)? {
+        Msg::GlobalSaved {
+            result: Ok(mut saved),
+        } => {
+            saved.warning = Some(SaveWarning::DirectorySync);
+            Some(Msg::GlobalSaved { result: Ok(saved) })
+        }
+        message => Some(message),
+    }
 }
 
 fn fail_global(effect: &Effect, _: &World) -> Option<Msg> {
@@ -340,6 +433,18 @@ fn save_global_stores_the_payload() {
         !app.world.global.dco_signoff,
         "the world must be the reply snapshot, not the pending copy"
     );
+}
+
+#[test]
+fn committed_unsynced_global_save_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::Returning, store_global_unsynced);
+    press(&mut app, "s enter space ctrl+s");
+    press(&mut app, "right enter");
+    settle(&mut app);
+
+    assert_eq!(status(&app), "Saved, durability uncertain · Settings saved");
+    assert!(!app.world.global.dco_signoff);
+    assert!(!screen(&mut app).contains("Settings error"));
 }
 
 #[test]
@@ -418,8 +523,26 @@ fn store_accounts(effect: &Effect, world: &World) -> Option<Msg> {
     Some(Msg::AccountsSaved {
         ticket: *ticket,
         added: None,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
+}
+
+fn store_accounts_unsynced(effect: &Effect, world: &World) -> Option<Msg> {
+    match store_accounts(effect, world)? {
+        Msg::AccountsSaved {
+            ticket,
+            added,
+            result: Ok(mut saved),
+        } => {
+            saved.warning = Some(SaveWarning::DirectorySync);
+            Some(Msg::AccountsSaved {
+                ticket,
+                added,
+                result: Ok(saved),
+            })
+        }
+        message => Some(message),
+    }
 }
 
 fn fail_accounts(effect: &Effect, _: &World) -> Option<Msg> {
@@ -468,6 +591,30 @@ fn save_accounts_stores_the_payload() {
 }
 
 #[test]
+fn committed_unsynced_accounts_save_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::AccountsMixed, store_accounts_unsynced);
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Saved Claude · Spare"
+    );
+    let spare = app
+        .world
+        .accounts
+        .accounts
+        .iter()
+        .find(|account| account.display_name == "Spare")
+        .expect("the saved account");
+    assert_eq!(spare.purpose.as_deref(), Some("kept by the backend"));
+    let shown = screen(&mut app);
+    assert!(!shown.contains("New account"), "{shown}");
+    assert!(!shown.contains("disk full"), "{shown}");
+}
+
+#[test]
 fn failed_accounts_save_keeps_the_form() {
     let (mut app, _) = backed(Scenario::AccountsMixed, fail_accounts);
     let before = app.world.accounts.clone();
@@ -492,7 +639,7 @@ fn delete_workspace(effect: &Effect, world: &World) -> Option<Msg> {
     snapshot.workspaces.retain(|w| w.id != *id);
     Some(Msg::WorkspaceDeleted {
         id: *id,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
 }
 
@@ -535,6 +682,30 @@ fn delete_workspace_is_an_effect() {
             "the instances are the reply snapshot's, not the screen's"
         );
     }
+}
+
+#[test]
+fn committed_unsynced_workspace_delete_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::Returning, |effect, world| {
+        unsynced(delete_workspace(effect, world))
+    });
+    let doomed = app.world.workspaces[0].clone();
+    press(&mut app, "down d");
+    press(&mut app, "right enter");
+    settle(&mut app);
+
+    assert!(
+        app.world
+            .workspaces
+            .iter()
+            .all(|workspace| workspace.id != doomed.id)
+    );
+    assert_eq!(app.route(), Route::Manager);
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Deleted workspace payments-platform · instances and files kept"
+    );
+    assert!(!screen(&mut app).contains("Nothing changed"));
 }
 
 #[test]
@@ -1346,7 +1517,7 @@ fn bind_role(effect: &Effect, world: &World) -> Option<Msg> {
     Some(Msg::RoleBound {
         role: role.clone(),
         agent: *agent,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
 }
 
@@ -1394,6 +1565,33 @@ fn role_bind_comes_from_the_snapshot() {
 }
 
 #[test]
+fn committed_unsynced_role_bind_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::RoleBinding, |effect, world| {
+        unsynced(bind_role(effect, world))
+    });
+    press(&mut app, PICK_EXPERIMENTS);
+    settle(&mut app);
+
+    let bindings = &admin(&app.world)
+        .role("sentinel")
+        .expect("sentinel")
+        .bindings;
+    assert_eq!(
+        bindings.get(&Agent::Codex).map(String::as_str),
+        Some("acct-codex-experiments")
+    );
+    assert_eq!(
+        bindings.get(&Agent::ClaudeCode).map(String::as_str),
+        Some(MARKER)
+    );
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Bound Codex · Experiments to sentinel for Codex"
+    );
+    assert!(!screen(&mut app).contains("Could not save the binding"));
+}
+
+#[test]
 fn failed_role_bind_keeps_the_binding() {
     let (mut app, _) = backed(Scenario::RoleBinding, refuse_bind);
     let before = app.world.surfaces.roles.clone();
@@ -1420,7 +1618,7 @@ fn add_role(effect: &Effect, world: &World) -> Option<Msg> {
     snapshot.surfaces.roles.as_mut()?.roles.push(record);
     Some(Msg::RoleAdded {
         location: location.clone(),
-        result: Ok((name, Box::new(snapshot))),
+        result: Ok((name, save_success(snapshot, None))),
     })
 }
 
@@ -1456,6 +1654,28 @@ fn role_add_comes_from_the_snapshot() {
     assert!(names.contains(&"registered-by-backend"), "{names:?}");
     assert!(!names.contains(&"new-role"), "{names:?}");
     assert_eq!(status(&app), "Role registered-by-backend added");
+}
+
+#[test]
+fn committed_unsynced_role_add_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::RoleBinding, |effect, world| {
+        unsynced(add_role(effect, world))
+    });
+    press(&mut app, ADD_NEW_ROLE);
+    settle(&mut app);
+
+    let names: Vec<_> = admin(&app.world)
+        .roles
+        .iter()
+        .map(|role| role.name.as_str())
+        .collect();
+    assert!(names.contains(&"registered-by-backend"), "{names:?}");
+    assert!(!names.contains(&"new-role"), "{names:?}");
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Role registered-by-backend added"
+    );
+    assert!(!screen(&mut app).contains("Could not add role"));
 }
 
 #[test]
@@ -1563,7 +1783,7 @@ fn remove_role(effect: &Effect, world: &World) -> Option<Msg> {
         .retain(|r| r.name != *role && r.name != "data-eng");
     Some(Msg::RoleRemoved {
         role: role.clone(),
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
 }
 
@@ -1602,6 +1822,27 @@ fn role_remove_comes_from_the_snapshot() {
         "the roster is the reply snapshot's, not the screen's"
     );
     assert_eq!(status(&app), "Removed role writer");
+}
+
+#[test]
+fn committed_unsynced_role_remove_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::RoleBinding, |effect, world| {
+        unsynced(remove_role(effect, world))
+    });
+    press(&mut app, REMOVE_WRITER);
+    settle(&mut app);
+
+    let names: Vec<_> = admin(&app.world)
+        .roles
+        .iter()
+        .map(|role| role.name.as_str())
+        .collect();
+    assert_eq!(names, ["sentinel", "the-architect", "reviewer"]);
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Removed role writer"
+    );
+    assert!(!screen(&mut app).contains("Nothing changed"));
 }
 
 #[test]
@@ -2699,7 +2940,24 @@ fn saved_as(effect: &Effect, world: &World, purpose: &str) -> Msg {
     Msg::AccountsSaved {
         ticket: *ticket,
         added: None,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
+    }
+}
+
+fn saved_as_unsynced(effect: &Effect, world: &World, purpose: &str) -> Msg {
+    let Msg::AccountsSaved {
+        ticket,
+        added,
+        result: Ok(mut saved),
+    } = saved_as(effect, world, purpose)
+    else {
+        panic!("an account save expected");
+    };
+    saved.warning = Some(SaveWarning::DirectorySync);
+    Msg::AccountsSaved {
+        ticket,
+        added,
+        result: Ok(saved),
     }
 }
 
@@ -2762,6 +3020,65 @@ fn the_late_reply_of_a_save_that_gave_way_still_lands_while_the_newer_save_is_ou
 
     app.deliver(&saved_as(second, &app.world, "newer"));
     assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+}
+
+#[test]
+fn an_unsynced_old_reply_applies_while_leaving_the_newer_save_in_flight() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        |_, _| None,
+    );
+    app.go(Go::Accounts {
+        select: Some(PERSONAL.into()),
+    });
+    press(&mut app, "t");
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two saves expected, got {saves:?}");
+    };
+
+    app.deliver(&saved_as_unsynced(first, &app.world, "older"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("older"));
+    assert_eq!(status(&app), "Saved, durability uncertain");
+
+    press(&mut app, "t");
+    assert!(status(&app).contains("Saving the previous change"));
+    app.deliver(&saved_as(second, &app.world, "newer"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+}
+
+#[test]
+fn an_unsynced_reply_after_a_newer_commit_warns_without_reapplying_the_old_snapshot() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        |_, _| None,
+    );
+    app.go(Go::Accounts {
+        select: Some(PERSONAL.into()),
+    });
+    press(&mut app, "t");
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two saves expected, got {saves:?}");
+    };
+
+    app.deliver(&saved_as(second, &app.world, "newer"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+    app.deliver(&saved_as_unsynced(first, &app.world, "older"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+    assert_eq!(status(&app), "Saved, durability uncertain");
+
+    app.set_status(
+        "Routine refresh complete",
+        junie_tui::theme::Tone::Secondary,
+    );
+    assert_eq!(status(&app), "Saved, durability uncertain");
 }
 
 #[test]

@@ -364,8 +364,16 @@ impl CockpitScreen {
                     self.fail(failure, instance, w, cx);
                 }
                 LaunchEvent::Ready(ready) => {
-                    let ReadyInstance { instance, run_id } = *ready;
+                    let ReadyInstance {
+                        instance,
+                        run_id,
+                        warning,
+                    } = *ready;
                     self.ready_run_id = Some(run_id);
+                    if let Some(warning) = warning {
+                        w.note_committed_save_warning(warning);
+                        cx.status(warning.status());
+                    }
                     if instance
                         .as_available()
                         .is_some_and(|available| available.status == InstanceStatus::Running)

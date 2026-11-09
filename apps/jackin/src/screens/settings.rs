@@ -30,7 +30,7 @@ use crate::backend::Effect;
 use crate::domain::agent::{Agent, AuthMode};
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::RoleName;
-use crate::world::{GlobalConfig, Msg, SaveFailure, Snapshot, TrustKind, World, job};
+use crate::world::{GlobalConfig, Msg, SaveFailure, SaveSuccess, TrustKind, World, job};
 use junie_tui::ui::text::plural;
 
 pub const TABS: WidgetId = WidgetId::of("settings.tabs");
@@ -347,14 +347,14 @@ impl SettingsScreen {
 
     fn finish_save(
         &mut self,
-        result: &Result<Box<Snapshot>, SaveFailure>,
+        result: &Result<SaveSuccess, SaveFailure>,
         w: &mut World,
         cx: &mut Cx,
     ) {
         self.saving = false;
         self.save.busy = false;
-        let snapshot = match result {
-            Ok(snapshot) => snapshot,
+        let saved = match result {
+            Ok(saved) => saved,
             Err(error) => {
                 let mut props = vec![
                     Prop::new("Error", error.error.as_str()),
@@ -370,9 +370,12 @@ impl SettingsScreen {
                 return;
             }
         };
-        w.apply((**snapshot).clone());
+        w.apply((*saved.snapshot).clone());
         self.original = self.pending.clone();
-        cx.status("Settings saved");
+        cx.status(match saved.warning {
+            Some(warning) => format!("{} · Settings saved", warning.status()),
+            None => "Settings saved".to_owned(),
+        });
         cx.go(Go::Manager);
     }
 

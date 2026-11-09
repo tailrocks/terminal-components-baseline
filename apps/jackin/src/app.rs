@@ -441,7 +441,28 @@ impl App {
     }
 
     pub fn set_status(&mut self, s: &str, tone: Tone) {
+        if tone != Tone::Error
+            && let Some(warning) = self.world.committed_save_warning
+        {
+            if s.contains(warning.status()) {
+                self.world.committed_save_status = Some(s.to_owned());
+            }
+            self.show_committed_save_warning();
+            return;
+        }
         self.shell.status.set_at(s, tone, self.world.clock.now());
+    }
+
+    fn show_committed_save_warning(&mut self) {
+        if let Some(warning) = self.world.committed_save_warning {
+            self.shell.status.sticky_at(
+                self.world
+                    .committed_save_status
+                    .as_deref()
+                    .unwrap_or_else(|| warning.status()),
+                self.world.clock.now(),
+            );
+        }
     }
 
     fn animating(&self) -> bool {
@@ -483,6 +504,9 @@ impl App {
     }
 
     fn handle_input(&mut self, input: Input) -> Outcome {
+        if matches!(&input, Input::Key(_) | Input::Paste(_) | Input::Mouse(_)) {
+            self.world.dismiss_committed_save_warning();
+        }
         let out = match input {
             Input::Resize(..) => Outcome::Changed,
             Input::Tick => self.tick_step(),
@@ -544,6 +568,9 @@ impl App {
         out = out.or(PointerRouter::tick(self));
         if self.shell.status.expire(self.world.clock.now()) {
             out = Outcome::Changed;
+        }
+        if self.shell.status.get().is_none() {
+            self.show_committed_save_warning();
         }
         if let Some(at) = self.exit_after_status
             && self.world.now_ms() >= at
@@ -630,7 +657,9 @@ impl App {
 
     fn dispatch_reply(&mut self, m: &Msg) -> Outcome {
         self.tell_forms_of_reply(m);
-        if self.world.absorb(m) == Absorbed::Stale {
+        let absorbed = self.world.absorb(m);
+        self.show_committed_save_warning();
+        if absorbed == Absorbed::Stale {
             return Outcome::Ignored;
         }
         let ended = m
@@ -1798,12 +1827,20 @@ impl App {
                 Request::Status(s, tone) => self.set_status(&s, tone),
                 Request::StatusAs(s, kind) => self.set_status(&s, kind.tone()),
                 Request::Sticky(s) => {
-                    let now = self.world.clock.now();
-                    self.shell.status.sticky_at(s, now);
+                    if self.world.committed_save_warning.is_some() {
+                        self.show_committed_save_warning();
+                    } else {
+                        let now = self.world.clock.now();
+                        self.shell.status.sticky_at(s, now);
+                    }
                 }
                 Request::Progress(s, job) => {
-                    let now = self.world.clock.now();
-                    self.shell.status.progress_at(job, s, now);
+                    if self.world.committed_save_warning.is_some() {
+                        self.show_committed_save_warning();
+                    } else {
+                        let now = self.world.clock.now();
+                        self.shell.status.progress_at(job, s, now);
+                    }
                 }
                 Request::Open(layer, tag) => self.open_layer(layer, tag, owner),
 

@@ -22,7 +22,7 @@ use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::sim::{self, SimBackend};
-use jackin_console::world::{Msg, World};
+use jackin_console::world::{Msg, SaveSuccess, World};
 use junie_tui::core::event::{Input, Key};
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
@@ -334,7 +334,10 @@ fn give_an_id(effect: &Effect, world: &World) -> Option<Msg> {
     Some(Msg::AccountsSaved {
         ticket: *ticket,
         added,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(SaveSuccess {
+            snapshot: Box::new(snapshot),
+            warning: None,
+        }),
     })
 }
 

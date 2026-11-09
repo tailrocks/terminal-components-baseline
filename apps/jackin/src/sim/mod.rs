@@ -14,9 +14,16 @@ use crate::domain::vocabulary::{Rejection, fill_in};
 use crate::domain::workspace::{RoleEntry, RoleSource, Workspace, WorkspaceId};
 use crate::launch::{LaunchFeed, LaunchTarget};
 use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
-use crate::world::{GlobalConfig, Msg, SaveFailure, Snapshot, World};
+use crate::world::{GlobalConfig, Msg, SaveFailure, SaveSuccess, Snapshot, World};
 
 use self::launch::{LaunchPlan, Opening, SimLaunch};
+
+fn save_success(snapshot: Snapshot) -> SaveSuccess {
+    SaveSuccess {
+        snapshot: Box::new(snapshot),
+        warning: None,
+    }
+}
 
 pub mod changes;
 pub mod launch;
@@ -190,7 +197,10 @@ impl SimBackend {
         let mut snapshot = snapshot(world);
         snapshot.global = global.clone();
         Msg::GlobalSaved {
-            result: Ok(Box::new(snapshot)),
+            result: Ok(SaveSuccess {
+                snapshot: Box::new(snapshot),
+                warning: None,
+            }),
         }
     }
 
@@ -231,7 +241,10 @@ impl SimBackend {
         };
         Msg::WorkspaceSaved {
             id: Some(assigned),
-            result: Ok(Box::new(snapshot)),
+            result: Ok(SaveSuccess {
+                snapshot: Box::new(snapshot),
+                warning: None,
+            }),
         }
     }
 }
@@ -545,7 +558,10 @@ impl Backend for SimBackend {
                 Some(Msg::RoleBound {
                     role: role.clone(),
                     agent: *agent,
-                    result,
+                    result: result.map(|snapshot| SaveSuccess {
+                        snapshot,
+                        warning: None,
+                    }),
                 })
             }
             Effect::AddRole { location } => {
@@ -565,7 +581,7 @@ impl Backend for SimBackend {
                         .as_mut()
                         .ok_or("roles are not available")?;
                     admin.roles.push(rec);
-                    Ok((name, Box::new(snapshot)))
+                    Ok((name, save_success(snapshot)))
                 });
                 Some(Msg::RoleAdded {
                     location: location.clone(),
@@ -582,7 +598,7 @@ impl Backend for SimBackend {
                 Some(Msg::RoleRemoved {
                     role: role.clone(),
                     result: if removed {
-                        Ok(Box::new(snapshot))
+                        Ok(save_success(snapshot))
                     } else {
                         Err(world
                             .surfaces
@@ -607,7 +623,7 @@ impl Backend for SimBackend {
                 }
                 Some(Msg::WorkspaceDeleted {
                     id: *id,
-                    result: Ok(Box::new(snapshot)),
+                    result: Ok(save_success(snapshot)),
                 })
             }
             Effect::Restore { instance } => {
@@ -718,7 +734,10 @@ fn settle_accounts_save(
     Msg::AccountsSaved {
         ticket,
         added,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(SaveSuccess {
+            snapshot: Box::new(snapshot),
+            warning: None,
+        }),
     }
 }
 

@@ -7,7 +7,7 @@ use crate::domain::docker::DockerCapability;
 use crate::domain::instance::InstanceEntry;
 use crate::domain::launch::{LaunchContent, LaunchFailure, RefusalReason};
 use crate::domain::workspace::WorkspaceId;
-use crate::world::World;
+use crate::world::{SaveWarning, World};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LaunchTarget {
@@ -32,6 +32,7 @@ impl LaunchTarget {
 pub struct ReadyInstance {
     pub instance: InstanceEntry,
     pub run_id: String,
+    pub warning: Option<SaveWarning>,
 }
 
 /// Why a launch failed, and the `FailedSetup` record the backend kept of it.

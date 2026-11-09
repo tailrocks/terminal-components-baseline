@@ -630,6 +630,7 @@ impl SimLaunch {
             ev.push(LaunchEvent::Ready(Box::new(ReadyInstance {
                 instance: self.record(w, InstanceStatus::Running),
                 run_id: self.run_id.clone(),
+                warning: None,
             })));
         }
         ev

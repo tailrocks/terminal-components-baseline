@@ -2938,13 +2938,15 @@ impl Page<Jackin> for ManagerScreen {
             Msg::WorkspaceDeleted { id, result } => {
                 self.busy_rows.retain(|(k, _)| *k != RowKey::Workspace(*id));
                 match result {
-                    Ok(snapshot) => {
+                    Ok(saved) => {
                         let name = w.workspace(*id).map(|x| x.name.clone()).unwrap_or_default();
-                        w.apply((**snapshot).clone());
+                        w.apply((*saved.snapshot).clone());
                         self.selected = RowKey::CurrentDir;
-                        cx.status(format!(
-                            "Deleted workspace {name} · instances and files kept"
-                        ));
+                        let status = format!("Deleted workspace {name} · instances and files kept");
+                        cx.status(match saved.warning {
+                            Some(warning) => format!("{} · {status}", warning.status()),
+                            None => status,
+                        });
                     }
                     Err(error) if w.workspace(*id).is_some() => cx.error(error.clone()),
                     Err(_) => {}

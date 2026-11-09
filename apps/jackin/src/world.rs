@@ -105,6 +105,19 @@ pub struct SaveFailure {
     pub next: Option<String>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SaveWarning {
+    DirectorySync,
+}
+
+impl SaveWarning {
+    pub fn status(self) -> &'static str {
+        match self {
+            SaveWarning::DirectorySync => "Saved, durability uncertain",
+        }
+    }
+}
+
 /// Where the roles of a trust row come from.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TrustKind {
@@ -159,19 +172,19 @@ impl From<&GithubRepo> for RepoRef {
 pub enum Msg {
     WorkspaceSaved {
         id: Option<WorkspaceId>,
-        result: Result<Box<Snapshot>, SaveFailure>,
+        result: Result<SaveSuccess, SaveFailure>,
     },
     GlobalSaved {
-        result: Result<Box<Snapshot>, SaveFailure>,
+        result: Result<SaveSuccess, SaveFailure>,
     },
     AccountsSaved {
         ticket: Ticket,
         added: Option<AccountId>,
-        result: Result<Box<Snapshot>, String>,
+        result: Result<SaveSuccess, String>,
     },
     WorkspaceDeleted {
         id: WorkspaceId,
-        result: Result<Box<Snapshot>, String>,
+        result: Result<SaveSuccess, String>,
     },
     Restored {
         instance: InstanceId,
@@ -242,15 +255,15 @@ pub enum Msg {
     RoleBound {
         role: RoleName,
         agent: Agent,
-        result: Result<Box<Snapshot>, String>,
+        result: Result<SaveSuccess, String>,
     },
     RoleAdded {
         location: String,
-        result: Result<(RoleName, Box<Snapshot>), String>,
+        result: Result<(RoleName, SaveSuccess), String>,
     },
     RoleRemoved {
         role: RoleName,
-        result: Result<Box<Snapshot>, String>,
+        result: Result<SaveSuccess, String>,
     },
     DoctorFinished(Result<DoctorReport, DoctorFailure>),
     SourceChecked {
@@ -392,6 +405,9 @@ pub struct World {
     pub refresh_ticket: Ticket,
     pub saved_ticket: Ticket,
 
+    pub committed_save_warning: Option<SaveWarning>,
+    pub committed_save_status: Option<String>,
+
     /// What a program may do through a pane; every daemon the world creates
     /// starts with it.
     pub pane_policy: Arc<PanePolicy>,
@@ -422,6 +438,12 @@ pub struct Snapshot {
     pub index_error: Option<DiscoveryError>,
     /// How the gateways answered the listing this snapshot comes from.
     pub daemon_health: DaemonHealth,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SaveSuccess {
+    pub snapshot: Box<Snapshot>,
+    pub warning: Option<SaveWarning>,
 }
 
 pub struct WorldParts {
@@ -532,6 +554,8 @@ impl World {
             refresh_started_secs: 0,
             refresh_ticket: 0,
             saved_ticket: 0,
+            committed_save_warning: None,
+            committed_save_status: None,
             pane_policy: Arc::default(),
         };
         world.sync_arbiter();
@@ -747,6 +771,33 @@ impl World {
     /// Takes in what a reply says about the world itself, before any screen
     /// sees the message.
     pub fn absorb(&mut self, msg: &Msg) -> Absorbed {
+        let warning = match msg {
+            Msg::WorkspaceSaved {
+                result: Ok(saved), ..
+            }
+            | Msg::GlobalSaved { result: Ok(saved) }
+            | Msg::WorkspaceDeleted {
+                result: Ok(saved), ..
+            }
+            | Msg::AccountsSaved {
+                result: Ok(saved), ..
+            }
+            | Msg::RoleBound {
+                result: Ok(saved), ..
+            }
+            | Msg::RoleRemoved {
+                result: Ok(saved), ..
+            } => saved.warning,
+            Msg::RoleAdded {
+                result: Ok((_, saved)),
+                ..
+            } => saved.warning,
+            _ => None,
+        };
+        if warning.is_some() {
+            self.committed_save_warning = warning;
+            self.committed_save_status = None;
+        }
         let mut absorbed = Absorbed::Current;
         match msg {
             Msg::DoctorFinished(result) => {
@@ -863,6 +914,16 @@ impl World {
             _ => {}
         }
         absorbed
+    }
+
+    pub fn note_committed_save_warning(&mut self, warning: SaveWarning) {
+        self.committed_save_warning = Some(warning);
+        self.committed_save_status = None;
+    }
+
+    pub fn dismiss_committed_save_warning(&mut self) {
+        self.committed_save_warning = None;
+        self.committed_save_status = None;
     }
 
     pub fn tick(&mut self, interval_ms: i64) -> Vec<Msg> {
