@@ -260,6 +260,7 @@ bound_runtime_tree() {
 generation_inspected_total=0
 validate_installed_generation() {
   local generation=$1
+  local scope=${2:-all}
   local directory="$versions_dir/$generation"
   local manifest="$directory/manifest"
   local line
@@ -485,6 +486,12 @@ validate_installed_generation() {
   [[ "$actual" == "$manifest_seed_commit" ]] || return 1
   IFS=' ' read -r key commit_tree < "$directory/trusted-seed.commit"
   [[ "$key" == tree && "$commit_tree" =~ ^[0-9a-f]{40}$ && "$commit_tree" == "$manifest_seed_tree" ]] || return 1
+
+  if [[ "$scope" == generation ]]; then
+    generation_inspected_total=$((generation_inspected_total + total_bytes))
+    (( generation_inspected_total <= 536870912 ))
+    return $?
+  fi
 
   mise_binary="$artifact_root/mise/$manifest_mise_version/$platform/mise"
   owned_private_directory "$artifact_root" || return 1
@@ -713,7 +720,7 @@ validate_existing_hook() {
   fi
   for generation in "${installed_generations[@]}"; do
     if render_hook "$expected_mode" "$versions_dir/$generation" | /usr/bin/cmp -s - "$target"; then
-      if [[ -n "$matched_generation" ]] || ! validate_installed_generation "$generation"; then
+      if [[ -n "$matched_generation" ]] || ! validate_installed_generation "$generation" generation; then
         printf 'generated-workflows: refusing to replace an existing hook at %s\n' "$target" >&2
         return 1
       fi
@@ -842,13 +849,6 @@ if [[ "$seed_object" != "$reviewed_seed_commit" ]]; then
   exit 1
 fi
 
-validate_hook_pair || exit 1
-capture_hook_baseline || exit 1
-validate_hook_pair || exit 1
-assert_expected_hook_states || {
-  printf 'generated-workflows: existing hook changed during initial validation\n' >&2
-  exit 1
-}
 umask 077
 if [[ -e "$install_root" || -L "$install_root" ]]; then
   if [[ -L "$install_root" || ! -d "$install_root" ]]; then
@@ -900,8 +900,7 @@ if [[ ! -x /usr/bin/perl ]]; then
   printf 'generated-workflows: /usr/bin/perl is required for the installer lock\n' >&2
   exit 127
 fi
-installer_lock_helper() {
-  /usr/bin/env -i PATH=/usr/bin:/bin:/usr/sbin:/sbin /usr/bin/perl -e '
+IFS= read -r -d '' installer_lock_perl <<'PERL' || true
 use strict;
 use warnings;
 use Cwd qw(realpath);
@@ -950,15 +949,39 @@ if (!$locked) {
     exit 75 if $! == EAGAIN || $! == EWOULDBLOCK;
     die "generated-workflows: native advisory installer lock failed: $!\n";
 }
+my $origin = getppid();
+$| = 1;
+print "locked\n" or die "generated-workflows: cannot report installer lock acquisition: $!\n";
+for (;;) {
+    last if getppid() != $origin;
+    select(undef, undef, undef, 0.05);
+}
 exit 0;
-' "$@"
+PERL
+installer_lock_helper() {
+  /usr/bin/env -i PATH=/usr/bin:/bin:/usr/sbin:/sbin /usr/bin/perl -e "$installer_lock_perl" "$@"
 }
 installer_lock_helper create "$lock_file"
 exec 9< "$lock_file"
-if installer_lock_helper hold "$lock_file"; then
-  :
-else
-  lock_status=$?
+lock_state_file=$(/usr/bin/mktemp "$install_root/.lock-holder.XXXXXX")
+/usr/bin/env -i PATH=/usr/bin:/bin:/usr/sbin:/sbin /usr/bin/perl -e "$installer_lock_perl" hold "$lock_file" < /dev/null > "$lock_state_file" 2>&1 &
+lock_holder_pid=$!
+lock_holder_deadline=$((SECONDS + 30))
+lock_holder_state=
+while (( SECONDS < lock_holder_deadline )); do
+  lock_holder_state=
+  IFS= read -r lock_holder_state < "$lock_state_file" || true
+  if [[ "$lock_holder_state" == locked ]]; then
+    break
+  fi
+  kill -0 "$lock_holder_pid" 2>/dev/null || break
+  sleep 0.05
+done
+if [[ "$lock_holder_state" != locked ]]; then
+  lock_status=0
+  kill "$lock_holder_pid" 2>/dev/null || true
+  wait "$lock_holder_pid" 2>/dev/null || lock_status=$?
+  /bin/rm -f "$lock_state_file"
   if [[ "$lock_status" -eq 75 ]]; then
     printf 'generated-workflows: another trusted checker installation is in progress\n' >&2
     exit 75
@@ -966,8 +989,21 @@ else
   printf 'generated-workflows: cannot acquire the native advisory installer lock\n' >&2
   exit "$lock_status"
 fi
+if ! kill -0 "$lock_holder_pid" 2>/dev/null; then
+  /bin/rm -f "$lock_state_file"
+  printf 'generated-workflows: the native advisory installer lock holder exited unexpectedly\n' >&2
+  exit 1
+fi
+exec 9<&-
 cleanup() {
   unset trusted_setup_token
+  if [[ -n "${lock_holder_pid:-}" ]] && kill -0 "$lock_holder_pid" 2>/dev/null; then
+    kill "$lock_holder_pid" 2>/dev/null || true
+    wait "$lock_holder_pid" 2>/dev/null || true
+  fi
+  if [[ -n "${lock_state_file:-}" && -f "$lock_state_file" ]]; then
+    /bin/rm -f "$lock_state_file"
+  fi
   for hook_temp in "${pre_commit_temp:-}" "${pre_push_temp:-}"; do
     if [[ -n "$hook_temp" && -f "$hook_temp" && ! -L "$hook_temp" ]]; then
       /bin/rm -f "$hook_temp"
@@ -995,6 +1031,13 @@ cleanup() {
   fi
 }
 trap cleanup EXIT
+validate_hook_pair || exit 1
+capture_hook_baseline || exit 1
+validate_hook_pair || exit 1
+assert_expected_hook_states || {
+  printf 'generated-workflows: existing hook changed during initial validation\n' >&2
+  exit 1
+}
 validate_hook_pair || exit 1
 assert_expected_hook_states || {
   printf 'generated-workflows: existing hook changed before installation preparation\n' >&2
@@ -1364,6 +1407,10 @@ if [[ "$(sha256_file "$version_dir/check-generated-workflows.sh")" != "$reviewed
 fi
 if ! /usr/bin/grep -F -x -q "trusted_seed_cargo_lock_sha256=$reviewed_seed_cargo_lock_sha256" "$version_dir/manifest" || ! /usr/bin/grep -F -x -q "trusted_seed_cargo_policy_sha256=$reviewed_seed_cargo_policy_sha256" "$version_dir/manifest" || ! /usr/bin/grep -F -x -q "metadata_pack_sha256=$reviewed_metadata_pack_sha256" "$version_dir/manifest" || ! /usr/bin/grep -F -x -q "metadata_object_list_sha256=$reviewed_metadata_object_list_sha256" "$version_dir/manifest" || ! /usr/bin/grep -F -x -q "seed_tree=$reviewed_seed_tree" "$version_dir/manifest" || ! /usr/bin/grep -F -x -q "inventory_sha256=$python_inventory_sha256" "$version_dir/manifest" || ! /usr/bin/grep -F -x -q "python_artifact_sha256=$python_artifact_sha256" "$version_dir/manifest" || ! /usr/bin/grep -F -x -q "python_lock_sha256=$python_lock_sha256" "$version_dir/manifest" || ! /usr/bin/grep -F -x -q "python_mise_sha256=$reviewed_python_mise_sha256" "$version_dir/manifest" || ! /usr/bin/grep -F -x -q "mise_sha256=$mise_sha256" "$version_dir/manifest"; then
   printf 'generated-workflows: installed checker manifest does not bind the qualified runtime artifacts\n' >&2
+  exit 1
+fi
+if ! validate_installed_generation "$reviewed_checker_sha256"; then
+  printf 'generated-workflows: installed checker generation failed artifact validation\n' >&2
   exit 1
 fi
 prepare_environment=(/usr/bin/env -i)

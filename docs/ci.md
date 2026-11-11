@@ -118,6 +118,19 @@ preserves logs and manifests when `BASELINE_GUARD_EVIDENCE_DIR` names an output
 directory; its evidence records whether network isolation was enforced by the
 harness.
 
+Run `bash tests/check-install-generated-workflow-guard-recovery.sh` for the
+installer's lock and artifact recovery. It runs the real installer against a
+sandbox Git worktree whose checker and pinned Mise tool are local stubs and
+whose only download boundary is a local fixture serving the pinned fake Mise
+bytes, so it needs no network, no private toolchain and no installed hook: it
+proves that the install lock is taken before the hook preflight and that a
+live lock refuses a concurrent installation without mutating the installation
+or the hooks, that killing only an abandoned installer releases the lock even
+while its tool processes survive and that the next run republishes the hooks
+with fresh identities, that a changed or corrupt installed artifact is
+quarantined and rebuilt from the verified pins, and that a rebuild serving
+bytes that break the pinned checksum fails without publishing anything.
+
 The redirect regression uses a deterministic curl boundary. The HTTP downgrade
 URL appears only in a synthetic HTTPS response's `Location` header; the test
 asserts that the URL never appears in the request log and that only the
