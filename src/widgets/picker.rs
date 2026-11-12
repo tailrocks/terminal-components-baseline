@@ -1771,14 +1771,12 @@ mod tests {
             .expect("empty picker accepts multi-selection");
         picker.set_items(items()).expect("valid initial items");
 
-        // A transient validation failure blocks all interaction.
         picker.report_item_error(super::PickerItemsError::MissingStableKey);
         assert!(
             picker.eligible(0).is_none(),
             "error state must block interaction"
         );
 
-        // set_items accepts corrected items and restores readiness.
         picker
             .set_items(items())
             .expect("corrected items are valid");
@@ -1792,7 +1790,6 @@ mod tests {
             "restored rows must be interactive again"
         );
 
-        // replace_items does the same.
         picker.report_item_error(super::PickerItemsError::MissingStableKey);
         picker
             .replace_items(items())
@@ -1803,7 +1800,6 @@ mod tests {
         );
         assert_eq!(picker.eligible(0), Some(0));
 
-        // set_visible_items does the same.
         picker.report_item_error(super::PickerItemsError::MissingStableKey);
         picker
             .set_visible_items(items())
