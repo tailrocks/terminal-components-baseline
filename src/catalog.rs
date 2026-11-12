@@ -381,6 +381,8 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("core::keymap::KeyBinding::deliverable_with"),
     Capability::function("core::keymap::KeyBinding::matches"),
     Capability::function("core::keymap::KeyBinding::matches_with"),
+    Capability::function("core::keymap::normalized_key_mods"),
+    Capability::function("core::keymap::KeyBinding::normalized_mods"),
     Capability::function("core::keymap::KeyBinding::label"),
     Capability::function("core::keymap::KeyBinding::label_on"),
     Capability::function("core::keymap::lookup"),

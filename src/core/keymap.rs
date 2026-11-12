@@ -142,8 +142,11 @@ pub(crate) fn normalize_shift_chars(code: KeyCode, mods: KeyModifiers) -> (KeyCo
     if let KeyCode::Char(c) = code
         && c.is_uppercase()
     {
-        let base = c.to_lowercase().next().unwrap_or(c);
-        return (KeyCode::Char(base), mods.union(KeyModifiers::SHIFT));
+        let mut folded = c.to_lowercase();
+        let base = folded.next().unwrap_or(c);
+        if folded.next().is_none() {
+            return (KeyCode::Char(base), mods.union(KeyModifiers::SHIFT));
+        }
     }
     (code, mods)
 }
@@ -425,4 +428,38 @@ pub fn intern(label: String) -> &'static str {
     let l: &'static str = Box::leak(label.into_boxed_str());
     labels.insert(l);
     l
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn an_ascii_uppercase_letter_folds_to_its_lowercase_with_shift() {
+        let (code, mods) = normalize_shift_chars(KeyCode::Char('T'), KeyModifiers::NONE);
+        assert_eq!(code, KeyCode::Char('t'));
+        assert_eq!(mods, KeyModifiers::SHIFT);
+    }
+
+    #[test]
+    fn a_lowercase_mapping_with_more_than_one_scalar_is_not_folded() {
+        let (code, mods) = normalize_shift_chars(KeyCode::Char('\u{0130}'), KeyModifiers::NONE);
+        assert_eq!(code, KeyCode::Char('\u{0130}'));
+        assert_eq!(mods, KeyModifiers::NONE);
+        let binding = KeyBinding::new(KeyCode::Char('\u{0130}'), KeyModifiers::NONE);
+        let shifted = KeyBinding::new(KeyCode::Char('I'), KeyModifiers::SHIFT);
+        let ascii_shift = Key {
+            code: KeyCode::Char('I'),
+            mods: KeyModifiers::SHIFT,
+        };
+        let dotted = Key {
+            code: KeyCode::Char('\u{0130}'),
+            mods: KeyModifiers::NONE,
+        };
+        assert!(
+            !binding.matches_shifted_char(&ascii_shift),
+            "a dotted capital I is not the shifted I of an ASCII keyboard"
+        );
+        assert!(!shifted.matches_shifted_char(&dotted));
+    }
 }

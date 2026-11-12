@@ -244,6 +244,14 @@ pub const KEYMAP_ALLOWLIST: &[(&str, &str)] = &[
         "Pages read the deliverable binding from rendered hint bars, so the capability-aware lookup has no page call site.",
     ),
     (
+        "core::keymap::normalized_key_mods",
+        "The widgets own the key normalization; no showcase page asks for the normalized modifiers of a key on its own.",
+    ),
+    (
+        "core::keymap::KeyBinding::normalized_mods",
+        "The widgets own the key normalization; no showcase page asks a binding for its normalized modifiers.",
+    ),
+    (
         "core::hints::HintCx::current",
         "Pages draw widgets through the showcase harness, which supplies the hint context; no page builds one from ambient state.",
     ),
@@ -288,6 +296,8 @@ mod tests {
             "core::keymap::KeyBinding::matches_with",
             "core::keymap::lookup_with",
             "core::keymap::deliverable_binding_for_with",
+            "core::keymap::normalized_key_mods",
+            "core::keymap::KeyBinding::normalized_mods",
             "core::hints::HintCx::current",
             "core::hints::HintCx::with_environment",
         ] {
