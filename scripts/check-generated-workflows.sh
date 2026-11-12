@@ -2152,7 +2152,10 @@ def dependency_deltas(baseline_data, selected_data, trusted_identities, trusted_
     workspace = root.get("workspace", {}).get("dependencies", {})
     root_dev = root.get("dev-dependencies", {})
     app_dev = app.get("dev-dependencies", {})
-    if (workspace.get("sha2") == "0.10.9"
+    baseline_workspace = baseline_data["Cargo.toml"].get("workspace", {}).get("dependencies", {})
+    baseline_bundle_absent = "sha2" not in baseline_workspace and "sha2" not in baseline_data["Cargo.toml"].get("dev-dependencies", {}) and "jackin-console" not in baseline_data["apps/jackin/Cargo.toml"].get("dev-dependencies", {})
+    if (baseline_bundle_absent
+        and workspace.get("sha2") == "0.10.9"
         and root_dev.get("sha2") == {"workspace": True}
         and app_dev.get("jackin-console") == {"path": ".", "default-features": False, "features": ["demo"]}):
         del workspace["sha2"]
