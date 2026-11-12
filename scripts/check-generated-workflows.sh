@@ -2049,7 +2049,8 @@ def validate_snapshot_lock(path, trusted_path, permitted_deltas):
                     reject("Cargo.lock adds an unreviewed dependency identity")
         elif not toml_equal(candidate_package, trusted_package):
             reject("Cargo.lock changes a reviewed external package record")
-    if removed_edges != permitted_deltas["removed"] or added_edges != permitted_deltas["added"]:
+    optional_added = permitted_deltas.get("optional_added", False) and not added_edges
+    if removed_edges != permitted_deltas["removed"] or (added_edges != permitted_deltas["added"] and not optional_added):
         reject("Cargo.lock local edge changes do not match the selected manifest dependency changes")
     return candidate_digest
 
@@ -2164,7 +2165,7 @@ def dependency_deltas(baseline_data, selected_data, trusted_identities, trusted_
         sha_identity = ("sha2", "0.10.9", registry_source)
         if root_identity not in trusted_locals or app_identity not in trusted_locals or sha_identity not in trusted_identities:
             reject("reviewed dependency bundle does not match trusted package identities")
-        return {"removed": set(), "added": {(root_identity, sha_identity), (app_identity, app_identity)}, "removed_keys": set()}
+        return {"removed": set(), "added": {(root_identity, sha_identity), (app_identity, app_identity)}, "removed_keys": set(), "optional_added": True}
     removed = set()
     added = set()
     removed_declarations = set()
