@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use junie_tui::clock::Clock;
-use junie_tui::core::event::{External, Input, Key, Outcome};
+use junie_tui::core::event::{External, Input, Key, MouseKind, Outcome};
 use junie_tui::core::focus::FocusChange;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
@@ -504,7 +504,9 @@ impl App {
     }
 
     fn handle_input(&mut self, input: Input) -> Outcome {
-        if matches!(&input, Input::Key(_) | Input::Paste(_) | Input::Mouse(_)) {
+        if matches!(&input, Input::Key(_) | Input::Paste(_))
+            || matches!(&input, Input::Mouse(mouse) if !matches!(mouse.kind, MouseKind::Move))
+        {
             self.world.dismiss_committed_save_warning();
         }
         let out = match input {

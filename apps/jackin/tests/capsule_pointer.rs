@@ -6,6 +6,7 @@ mod pane_support;
 mod product_support;
 
 use capsule_support::*;
+use jackin_console::world::SaveWarning;
 use junie_tui::core::event::MouseKind;
 use ratatui::crossterm::event::KeyModifiers;
 
@@ -111,4 +112,23 @@ fn a_double_click_on_the_scroll_track_selects_and_copies_nothing() {
 
     assert_eq!(rig.daemon().panes[0].body.viewport().selected_text(), None);
     assert_eq!(*rig.copied.0.lock().expect("sink"), Vec::<String>::new());
+}
+
+#[test]
+fn pointer_motion_keeps_the_durability_warning_and_a_click_dismisses_it() {
+    let mut rig = Rig::new();
+    rig.app
+        .world
+        .note_committed_save_warning(SaveWarning::DirectorySync);
+    rig.mouse(MouseKind::Move, (3, 3));
+    assert_eq!(
+        rig.app.world.committed_save_warning,
+        Some(SaveWarning::DirectorySync),
+        "moving the pointer over the window does not dismiss the warning"
+    );
+    rig.mouse(MouseKind::Down, (3, 3));
+    assert_eq!(
+        rig.app.world.committed_save_warning, None,
+        "a deliberate click dismisses the warning"
+    );
 }
