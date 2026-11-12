@@ -759,9 +759,11 @@ impl Page for ChromePage {
         self.layer(focus)
             .hints
             .iter()
-            .filter_map(|h| match h.action {
-                std::borrow::Cow::Borrowed(a) => Some((h.key, a)),
-                std::borrow::Cow::Owned(_) => None,
+            .filter_map(|h| match (&h.key, &h.action) {
+                (std::borrow::Cow::Borrowed(key), std::borrow::Cow::Borrowed(action)) => {
+                    Some((*key, *action))
+                }
+                _ => None,
             })
             .collect()
     }

@@ -48,7 +48,7 @@ fn y_after_a_drag_reaches_the_program() {
         "release copies"
     );
     assert!(
-        rig.app.world.daemons[INSTANCE].panes[0]
+        rig.app.world.daemons[&instance_id()].panes[0]
             .body
             .viewport()
             .has_selection()
@@ -57,7 +57,7 @@ fn y_after_a_drag_reaches_the_program() {
     rig.press("y");
     assert_eq!(rig.bench.commands(0), [input(b"y")], "y is the program's");
     assert!(
-        !rig.app.world.daemons[INSTANCE].panes[0]
+        !rig.app.world.daemons[&instance_id()].panes[0]
             .body
             .viewport()
             .has_selection()
@@ -93,7 +93,7 @@ fn esc_clears_a_selection_and_otherwise_reaches_the_program() {
         "Esc cleared the selection and stopped"
     );
     assert!(
-        !rig.app.world.daemons[INSTANCE].panes[0]
+        !rig.app.world.daemons[&instance_id()].panes[0]
             .body
             .viewport()
             .has_selection()

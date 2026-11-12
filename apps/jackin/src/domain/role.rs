@@ -115,18 +115,6 @@ impl RoleAdmin {
         self.role(role)?.bindings.get(&agent)
     }
 
-    pub fn binding_for_provider(
-        &self,
-        role: &str,
-        provider: super::agent::Provider,
-    ) -> Option<&AccountId> {
-        self.role(role)?
-            .bindings
-            .iter()
-            .find(|(a, _)| a.provider() == provider)
-            .map(|(_, id)| id)
-    }
-
     pub fn docker_roles(&self) -> impl Iterator<Item = &RoleName> {
         self.roles
             .iter()

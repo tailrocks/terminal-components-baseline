@@ -1,11 +1,5 @@
 //! Jackin export, driven through the real binary.
 //!
-//! Tuiscotti test ids are `[a-z0-9_-]` segments, so the baseline directory is
-//! `pre_refactor/j06_export/`. The shots are the path dialog with a valid path
-//! typed, before confirm and before cancel. They do not nudge. `Launch::new`
-//! leaves the clock off. `App::new` would enable it for jackin.
-//!
-//! The typed path goes through the command palette, not the File menu.
 //! `CapsuleScreen::hints` paints `Ctrl+\` for Palette on the resting capsule,
 //! and `on_key` opens the palette on that chord (`src/bin/jackin/screens/capsule.rs`).
 //! `run_palette` opens `Dialog::prompt` for "Export file". Confirm is Enter in
@@ -281,6 +275,14 @@ fn type_path(app: &App, path: &str) {
     });
 }
 
+fn paste_path(app: &App, path: &str) {
+    app.paste(path);
+    app.wait_screen("path pasted", |screen| {
+        let visible = text(screen);
+        visible.contains(path) && visible.contains(TITLE) && !visible.contains(PLACEHOLDER)
+    });
+}
+
 fn export_dismissed(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
     visible.contains(IDENTITY)
@@ -411,7 +413,7 @@ fn j06_export_export() {
 
     let cancel = open("j06-export-cancel");
     open_export(&cancel);
-    type_path(&cancel, PATH);
+    paste_path(&cancel, PATH);
     let wide = wait_settled(
         &cancel,
         "wide path dialog",
@@ -444,7 +446,7 @@ fn j06_export_export() {
 
     let confirm = open("j06-export-confirm");
     open_export(&confirm);
-    type_path(&confirm, PATH);
+    paste_path(&confirm, PATH);
     confirm.key("enter");
     let exported = confirm.wait_screen("exported", |screen| {
         let visible = text(screen);

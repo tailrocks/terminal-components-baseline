@@ -208,7 +208,7 @@ fn outro_only_when_framed() {
     }
     let attach = |outro_when_framed| Entry {
         page: EntryPage::Attach {
-            instance: "jk-7f3a".into(),
+            instance: jackin_console::domain::instance::InstanceId::simulated("jk-7f3a"),
             pane: None,
         },
         outro_when_framed,

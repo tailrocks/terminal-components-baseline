@@ -36,7 +36,7 @@ pub enum ModalResult {
         text: Option<String>,
     },
     Picked(usize),
-    PickedMany(Vec<usize>),
+    PickedMany(Vec<junie_tui::core::id::ItemKey>),
     PickedAlt(usize),
 
     Scope,
@@ -122,12 +122,6 @@ pub enum Go {
         pending: Option<Box<Workspace>>,
     },
     Prelude,
-    Launch {
-        workspace: Option<WorkspaceId>,
-        role: String,
-        agent: Agent,
-        account: Option<AccountId>,
-    },
     LaunchMany {
         workspace: Option<WorkspaceId>,
         role: String,
@@ -149,6 +143,13 @@ pub enum Go {
     InstanceEnded {
         instance: InstanceId,
         purge: bool,
+    },
+
+    PowerStart {
+        instance: InstanceId,
+    },
+    PowerStop {
+        instance: InstanceId,
     },
 
     LaunchFailedAck {

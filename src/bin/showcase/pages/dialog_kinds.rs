@@ -271,9 +271,11 @@ impl DialogKindsPage {
 
     fn open_key_picker(&mut self, cx: &mut Cx) {
         let mut p = Picker::new(KEYS, "SSH key");
-        p.set_searchable(false);
-        p.list.width = (48, 48);
-        p.set_items(KEY_FILES.iter().map(|k| Item::new(*k).glyph("⚿")).collect());
+        p.set_searchable(false)
+            .expect("disabling picker search is valid");
+        p.set_width(48);
+        p.set_items(KEY_FILES.iter().map(|k| Item::new(*k).glyph("⚿")).collect())
+            .unwrap_or_else(|error| p.report_item_error(error));
         cx.open(p, LayerTag::new("keys"));
         self.open.push("keys");
     }

@@ -7,7 +7,9 @@ use crate::core::edit::TextCmd;
 use crate::core::event::{Key, Outcome};
 use crate::core::hints::{HasHints, HintCx, nav_hints};
 use crate::core::id::{ItemKey, Part, PartRef, WidgetId};
-use crate::core::keymap::{Nav, NavKeys};
+use crate::core::keymap::{
+    Actions, KeyBinding, KeyMap, KeyboardCapabilities, Nav, NavKeys, deliverable_binding_for_with,
+};
 use crate::core::list::{Cursor, KeyStep, Navigable, RowSource};
 use crate::theme::CursorStyle;
 use crate::ui::columns::{self, Col};
@@ -23,6 +25,53 @@ use crate::widgets::keyhint::Hint;
 use crate::widgets::option_list::{Item, OptionList};
 
 pub const DEFAULT_GLYPH: &str = "·";
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum PickerCmd {
+    Toggle,
+}
+
+impl Actions for PickerCmd {
+    fn default_keymap() -> KeyMap<Self> {
+        vec![(KeyBinding::key(KeyCode::Insert), Self::Toggle)]
+    }
+
+    fn label(self) -> &'static str {
+        match self {
+            Self::Toggle => "Toggle",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Hash)]
+pub enum PickerKeyProfile {
+    #[default]
+    Desktop,
+    Vim,
+}
+
+thread_local! {
+    static PICKER_KEY_PROFILE: std::cell::Cell<PickerKeyProfile> = const { std::cell::Cell::new(PickerKeyProfile::Desktop) };
+}
+
+impl PickerKeyProfile {
+    pub fn install(self) {
+        PICKER_KEY_PROFILE.with(|profile| profile.set(self));
+    }
+
+    pub fn current() -> Self {
+        PICKER_KEY_PROFILE.with(std::cell::Cell::get)
+    }
+
+    fn toggle_keymap(self, searchable: bool) -> KeyMap<PickerCmd> {
+        let binding = match self {
+            Self::Desktop if searchable => KeyBinding::key(KeyCode::Insert),
+            Self::Desktop => KeyBinding::char(' '),
+            Self::Vim => KeyBinding::ctrl('t'),
+        };
+        vec![(binding, PickerCmd::Toggle)]
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub enum PickerStatus {
@@ -44,14 +93,16 @@ pub struct Picker {
     pub title: String,
     pub placeholder: String,
 
-    pub items: Vec<Item>,
+    items: Vec<Item>,
 
-    pub list: OptionList,
-    checked_keys: Vec<ItemKey>,
+    authoritative_items: Vec<Item>,
+
+    list: OptionList,
 
     pub anchor: Rect,
 
     pub hints: String,
+    hints_overridden: bool,
 
     pub backdrop: Backdrop,
 
@@ -68,16 +119,20 @@ pub struct Picker {
     pub(crate) pending: Option<PickerAction>,
 
     pub delete_is_secondary: bool,
-    pub multi: bool,
-    multi_by_key: bool,
+    multi: bool,
 
     pub choose_hint: std::borrow::Cow<'static, str>,
 
     pub edit_menu: EditMenu,
+
+    toggle_keymap: KeyMap<PickerCmd>,
+    toggle_keymap_overridden: bool,
+    key_profile: PickerKeyProfile,
+    key_profile_configured: bool,
 }
 
 impl HasHints for Picker {
-    fn hints(&self, _: &HintCx) -> Vec<Hint> {
+    fn hints(&self, cx: &HintCx) -> Vec<Hint> {
         let searchable = self.is_searchable();
         let mut v = vec![];
         if searchable {
@@ -89,11 +144,19 @@ impl HasHints for Picker {
                 .into_iter()
                 .filter(|h| h.key != "Type"),
         );
-        if self.multi && (!searchable || self.multi_by_key) {
-            v.push(Hint::new(
-                if searchable { "Ctrl+Space" } else { "Space" },
-                "Toggle",
-            ));
+        if self.multi
+            && let Some(binding) =
+                deliverable_binding_for_with(&self.toggle_keymap, PickerCmd::Toggle, cx.keyboard)
+        {
+            let label = if binding.code == KeyCode::Insert && binding.mods.is_empty() {
+                "Insert".to_owned()
+            } else {
+                binding.label_on(cx.platform)
+            };
+            v.push(Hint::new(label, "Toggle").click_key(Key {
+                code: binding.code,
+                mods: binding.mods,
+            }));
         }
         v.push(Hint::new(
             "Enter",
@@ -116,7 +179,12 @@ impl HasHints for Picker {
 pub enum PickerAction {
     QueryChanged,
     Chosen(usize),
-    ChosenMany(Vec<usize>),
+    ChosenMany(Vec<ItemKey>),
+    Toggled,
+    SelectionConflict {
+        attempted: ItemKey,
+        selected: ItemKey,
+    },
 
     ChosenAlt(usize),
 
@@ -133,18 +201,10 @@ pub enum PickerAction {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum KeyedMultiSelectError {
-    NotEnabled,
+pub enum PickerItemsError {
     DuplicateKey(ItemKey),
-}
-
-impl std::fmt::Display for KeyedMultiSelectError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::NotEnabled => f.write_str("keyed multi-select is not enabled"),
-            Self::DuplicateKey(key) => write!(f, "duplicate multi-select item key: {key:?}"),
-        }
-    }
+    MissingStableKey,
+    UnknownVisibleKey(ItemKey),
 }
 
 impl Picker {
@@ -159,16 +219,19 @@ impl Picker {
             .width(Self::WIDTH, Self::WIDTH)
             .placement(Placement::Center)
             .hover_moves_cursor(false);
+        let key_profile = PickerKeyProfile::current();
+        let key_profile_configured = key_profile != PickerKeyProfile::Desktop;
         Self {
             id,
             status: PickerStatus::Ready,
             title: title.to_owned(),
             placeholder: crate::theme::Strings::DEFAULT.search_placeholder.into(),
             items: vec![],
+            authoritative_items: vec![],
             list,
-            checked_keys: vec![],
             anchor: Rect::ZERO,
             hints: String::new(),
+            hints_overridden: false,
             backdrop: Backdrop::DEFAULT,
             scope: None,
             empty_text: crate::theme::Strings::DEFAULT.no_matches.into(),
@@ -179,9 +242,12 @@ impl Picker {
             pending: None,
             delete_is_secondary: true,
             multi: false,
-            multi_by_key: false,
             choose_hint: std::borrow::Cow::Borrowed("Choose"),
             edit_menu: EditMenu::default(),
+            toggle_keymap: key_profile.toggle_keymap(true),
+            toggle_keymap_overridden: false,
+            key_profile,
+            key_profile_configured,
         }
     }
 
@@ -190,68 +256,63 @@ impl Picker {
         self
     }
 
-    /// Enable legacy multi-selection, where confirmation returns item positions.
-    pub fn multi_select(mut self, on: bool) -> Self {
-        if self.multi_by_key {
-            self.checked_keys.clear();
-            self.list.checked.clear();
+    pub fn multi_select(mut self, on: bool) -> Result<Self, PickerItemsError> {
+        if on && let Some(error) = Self::validate_items(&self.items, self.is_searchable()) {
+            return Err(error);
         }
         self.multi = on;
-        self.multi_by_key = false;
         if on {
             self.choose_hint = std::borrow::Cow::Borrowed("Confirm");
         } else {
-            self.checked_keys.clear();
             self.list.checked.clear();
         }
+        Ok(self)
+    }
+
+    pub fn keymap(mut self, keymap: KeyMap<PickerCmd>) -> Self {
+        self.toggle_keymap = keymap;
+        self.toggle_keymap_overridden = true;
         self
     }
 
-    /// Enable stable-key multi-selection. Keyed item setters require unique
-    /// keys that remain stable across filtered refreshes, including `Index`
-    /// keys when their source index is stable.
-    pub fn multi_select_by_key(mut self, on: bool) -> Self {
-        if self.multi_by_key != on {
-            self.checked_keys.clear();
-            self.list.checked.clear();
-        }
-        self.multi = on;
-        self.multi_by_key = on;
-        if on {
-            self.choose_hint = std::borrow::Cow::Borrowed("Confirm");
-            if let Err(error) = self.validate_multi_keys(&self.items) {
-                self.reject_keyed_items(error);
-            }
-        } else {
-            self.checked_keys.clear();
-            self.list.checked.clear();
+    pub fn toggle_binding(mut self, binding: KeyBinding) -> Self {
+        self.toggle_keymap = vec![(binding, PickerCmd::Toggle)];
+        self.toggle_keymap_overridden = true;
+        self
+    }
+
+    pub fn key_profile(mut self, profile: PickerKeyProfile) -> Self {
+        self.key_profile = profile;
+        self.key_profile_configured = true;
+        if !self.toggle_keymap_overridden {
+            self.toggle_keymap = profile.toggle_keymap(self.is_searchable());
         }
         self
     }
     pub fn is_multi(&self) -> bool {
         self.multi
     }
-    pub fn checked(&self) -> &[usize] {
+    pub fn checked(&self) -> &[ItemKey] {
         &self.list.checked
     }
-    /// Return stable selected item identities in keyed multi-select mode.
-    pub fn selected_keys(&self) -> &[ItemKey] {
-        &self.checked_keys
+    pub fn toggle_checked(&mut self, i: usize) -> Option<PickerAction> {
+        self.eligible(i)
+            .and_then(|index| self.toggle_item(self.item_key(index)))
     }
-    pub fn toggle_checked(&mut self, i: usize) {
-        if self.eligible(i).is_some() {
-            self.list.toggle_checked(i);
-            if self.multi_by_key {
-                let key = self.identity_key(i);
-                if self.list.is_checked(i) {
-                    if !self.checked_keys.contains(&key) {
-                        self.checked_keys.push(key);
-                    }
-                } else {
-                    self.checked_keys.retain(|selected| *selected != key);
-                }
-            }
-        }
+    fn item_key(&self, i: usize) -> ItemKey {
+        Self::key_of(&self.items[i], i)
+    }
+
+    fn item_for_key_in(items: &[Item], key: ItemKey) -> Option<&Item> {
+        items
+            .iter()
+            .enumerate()
+            .find(|(index, item)| Self::key_of(item, *index) == key)
+            .map(|(_, item)| item)
+    }
+
+    fn key_of(item: &Item, index: usize) -> ItemKey {
+        item.key.unwrap_or(ItemKey::index(index))
     }
     pub fn nav(mut self, nav: NavKeys) -> Self {
         self.list.nav = nav;
@@ -263,17 +324,27 @@ impl Picker {
         self
     }
 
-    pub fn searchable(mut self, on: bool) -> Self {
-        self.set_searchable(on);
-        self
+    pub fn searchable(mut self, on: bool) -> Result<Self, PickerItemsError> {
+        self.set_searchable(on)?;
+        Ok(self)
     }
 
-    pub fn set_searchable(&mut self, on: bool) {
+    pub fn set_searchable(&mut self, on: bool) -> Result<(), PickerItemsError> {
+        if self.multi
+            && on
+            && let Some(error) = Self::validate_items(&self.items, true)
+        {
+            return Err(error);
+        }
         match (on, self.list.query.is_some()) {
             (true, false) => self.list.query = Some(Box::new(EditField::single(""))),
             (false, true) => self.list.query = None,
             _ => {}
         }
+        if !self.toggle_keymap_overridden {
+            self.toggle_keymap = self.key_profile.toggle_keymap(on);
+        }
+        Ok(())
     }
 
     pub fn is_searchable(&self) -> bool {
@@ -295,6 +366,34 @@ impl Picker {
             .query
             .as_ref()
             .map_or(0, |q| q.buffer.cursor_offset())
+    }
+
+    pub fn items(&self) -> &[Item] {
+        &self.items
+    }
+
+    pub fn list(&self) -> &OptionList {
+        &self.list
+    }
+
+    pub fn set_width(&mut self, width: u16) {
+        self.list.width = (width, width);
+    }
+
+    pub fn set_max_rows(&mut self, rows: u16) {
+        self.list.max_rows = rows;
+    }
+
+    pub fn set_placement(&mut self, placement: Placement) {
+        self.list.placement = placement;
+    }
+
+    pub fn set_chosen(&mut self, chosen: Option<usize>) {
+        self.list.chosen = chosen.filter(|index| *index < self.items.len());
+    }
+
+    pub fn wheel(&mut self, axis: crate::core::hit::Axis, delta: i32) -> Outcome {
+        crate::core::scroll::Scrollable::wheel(&mut self.list, axis, delta).outcome()
     }
 
     pub fn width(mut self, width: u16) -> Self {
@@ -325,6 +424,7 @@ impl Picker {
 
     pub fn hints(mut self, hints: &str) -> Self {
         self.hints = hints.to_owned();
+        self.hints_overridden = true;
         self
     }
 
@@ -380,110 +480,145 @@ impl Picker {
         self.items.iter().position(|i| !i.disabled).unwrap_or(0)
     }
 
-    fn identity_key(&self, i: usize) -> ItemKey {
-        self.items[i].key
-    }
-
-    fn validate_multi_keys(&self, items: &[Item]) -> Result<(), KeyedMultiSelectError> {
-        if !self.multi_by_key {
-            return Err(KeyedMultiSelectError::NotEnabled);
+    pub fn set_items(&mut self, items: Vec<Item>) -> Result<(), PickerItemsError> {
+        if let Some(error) = Self::validate_items(&items, self.multi && self.is_searchable()) {
+            return Err(error);
         }
-        let mut seen = std::collections::HashSet::new();
-        for item in items {
-            if !seen.insert(item.key) {
-                return Err(KeyedMultiSelectError::DuplicateKey(item.key));
-            }
-        }
-        Ok(())
-    }
-
-    pub fn set_items(&mut self, items: Vec<Item>) {
-        if self.multi_by_key {
-            if let Err(error) = self.set_items_by_key(items) {
-                self.reject_keyed_items(error);
-            }
-            return;
-        }
-        self.set_items_inner(items);
-    }
-
-    /// Replace the items in keyed multi-select mode, clearing prior selection.
-    /// Duplicate item keys return an error without changing the current list.
-    pub fn set_items_by_key(&mut self, items: Vec<Item>) -> Result<(), KeyedMultiSelectError> {
-        self.validate_multi_keys(&items)?;
-        self.set_items_inner(items);
-        self.status = PickerStatus::Ready;
-        Ok(())
-    }
-
-    fn set_items_inner(&mut self, items: Vec<Item>) {
-        self.list.checked.clear();
-        self.checked_keys.clear();
+        self.authoritative_items.clone_from(&items);
         self.items = items;
+        self.list.checked.clear();
         self.list.reset(self.items.len());
         self.list.cursor.index = self.first_enabled();
-    }
-
-    pub fn refresh_items(&mut self, items: Vec<Item>) {
-        if self.multi_by_key {
-            if let Err(error) = self.refresh_items_by_key(items) {
-                self.reject_keyed_items(error);
-            }
-            return;
-        }
-        self.refresh_items_inner(items);
-    }
-
-    /// Refresh keyed items while retaining selected identities that are hidden
-    /// by filtering. A key that remains visible but becomes disabled is dropped.
-    pub fn refresh_items_by_key(&mut self, items: Vec<Item>) -> Result<(), KeyedMultiSelectError> {
-        self.validate_multi_keys(&items)?;
-        self.refresh_items_inner(items);
         self.status = PickerStatus::Ready;
         Ok(())
     }
 
-    fn refresh_items_inner(&mut self, items: Vec<Item>) {
-        let keep = self.items.get(self.list.cursor.index).map(|item| item.key);
-        let offset = self.list.scroll.offset;
-        self.items = items;
-        if self.multi_by_key {
-            self.checked_keys.retain(|key| {
-                self.items
-                    .iter()
-                    .find(|item| item.key == *key)
-                    .is_none_or(|item| !item.disabled)
-            });
-            self.list.checked = self
-                .items
-                .iter()
-                .enumerate()
-                .filter_map(|(i, item)| self.checked_keys.contains(&item.key).then_some(i))
-                .collect();
-        } else {
-            self.list.checked.clear();
-            self.checked_keys.clear();
+    pub fn replace_items(&mut self, items: Vec<Item>) -> Result<(), PickerItemsError> {
+        if let Some(error) = Self::validate_items(&items, self.multi && self.is_searchable()) {
+            return Err(error);
         }
+        let keep = self
+            .items
+            .get(self.list.cursor.index)
+            .and_then(|item| item.key);
+        let offset = self.list.scroll.offset;
+        let stable_checked: std::collections::HashSet<ItemKey> = self
+            .authoritative_items
+            .iter()
+            .filter_map(|item| item.key)
+            .collect();
+        self.authoritative_items.clone_from(&items);
+        self.items = items;
+        self.list.checked.retain(|key| {
+            stable_checked.contains(key)
+                && self
+                    .authoritative_items
+                    .iter()
+                    .any(|item| item.key == Some(*key) && !item.disabled)
+        });
         self.list.cursor.index = keep
-            .and_then(|k| {
+            .and_then(|key| {
                 self.items
                     .iter()
-                    .position(|item| item.key == k && !item.disabled)
+                    .position(|item| item.key == Some(key) && !item.disabled)
             })
             .unwrap_or_else(|| self.first_enabled());
         self.list.scroll.set_content(self.items.len());
         self.list.scroll.scroll_to(offset);
+        self.status = PickerStatus::Ready;
+        Ok(())
     }
 
-    fn reject_keyed_items(&mut self, error: KeyedMultiSelectError) {
-        self.items.clear();
-        self.checked_keys.clear();
-        self.list.checked.clear();
-        self.list.reset(0);
+    pub fn set_visible_items(&mut self, items: Vec<Item>) -> Result<(), PickerItemsError> {
+        if let Some(error) = Self::validate_items(&items, true) {
+            return Err(error);
+        }
+        let mut visible = Vec::with_capacity(items.len());
+        for item in items {
+            let Some(key) = item.key else {
+                return Err(PickerItemsError::MissingStableKey);
+            };
+            let Some(mut authoritative) = self
+                .authoritative_items
+                .iter()
+                .find(|candidate| candidate.key == Some(key))
+                .cloned()
+            else {
+                return Err(PickerItemsError::UnknownVisibleKey(key));
+            };
+            authoritative.matched = item.matched;
+            visible.push(authoritative);
+        }
+        let keep = self
+            .items
+            .get(self.list.cursor.index)
+            .and_then(|item| item.key);
+        let offset = self.list.scroll.offset;
+        self.items = visible;
+        self.list.cursor.index = keep
+            .and_then(|key| {
+                self.items
+                    .iter()
+                    .position(|item| item.key == Some(key) && !item.disabled)
+            })
+            .unwrap_or_else(|| self.first_enabled());
+        self.list.scroll.set_content(self.items.len());
+        self.list.scroll.scroll_to(offset);
+        self.status = PickerStatus::Ready;
+        Ok(())
+    }
+
+    pub fn item_for_key(&self, key: ItemKey) -> Option<&Item> {
+        Self::item_for_key_in(&self.authoritative_items, key)
+    }
+
+    fn toggle_item(&mut self, key: ItemKey) -> Option<PickerAction> {
+        let group = Self::item_for_key_in(&self.authoritative_items, key)
+            .and_then(|item| item.selection_group);
+        if !self.list.checked.contains(&key)
+            && let Some(group) = group
+            && let Some(selected) =
+                self.authoritative_items
+                    .iter()
+                    .enumerate()
+                    .find(|(index, item)| {
+                        item.selection_group == Some(group)
+                            && Self::key_of(item, *index) != key
+                            && self.list.checked.contains(&Self::key_of(item, *index))
+                    })
+        {
+            return Some(PickerAction::SelectionConflict {
+                attempted: key,
+                selected: Self::key_of(selected.1, selected.0),
+            });
+        }
+        self.list.toggle_checked(key);
+        None
+    }
+
+    pub fn report_item_error(&mut self, error: PickerItemsError) {
         self.status = PickerStatus::Error {
-            message: "Invalid multi-select item keys".into(),
-            detail: Some(error.to_string()),
+            message: "Invalid picker items".into(),
+            detail: Some(format!("{error:?}")),
         };
+    }
+
+    pub fn reset_selection(&mut self) {
+        self.list.checked.clear();
+    }
+
+    fn validate_items(items: &[Item], require_stable: bool) -> Option<PickerItemsError> {
+        let mut keys = std::collections::HashSet::with_capacity(items.len());
+        for (index, item) in items.iter().enumerate() {
+            if require_stable && item.key.is_none() {
+                return Some(PickerItemsError::MissingStableKey);
+            }
+            let key = Self::key_of(item, index);
+            if !keys.insert(key) {
+                return Some(PickerItemsError::DuplicateKey(key));
+            }
+        }
+        None
     }
 
     pub fn eligible(&self, i: usize) -> Option<usize> {
@@ -499,9 +634,7 @@ impl Picker {
     }
 
     pub fn current_key(&self) -> Option<ItemKey> {
-        self.current()
-            .map(|it| it.key)
-            .filter(|k| !matches!(k, ItemKey::Index(_)))
+        self.current().and_then(|item| item.key)
     }
 
     pub fn on_paste(&mut self, text: &str) -> (Outcome, Option<PickerAction>) {
@@ -529,6 +662,29 @@ impl Picker {
     }
 
     pub fn on_key(&mut self, key: &Key) -> (Outcome, Option<PickerAction>) {
+        self.on_key_with_capabilities(key, KeyboardCapabilities::current())
+    }
+
+    fn on_key_with_capabilities(
+        &mut self,
+        key: &Key,
+        capabilities: KeyboardCapabilities,
+    ) -> (Outcome, Option<PickerAction>) {
+        let toggle = self.toggle_keymap.iter().any(|(binding, command)| {
+            *command == PickerCmd::Toggle
+                && binding.deliverable_with(capabilities)
+                && binding.normalized_mods() == crate::core::keymap::normalized_key_mods(key)
+                && binding.matches_with(key, capabilities)
+        });
+        if self.multi && toggle {
+            return match self.eligible(self.list.cursor.index) {
+                Some(i) => match self.toggle_checked(i) {
+                    Some(action) => (Outcome::Consumed, Some(action)),
+                    None => (Outcome::Changed, Some(PickerAction::Toggled)),
+                },
+                None => (Outcome::Consumed, None),
+            };
+        }
         if self.list.query.is_some()
             && let Some(o) = edit_menu_key(self, key)
         {
@@ -538,7 +694,16 @@ impl Picker {
                 .then_some(PickerAction::QueryChanged);
             return (o, ev);
         }
-
+        if self.multi && key.code == KeyCode::Enter && !key.alt() {
+            return if self.list.checked.is_empty() {
+                (Outcome::Consumed, None)
+            } else {
+                (
+                    Outcome::Changed,
+                    Some(PickerAction::ChosenMany(self.list.checked.clone())),
+                )
+            };
+        }
         let typing = self.is_searchable();
 
         if !typing
@@ -588,32 +753,6 @@ impl Picker {
                     return (Outcome::Consumed, None);
                 }
                 (Outcome::Changed, Some(PickerAction::Cancelled))
-            }
-            KeyCode::Null if self.multi_by_key && key.ctrl() => self.toggle_current(),
-            KeyCode::Char(' ') if self.multi_by_key && (key.ctrl() || !searchable) => {
-                self.toggle_current()
-            }
-            KeyCode::Char(' ') if self.multi && !searchable => {
-                let Some(i) = self.eligible(self.list.cursor.index) else {
-                    return (Outcome::Consumed, None);
-                };
-                self.toggle_checked(i);
-                (Outcome::Changed, None)
-            }
-            KeyCode::Enter if self.multi && !key.alt() => {
-                let selected = if self.multi_by_key {
-                    !self.checked_keys.is_empty()
-                } else {
-                    !self.list.checked.is_empty()
-                };
-                if !selected {
-                    (Outcome::Consumed, None)
-                } else {
-                    (
-                        Outcome::Changed,
-                        Some(PickerAction::ChosenMany(self.list.checked.clone())),
-                    )
-                }
             }
             KeyCode::Enter => match self.eligible(self.list.cursor.index) {
                 Some(i) => {
@@ -665,14 +804,6 @@ impl Picker {
         }
     }
 
-    fn toggle_current(&mut self) -> (Outcome, Option<PickerAction>) {
-        let Some(i) = self.eligible(self.list.cursor.index) else {
-            return (Outcome::Consumed, None);
-        };
-        self.toggle_checked(i);
-        (Outcome::Changed, None)
-    }
-
     pub fn on_click(&mut self, id: WidgetId) -> Option<PickerAction> {
         if id == crate::ui::popup::backdrop_id(self.id) {
             return self.on_click_outside();
@@ -680,15 +811,17 @@ impl Picker {
         let i = self.eligible(self.list.row_of(id, self.items.len())?)?;
         self.list.select(i, &self.items[..]);
         if self.multi {
-            self.toggle_checked(i);
-            None
+            match self.toggle_checked(i) {
+                Some(action) => Some(action),
+                None => Some(PickerAction::Toggled),
+            }
         } else {
             Some(PickerAction::Chosen(i))
         }
     }
 
     pub fn draw(&mut self, screen: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
-        let hints = std::mem::take(&mut self.hints);
+        let hints = self.hints_for_draw(&HintCx::current(None));
         self.paint(
             screen,
             buf,
@@ -700,9 +833,59 @@ impl Picker {
         self.edit_menu.render(self.area, buf, ctx);
     }
 
+    fn hints_for_draw(&self, cx: &HintCx) -> String {
+        self.hints_for_render(cx, &self.hints, self.hints_overridden)
+    }
+
+    fn hints_for_render(&self, cx: &HintCx, custom_hints: &str, overridden: bool) -> String {
+        let generated = HasHints::hints(self, cx);
+        if !self.multi {
+            return custom_hints.to_owned();
+        }
+        if !overridden && !self.toggle_keymap_overridden && !self.key_profile_configured {
+            return custom_hints.to_owned();
+        }
+        if !overridden {
+            return generated
+                .into_iter()
+                .map(|hint| format!("{} {}", hint.key, hint.action))
+                .collect::<Vec<_>>()
+                .join(" · ");
+        }
+        let toggle = generated
+            .iter()
+            .find(|hint| hint.action == "Toggle")
+            .map(|hint| format!("{} {}", hint.key, hint.action));
+        let mut inserted_toggle = false;
+        let mut hints = custom_hints
+            .split(" · ")
+            .filter_map(|hint| {
+                if hint.split_whitespace().last() == Some("Toggle") {
+                    if inserted_toggle {
+                        None
+                    } else {
+                        inserted_toggle = true;
+                        toggle.clone()
+                    }
+                } else {
+                    Some(hint.to_owned())
+                }
+            })
+            .collect::<Vec<_>>();
+        if !inserted_toggle && let Some(toggle) = toggle {
+            hints.push(toggle);
+        }
+        hints.join(" · ")
+    }
+
     #[deprecated(note = "set `Picker::hints` and call `Picker::draw`")]
     pub fn render(&mut self, screen: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, hints: &str) {
-        self.paint(screen, buf, ctx, hints);
+        let hints = self.hints_for_render(
+            &HintCx::current(None),
+            hints,
+            self.hints_overridden || !hints.trim().is_empty(),
+        );
+        self.paint(screen, buf, ctx, &hints);
     }
 
     fn paint(&mut self, screen: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, hints: &str) {
@@ -925,7 +1108,7 @@ impl Picker {
                     .remove_modifier(Modifier::BOLD),
                 );
 
-                if self.list.checked.contains(&i) {
+                if self.list.checked.contains(&self.item_key(i)) {
                     r.mark(
                         ctx,
                         buf,
@@ -1141,191 +1324,1328 @@ impl EditMenuHost for Picker {
 mod tests {
     use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 
-    use super::*;
+    use super::{Item, Picker, PickerAction, PickerKeyProfile};
+    use crate::core::edit::TextCmd;
+    use crate::core::event::{Key, Outcome};
+    use crate::core::focus::{Focus, FocusRing};
+    use crate::core::hints::{HasHints, HintCx};
+    use crate::core::hit::HitRegistry;
+    use crate::core::id::{ItemKey, Part, PartRef, WidgetId};
+    use crate::core::intent::Phase;
+    use crate::core::keymap::{KeyBinding, KeyboardCapabilities};
+    use crate::core::pointer::PointerEvent;
+    use crate::theme::{ColorLevel, Theme};
+    use crate::ui::context::ContextAnchor;
+    use crate::ui::ctx::{Interaction, RenderCtx};
+    use crate::ui::layer::{Layer, LayerCx, LayerOut};
+    use crate::ui::layers::LayerResult;
+    use crate::widgets::hintbar::{HintBar, HintKeys, HintLayer};
+    use crate::widgets::keyhint::key_of;
+    use crate::widgets::menu::MenuItem;
+    use ratatui::buffer::Buffer;
+    use ratatui::layout::{Position, Rect};
 
     #[test]
-    fn searchable_multi_picker_accepts_ctrl_space_key_encodings_for_toggle() {
-        let key = ItemKey::text("Row 3");
-        for code in [KeyCode::Null, KeyCode::Char(' ')] {
-            let mut picker =
-                Picker::new(WidgetId::of("picker-test"), "Multi search").multi_select_by_key(true);
-            picker.set_searchable(true);
+    fn searchable_multi_keeps_hidden_identities_across_filter_and_reorder() {
+        let mut picker = Picker::new(WidgetId::of("picker-test"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        let alpha = Item::new("Alpha").key(ItemKey::text("alpha"));
+        let beta = Item::new("Beta").key(ItemKey::text("beta"));
+        let same_a = Item::new("Same label").key(ItemKey::text("same-a"));
+        let same_b = Item::new("Same label").key(ItemKey::text("same-b"));
+        picker
+            .set_items(vec![
+                alpha.clone(),
+                beta.clone(),
+                same_a.clone(),
+                same_b.clone(),
+            ])
+            .expect("valid picker update");
+        assert!(
+            HasHints::hints(&picker, &HintCx::new(None))
+                .iter()
+                .any(|hint| hint.key == "Insert" && hint.action == "Toggle")
+        );
+
+        assert_eq!(
             picker
-                .set_items_by_key(vec![Item::new("Row 3").key(key)])
-                .unwrap();
+                .on_key(&Key {
+                    code: KeyCode::Insert,
+                    mods: KeyModifiers::NONE
+                })
+                .0,
+            Outcome::Changed
+        );
+        assert_eq!(picker.checked(), &[ItemKey::text("alpha")]);
+        let (outcome, action) = picker.on_key(&Key {
+            code: KeyCode::Char(' '),
+            mods: KeyModifiers::NONE,
+        });
+        assert_eq!(outcome, Outcome::Changed);
+        assert_eq!(action, Some(PickerAction::QueryChanged));
+        assert_eq!(picker.query(), " ");
+        picker
+            .set_visible_items(vec![beta.clone()])
+            .expect("valid picker update");
+        assert_eq!(picker.checked(), &[ItemKey::text("alpha")]);
+        picker.set_cursor(0);
+        picker.on_key(&Key {
+            code: KeyCode::Insert,
+            mods: KeyModifiers::NONE,
+        });
+        picker
+            .replace_items(vec![same_b.clone(), beta, alpha, same_a.clone()])
+            .expect("valid picker update");
+        assert_eq!(
+            picker.checked(),
+            &[ItemKey::text("alpha"), ItemKey::text("beta")]
+        );
+        let area = Rect::new(0, 0, 100, 30);
+        let theme = Theme::for_level(ColorLevel::TrueColor);
+        let mut buffer = Buffer::empty(area);
+        let mut hits = HitRegistry::default();
+        let mut ring = FocusRing::default();
+        let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+        picker.draw(area, &mut buffer, &mut ctx);
+        ctx.flush_overlays(&mut buffer);
+        assert_eq!(
+            buffer
+                .content()
+                .iter()
+                .filter(|cell| cell.symbol() == theme.glyphs.tick)
+                .count(),
+            2
+        );
+        picker
+            .set_visible_items(vec![same_a.clone(), same_b.clone()])
+            .expect("valid picker update");
+        picker.toggle_checked(0);
+        picker.toggle_checked(1);
+        assert_eq!(
+            picker.checked(),
+            &[
+                ItemKey::text("alpha"),
+                ItemKey::text("beta"),
+                ItemKey::text("same-a"),
+                ItemKey::text("same-b")
+            ]
+        );
+        picker
+            .set_visible_items(vec![same_a, same_b])
+            .expect("valid picker update");
+        assert_eq!(
+            picker
+                .on_key(&Key {
+                    code: KeyCode::Enter,
+                    mods: KeyModifiers::NONE
+                })
+                .1,
+            Some(PickerAction::ChosenMany(vec![
+                ItemKey::text("alpha"),
+                ItemKey::text("beta"),
+                ItemKey::text("same-a"),
+                ItemKey::text("same-b")
+            ]))
+        );
+    }
 
-            let (outcome, action) = picker.on_key(&Key {
-                code,
-                mods: KeyModifiers::CONTROL,
-            });
+    #[test]
+    fn hidden_deleted_and_disabled_choices_are_pruned_and_restoration_does_not_reselect() {
+        let mut picker = Picker::new(WidgetId::of("picker-test"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        let alpha = Item::new("Alpha").key(ItemKey::text("alpha"));
+        let beta = Item::new("Beta").key(ItemKey::text("beta"));
+        picker
+            .set_items(vec![alpha.clone(), beta.clone()])
+            .expect("valid picker update");
+        picker.toggle_checked(0);
+        picker
+            .set_visible_items(vec![beta.clone()])
+            .expect("valid picker update");
+        picker.toggle_checked(0);
 
-            assert_eq!(outcome, Outcome::Changed);
-            assert_eq!(action, None);
-            assert_eq!(picker.checked(), &[0]);
-            assert_eq!(picker.selected_keys(), &[key]);
-            assert_eq!(picker.query(), "");
+        picker
+            .replace_items(vec![beta.clone()])
+            .expect("valid picker update");
+        assert_eq!(picker.checked(), &[ItemKey::text("beta")]);
+        picker
+            .replace_items(vec![alpha.clone(), beta.clone()])
+            .expect("valid picker update");
+        assert_eq!(picker.checked(), &[ItemKey::text("beta")]);
+
+        picker.toggle_checked(0);
+        assert_eq!(
+            picker.checked(),
+            &[ItemKey::text("beta"), ItemKey::text("alpha")]
+        );
+        picker
+            .set_visible_items(vec![beta.clone()])
+            .expect("valid picker update");
+        picker
+            .replace_items(vec![alpha.clone().disabled(true), beta.clone()])
+            .expect("valid picker update");
+        assert_eq!(picker.checked(), &[ItemKey::text("beta")]);
+        picker
+            .replace_items(vec![alpha, beta])
+            .expect("valid picker update");
+        assert_eq!(picker.checked(), &[ItemKey::text("beta")]);
+
+        picker.reset_selection();
+        assert!(picker.checked().is_empty());
+    }
+
+    #[test]
+    fn refreshing_a_nonsearch_multi_picker_clears_position_keys() {
+        let mut picker = Picker::new(WidgetId::of("picker-test"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection")
+            .searchable(false)
+            .expect("disabling search is valid");
+        picker
+            .set_items(vec![Item::new("Alpha")])
+            .expect("valid picker update");
+        picker.toggle_checked(0);
+        assert_eq!(picker.checked(), &[ItemKey::index(0)]);
+
+        picker
+            .replace_items(vec![Item::new("Beta")])
+            .expect("valid picker update");
+        assert!(picker.checked().is_empty());
+        assert_eq!(
+            picker.on_key(&Key {
+                code: KeyCode::Enter,
+                mods: KeyModifiers::NONE,
+            }),
+            (Outcome::Consumed, None)
+        );
+    }
+
+    #[test]
+    fn multi_toggle_skips_disabled_items_and_non_search_space_toggles() {
+        let mut picker = Picker::new(WidgetId::of("picker-test"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection")
+            .searchable(false)
+            .expect("disabling search is valid");
+        picker
+            .set_items(vec![
+                Item::new("Unavailable").disabled(true),
+                Item::new("Available"),
+            ])
+            .expect("valid picker update");
+        assert!(
+            HasHints::hints(&picker, &HintCx::new(None))
+                .iter()
+                .any(|hint| hint.key == "Space" && hint.action == "Toggle")
+        );
+        picker.set_cursor(0);
+        assert_eq!(
+            picker
+                .on_key(&Key {
+                    code: KeyCode::Char(' '),
+                    mods: KeyModifiers::NONE
+                })
+                .0,
+            Outcome::Consumed
+        );
+        picker.set_cursor(1);
+        assert_eq!(
+            picker
+                .on_key(&Key {
+                    code: KeyCode::Char(' '),
+                    mods: KeyModifiers::NONE
+                })
+                .0,
+            Outcome::Changed
+        );
+        assert_eq!(picker.checked(), &[ItemKey::index(1)]);
+    }
+
+    #[test]
+    fn searchable_multi_profile_binding_is_visible_exact_and_preserves_space_input() {
+        let group = ItemKey::text("provider");
+        let mut picker = Picker::new(WidgetId::of("picker-test-remapped"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection")
+            .key_profile(PickerKeyProfile::Vim);
+        picker
+            .set_items(vec![
+                Item::new("Alpha")
+                    .key(ItemKey::text("alpha"))
+                    .selection_group(group),
+                Item::new("Beta")
+                    .key(ItemKey::text("beta"))
+                    .selection_group(group),
+                Item::new("Unavailable")
+                    .key(ItemKey::text("unavailable"))
+                    .disabled(true),
+            ])
+            .expect("valid picker update");
+        let hints = HasHints::hints(&picker, &HintCx::current(None));
+        assert!(
+            hints
+                .iter()
+                .any(|hint| { hint.key == "Ctrl+T" && hint.action == "Toggle" })
+        );
+        assert!(!hints.iter().any(|hint| hint.key == "Insert"));
+
+        let area = Rect::new(0, 0, 100, 30);
+        let theme = Theme::for_level(ColorLevel::TrueColor);
+        let mut buffer = Buffer::empty(area);
+        let mut hits = HitRegistry::default();
+        let mut ring = FocusRing::default();
+        let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+        picker.draw(area, &mut buffer, &mut ctx);
+        ctx.flush_overlays(&mut buffer);
+        let rendered = buffer
+            .content()
+            .iter()
+            .map(|cell| cell.symbol())
+            .collect::<String>();
+        assert!(rendered.contains("Ctrl+T Toggle"));
+
+        let mut focus = Focus::default();
+        let app = ();
+        let insert = Key {
+            code: KeyCode::Insert,
+            mods: KeyModifiers::NONE,
+        };
+        let inserted = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::on_key(&mut picker, &insert, &mut cx)
+        };
+        assert_eq!(inserted, Outcome::Consumed);
+        assert!(picker.checked().is_empty());
+
+        let ctrl_t = Key {
+            code: KeyCode::Char('t'),
+            mods: KeyModifiers::CONTROL,
+        };
+        let toggled = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::on_key(&mut picker, &ctrl_t, &mut cx)
+        };
+        assert_eq!(toggled, Outcome::Changed);
+        assert_eq!(picker.checked(), &[ItemKey::text("alpha")]);
+        assert_eq!(
+            <Picker as Layer<LayerResult, ()>>::take_result(&mut picker),
+            Some(LayerOut::Event(LayerResult::Picker(PickerAction::Toggled)))
+        );
+
+        let shifted_ctrl_t = Key {
+            code: KeyCode::Char('t'),
+            mods: KeyModifiers::CONTROL | KeyModifiers::SHIFT,
+        };
+        picker.on_key(&shifted_ctrl_t);
+        assert_eq!(picker.checked(), &[ItemKey::text("alpha")]);
+
+        let space = Key {
+            code: KeyCode::Char(' '),
+            mods: KeyModifiers::NONE,
+        };
+        assert_eq!(
+            picker.on_key(&space),
+            (Outcome::Changed, Some(PickerAction::QueryChanged))
+        );
+        assert_eq!(picker.query(), " ");
+        assert_eq!(picker.checked(), &[ItemKey::text("alpha")]);
+
+        picker.set_cursor(1);
+        assert_eq!(
+            picker.on_key(&ctrl_t),
+            (
+                Outcome::Consumed,
+                Some(PickerAction::SelectionConflict {
+                    attempted: ItemKey::text("beta"),
+                    selected: ItemKey::text("alpha"),
+                })
+            )
+        );
+        picker.set_cursor(2);
+        assert_eq!(picker.on_key(&ctrl_t), (Outcome::Consumed, None));
+        assert_eq!(picker.checked(), &[ItemKey::text("alpha")]);
+    }
+
+    #[test]
+    fn custom_multi_hints_follow_the_effective_binding_and_capabilities() {
+        struct RestoreAlt(bool);
+
+        impl Drop for RestoreAlt {
+            fn drop(&mut self) {
+                crate::core::keyboard::set_alt_delivered(self.0);
+            }
+        }
+
+        let original_alt = KeyboardCapabilities::current().alt;
+        let _restore_alt = RestoreAlt(original_alt);
+        let mut remapped = Picker::new(WidgetId::of("picker-custom-hints"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection")
+            .toggle_binding(KeyBinding::ctrl('t'))
+            .hints("Insert Toggle · Enter Confirm · Esc Close");
+        remapped
+            .set_items(vec![Item::new("Alpha").key(ItemKey::text("alpha"))])
+            .expect("valid picker update");
+
+        let area = Rect::new(0, 0, 100, 30);
+        let theme = Theme::for_level(ColorLevel::TrueColor);
+        let mut buffer = Buffer::empty(area);
+        let mut hits = HitRegistry::default();
+        let mut ring = FocusRing::default();
+        let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+        remapped.draw(area, &mut buffer, &mut ctx);
+        ctx.flush_overlays(&mut buffer);
+        let rendered = buffer
+            .content()
+            .iter()
+            .map(|cell| cell.symbol())
+            .collect::<String>();
+        assert!(rendered.contains("Ctrl+T Toggle"));
+        assert!(rendered.contains("Enter Confirm"));
+        assert!(rendered.contains("Esc Close"));
+        assert!(!rendered.contains("Insert Toggle"));
+
+        remapped.on_key(&Key {
+            code: KeyCode::Insert,
+            mods: KeyModifiers::NONE,
+        });
+        assert!(remapped.checked().is_empty());
+        remapped.on_key(&Key {
+            code: KeyCode::Char('t'),
+            mods: KeyModifiers::CONTROL,
+        });
+        assert_eq!(remapped.checked(), &[ItemKey::text("alpha")]);
+
+        crate::core::keyboard::set_alt_delivered(false);
+        let mut undeliverable = Picker::new(WidgetId::of("picker-custom-undeliverable"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection")
+            .toggle_binding(KeyBinding::alt('t'))
+            .hints("Alt+T Toggle · Enter Confirm · Esc Close");
+        undeliverable
+            .set_items(vec![Item::new("Alpha").key(ItemKey::text("alpha"))])
+            .expect("valid picker update");
+        let mut buffer = Buffer::empty(area);
+        let mut hits = HitRegistry::default();
+        let mut ring = FocusRing::default();
+        let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+        undeliverable.draw(area, &mut buffer, &mut ctx);
+        ctx.flush_overlays(&mut buffer);
+        let rendered = buffer
+            .content()
+            .iter()
+            .map(|cell| cell.symbol())
+            .collect::<String>();
+        assert!(!rendered.contains("Alt+T Toggle"));
+        assert!(rendered.contains("Enter Confirm"));
+        undeliverable.on_key(&Key {
+            code: KeyCode::Char('t'),
+            mods: KeyModifiers::ALT,
+        });
+        assert!(undeliverable.checked().is_empty());
+        assert_eq!(
+            undeliverable.on_key(&Key {
+                code: KeyCode::Char('x'),
+                mods: KeyModifiers::NONE,
+            }),
+            (Outcome::Changed, Some(super::PickerAction::QueryChanged))
+        );
+        assert_eq!(undeliverable.query(), "x");
+    }
+
+    #[test]
+    fn corrected_items_restore_readiness_after_report_item_error() {
+        let items = || vec![Item::new("Alpha").key(ItemKey::text("alpha"))];
+        let mut picker = Picker::new(WidgetId::of("picker-readiness"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        picker.set_items(items()).expect("valid initial items");
+
+        picker.report_item_error(super::PickerItemsError::MissingStableKey);
+        assert!(
+            picker.eligible(0).is_none(),
+            "error state must block interaction"
+        );
+
+        picker
+            .set_items(items())
+            .expect("corrected items are valid");
+        assert!(
+            picker.status == super::PickerStatus::Ready,
+            "set_items must restore readiness"
+        );
+        assert_eq!(
+            picker.eligible(0),
+            Some(0),
+            "restored rows must be interactive again"
+        );
+
+        picker.report_item_error(super::PickerItemsError::MissingStableKey);
+        picker
+            .replace_items(items())
+            .expect("corrected items are valid");
+        assert!(
+            picker.status == super::PickerStatus::Ready,
+            "replace_items must restore readiness"
+        );
+        assert_eq!(picker.eligible(0), Some(0));
+
+        picker.report_item_error(super::PickerItemsError::MissingStableKey);
+        picker
+            .set_visible_items(items())
+            .expect("corrected items are valid");
+        assert!(
+            picker.status == super::PickerStatus::Ready,
+            "set_visible_items must restore readiness"
+        );
+        assert_eq!(picker.eligible(0), Some(0));
+    }
+
+    #[test]
+    fn legacy_shifted_character_events_toggle_the_picker() {
+        use ratatui::crossterm::event::{Event, KeyEvent};
+
+        let mut picker = Picker::new(WidgetId::of("picker-legacy-shift"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection")
+            .toggle_binding(KeyBinding::char('t').shift());
+        picker
+            .set_items(vec![Item::new("Alpha").key(ItemKey::text("alpha"))])
+            .expect("valid picker update");
+        let legacy = Event::Key(KeyEvent::new(KeyCode::Char('T'), KeyModifiers::SHIFT));
+        let input = crate::core::event::Input::from_crossterm_with(
+            legacy,
+            crate::core::event::InputConfig::default(),
+        )
+        .expect("legacy key event decodes");
+        let crate::core::event::Input::Key(key) = input else {
+            panic!("legacy key event must decode to a key");
+        };
+        assert_eq!(
+            key.code,
+            KeyCode::Char('T'),
+            "legacy input preserves the produced character code"
+        );
+        let (outcome, _action) = picker.on_key(&key);
+        assert!(
+            matches!(outcome, Outcome::Changed | Outcome::Consumed),
+            "the advertised shift toggle must consume the legacy event"
+        );
+        assert_eq!(
+            picker.checked(),
+            vec![ItemKey::text("alpha")],
+            "the legacy Shift+T encoding must toggle the picker"
+        );
+    }
+
+    #[test]
+    fn remapped_toggle_hint_clicks_deliver_the_bound_key() {
+        struct RestoreCaps {
+            alt: bool,
+            super_key: bool,
+        }
+
+        impl Drop for RestoreCaps {
+            fn drop(&mut self) {
+                crate::core::keyboard::set_alt_delivered(self.alt);
+                crate::core::keyboard::set_super_delivered(self.super_key);
+            }
+        }
+
+        let _restore = RestoreCaps {
+            alt: KeyboardCapabilities::current().alt,
+            super_key: KeyboardCapabilities::current().super_key,
+        };
+        crate::core::keyboard::set_alt_delivered(true);
+        crate::core::keyboard::set_super_delivered(true);
+
+        let cases = [
+            (
+                KeyBinding::cmd('t'),
+                Key {
+                    code: KeyCode::Char('t'),
+                    mods: KeyModifiers::SUPER,
+                },
+            ),
+            (
+                KeyBinding::alt('t'),
+                Key {
+                    code: KeyCode::Char('t'),
+                    mods: KeyModifiers::ALT,
+                },
+            ),
+            (
+                KeyBinding::char('t').shift(),
+                Key {
+                    code: KeyCode::Char('t'),
+                    mods: KeyModifiers::SHIFT,
+                },
+            ),
+        ];
+        for (binding, expected) in cases {
+            let mut picker = Picker::new(WidgetId::of("picker-remapped-hint"), "Choose")
+                .multi_select(true)
+                .expect("empty picker accepts multi-selection")
+                .toggle_binding(binding);
+            picker
+                .set_items(vec![Item::new("Alpha").key(ItemKey::text("alpha"))])
+                .expect("valid picker update");
+            let hints = HasHints::hints(&picker, &HintCx::current(None));
+            let toggle_at = hints
+                .iter()
+                .position(|hint| hint.action == "Toggle")
+                .expect("remapped binding advertises a toggle hint");
+
+            let area = Rect::new(0, 0, 100, 1);
+            let theme = Theme::for_level(ColorLevel::TrueColor);
+            let layer = HintLayer::new(hints.clone());
+            let mut buffer = Buffer::empty(area);
+            let mut hits = HitRegistry::default();
+            let mut ring = FocusRing::default();
+            let spots;
+            let keys;
+            {
+                let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+                spots = HintBar::render_at(area, &mut buffer, &theme, &layer);
+                keys = HintKeys::register(&mut ctx, &mut buffer, &layer.hints, spots.clone());
+            }
+            let cell = spots
+                .iter()
+                .find(|(i, _)| *i == toggle_at)
+                .map(|(_, cell)| *cell)
+                .expect("toggle hint renders a clickable cell");
+            let id = HintBar::ID.part(PartRef::item(Part::KEY, ItemKey::index(toggle_at)));
+            let ev = PointerEvent::new(
+                &hits,
+                Phase::Click,
+                id,
+                Position::new(cell.x, cell.y),
+                1,
+                KeyModifiers::NONE,
+            );
+            let clicked = keys
+                .clicked(&ev)
+                .expect("clicking the remapped toggle hint must yield a key");
+            assert_eq!(
+                clicked, expected,
+                "the hint click for {binding:?} must deliver the key the binding sends"
+            );
+
+            assert!(
+                key_of("Insertion").is_none(),
+                "near-miss labels must not parse"
+            );
+            assert_ne!(
+                clicked,
+                Key {
+                    code: KeyCode::Insert,
+                    mods: KeyModifiers::NONE,
+                },
+                "a remapped hint must not fall back to the default Insert toggle"
+            );
+            if let Some(naive) = key_of(layer.hints[toggle_at].key.as_ref()) {
+                assert_ne!(
+                    naive, expected,
+                    "the display label must not re-parse to the bound key by accident"
+                );
+                assert_ne!(
+                    picker.on_key(&naive).1,
+                    Some(PickerAction::Toggled),
+                    "the label-reparsed key {naive:?} must not toggle"
+                );
+                assert!(picker.checked().is_empty());
+            }
+            assert_ne!(
+                picker
+                    .on_key(&Key {
+                        code: KeyCode::Insert,
+                        mods: KeyModifiers::NONE,
+                    })
+                    .1,
+                Some(PickerAction::Toggled)
+            );
+            assert!(picker.checked().is_empty());
+
+            assert_eq!(
+                picker.on_key(&clicked),
+                (Outcome::Changed, Some(PickerAction::Toggled))
+            );
+            assert_eq!(picker.checked(), &[ItemKey::text("alpha")]);
         }
     }
 
     #[test]
-    fn searchable_multi_picker_preserves_hidden_selection_and_confirms_keys() {
-        let row3 = ItemKey::text("Row 3");
-        let row4 = ItemKey::text("Row 4");
-        let mut picker =
-            Picker::new(WidgetId::of("picker-test"), "Multi search").multi_select_by_key(true);
-        picker.set_searchable(true);
+    fn searchable_layer_routes_edit_menu_enter_before_multi_confirm_and_insert() {
+        let mut picker = Picker::new(WidgetId::of("picker-test"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
         picker
-            .set_items_by_key(vec![
-                Item::new("Row 3").key(row3),
-                Item::new("Row 4").key(row4),
+            .set_items(vec![
+                Item::new("Alpha").key(ItemKey::text("alpha")),
+                Item::new("Beta").key(ItemKey::text("beta")),
+                Item::new("Unavailable")
+                    .key(ItemKey::text("unavailable"))
+                    .disabled(true),
             ])
-            .unwrap();
+            .expect("valid picker update");
         picker.toggle_checked(0);
+        picker.set_query("Alpha");
+        picker.edit_menu.open(
+            picker.id,
+            ContextAnchor::Control {
+                id: picker.id,
+                fallback: Rect::new(0, 0, 30, 1),
+            },
+            vec![(TextCmd::SelectAll, MenuItem::new("Select all"))],
+        );
 
-        picker.set_query("Row 4");
-        picker
-            .refresh_items_by_key(vec![Item::new("Row 4").key(row4)])
-            .unwrap();
-        assert!(picker.checked().is_empty());
-
-        picker.set_query("");
-        picker
-            .refresh_items_by_key(vec![
-                Item::new("Row 3").key(row3),
-                Item::new("Row 4").key(row4),
-            ])
-            .unwrap();
-        assert_eq!(picker.checked(), &[0]);
-
-        picker.set_query("No results");
-        picker.refresh_items_by_key(vec![]).unwrap();
-        assert!(picker.checked().is_empty());
-        let (outcome, action) = picker.on_key(&Key {
+        let mut focus = Focus::default();
+        let ring = FocusRing::default();
+        let app = ();
+        let enter = Key {
             code: KeyCode::Enter,
             mods: KeyModifiers::NONE,
-        });
-        assert_eq!(outcome, Outcome::Changed);
-        assert_eq!(action, Some(PickerAction::ChosenMany(vec![])));
-        assert_eq!(picker.selected_keys(), &[row3]);
+        };
+        let out = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::on_key(&mut picker, &enter, &mut cx)
+        };
+        assert_eq!(out, Outcome::Changed);
+        assert!(!picker.edit_menu.is_open());
+        assert_eq!(
+            picker.list.query.as_ref().unwrap().buffer.selected_text(),
+            Some("Alpha")
+        );
+        assert!(<Picker as Layer<LayerResult, ()>>::take_result(&mut picker).is_none());
+
+        picker.set_query("Alpha");
+        picker.set_cursor(1);
+        let modified_insert = Key {
+            code: KeyCode::Insert,
+            mods: KeyModifiers::CONTROL,
+        };
+        let out = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::on_key(&mut picker, &modified_insert, &mut cx)
+        };
+        assert_eq!(out, Outcome::Consumed);
+        assert_eq!(picker.checked(), &[ItemKey::text("alpha")]);
+
+        let insert = Key {
+            code: KeyCode::Insert,
+            mods: KeyModifiers::NONE,
+        };
+        let out = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::on_key(&mut picker, &insert, &mut cx)
+        };
+        assert_eq!(out, Outcome::Changed);
+        assert_eq!(
+            picker.checked(),
+            &[ItemKey::text("alpha"), ItemKey::text("beta")]
+        );
+
+        let space = Key {
+            code: KeyCode::Char(' '),
+            mods: KeyModifiers::NONE,
+        };
+        let out = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::on_key(&mut picker, &space, &mut cx)
+        };
+        assert_eq!(out, Outcome::Changed);
+        assert_eq!(picker.query(), "Alpha ");
+
+        let out = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::on_key(&mut picker, &enter, &mut cx)
+        };
+        assert_eq!(out, Outcome::Changed);
+        assert!(matches!(
+            <Picker as Layer<LayerResult, ()>>::take_result(&mut picker),
+            Some(LayerOut::Close(LayerResult::Picker(PickerAction::ChosenMany(keys))))
+                if keys == [ItemKey::text("alpha"), ItemKey::text("beta")]
+        ));
+
+        let mut plain = Picker::new(WidgetId::of("picker-test-plain"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection")
+            .searchable(false)
+            .expect("disabling search is valid");
+        plain
+            .set_items(vec![Item::new("Available")])
+            .expect("valid picker update");
+        let space = Key {
+            code: KeyCode::Char(' '),
+            mods: KeyModifiers::NONE,
+        };
+        let out = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::on_key(&mut plain, &space, &mut cx)
+        };
+        assert_eq!(out, Outcome::Changed);
+        assert_eq!(plain.checked(), &[ItemKey::index(0)]);
     }
 
     #[test]
-    fn multi_picker_preserves_distinct_keys_for_duplicate_labels() {
-        let left = ItemKey::index(17);
-        let right = ItemKey::index(29);
-        let mut picker =
-            Picker::new(WidgetId::of("picker-test"), "Multi").multi_select_by_key(true);
-        picker.set_searchable(false);
+    fn multi_picker_rejects_a_second_choice_in_the_same_selection_group() {
+        let group = ItemKey::text("omp");
+        let mut picker = Picker::new(WidgetId::of("picker-test"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
         picker
-            .set_items_by_key(vec![
-                Item::new("Same label").key(left),
-                Item::new("Same label").key(right),
+            .set_items(vec![
+                Item::new("OMP · Kimi")
+                    .key(ItemKey::text("omp-kimi"))
+                    .selection_group(group),
+                Item::new("OMP · MiMo")
+                    .key(ItemKey::text("omp-mimo"))
+                    .selection_group(group),
             ])
-            .unwrap();
+            .expect("valid picker update");
+        picker.toggle_checked(0);
+        assert_eq!(
+            picker.toggle_checked(1),
+            Some(PickerAction::SelectionConflict {
+                attempted: ItemKey::text("omp-mimo"),
+                selected: ItemKey::text("omp-kimi"),
+            })
+        );
+        assert_eq!(picker.checked(), &[ItemKey::text("omp-kimi")]);
+    }
+
+    #[test]
+    fn disabling_multi_select_clears_hidden_selections() {
+        let mut picker = Picker::new(WidgetId::of("picker-test-multi-off"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        picker
+            .set_items(vec![
+                Item::new("Alpha").key(ItemKey::text("alpha")),
+                Item::new("Beta").key(ItemKey::text("beta")),
+            ])
+            .expect("valid picker update");
         picker.toggle_checked(0);
         picker.toggle_checked(1);
-
         assert_eq!(
-            picker.on_key(&Key {
-                code: KeyCode::Enter,
-                mods: KeyModifiers::NONE,
-            }),
-            (Outcome::Changed, Some(PickerAction::ChosenMany(vec![0, 1])))
+            picker.checked(),
+            &[ItemKey::text("alpha"), ItemKey::text("beta")]
         );
-        assert_eq!(picker.selected_keys(), &[left, right]);
+
+        picker = picker
+            .multi_select(false)
+            .expect("disabling multi-select is valid");
+        assert!(
+            picker.checked().is_empty(),
+            "hidden selections must not survive multi-select being disabled"
+        );
+        assert_eq!(
+            <Picker as HasHints>::hints(&picker, &HintCx::current(None))
+                .iter()
+                .filter(|hint| hint.action == "Toggle")
+                .count(),
+            0
+        );
     }
 
     #[test]
-    fn multi_picker_drops_a_selected_key_when_its_item_becomes_disabled() {
-        let row = ItemKey::text("row");
-        let mut picker =
-            Picker::new(WidgetId::of("picker-test"), "Multi").multi_select_by_key(true);
+    fn grouped_selections_can_be_deselected_after_groups_change() {
+        let group = ItemKey::text("provider");
+        let mut picker = Picker::new(WidgetId::of("picker-test-group-off"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
         picker
-            .set_items_by_key(vec![Item::new("Row").key(row)])
-            .unwrap();
+            .set_items(vec![
+                Item::new("Alpha").key(ItemKey::text("alpha")),
+                Item::new("Beta").key(ItemKey::text("beta")),
+            ])
+            .expect("valid picker update");
         picker.toggle_checked(0);
+        picker.toggle_checked(1);
+        assert_eq!(
+            picker.checked(),
+            &[ItemKey::text("alpha"), ItemKey::text("beta")]
+        );
 
         picker
-            .refresh_items_by_key(vec![Item::new("Row").key(row).disabled(true)])
-            .unwrap();
-
-        assert!(picker.checked().is_empty());
-        assert!(picker.selected_keys().is_empty());
+            .replace_items(vec![
+                Item::new("Alpha")
+                    .key(ItemKey::text("alpha"))
+                    .selection_group(group),
+                Item::new("Beta")
+                    .key(ItemKey::text("beta"))
+                    .selection_group(group),
+            ])
+            .expect("valid picker update");
         assert_eq!(
-            picker.on_key(&Key {
-                code: KeyCode::Enter,
-                mods: KeyModifiers::NONE,
-            }),
-            (Outcome::Consumed, None)
+            picker.checked(),
+            &[ItemKey::text("alpha"), ItemKey::text("beta")],
+            "replace_items preserves both checked keys"
+        );
+
+        assert_eq!(picker.toggle_checked(0), None);
+        assert_eq!(
+            picker.checked(),
+            &[ItemKey::text("beta")],
+            "removing an already-checked key must not report a group conflict"
+        );
+        assert_eq!(picker.toggle_checked(1), None);
+        assert!(picker.checked().is_empty());
+    }
+
+    #[test]
+    fn keyboard_toggles_emit_events_and_hidden_group_conflicts_keep_selection() {
+        let mut focus = Focus::default();
+        let ring = FocusRing::default();
+        let app = ();
+        let mut plain = Picker::new(WidgetId::of("picker-test-plain"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection")
+            .searchable(false)
+            .expect("disabling search is valid");
+        plain
+            .set_items(vec![Item::new("Alpha")])
+            .expect("valid picker update");
+        let space = Key {
+            code: KeyCode::Char(' '),
+            mods: KeyModifiers::NONE,
+        };
+        for (selected, expected) in [(true, &[ItemKey::index(0)][..]), (false, &[][..])] {
+            let outcome = {
+                let mut cx = LayerCx {
+                    focus: &mut focus,
+                    ring: &ring,
+                    app: &app,
+                };
+                <Picker as Layer<LayerResult, ()>>::on_key(&mut plain, &space, &mut cx)
+            };
+            assert_eq!(outcome, Outcome::Changed);
+            assert_eq!(plain.checked(), expected);
+            assert_eq!(
+                <Picker as Layer<LayerResult, ()>>::take_result(&mut plain),
+                Some(LayerOut::Event(LayerResult::Picker(PickerAction::Toggled)))
+            );
+            assert_eq!(plain.checked().is_empty(), !selected);
+        }
+
+        let group = ItemKey::text("provider");
+        let alpha = Item::new("Alpha")
+            .key(ItemKey::text("alpha"))
+            .selection_group(group);
+        let beta = Item::new("Beta")
+            .key(ItemKey::text("beta"))
+            .selection_group(group);
+        let mut searchable = Picker::new(WidgetId::of("picker-test-searchable"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        searchable
+            .set_items(vec![alpha.clone(), beta.clone()])
+            .expect("valid picker update");
+        searchable.toggle_checked(0);
+        searchable
+            .set_visible_items(vec![beta])
+            .expect("valid picker update");
+
+        let insert = Key {
+            code: KeyCode::Insert,
+            mods: KeyModifiers::NONE,
+        };
+        let outcome = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::on_key(&mut searchable, &insert, &mut cx)
+        };
+        assert_eq!(outcome, Outcome::Consumed);
+        assert_eq!(searchable.checked(), &[ItemKey::text("alpha")]);
+        assert_eq!(
+            <Picker as Layer<LayerResult, ()>>::take_result(&mut searchable),
+            Some(LayerOut::Event(LayerResult::Picker(
+                PickerAction::SelectionConflict {
+                    attempted: ItemKey::text("beta"),
+                    selected: ItemKey::text("alpha"),
+                }
+            )))
+        );
+
+        searchable
+            .set_visible_items(vec![alpha])
+            .expect("valid picker update");
+        for (selected, expected) in [(false, &[][..]), (true, &[ItemKey::text("alpha")][..])] {
+            let outcome = {
+                let mut cx = LayerCx {
+                    focus: &mut focus,
+                    ring: &ring,
+                    app: &app,
+                };
+                <Picker as Layer<LayerResult, ()>>::on_key(&mut searchable, &insert, &mut cx)
+            };
+            assert_eq!(outcome, Outcome::Changed);
+            assert_eq!(searchable.checked(), expected);
+            assert_eq!(
+                <Picker as Layer<LayerResult, ()>>::take_result(&mut searchable),
+                Some(LayerOut::Event(LayerResult::Picker(PickerAction::Toggled)))
+            );
+            assert_eq!(searchable.checked().is_empty(), !selected);
+        }
+    }
+
+    #[test]
+    fn searchable_refresh_prunes_disabled_selections_and_new_session_resets_them() {
+        let mut picker = Picker::new(WidgetId::of("picker-test"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        picker
+            .set_items(vec![Item::new("Alpha").key(ItemKey::text("alpha"))])
+            .expect("valid picker update");
+        picker.toggle_checked(0);
+        picker
+            .replace_items(vec![
+                Item::new("Alpha")
+                    .key(ItemKey::text("alpha"))
+                    .disabled(true),
+            ])
+            .expect("valid picker update");
+        assert!(picker.checked().is_empty());
+
+        picker
+            .set_items(vec![Item::new("Beta").key(ItemKey::text("beta"))])
+            .expect("valid picker update");
+        picker.toggle_checked(0);
+        picker
+            .set_items(vec![Item::new("Gamma").key(ItemKey::text("gamma"))])
+            .expect("valid picker update");
+        assert!(picker.checked().is_empty());
+    }
+
+    #[test]
+    fn searchable_multi_rejects_position_keys() {
+        let mut picker = Picker::new(WidgetId::of("picker-test"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        assert_eq!(
+            picker.set_items(vec![Item::new("Alpha")]),
+            Err(super::PickerItemsError::MissingStableKey)
         );
     }
 
     #[test]
-    fn keyed_multi_picker_rejects_duplicate_keys_without_panicking() {
-        let mut picker =
-            Picker::new(WidgetId::of("picker-test"), "Multi").multi_select_by_key(true);
-        let key = ItemKey::text("duplicate");
+    fn searchable_multi_rejects_duplicate_stable_keys() {
+        let mut picker = Picker::new(WidgetId::of("picker-test"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
         assert_eq!(
-            picker.set_items_by_key(vec![
-                Item::new("First").key(key),
-                Item::new("Second").key(key),
+            picker.set_items(vec![
+                Item::new("Same label").key(ItemKey::text("same-id")),
+                Item::new("Same label").key(ItemKey::text("same-id")),
             ]),
-            Err(KeyedMultiSelectError::DuplicateKey(key))
+            Err(super::PickerItemsError::DuplicateKey(ItemKey::text(
+                "same-id"
+            )))
         );
     }
 
     #[test]
-    fn legacy_multi_picker_keeps_default_index_behavior() {
-        let mut picker = Picker::new(WidgetId::of("picker-test"), "Multi").multi_select(true);
-        picker.set_searchable(false);
-        picker.set_items(vec![Item::new("First"), Item::new("Second")]);
+    fn picker_layer_pointer_toggle_repaints_stays_open_and_skips_disabled_rows() {
+        let area = Rect::new(0, 0, 100, 30);
+        let mut picker = Picker::new(WidgetId::of("picker-test"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection")
+            .searchable(false)
+            .expect("disabling search is valid");
+        picker
+            .set_items(vec![
+                Item::new("Alpha").key(ItemKey::text("alpha")),
+                Item::new("Unavailable")
+                    .key(ItemKey::text("unavailable"))
+                    .disabled(true),
+            ])
+            .expect("valid picker update");
+        let theme = Theme::for_level(ColorLevel::TrueColor);
+        let mut focus = Focus::default();
+        let app = ();
+        let draw = |picker: &mut Picker, ring: &mut FocusRing| {
+            let mut buffer = Buffer::empty(area);
+            let mut hits = HitRegistry::default();
+            let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, ring);
+            picker.draw(area, &mut buffer, &mut ctx);
+            ctx.flush_overlays(&mut buffer);
+            (buffer, hits)
+        };
+
+        let mut ring = FocusRing::default();
+        let (_, hits) = draw(&mut picker, &mut ring);
+        let click = PointerEvent::new(
+            &hits,
+            Phase::Click,
+            picker.row_id(0),
+            Position::new(1, 1),
+            1,
+            KeyModifiers::NONE,
+        );
+        let outcome = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::pointer(&mut picker, &click, &mut cx)
+        };
+        assert_eq!(outcome, Outcome::Changed);
+        assert!(matches!(
+            <Picker as Layer<LayerResult, ()>>::take_result(&mut picker),
+            Some(LayerOut::Event(LayerResult::Picker(PickerAction::Toggled)))
+        ));
+        assert_eq!(picker.checked(), &[ItemKey::text("alpha")]);
+
+        let (buffer, hits) = draw(&mut picker, &mut ring);
+        assert_eq!(
+            buffer
+                .content()
+                .iter()
+                .filter(|cell| cell.symbol() == theme.glyphs.tick)
+                .count(),
+            1
+        );
+        let click = PointerEvent::new(
+            &hits,
+            Phase::Click,
+            picker.row_id(0),
+            Position::new(1, 1),
+            1,
+            KeyModifiers::NONE,
+        );
+        let outcome = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::pointer(&mut picker, &click, &mut cx)
+        };
+        assert_eq!(outcome, Outcome::Changed);
+        assert!(matches!(
+            <Picker as Layer<LayerResult, ()>>::take_result(&mut picker),
+            Some(LayerOut::Event(LayerResult::Picker(PickerAction::Toggled)))
+        ));
+        assert!(picker.checked().is_empty());
+
+        let (_, hits) = draw(&mut picker, &mut ring);
+        let disabled = PointerEvent::new(
+            &hits,
+            Phase::Click,
+            picker.row_id(1),
+            Position::new(1, 1),
+            1,
+            KeyModifiers::NONE,
+        );
+        let outcome = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::pointer(&mut picker, &disabled, &mut cx)
+        };
+        assert_eq!(outcome, Outcome::Consumed);
+        assert!(<Picker as Layer<LayerResult, ()>>::take_result(&mut picker).is_none());
+        assert!(picker.checked().is_empty());
+
+        let backdrop = PointerEvent::new(
+            &hits,
+            Phase::Click,
+            crate::ui::popup::backdrop_id(picker.id),
+            Position::new(0, 0),
+            1,
+            KeyModifiers::NONE,
+        );
+        let outcome = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::pointer(&mut picker, &backdrop, &mut cx)
+        };
+        assert_eq!(outcome, Outcome::Ignored);
+        assert!(<Picker as Layer<LayerResult, ()>>::take_result(&mut picker).is_none());
+        assert!(picker.checked().is_empty());
+    }
+    #[test]
+    fn duplicate_picker_keys_are_rejected_without_mutation_or_panic() {
+        for searchable in [false, true] {
+            let mut picker = Picker::new(WidgetId::of("duplicate"), "Duplicate")
+                .multi_select(true)
+                .expect("empty picker accepts multi-selection");
+            picker
+                .set_searchable(searchable)
+                .expect("valid picker update");
+            picker
+                .set_items(vec![Item::new("First").key(ItemKey::text("first"))])
+                .expect("valid picker update");
+            picker.toggle_checked(0);
+            let before = picker.checked().to_vec();
+            let cursor = picker.list.cursor.index;
+            let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                picker.set_items(vec![
+                    Item::new("A").key(ItemKey::text("same")),
+                    Item::new("B").key(ItemKey::text("same")),
+                ])
+            }));
+            assert_eq!(
+                result.unwrap(),
+                Err(super::PickerItemsError::DuplicateKey(ItemKey::text("same")))
+            );
+            assert_eq!(picker.items[0].label, "First");
+            assert_eq!(picker.list.cursor.index, cursor);
+            assert_eq!(picker.checked(), before);
+        }
+    }
+
+    #[test]
+    fn explicit_index_picker_keys_survive_reorder() {
+        let mut picker = Picker::new(WidgetId::of("explicit-index"), "Index")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        picker.set_searchable(false).expect("valid picker update");
+        let a = Item::new("A").key(ItemKey::index(17));
+        let b = Item::new("B").key(ItemKey::index(29));
+        picker
+            .set_items(vec![a.clone(), b.clone()])
+            .expect("valid picker update");
         picker.toggle_checked(0);
-        picker.toggle_checked(1);
-
+        assert_eq!(picker.checked(), &[ItemKey::index(17)]);
+        picker
+            .replace_items(vec![b, a])
+            .expect("valid picker update");
+        assert_eq!(picker.checked(), &[ItemKey::index(17)]);
+        assert_eq!(picker.item_for_key(ItemKey::index(17)).unwrap().label, "A");
+    }
+    #[test]
+    fn picker_rejects_ambiguous_and_unknown_keys_atomically() {
+        let mut picker = Picker::new(WidgetId::of("keys"), "Keys")
+            .multi_select(true)
+            .expect("empty picker")
+            .searchable(false)
+            .expect("disable search");
+        let first = Item::new("First").key(ItemKey::index(17));
+        let second = Item::new("Second").key(ItemKey::index(29));
         assert_eq!(
-            picker.on_key(&Key {
-                code: KeyCode::Enter,
-                mods: KeyModifiers::NONE,
-            }),
-            (Outcome::Changed, Some(PickerAction::ChosenMany(vec![0, 1])))
+            picker.set_items(vec![first.clone(), second.clone()]),
+            Ok(())
         );
+        picker.toggle_checked(0);
+        let cursor = picker.list.cursor.index;
+        assert_eq!(
+            picker.replace_items(vec![first.clone(), first.clone()]),
+            Err(super::PickerItemsError::DuplicateKey(ItemKey::index(17)))
+        );
+        assert_eq!(picker.list.cursor.index, cursor);
+        assert_eq!(picker.checked(), &[ItemKey::index(17)]);
+        assert_eq!(picker.items.len(), 2);
+        assert_eq!(
+            picker.set_visible_items(vec![Item::new("Unknown").key(ItemKey::index(41))]),
+            Err(super::PickerItemsError::UnknownVisibleKey(ItemKey::index(
+                41
+            )))
+        );
+        assert_eq!(
+            picker.set_visible_items(vec![first.clone(), first.clone()]),
+            Err(super::PickerItemsError::DuplicateKey(ItemKey::index(17)))
+        );
+        assert_eq!(picker.set_visible_items(vec![second.clone()]), Ok(()));
+        assert_eq!(picker.checked(), &[ItemKey::index(17)]);
+        assert_eq!(
+            picker.replace_items(vec![second, first.disabled(true)]),
+            Ok(())
+        );
+        assert!(picker.checked().is_empty());
     }
 
     #[test]
-    fn legacy_multi_picker_space_cannot_check_disabled_or_missing_rows() {
-        let mut picker = Picker::new(WidgetId::of("picker-test"), "Multi").multi_select(true);
-        picker.set_searchable(false);
-        picker.set_items(vec![Item::new("Disabled").disabled(true)]);
-
+    fn picker_implicit_positions_cannot_alias_explicit_indices() {
+        let mut picker = Picker::new(WidgetId::of("positions"), "Positions")
+            .multi_select(true)
+            .expect("empty picker")
+            .searchable(false)
+            .expect("disable search");
         assert_eq!(
-            picker.on_key(&Key {
-                code: KeyCode::Char(' '),
-                mods: KeyModifiers::NONE,
-            }),
-            (Outcome::Consumed, None)
+            picker.set_items(vec![
+                Item::new("Implicit"),
+                Item::new("Explicit").key(ItemKey::index(0))
+            ]),
+            Err(super::PickerItemsError::DuplicateKey(ItemKey::index(0)))
         );
-        assert!(picker.checked().is_empty());
-
-        picker.set_items(vec![]);
+        assert_eq!(picker.set_items(vec![Item::new("Implicit")]), Ok(()));
+        picker.toggle_checked(0);
+        assert_eq!(picker.checked(), &[ItemKey::index(0)]);
         assert_eq!(
-            picker.on_key(&Key {
-                code: KeyCode::Char(' '),
-                mods: KeyModifiers::NONE,
-            }),
-            (Outcome::Consumed, None)
+            picker.replace_items(vec![Item::new("Explicit").key(ItemKey::index(0))]),
+            Ok(())
         );
         assert!(picker.checked().is_empty());
     }
 
     #[test]
-    fn enabling_keyed_mode_rejects_existing_duplicate_keys_safely() {
-        let mut picker = Picker::new(WidgetId::of("picker-test"), "Multi");
-        picker.set_items(vec![Item::new("First"), Item::new("Second")]);
-
-        let picker = picker.multi_select_by_key(true);
-
-        assert!(picker.items.is_empty());
-        assert!(matches!(picker.status, PickerStatus::Error { .. }));
-        assert!(picker.selected_keys().is_empty());
+    fn enabling_searchable_multi_rejects_unstable_items() {
+        let mut picker = Picker::new(WidgetId::of("mode"), "Mode");
+        picker
+            .set_items(vec![Item::new("Implicit")])
+            .expect("valid picker update");
+        let result = picker.multi_select(true);
+        assert!(matches!(
+            result,
+            Err(super::PickerItemsError::MissingStableKey)
+        ));
+        let mut picker = Picker::new(WidgetId::of("mode2"), "Mode")
+            .multi_select(true)
+            .expect("empty picker")
+            .searchable(false)
+            .expect("disable search");
+        picker
+            .set_items(vec![Item::new("Implicit")])
+            .expect("valid picker update");
+        assert_eq!(
+            picker.set_searchable(true),
+            Err(super::PickerItemsError::MissingStableKey)
+        );
+        assert!(!picker.is_searchable());
+        assert_eq!(picker.items[0].label, "Implicit");
     }
 }

@@ -2010,10 +2010,11 @@ impl ConfigTabs {
 
     fn open_role_picker(&mut self, cx: &mut Cx) {
         let mut p = Picker::new(self.ids.form.sub("rolepick"), "Add role override");
-        p.list.width = (72, 72);
+        p.set_width(72);
         p.scope = Some(format!("{} roles", self.registry.len()));
         let items = self.role_picker_items("");
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         cx.open(p, LayerTag::new("cfg.role"));
     }
 

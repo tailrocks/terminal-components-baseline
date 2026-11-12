@@ -457,7 +457,7 @@ fn editing_a_host_variable_account_opens_on_its_source_and_name() {
 fn roster_card(vocabulary: Vocabulary, daemon: DaemonSnapshot) -> String {
     let mut world = world_for(Scenario::Returning);
     world.surfaces.vocabulary = vocabulary;
-    let id = world.running()[0].id.clone();
+    let id = world.running_entries()[0].id().clone();
     world.daemons.remove(&id);
     world.instance_mut(&id).expect("instance").daemon = daemon;
     let mut app = app_with(Scenario::Returning, world);
@@ -655,7 +655,7 @@ fn a_pending_check_brings_its_rows_into_view() {
 fn the_no_tabs_card_keeps_its_point_at_the_narrowest_width_that_draws_it() {
     let mut world = world_for(Scenario::Returning);
     world.surfaces.vocabulary = Vocabulary::openshell();
-    let id = world.running()[0].id.clone();
+    let id = world.running_entries()[0].id().clone();
     world.daemons.remove(&id);
     world.instance_mut(&id).expect("instance").daemon = DaemonSnapshot::NoTabs;
     let mut app = app_with(Scenario::Returning, world);

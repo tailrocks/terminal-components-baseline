@@ -32,7 +32,7 @@ use crate::domain::agent::Agent;
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::role::{RoleCheckState, RoleManifestDoc, RoleRecord};
 use crate::domain::workspace::{AllowedRoles, RoleEntry, RoleName, RoleSource, usability_of};
-use crate::world::{Msg, RoleLoad, Snapshot, World, job};
+use crate::world::{Msg, RoleLoad, SaveSuccess, World, job};
 use junie_tui::ui::text::plural;
 use junie_tui::widgets::list_detail::{Action, Event, Frame, Line, ListDetail, ListRow};
 
@@ -247,7 +247,12 @@ impl RolesScreen {
             .pending
             .as_ref()
             .is_some_and(|p| p.role == rec.name && p.agent == agent);
-        let resolved = w.account_for(agent.provider(), None, Some(&rec.name), None);
+        let resolved = w.account_for(
+            crate::domain::tuple::TupleIdentity::new(agent, agent.provider()),
+            None,
+            Some(&rec.name),
+            None,
+        );
         let bound = rec.bindings.get(&agent).and_then(|id| w.accounts.get(id));
         let (cols, mut mark, mut tone) = match (bound, &resolved.account) {
             (Some(a), _) => (
@@ -482,9 +487,11 @@ impl RolesScreen {
             WidgetId::of("roles.pick"),
             &format!("Bind account · {role} · {}", agent.label()),
         );
-        p.set_searchable(false);
-        p.set_items(items);
-        p.list.chosen = chosen;
+        p.set_searchable(false)
+            .expect("disabling picker search is valid");
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
+        p.set_chosen(chosen);
         if let Some(i) = chosen {
             p.set_cursor(i);
         }
@@ -546,12 +553,12 @@ impl RolesScreen {
         }
     }
 
-    fn finish_bind(&mut self, result: &Result<Box<Snapshot>, String>, w: &mut World, cx: &mut Cx) {
+    fn finish_bind(&mut self, result: &Result<SaveSuccess, String>, w: &mut World, cx: &mut Cx) {
         let Some(bind) = self.pending.take() else {
             return;
         };
-        let snapshot = match result {
-            Ok(snapshot) => snapshot,
+        let saved = match result {
+            Ok(saved) => saved,
             Err(reason) => {
                 let hint = if reason.contains("permission denied") {
                     " Make ~/.config/jackin/config.toml writable."
@@ -567,26 +574,30 @@ impl RolesScreen {
                 return;
             }
         };
-        w.apply((**snapshot).clone());
+        w.apply((*saved.snapshot).clone());
         if !bind.undo {
             self.undo = Some((bind.role.clone(), bind.agent, bind.previous.clone()));
         }
         let agent = bind.agent.label();
         let role = &bind.role;
-        match (&bind.account, bind.undo) {
+        let status = match (&bind.account, bind.undo) {
             (Some(id), true) => {
                 let title = w.accounts.get(id).map(|a| a.title()).unwrap_or_default();
-                cx.status(format!("Restored the {agent} binding of {role} to {title}"));
+                format!("Restored the {agent} binding of {role} to {title}")
             }
-            (None, true) => cx.status(format!("Restored {role} · no {agent} binding")),
+            (None, true) => format!("Restored {role} · no {agent} binding"),
             (Some(id), false) => {
                 let title = w.accounts.get(id).map(|a| a.title()).unwrap_or_default();
-                cx.status(format!("Bound {title} to {role} for {agent}"));
+                format!("Bound {title} to {role} for {agent}")
             }
             (None, false) => {
-                cx.status(format!("Cleared the {agent} binding of {role} · u undoes"));
+                format!("Cleared the {agent} binding of {role} · u undoes")
             }
-        }
+        };
+        cx.status(match saved.warning {
+            Some(warning) => format!("{} · {status}", warning.status()),
+            None => status,
+        });
     }
 
     fn check(&mut self, w: &mut World, cx: &mut Cx) {
@@ -763,18 +774,22 @@ impl RolesScreen {
     fn finish_add(
         &mut self,
         location: &str,
-        result: &Result<(RoleName, Box<Snapshot>), String>,
+        result: &Result<(RoleName, SaveSuccess), String>,
         w: &mut World,
         cx: &mut Cx,
     ) {
         self.adding = None;
         match result {
-            Ok((name, snapshot)) => {
-                w.apply((**snapshot).clone());
+            Ok((name, saved)) => {
+                w.apply((*saved.snapshot).clone());
                 self.want = Some(name.clone());
                 self.filter = None;
                 self.build_rows(w);
-                cx.status(format!("Role {name} added"));
+                let status = format!("Role {name} added");
+                cx.status(match saved.warning {
+                    Some(warning) => format!("{} · {status}", warning.status()),
+                    None => status,
+                });
             }
             Err(reason) => {
                 cx.error(format!("Could not add role {location}: {reason}"));
@@ -931,9 +946,13 @@ impl Page<Jackin> for RolesScreen {
             Msg::RoleRemoved { role, result } if self.removing.as_ref() == Some(role) => {
                 self.removing = None;
                 match result {
-                    Ok(snapshot) => {
-                        w.apply((**snapshot).clone());
-                        cx.status(format!("Removed role {role}"));
+                    Ok(saved) => {
+                        w.apply((*saved.snapshot).clone());
+                        let status = format!("Removed role {role}");
+                        cx.status(match saved.warning {
+                            Some(warning) => format!("{} · {status}", warning.status()),
+                            None => status,
+                        });
                         self.build_rows(w);
                     }
                     Err(reason) => cx.error(format!(

@@ -9,7 +9,8 @@ use crate::domain::account::{
 };
 use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::instance::{
-    DaemonSnapshot, Instance, InstanceStatus, ManifestError, SessionRecord, SessionStatus,
+    DaemonSnapshot, Instance, InstanceEntry, InstanceId, InstanceStatus, ManifestError,
+    SessionRecord, SessionStatus,
 };
 use crate::domain::onepassword::OpReference;
 use crate::domain::reason::{IssueReason, UsageReason};
@@ -290,11 +291,11 @@ fn instance(
     last_seen: i64,
 ) -> Instance {
     Instance {
-        id: id.into(),
+        id: crate::domain::instance::InstanceId::simulated(id),
         container: format!("jackin-{wsname}"),
         workspace: ws,
-        workdir: format!("/workspace/{wsname}"),
-        role: role.into(),
+        workdir: Some(format!("/workspace/{wsname}")),
+        role: Some(role.into()),
         agent,
         status,
         created_secs: created,
@@ -1310,7 +1311,10 @@ fn populated(scenario: Scenario, rich: bool) -> World {
         now - 30 * 60,
     );
     i9.sessions = Ok(vec![]);
-    w.instances = vec![i1, i2, i3, i4, i5, i6, i7, i8, i9];
+    w.instances = vec![i1, i2, i3, i4, i5, i6, i7, i8, i9]
+        .into_iter()
+        .map(InstanceEntry::available)
+        .collect();
     if rich {
         let mut i10 = instance(
             "jk-e0e0",
@@ -1323,7 +1327,7 @@ fn populated(scenario: Scenario, rich: bool) -> World {
             now - 90,
         );
         i10.sessions = Err(ManifestError::ReadError);
-        w.instances.push(i10);
+        w.instances.push(InstanceEntry::available(i10));
         let i11 = instance(
             "jk-f1f1",
             Some(11),
@@ -1334,7 +1338,7 @@ fn populated(scenario: Scenario, rich: bool) -> World {
             now - 4 * d,
             now - 4 * d,
         );
-        w.instances.push(i11);
+        w.instances.push(InstanceEntry::available(i11));
         for k in 0..6 {
             let id = format!("jk-b{k}{k}{k}");
             let st = if k % 2 == 0 {
@@ -1342,7 +1346,7 @@ fn populated(scenario: Scenario, rich: bool) -> World {
             } else {
                 InstanceStatus::RestoreAvailable
             };
-            w.instances.push(instance(
+            w.instances.push(InstanceEntry::available(instance(
                 &id,
                 Some(1),
                 "payments-platform",
@@ -1351,7 +1355,7 @@ fn populated(scenario: Scenario, rich: bool) -> World {
                 st,
                 now - (k + 2) * d,
                 now - (k + 2) * d,
-            ));
+            )));
         }
     }
 
@@ -1359,20 +1363,22 @@ fn populated(scenario: Scenario, rich: bool) -> World {
         ws.github = w
             .instances
             .iter()
+            .filter_map(InstanceEntry::as_available)
             .filter(|i| i.workspace == Some(ws.id))
             .find_map(|i| i.github.clone());
     }
 
     let now_ms = w.now_ms();
     let mut d1 = Daemon::new("payments-platform");
+    let payments_instance = InstanceId::simulated("jk-7f3a");
     let claude = PaneRequest::new(
-        "jk-7f3a",
+        &payments_instance,
         Some(Agent::ClaudeCode),
         Some("acct-claude-work".into()),
     );
     d1.new_tab(&claude, now_ms - 60_000, scripted(&claude));
     let codex = PaneRequest::new(
-        "jk-7f3a",
+        &payments_instance,
         Some(Agent::Codex),
         Some("acct-codex-primary".into()),
     );
@@ -1383,7 +1389,7 @@ fn populated(scenario: Scenario, rich: bool) -> World {
         now_ms - 50_000,
         scripted(&codex),
     );
-    let shell = PaneRequest::new("jk-7f3a", None, None);
+    let shell = PaneRequest::new(&payments_instance, None, None);
     d1.split(
         SplitDir::Vertical,
         false,
@@ -1400,30 +1406,32 @@ fn populated(scenario: Scenario, rich: bool) -> World {
         t.focused = 1;
     }
     d1.new_tab(&shell, now_ms - 30_000, scripted(&shell));
-    let amp = PaneRequest::new("jk-7f3a", Some(Agent::Amp), None);
+    let amp = PaneRequest::new(&payments_instance, Some(Agent::Amp), None);
     d1.new_tab(&amp, now_ms - 20_000, scripted(&amp));
     if let Some(t) = d1.tabs.get_mut(2) {
         t.custom_label = Some("docs".into());
     }
     d1.active = 0;
 
-    w.daemons.insert("jk-7f3a".into(), d1);
+    w.daemons.insert(payments_instance, d1);
+    let infra_instance = InstanceId::simulated("jk-9b02");
     let mut d3 = Daemon::new("infra-control-plane");
     let experiments = PaneRequest::new(
-        "jk-9b02",
+        &infra_instance,
         Some(Agent::Codex),
         Some("acct-codex-experiments".into()),
     );
     d3.new_tab(&experiments, now_ms - 30_000, scripted(&experiments));
-    w.daemons.insert("jk-9b02".into(), d3);
+    w.daemons.insert(infra_instance, d3);
     if rich {
         let d10 = Daemon::new("data-pipeline");
-        w.daemons.insert("jk-e0e0".into(), d10);
+        let data_instance = InstanceId::simulated("jk-e0e0");
+        w.daemons.insert(data_instance.clone(), d10);
 
-        if let Some(i) = w.instance_mut("jk-e0e0") {
+        if let Some(i) = w.instance_mut(&data_instance) {
             i.daemon = DaemonSnapshot::Unavailable;
         }
-        w.daemons.remove("jk-e0e0");
+        w.daemons.remove(&data_instance);
     }
 
     w.roles.extend(generated_roles(if rich { 120 } else { 40 }));
@@ -1443,9 +1451,10 @@ fn populated(scenario: Scenario, rich: bool) -> World {
         })
         .collect();
     for i in w.instances.iter_mut() {
-        if let Some((_, set)) = i
-            .workspace
-            .and_then(|id| sets.iter().find(|(w, _)| *w == id))
+        if let Some(i) = i.as_available_mut()
+            && let Some((_, set)) = i
+                .workspace
+                .and_then(|id| sets.iter().find(|(w, _)| *w == id))
         {
             i.accounts = set.clone();
         }
@@ -1560,11 +1569,13 @@ pub fn world_for(scenario: Scenario) -> World {
             let mut w = populated(scenario, false);
 
             for i in w.instances.iter_mut() {
-                if i.id == "jk-9b02" {
-                    i.status = InstanceStatus::CleanExited;
+                if i.id() == &InstanceId::simulated("jk-9b02")
+                    && let Some(instance) = i.as_available_mut()
+                {
+                    instance.status = InstanceStatus::CleanExited;
                 }
             }
-            w.daemons.remove("jk-9b02");
+            w.daemons.remove(&InstanceId::simulated("jk-9b02"));
             refresh_snapshots(&mut w);
             w.sync_arbiter();
             w.arbiter.entered_at_ms = Some(-8_040_000);

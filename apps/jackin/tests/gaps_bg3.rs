@@ -14,7 +14,9 @@ use jackin_console::backend::{Backend, Completion, Effect, FileSource, OnePasswo
 use jackin_console::domain::account::{AccountId, Lifecycle};
 use jackin_console::domain::agent::{Agent, AuthMode, Provider};
 use jackin_console::domain::docker::{DockerCapability, DockerRiskText};
-use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
+use jackin_console::domain::instance::{
+    DaemonSnapshot, Instance, InstanceEntry, InstanceId, InstanceStatus,
+};
 use jackin_console::domain::launch::{
     LaunchContent, LaunchFailure, LaunchWords, NextStep, RefusalReason, RefusalText,
 };
@@ -31,6 +33,10 @@ use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::theme::{ColorLevel, Theme};
 use junie_tui::widgets::steps::StepState;
+
+fn iid(label: &str) -> InstanceId {
+    InstanceId::simulated(label)
+}
 
 // A backend whose launch the test scripts, with the content (the words) it
 // names. Everything else goes to the simulator.
@@ -64,9 +70,9 @@ impl LaunchFeed for Feed {
 
     fn answer_env(&mut self, _: Vec<EnvAnswer>) {}
 
-    fn cancel(&mut self, _: &World) -> Option<Instance> {
+    fn cancel(&mut self, _: &World) -> Option<InstanceEntry> {
         self.calls.lock().expect("calls").cancels += 1;
-        self.cancel.take()
+        self.cancel.take().map(InstanceEntry::available)
     }
 }
 
@@ -177,11 +183,11 @@ fn running_stage(stage: usize) -> Vec<LaunchEvent> {
 
 fn record(id: &str, status: InstanceStatus) -> Instance {
     Instance {
-        id: id.into(),
+        id: iid(id),
         container: format!("jackin-{id}"),
         workspace: Some(1),
-        workdir: "/sandbox/project".into(),
-        role: "the-architect".into(),
+        workdir: Some("/sandbox/project".into()),
+        role: Some("the-architect".into()),
         agent: Agent::Codex,
         status,
         created_secs: 1_700_000_000,
@@ -210,7 +216,7 @@ fn failed(summary: &str, next_step: NextStep, instance: Option<Instance>) -> Lau
             next_step,
             detail: vec![],
         },
-        instance,
+        instance: instance.map(InstanceEntry::available),
     }))
 }
 
@@ -582,21 +588,21 @@ fn a_cancel_record_that_comes_later_reaches_the_roster_at_once() {
     press(&mut app, "right enter");
     assert_eq!(calls.lock().expect("calls").cancels, 1);
     assert_eq!(app.route(), Route::Manager);
-    assert!(app.world.instance("jk-late").is_none());
+    assert!(app.world.instance(&iid("jk-late")).is_none());
     let before = app.world.instances.len();
 
     let late = record("jk-late", InstanceStatus::FailedSetup);
     let reply = Msg::LaunchCancelled {
-        instance: Box::new(late.clone()),
+        instance: Box::new(InstanceEntry::available(late.clone())),
     };
     assert_eq!(app.deliver(&reply), Outcome::Changed);
-    assert_eq!(app.world.instance("jk-late"), Some(&late));
+    assert_eq!(app.world.instance(&iid("jk-late")), Some(&late));
     assert_eq!(app.world.instances.len(), before + 1);
 
     let mut newer = late;
     newer.last_seen_secs += 5;
     let reply = Msg::LaunchCancelled {
-        instance: Box::new(newer.clone()),
+        instance: Box::new(InstanceEntry::available(newer.clone())),
     };
     app.deliver(&reply);
     assert_eq!(
@@ -604,7 +610,7 @@ fn a_cancel_record_that_comes_later_reaches_the_roster_at_once() {
         before + 1,
         "a record the roster already has is replaced, not added again"
     );
-    assert_eq!(app.world.instance("jk-late"), Some(&newer));
+    assert_eq!(app.world.instance(&iid("jk-late")), Some(&newer));
 }
 
 // Gap 8: the Docker banner comes from the event when the backend sends one.

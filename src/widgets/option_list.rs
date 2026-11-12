@@ -37,7 +37,7 @@ pub enum WheelMode {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Item {
-    pub key: ItemKey,
+    pub key: Option<ItemKey>,
     pub label: String,
 
     pub glyph: Cow<'static, str>,
@@ -55,6 +55,8 @@ pub struct Item {
 
     pub reason: Option<String>,
 
+    pub selection_group: Option<ItemKey>,
+
     pub value: usize,
 }
 
@@ -67,7 +69,7 @@ impl Default for Item {
 impl Item {
     pub fn new(label: impl Into<String>) -> Self {
         Self {
-            key: ItemKey::index(0),
+            key: None,
             label: label.into(),
             glyph: Cow::Borrowed(""),
             detail: String::new(),
@@ -77,12 +79,13 @@ impl Item {
             insert: None,
             disabled: false,
             reason: None,
+            selection_group: None,
             value: 0,
         }
     }
 
     pub fn key(mut self, key: ItemKey) -> Self {
-        self.key = key;
+        self.key = Some(key);
         self
     }
 
@@ -127,6 +130,11 @@ impl Item {
         self
     }
 
+    pub fn selection_group(mut self, group: ItemKey) -> Self {
+        self.selection_group = Some(group);
+        self
+    }
+
     pub fn value(mut self, value: usize) -> Self {
         self.value = value;
         self
@@ -158,10 +166,7 @@ impl<T: AsItem> RowSource for [T] {
         &self[i].as_item().label
     }
     fn key(&self, i: usize) -> ItemKey {
-        match self[i].as_item().key {
-            ItemKey::Index(_) => ItemKey::index(i),
-            k => k,
-        }
+        self[i].as_item().key.unwrap_or(ItemKey::index(i))
     }
 }
 
@@ -198,7 +203,7 @@ pub struct OptionList {
     pub query: Option<Box<EditField>>,
 
     pub chosen: Option<usize>,
-    pub checked: Vec<usize>,
+    pub checked: Vec<ItemKey>,
 
     pub clear_on_leave: bool,
     typeahead: TypeAhead,
@@ -370,15 +375,15 @@ impl OptionList {
         self
     }
 
-    pub fn toggle_checked(&mut self, i: usize) {
-        if let Some(pos) = self.checked.iter().position(|&c| c == i) {
+    pub fn toggle_checked(&mut self, key: ItemKey) {
+        if let Some(pos) = self.checked.iter().position(|&c| c == key) {
             self.checked.remove(pos);
         } else {
-            self.checked.push(i);
+            self.checked.push(key);
         }
     }
-    pub fn is_checked(&self, i: usize) -> bool {
-        self.checked.contains(&i)
+    pub fn is_checked(&self, key: ItemKey) -> bool {
+        self.checked.contains(&key)
     }
     pub fn reset(&mut self, len: usize) {
         self.cursor.index = 0;
@@ -557,7 +562,7 @@ impl OptionList {
             let mut state = ctx.state(self.row_id(i));
             state.focused = highlighted == Some(i);
             state.disabled = !src.enabled(i);
-            state.selected = self.chosen == Some(i) || self.checked.contains(&i);
+            state.selected = self.chosen == Some(i) || self.checked.contains(&src.key(i));
 
             state.hovered &= !self.hover_moves_cursor;
             let area = Rect::new(inner.x, y, inner.width.saturating_sub(u16::from(has_sb)), 1);

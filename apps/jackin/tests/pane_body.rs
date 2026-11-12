@@ -10,7 +10,8 @@ use jackin_console::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, asse
 use jackin_console::backend::{Backend, Completion, Effect};
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::{
-    AgentState, DaemonSnapshot, Instance, InstanceStatus, PaneSnapshot, TabSnapshot,
+    AgentState, DaemonSnapshot, Instance, InstanceEntry, InstanceId, InstanceStatus, PaneSnapshot,
+    TabSnapshot,
 };
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
@@ -38,6 +39,10 @@ use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::layout::{Position, Rect};
 
 const INSTANCE: &str = "jk-test";
+
+fn instance_id() -> InstanceId {
+    InstanceId::simulated(INSTANCE)
+}
 const WORKSPACE: &str = "sandbox-project";
 
 #[derive(Debug, Default)]
@@ -197,11 +202,11 @@ impl Backend for Recorder {
 
 fn instance() -> Instance {
     Instance {
-        id: INSTANCE.into(),
+        id: instance_id(),
         container: "jackin-sandbox".into(),
         workspace: None,
-        workdir: "/sandbox/project".into(),
-        role: "the-architect".into(),
+        workdir: Some("/sandbox/project".into()),
+        role: Some("the-architect".into()),
         agent: Agent::ClaudeCode,
         status: InstanceStatus::Running,
         created_secs: 1_788_401_000,
@@ -257,20 +262,20 @@ fn rig(first: Vec<Line>, touched: &[&str]) -> Rig {
             gateway: None,
         }),
     );
-    parts.instances.push(instance());
+    parts.instances.push(InstanceEntry::available(instance()));
     let mut world = World::new(parts);
     let mut daemon = Daemon::new(WORKSPACE);
-    let request = PaneRequest::new(INSTANCE, Some(Agent::ClaudeCode), None);
+    let request = PaneRequest::new(&instance_id(), Some(Agent::ClaudeCode), None);
     daemon.new_tab(&request, 0, |spawn| {
         Box::new(FakeBody::new(spawn.id, first, &seen).touching(touched))
     });
-    world.daemons.insert(INSTANCE.into(), daemon);
+    world.daemons.insert(instance_id(), daemon);
     let copied = Arc::new(Sink(Mutex::new(Vec::new())));
     let app = assemble(
         world,
         Entry {
             page: EntryPage::Attach {
-                instance: INSTANCE.into(),
+                instance: instance_id(),
                 pane: None,
             },
             outro_when_framed: false,
@@ -345,7 +350,11 @@ impl Rig {
     }
 
     fn daemon(&self) -> &Daemon {
-        self.app.world.daemons.get(INSTANCE).expect("the daemon")
+        self.app
+            .world
+            .daemons
+            .get(&instance_id())
+            .expect("the daemon")
     }
 }
 
@@ -465,7 +474,7 @@ fn a_new_tab_and_a_split_ask_the_backend_for_a_body() {
         let spawned = rig.backend.spawned.lock().expect("spawned");
         assert_eq!(spawned.len(), 1);
         let (request, spawn) = &spawned[0];
-        assert_eq!(request.instance, INSTANCE);
+        assert_eq!(request.instance, instance_id());
         assert!(matches!(request.kind, PaneKind::Shell));
         assert_eq!(spawn.id, 2, "the daemon hands out the next pane id");
         assert_eq!(spawn.workspace, WORKSPACE);

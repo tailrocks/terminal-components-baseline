@@ -83,7 +83,10 @@ def load_entries(entries_path: Path, statuses_path: Path, allowlist_path: Path, 
         if len(fields) != 3 or fields[:2] != [oid, "blob"] or not fields[2].isascii() or not fields[2].isdigit():
             reject("snapshot tree contains an unexpected blob object type")
         size = int(fields[2])
-        path_limit = allowlist.get((path, oid), maximum_blob)
+        allowed_size = allowlist.get((path, oid))
+        if allowed_size is not None and size != allowed_size:
+            reject("approved reference blob size differs from its reviewed identity")
+        path_limit = allowed_size if allowed_size is not None else maximum_blob
         if size > path_limit:
             reject("snapshot blob exceeds the per-object size limit")
         total += size

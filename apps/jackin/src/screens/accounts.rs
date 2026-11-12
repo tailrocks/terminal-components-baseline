@@ -2418,10 +2418,14 @@ impl Page<Jackin> for AccountsScreen {
                     }
                 };
                 match (result, current) {
-                    (Ok(snapshot), current) => {
-                        w.apply((**snapshot).clone());
+                    (Ok(saved), current) => {
+                        w.apply((*saved.snapshot).clone());
                         if let Some(saving) = current {
+                            let status = saving.status.clone();
                             self.finish_saving(saving, added.clone(), cx);
+                            if let Some(warning) = saved.warning {
+                                cx.status(format!("{} · {status}", warning.status()));
+                            }
                         }
                     }
                     (

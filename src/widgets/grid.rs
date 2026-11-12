@@ -1767,8 +1767,17 @@ impl DataGrid {
             GridCmd::ClearFilters => (Outcome::Changed, Some(GridAction::ClearFilters)),
             GridCmd::Refresh => (Outcome::Changed, Some(GridAction::Refresh)),
             GridCmd::Undo => {
-                self.undo();
-                (Outcome::Changed, None)
+                if self.undo() {
+                    (
+                        Outcome::Changed,
+                        Some(GridAction::CellChanged {
+                            row: self.cursor.0,
+                            col: self.cursor.1,
+                        }),
+                    )
+                } else {
+                    (Outcome::Consumed, None)
+                }
             }
             GridCmd::Discard => (Outcome::Changed, Some(GridAction::DiscardRequested)),
             GridCmd::SelectAll => {

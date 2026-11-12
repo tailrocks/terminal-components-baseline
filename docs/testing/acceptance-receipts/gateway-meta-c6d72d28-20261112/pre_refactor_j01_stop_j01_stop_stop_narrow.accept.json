@@ -1,0 +1,18 @@
+{
+  "schema": "tuiscotti.cli.v1",
+  "command": "accept",
+  "status": "pass",
+  "test_id": "pre_refactor/j01_stop/j01_stop_stop_narrow",
+  "reason": null,
+  "candidate_path": {
+    "encoding": "utf8",
+    "value": "/tmp/cand_pre_refactor_j01_stop_j01_stop_stop_narrow.tui.pb"
+  },
+  "candidate_sha256": "f94b516143685290ea3a6d06c16cb458d4ccc0d514fecb7d545aa89c07d1d48c",
+  "baseline_sha256": "f94b516143685290ea3a6d06c16cb458d4ccc0d514fecb7d545aa89c07d1d48c",
+  "output_path": {
+    "encoding": "utf8",
+    "value": "/Users/donbeave/Projects/jackin-project/terminal-components-baseline/tests/functional/baselines/pre_refactor/j01_stop/j01_stop_stop_narrow.tui.pb"
+  },
+  "error_code": null
+}

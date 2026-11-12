@@ -148,11 +148,16 @@ impl<R: From<LayerResult> + 'static, W: ?Sized + 'static> Layer<R, W> for Picker
     }
     fn on_click(&mut self, id: WidgetId, _: Position, _: &mut LayerCx<'_, W>) -> Outcome {
         let ev = Picker::on_click(self, id);
+        let changed = ev.is_some();
         picker_event(self, ev);
-        Outcome::Changed
+        if changed {
+            Outcome::Changed
+        } else {
+            Outcome::Consumed
+        }
     }
     fn on_wheel(&mut self, delta: i32, _: Position) -> Outcome {
-        Scrollable::wheel(&mut self.list, Axis::Vertical, delta).outcome()
+        self.wheel(Axis::Vertical, delta)
     }
     fn on_paste(&mut self, text: &str) -> Outcome {
         let (o, ev) = Picker::on_paste(self, text);

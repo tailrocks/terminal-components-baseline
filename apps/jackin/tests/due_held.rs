@@ -7,7 +7,9 @@ use std::sync::{Arc, Mutex};
 use jackin_console::app::Route;
 use jackin_console::backend::{Backend, Completion, Effect, FileSource};
 use jackin_console::domain::agent::Agent;
-use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
+use jackin_console::domain::instance::{
+    DaemonSnapshot, Instance, InstanceEntry, InstanceId, InstanceStatus,
+};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
@@ -63,11 +65,11 @@ impl Backend for Raising {
 
 fn cancelled_launch() -> Instance {
     Instance {
-        id: "jk-late".into(),
+        id: InstanceId::simulated("jk-late"),
         container: "jackin-jk-late".into(),
         workspace: Some(1),
-        workdir: "/sandbox/project".into(),
-        role: "the-architect".into(),
+        workdir: Some("/sandbox/project".into()),
+        role: Some("the-architect".into()),
         agent: Agent::Codex,
         status: InstanceStatus::FailedSetup,
         created_secs: 1_700_000_000,
@@ -94,7 +96,7 @@ fn a_message_raised_during_the_intro_is_delivered_when_the_manager_shows() {
     world.backend = Arc::new(Raising {
         inner: SimBackend::shared(),
         once: Mutex::new(Some(Msg::LaunchCancelled {
-            instance: Box::new(cancelled_launch()),
+            instance: Box::new(InstanceEntry::available(cancelled_launch())),
         })),
     });
     let mut app = app_with_world(
@@ -113,7 +115,9 @@ fn a_message_raised_during_the_intro_is_delivered_when_the_manager_shows() {
         "the first tick is still the intro"
     );
     assert!(
-        app.world.instance("jk-late").is_none(),
+        app.world
+            .instance(&InstanceId::simulated("jk-late"))
+            .is_none(),
         "the intro cannot deliver it yet"
     );
 
@@ -128,7 +132,9 @@ fn a_message_raised_during_the_intro_is_delivered_when_the_manager_shows() {
         Application::handle(&mut app, Input::Tick);
     }
     assert!(
-        app.world.instance("jk-late").is_some(),
+        app.world
+            .instance(&InstanceId::simulated("jk-late"))
+            .is_some(),
         "the message was held, not dropped"
     );
 }

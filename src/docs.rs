@@ -231,7 +231,7 @@ pub fn page(d: &Documented) -> String {
     let line = |h: &[Hint]| {
         let s: Vec<String> = h
             .iter()
-            .map(|h| format!("`{}` {}", cell(h.key), cell(&h.action)))
+            .map(|h| format!("`{}` {}", cell(h.key.as_ref()), cell(&h.action)))
             .collect();
         if s.is_empty() {
             "—".to_owned()

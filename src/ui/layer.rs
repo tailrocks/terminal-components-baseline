@@ -513,10 +513,10 @@ impl Overlay for HelpOverlay {
 impl Overlay for Picker {
     type Action = PickerAction;
     fn dismiss(&self) -> Dismiss {
-        self.list.dismiss
+        self.list().dismiss
     }
     fn spec(&self) -> LayerSpec {
-        LayerSpec::modal(self.list.dismiss).initial_focus(self.id)
+        LayerSpec::modal(self.list().dismiss).initial_focus(self.id)
     }
     fn on_dismiss(&mut self, _: DismissReason) -> Response<PickerAction> {
         Response::emit(PickerAction::Cancelled)

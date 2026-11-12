@@ -8,7 +8,7 @@ use std::sync::Arc;
 use common::*;
 use jackin_console::backend::{Backend, Completion, Effect};
 use jackin_console::domain::agent::Agent;
-use jackin_console::domain::instance::Instance;
+use jackin_console::domain::instance::{Instance, InstanceId};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
@@ -72,7 +72,9 @@ fn spawnable_refusal_shows_its_reason() {
     let mut world = world_for(Scenario::CapsuleMulti);
     world.backend = Arc::new(OneAgent(SimBackend::shared()));
     let mut app = app_with(Scenario::CapsuleMulti, world);
-    let tabs = app.world.daemons["jk-7f3a"].tabs.len();
+    let tabs = app.world.daemons[&InstanceId::simulated("jk-7f3a")]
+        .tabs
+        .len();
 
     press(&mut app, "ctrl+b c");
     let picker = screen(&mut app);
@@ -83,7 +85,9 @@ fn spawnable_refusal_shows_its_reason() {
 
     click_text(&mut app, "▪ Codex");
     assert_eq!(
-        app.world.daemons["jk-7f3a"].tabs.len(),
+        app.world.daemons[&InstanceId::simulated("jk-7f3a")]
+            .tabs
+            .len(),
         tabs,
         "a refused row starts nothing"
     );

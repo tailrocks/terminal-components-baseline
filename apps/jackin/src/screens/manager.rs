@@ -1,4 +1,3 @@
-use crate::domain::instance::ID_PREFIX;
 use crate::screens::Jackin;
 use junie_tui::shell::Page;
 use std::collections::HashSet;
@@ -21,7 +20,7 @@ use junie_tui::widgets::empty::{self, EmptyState};
 use junie_tui::widgets::keyhint::{Hint, hint};
 use junie_tui::widgets::option_list::Item;
 use junie_tui::widgets::panel::{Panel, PanelFocus};
-use junie_tui::widgets::picker::Picker;
+use junie_tui::widgets::picker::{Picker, PickerAction};
 use junie_tui::widgets::progress::spinner_frame;
 use junie_tui::widgets::props::{self, Prop};
 use junie_tui::widgets::scrollbar;
@@ -38,8 +37,12 @@ use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::Effect;
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
-use crate::domain::instance::{DaemonSnapshot, InstanceStatus};
+use crate::domain::instance::{
+    DaemonSnapshot, Instance, InstanceEntry, InstanceId, InstanceStatus,
+};
+use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::role::LaunchRole;
+use crate::domain::tuple::{AccountRequirement, InstanceChoice, TupleIdentity};
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::WorkspaceId;
 use crate::world::{Health, LaunchSource, Msg, World, job};
@@ -52,8 +55,13 @@ pub const TREE: WidgetId = WidgetId::of("manager.tree");
 pub const DETAIL: WidgetId = WidgetId::of("manager.detail");
 pub const ROSTER: WidgetId = WidgetId::of("manager.roster");
 
-fn roster_row(instance: &str) -> PartRef {
-    PartRef::item(Part::ROW, ItemKey::text(instance))
+fn roster_row(instance: &InstanceId) -> PartRef {
+    let key = instance.row_key();
+    PartRef::item(Part::ROW, ItemKey::text(&key))
+}
+
+fn id_for_row_key(key: &str) -> Option<InstanceId> {
+    InstanceId::from_row_key(key)
 }
 pub const SEAM: WidgetId = WidgetId::of("manager.seam");
 pub const MENU: WidgetId = WidgetId::of("manager.menu");
@@ -62,7 +70,8 @@ pub const MENU: WidgetId = WidgetId::of("manager.menu");
 pub enum RowKey {
     CurrentDir,
     Workspace(WorkspaceId),
-    Instance(String),
+    Instance(InstanceId),
+    UnattributedSandboxes,
     NewWorkspace,
 }
 
@@ -89,8 +98,8 @@ fn instance_line(
         Span::new(
             format!(
                 "{}  {} · {} · ",
-                i.id.trim_start_matches(ID_PREFIX),
-                i.role,
+                i.id.short_suffix(),
+                i.role_label(),
                 i.agent.label()
             ),
             tone,
@@ -100,6 +109,32 @@ fn instance_line(
             status_word_tone(i.status, tone),
         ),
     ]
+}
+
+fn entry_line(
+    entry: &InstanceEntry,
+    tone: Tone,
+    words: &crate::domain::vocabulary::Vocabulary,
+) -> Vec<Span> {
+    match entry {
+        InstanceEntry::Available(instance) => instance_line(instance, tone, words),
+        InstanceEntry::Unavailable(instance) => {
+            let display = instance.display();
+            vec![
+                Span::new("? ", Tone::Warning),
+                Span::new(
+                    format!(
+                        "{} · {} · {} · {}",
+                        display.sandbox_name,
+                        display.gateway,
+                        instance.phase.label(),
+                        display.reason
+                    ),
+                    tone,
+                ),
+            ]
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -130,15 +165,57 @@ enum Start {
         role: String,
     },
     Session {
-        instance: String,
+        instance: InstanceId,
     },
 }
 
 /// The account picker that is open, and what it starts.
 struct Choosing {
     start: Start,
-    agent: Agent,
+    tuple: TupleIdentity,
     accounts: Vec<AccountId>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum AccountSelection {
+    Automatic {
+        account: AccountId,
+        level: PrecedenceLevel,
+    },
+    Explicit(AccountId),
+    Accountless,
+    Unselected,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct LaunchChoice {
+    tuple: TupleIdentity,
+    model: String,
+    account: AccountSelection,
+}
+
+impl LaunchChoice {
+    fn instance(&self) -> Option<InstanceChoice> {
+        let account = match &self.account {
+            AccountSelection::Automatic { account, .. } | AccountSelection::Explicit(account) => {
+                Some(account.clone())
+            }
+            AccountSelection::Accountless => None,
+            AccountSelection::Unselected => return None,
+        };
+        Some(InstanceChoice {
+            agent: self.tuple.agent,
+            provider: self.tuple.provider,
+            account,
+            model: self.model.clone(),
+        })
+    }
+}
+
+#[derive(Debug, Clone)]
+struct LaunchPickerTarget {
+    key: ItemKey,
+    choice: LaunchChoice,
 }
 
 pub struct ManagerScreen {
@@ -157,12 +234,13 @@ pub struct ManagerScreen {
     pub still_inside: Option<(String, Vec<String>, i64)>,
     pub busy_rows: Vec<(RowKey, &'static str)>,
     pending_launch: Option<(Option<WorkspaceId>, String)>,
-    pending_session: Option<String>,
+    pending_session: Option<InstanceId>,
     choosing: Option<Choosing>,
-    picker_targets: Vec<(Agent, Option<String>)>,
-    launch_queue: Vec<Agent>,
+    launch_picker_targets: Vec<LaunchPickerTarget>,
+    session_picker_targets: Vec<(Agent, Option<String>)>,
+    launch_queue: Vec<LaunchChoice>,
     launch_chaining: bool,
-    launch_collected: Vec<crate::domain::tuple::InstanceChoice>,
+    launch_collected: Vec<LaunchChoice>,
     wide: bool,
 
     pub menu: RowMenu<RowKey, &'static str>,
@@ -197,7 +275,8 @@ impl ManagerScreen {
             pending_launch: None,
             pending_session: None,
             choosing: None,
-            picker_targets: vec![],
+            launch_picker_targets: vec![],
+            session_picker_targets: vec![],
             launch_queue: vec![],
             launch_chaining: false,
             launch_collected: vec![],
@@ -206,13 +285,13 @@ impl ManagerScreen {
         }
     }
 
-    pub fn select_instance(&mut self, id: &str, w: &World) {
-        if let Some(i) = w.instance(id)
-            && let Some(ws) = i.workspace
+    pub fn select_instance(&mut self, id: &InstanceId, w: &World) {
+        if let Some(entry) = w.entry(id)
+            && let Some(ws) = entry.workspace_id()
         {
             self.expanded.insert(ws);
         }
-        self.selected = RowKey::Instance(id.to_owned());
+        self.selected = RowKey::Instance(id.clone());
     }
 
     fn build_rows(&mut self, w: &World) {
@@ -233,17 +312,21 @@ impl ManagerScreen {
             expandable: false,
         });
         for ws in &w.workspaces {
-            let kids = w.instances_of(Some(ws.id));
-            let running = kids.iter().filter(|i| i.status.is_live()).count();
-            let failed = kids.iter().any(|i| {
-                matches!(
-                    i.status,
-                    InstanceStatus::FailedSetup | InstanceStatus::Crashed
-                )
+            let kids = w.entries_of(Some(ws.id));
+            let running = w.running_count_of(Some(ws.id));
+            let failed = kids.iter().any(|entry| {
+                entry.as_available().is_some_and(|i| {
+                    matches!(
+                        i.status,
+                        InstanceStatus::FailedSetup | InstanceStatus::Crashed
+                    )
+                })
             });
-            let restore = kids
-                .iter()
-                .any(|i| i.status == InstanceStatus::RestoreAvailable);
+            let restore = kids.iter().any(|entry| {
+                entry
+                    .as_available()
+                    .is_some_and(|i| i.status == InstanceStatus::RestoreAvailable)
+            });
             let (meta, tone) = if let Some((_, what)) = self
                 .busy_rows
                 .iter()
@@ -283,7 +366,35 @@ impl ManagerScreen {
                 expandable: !kids.is_empty(),
             });
             if expanded {
-                for i in kids {
+                for entry in &kids {
+                    let i = match entry {
+                        InstanceEntry::Available(instance) => instance,
+                        InstanceEntry::Unavailable(unavailable) => {
+                            let display = unavailable.display();
+                            let created = unavailable.created_secs.map_or_else(
+                                || "creation time unavailable".to_owned(),
+                                |secs| w.clock.ago(secs),
+                            );
+                            rows.push(Row {
+                                key: RowKey::Instance(unavailable.id.clone()),
+                                depth: 1,
+                                glyph: "?",
+                                glyph_tone: Tone::Warning,
+                                label: display.sandbox_name,
+                                meta: format!(
+                                    "{} · {} · {} · {created} · metadata unavailable: {}",
+                                    display.gateway,
+                                    display.role,
+                                    unavailable.phase.label(),
+                                    display.reason
+                                ),
+                                meta_tone: Tone::Warning,
+                                trailing: None,
+                                expandable: false,
+                            });
+                            continue;
+                        }
+                    };
                     let (glyph, gt) = instance_mark(i.status);
                     let (meta, mt) = if let Some((_, what)) = self
                         .busy_rows
@@ -327,6 +438,7 @@ impl ManagerScreen {
                             _ => (i.status.label().into(), Tone::Muted),
                         }
                     };
+                    let meta = format!("{} · {meta}", i.id.gateway);
                     rows.push(Row {
                         key: RowKey::Instance(i.id.clone()),
                         depth: 1,
@@ -334,8 +446,8 @@ impl ManagerScreen {
                         glyph_tone: gt,
                         label: format!(
                             "{}  {} · {}",
-                            i.id.trim_start_matches(ID_PREFIX),
-                            i.role,
+                            i.id.short_suffix(),
+                            i.role_label(),
                             i.agent.label()
                         ),
                         meta,
@@ -348,6 +460,58 @@ impl ManagerScreen {
                         expandable: false,
                     });
                 }
+            }
+        }
+        let unattributed = w
+            .instances
+            .iter()
+            .filter_map(|entry| match entry {
+                InstanceEntry::Unavailable(unavailable)
+                    if unavailable
+                        .workspace
+                        .is_none_or(|id| w.workspace(id).is_none()) =>
+                {
+                    Some(unavailable)
+                }
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+        if !unattributed.is_empty() {
+            rows.push(Row {
+                key: RowKey::UnattributedSandboxes,
+                depth: 0,
+                glyph: "▾",
+                glyph_tone: Tone::Warning,
+                label: "Unattributed sandboxes".into(),
+                meta: plural(unattributed.len(), "record", "records"),
+                meta_tone: Tone::Warning,
+                trailing: None,
+                expandable: false,
+            });
+            for unavailable in unattributed {
+                let display = unavailable.display();
+                let created = unavailable.created_secs.map_or_else(
+                    || "creation time unavailable".to_owned(),
+                    |secs| w.clock.ago(secs),
+                );
+                rows.push(Row {
+                    key: RowKey::Instance(unavailable.id.clone()),
+                    depth: 1,
+                    glyph: "?",
+                    glyph_tone: Tone::Warning,
+                    label: display.sandbox_name,
+                    meta: format!(
+                        "{} · {} · {} · {} · {created} · metadata unavailable: {}",
+                        display.gateway,
+                        display.workspace_name,
+                        display.role,
+                        unavailable.phase.label(),
+                        display.reason
+                    ),
+                    meta_tone: Tone::Warning,
+                    trailing: None,
+                    expandable: false,
+                });
             }
         }
         rows.push(Row {
@@ -365,11 +529,19 @@ impl ManagerScreen {
 
         if !self.rows.iter().any(|r| r.key == self.selected) {
             self.selected = match &self.selected {
-                RowKey::Instance(id) => w
-                    .instance(id)
-                    .and_then(|i| i.workspace)
-                    .map(RowKey::Workspace)
-                    .unwrap_or(RowKey::CurrentDir),
+                RowKey::Instance(id) => {
+                    w.entry(id).map_or(RowKey::CurrentDir, |entry| match entry {
+                        InstanceEntry::Available(instance) => instance
+                            .workspace
+                            .map(RowKey::Workspace)
+                            .unwrap_or(RowKey::CurrentDir),
+                        InstanceEntry::Unavailable(instance) => instance
+                            .workspace
+                            .filter(|workspace| w.workspace(*workspace).is_some())
+                            .map(RowKey::Workspace)
+                            .unwrap_or(RowKey::UnattributedSandboxes),
+                    })
+                }
                 _ => RowKey::CurrentDir,
             };
         }
@@ -396,6 +568,13 @@ impl ManagerScreen {
     fn selected_instance<'a>(&self, w: &'a World) -> Option<&'a crate::domain::instance::Instance> {
         match &self.selected {
             RowKey::Instance(id) => w.instance(id),
+            _ => None,
+        }
+    }
+
+    fn selected_entry<'a>(&self, w: &'a World) -> Option<&'a InstanceEntry> {
+        match &self.selected {
+            RowKey::Instance(id) => w.entry(id),
             _ => None,
         }
     }
@@ -450,20 +629,40 @@ impl ManagerScreen {
         &self,
         w: &World,
         (ws, role): &(Option<WorkspaceId>, String),
-        agent: Agent,
-        account: Option<&AccountId>,
+        choice: &LaunchChoice,
     ) -> bool {
         if self.launch_choice(w) != Some((*ws, LaunchRole::Role(role.clone()))) {
             return false;
         }
-        let offer = w.offer_for(
-            agent,
-            ws.and_then(|id| w.workspace(id)),
-            Some(role.as_str()),
-        );
-        match account {
-            Some(id) => offer.preselected.as_ref() == Some(id),
-            None => offer.blocked.is_none() && offer.accounts.len() > 1,
+        if ws.is_some_and(|id| w.workspace(id).is_none()) {
+            return false;
+        }
+        let offer = effective_launch_offer(w, choice.tuple, *ws, Some(role));
+        if !offer.launchable() || choice.model != offer.model {
+            return false;
+        }
+        match &choice.account {
+            AccountSelection::Automatic { account, level } => {
+                let workspace = ws.and_then(|id| w.workspace(id));
+                let resolved = w.account_for(choice.tuple, workspace, Some(role), None);
+                offer.account_offer.preselected.as_ref() == Some(account)
+                    && resolved.account.as_ref() == Some(account)
+                    && resolved.level == *level
+                    && w.accounts
+                        .get(account)
+                        .is_some_and(|registered| registered.provider == choice.tuple.provider)
+            }
+            AccountSelection::Explicit(account) => {
+                offer.account_offer.accounts.contains(account)
+                    && w.accounts
+                        .get(account)
+                        .is_some_and(|registered| registered.provider == choice.tuple.provider)
+            }
+            AccountSelection::Accountless => offer.accountless_allowed(),
+            AccountSelection::Unselected => {
+                offer.account_offer.preselected.is_none()
+                    && !offer.account_offer.accounts.is_empty()
+            }
         }
     }
 
@@ -476,10 +675,15 @@ impl ManagerScreen {
             LaunchRole::Unavailable(why) => (String::new(), Some(why)),
         };
         self.pending_launch = unavailable.is_none().then(|| (ws, role.clone()));
-        let mut p =
-            Picker::new(WidgetId::of("manager.launch"), "Launch · choose Agent").multi_select(true);
-        p.set_searchable(false);
-        p.list.width = (84, 84);
+        self.launch_queue.clear();
+        self.launch_collected.clear();
+        self.launch_chaining = false;
+        let mut p = Picker::new(WidgetId::of("manager.launch"), "Launch · choose Agent")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        p.set_searchable(false)
+            .expect("disabling picker search is valid");
+        p.set_width(84);
         let shown_role = if unavailable.is_some() {
             "no default role"
         } else {
@@ -494,7 +698,18 @@ impl ManagerScreen {
         }
         p.scope = Some(scope);
         let (items, targets) = if w.surfaces.tuples.is_empty() {
-            agent_rows(w, ws, unavailable.is_none().then_some(role.as_str()))
+            let (items, agents) = agent_rows(w, ws, unavailable.is_none().then_some(role.as_str()));
+            let targets = agents
+                .into_iter()
+                .map(|(agent, _)| {
+                    let tuple = TupleIdentity::new(agent, agent.provider());
+                    LaunchPickerTarget {
+                        key: ItemKey::text(agent.label()),
+                        choice: launch_choice_snapshot(w, tuple, ws, Some(&role)),
+                    }
+                })
+                .collect();
+            (items, targets)
         } else {
             tuple_rows(w, ws, unavailable.is_none().then_some(role.as_str()))
         };
@@ -508,22 +723,41 @@ impl ManagerScreen {
                 .collect(),
             None => items,
         };
-        p.set_items(items);
-        self.picker_targets = targets;
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
+        self.launch_picker_targets = targets;
         cx.open(p, LayerTag::new("launch"));
     }
 
     fn advance_launch_queue(&mut self, w: &World, cx: &mut Cx) -> Outcome {
         loop {
-            let Some(agent) = self.launch_queue.first().copied() else {
+            let Some(choice) = self.launch_queue.first().cloned() else {
                 self.launch_chaining = false;
-                let Some((ws, role)) = self.pending_launch.take() else {
+                let Some((ws, role)) = self.pending_launch.clone() else {
                     return Outcome::Changed;
                 };
-                let instances = std::mem::take(&mut self.launch_collected);
-                if instances.is_empty() {
+                let mut seen = HashSet::new();
+                if self.launch_collected.is_empty()
+                    || self.launch_collected.iter().any(|choice| {
+                        !seen.insert(choice.tuple.agent)
+                            || !self.launch_still_offered(w, &(ws, role.clone()), choice)
+                    })
+                {
+                    self.launch_options_changed(cx);
                     return Outcome::Changed;
                 }
+                let Some(instances) = self
+                    .launch_collected
+                    .iter()
+                    .map(LaunchChoice::instance)
+                    .collect::<Option<Vec<_>>>()
+                else {
+                    self.launch_options_changed(cx);
+                    return Outcome::Changed;
+                };
+                self.pending_launch = None;
+                self.launch_queue.clear();
+                self.launch_collected.clear();
                 cx.go(Go::LaunchMany {
                     workspace: ws,
                     role,
@@ -532,48 +766,17 @@ impl ManagerScreen {
                 });
                 return Outcome::Changed;
             };
-            let offer = w
-                .surfaces
-                .tuples
-                .iter()
-                .find(|o| {
-                    o.agent == agent && o.state == crate::domain::tuple::TupleState::Supported
-                })
-                .cloned();
-            let Some(offer) = offer else {
-                self.launch_queue.remove(0);
-                continue;
-            };
-            let preselected = self
-                .picker_targets
-                .iter()
-                .find(|(a, _)| *a == agent)
-                .and_then(|(_, acc)| acc.clone());
-            if let Some(account) = preselected {
-                self.launch_queue.remove(0);
-                self.launch_collected
-                    .push(crate::domain::tuple::InstanceChoice {
-                        agent,
-                        provider: offer.provider,
-                        account: Some(account),
-                        model: offer.default_model.clone(),
-                    });
-                continue;
-            }
             let (ws, role) = match &self.pending_launch {
                 Some((ws, role)) => (*ws, role.clone()),
                 None => return Outcome::Changed,
             };
-            let wsr = ws.and_then(|id| w.workspace(id));
-            if w.eligible_accounts(agent, wsr, Some(&role)).is_empty() {
+            if !self.launch_still_offered(w, &(ws, role.clone()), &choice) {
+                self.launch_options_changed(cx);
+                return Outcome::Changed;
+            }
+            if !matches!(choice.account, AccountSelection::Unselected) {
                 self.launch_queue.remove(0);
-                self.launch_collected
-                    .push(crate::domain::tuple::InstanceChoice {
-                        agent,
-                        provider: offer.provider,
-                        account: None,
-                        model: offer.default_model.clone(),
-                    });
+                self.launch_collected.push(choice);
                 continue;
             }
             self.choose_account(
@@ -581,7 +784,7 @@ impl ManagerScreen {
                     workspace: ws,
                     role,
                 },
-                agent,
+                choice.tuple,
                 w,
                 cx,
             );
@@ -589,45 +792,68 @@ impl ManagerScreen {
         }
     }
 
+    fn launch_options_changed(&mut self, cx: &mut Cx) {
+        self.pending_launch = None;
+        self.launch_queue.clear();
+        self.launch_collected.clear();
+        self.launch_chaining = false;
+        self.choosing = None;
+        cx.status("The launch options changed · open Launch again");
+    }
+
     /// Asks which of the accounts an agent offers it starts with, when the
     /// offer names none.
-    fn choose_account(&mut self, start: Start, agent: Agent, w: &World, cx: &mut Cx) {
+    fn choose_account(&mut self, start: Start, tuple: TupleIdentity, w: &World, cx: &mut Cx) {
         let (workspace, role) = match &start {
-            Start::Launch { workspace, role } => (*workspace, role.clone()),
+            Start::Launch { workspace, role } => (*workspace, Some(role.clone())),
             Start::Session { instance } => match w.instance(instance) {
                 Some(i) => (i.workspace, i.role.clone()),
                 None => return,
             },
         };
         let ws = workspace.and_then(|id| w.workspace(id));
-        let offer = w.offer_for(agent, ws, Some(&role));
-        let (picker, accounts) =
-            super::modals::account_picker(WidgetId::of("manager.account"), w, agent, ws, &offer);
+        let offer = w.offer_for_provider(tuple.agent, tuple.provider, ws, role.as_deref());
+        let (picker, accounts) = super::modals::account_picker(
+            WidgetId::of("manager.account"),
+            w,
+            tuple.agent,
+            tuple.provider,
+            ws,
+            &offer,
+        );
         self.choosing = Some(Choosing {
             start,
-            agent,
+            tuple,
             accounts,
         });
         cx.open(picker, LayerTag::new("account"));
     }
 
-    fn open_session_picker(&mut self, instance: &str, w: &World, cx: &mut Cx) {
+    fn open_session_picker(&mut self, instance: &InstanceId, w: &World, cx: &mut Cx) {
         let Some(i) = w.instance(instance) else {
+            if let Some(InstanceEntry::Unavailable(unavailable)) = w.entry(instance) {
+                let display = unavailable.display();
+                cx.status(format!(
+                    "Cannot open an agent session for {}: {}",
+                    display.sandbox_name, display.reason
+                ));
+            }
             return;
         };
-        self.pending_session = Some(instance.to_owned());
+        self.pending_session = Some(instance.clone());
         let mut p = Picker::new(
             WidgetId::of("manager.session"),
             "New session · choose Agent",
         );
-        p.set_searchable(false);
-        p.list.width = (84, 84);
+        p.set_searchable(false)
+            .expect("disabling picker search is valid");
+        p.set_width(84);
         p.scope = Some(format!(
             "instance {} › {}",
-            i.id.trim_start_matches(ID_PREFIX),
-            i.role
+            i.id.short_suffix(),
+            i.role_label()
         ));
-        let (mut items, mut targets) = agent_rows(w, i.workspace, Some(&i.role));
+        let (mut items, mut targets) = agent_rows(w, i.workspace, i.role.as_deref());
         items.push(
             Item::new("Shell")
                 .detail("zsh · no provider account")
@@ -635,8 +861,9 @@ impl ManagerScreen {
                 .group("shells"),
         );
         targets.push((Agent::ClaudeCode, Some("__shell__".into())));
-        p.set_items(items);
-        self.picker_targets = targets;
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
+        self.session_picker_targets = targets;
         cx.open(p, LayerTag::new("session"));
     }
 
@@ -651,65 +878,75 @@ impl ManagerScreen {
                 Outcome::Changed
             }
             RowKey::Instance(id) => self.reconnect(&id, w, cx),
+            RowKey::UnattributedSandboxes => Outcome::Consumed,
         }
     }
 
-    fn attach_restored(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
+    fn attach_restored(&mut self, id: &InstanceId, w: &mut World, cx: &mut Cx) {
         if w.instance(id).is_none() {
             return;
         }
         w.open_first_session(id);
+        let short = id.short_suffix();
         cx.status(fill_in(
             &w.surfaces.vocabulary.lifecycle.restored,
-            &[("id", id.trim_start_matches(ID_PREFIX))],
+            &[("id", &short)],
         ));
         cx.go(Go::Attach {
-            instance: id.to_owned(),
+            instance: id.clone(),
             pane: None,
         });
     }
 
-    fn reconnect(&mut self, id: &str, w: &mut World, cx: &mut Cx) -> Outcome {
+    fn reconnect(&mut self, id: &InstanceId, w: &mut World, cx: &mut Cx) -> Outcome {
+        if let Some(InstanceEntry::Unavailable(unavailable)) = w.entry(id) {
+            let display = unavailable.display();
+            cx.status(format!(
+                "Cannot reconnect {}: {}",
+                display.sandbox_name, display.reason
+            ));
+            return Outcome::Consumed;
+        }
         let Some(i) = w.instance(id) else {
             return Outcome::Consumed;
         };
         match i.status {
             InstanceStatus::Running => {
                 cx.go(Go::Attach {
-                    instance: id.to_owned(),
+                    instance: id.clone(),
                     pane: None,
                 });
             }
             InstanceStatus::RestoreAvailable
             | InstanceStatus::PreservedDirty
             | InstanceStatus::PreservedUnpushed => {
-                let row = RowKey::Instance(id.to_owned());
+                let row = RowKey::Instance(id.clone());
                 if self.busy_rows.iter().any(|(k, _)| *k == row) {
                     cx.status("Restore already running");
                     return Outcome::Consumed;
                 }
                 self.busy_rows.push((row, "restoring…"));
                 w.perform(Effect::Restore {
-                    instance: id.to_owned(),
+                    instance: id.clone(),
                 });
             }
             InstanceStatus::Crashed => {
                 cx.error(format!(
                     "Cannot reconnect: {} crashed (exit 137) · inspect or purge it",
-                    id.trim_start_matches(ID_PREFIX)
+                    id.short_suffix()
                 ));
             }
             InstanceStatus::FailedSetup => {
                 cx.error(format!(
                     "Cannot reconnect: {} {} · launch again",
-                    id.trim_start_matches(ID_PREFIX),
+                    id.short_suffix(),
                     w.surfaces.vocabulary.never_reached
                 ));
             }
             InstanceStatus::CleanExited => {
                 cx.status(format!(
                     "{} exited cleanly · launch the Workspace to start a new instance",
-                    id.trim_start_matches(ID_PREFIX)
+                    id.short_suffix()
                 ));
             }
             _ => {}
@@ -717,14 +954,35 @@ impl ManagerScreen {
         Outcome::Changed
     }
 
-    fn inspect(&mut self, id: &str, w: &World, cx: &mut Cx) {
+    fn inspect(&mut self, id: &InstanceId, w: &World, cx: &mut Cx) {
+        if let Some(InstanceEntry::Unavailable(unavailable)) = w.entry(id) {
+            let display = unavailable.display();
+            let created = unavailable.created_secs.map_or_else(
+                || "creation time unavailable".to_owned(),
+                |secs| w.clock.ago(secs),
+            );
+            let props = vec![
+                Prop::new("Sandbox", display.sandbox_name.clone()).copyable(),
+                Prop::new("Gateway", display.gateway.clone()).copyable(),
+                Prop::new("Workspace", display.workspace_name),
+                Prop::new("Role", display.role),
+                Prop::new("Phase", unavailable.phase.label()),
+                Prop::new("Created", created),
+                Prop::new("Agent metadata", display.reason).tone(Tone::Warning),
+                Prop::new("Agent actions", "unavailable until metadata verifies").tone(Tone::Muted),
+            ];
+            cx.open(
+                InfoDialog::new(WidgetId::of("manager.info"), &display.sandbox_name, props)
+                    .meta("read-only"),
+                LayerTag::new("info").key(id.row_key()),
+            );
+            return;
+        }
         let Some(i) = w.instance(id) else { return };
         let ws = i.workspace.and_then(|x| w.workspace(x));
         let account = match &i.account {
             Some(id) => w.accounts.get(id).map_or_else(|| id.clone(), |a| a.title()),
-            None => w
-                .account_for(i.agent.provider(), ws, Some(&i.role), None)
-                .label(&w.accounts),
+            None => "no registered account used".to_owned(),
         };
         let mut props = vec![
             Prop::new(&w.surfaces.vocabulary.container_noun, i.container_id()).copyable(),
@@ -741,7 +999,7 @@ impl ManagerScreen {
                 format!(
                     "{} › role {}",
                     ws.map(|x| x.name.as_str()).unwrap_or("current directory"),
-                    i.role
+                    i.role_label()
                 ),
             ),
             Prop::new(
@@ -752,7 +1010,7 @@ impl ManagerScreen {
                 "Target",
                 format!(
                     "{} · {}",
-                    i.workdir,
+                    i.workdir_label(),
                     w.surfaces
                         .vocabulary
                         .count(ws.map(|x| x.mounts.len()).unwrap_or(1))
@@ -790,24 +1048,39 @@ impl ManagerScreen {
             &format!(
                 "{} {}",
                 w.surfaces.vocabulary.container_noun,
-                id.trim_start_matches(ID_PREFIX)
+                id.short_suffix()
             ),
             props,
         )
         .meta("read-only");
-        cx.open(d, LayerTag::new("info").key(id));
+        cx.open(d, LayerTag::new("info").key(id.row_key()));
     }
 
-    fn stop(&mut self, id: &str, w: &World, cx: &mut Cx) {
+    fn stop(&mut self, id: &InstanceId, w: &World, cx: &mut Cx) {
+        if let Some(InstanceEntry::Unavailable(unavailable)) = w.entry(id) {
+            if !unavailable.phase.ready() {
+                let display = unavailable.display();
+                cx.status(format!(
+                    "{} is {} · nothing to stop",
+                    display.sandbox_name,
+                    unavailable.phase.label()
+                ));
+                return;
+            }
+            cx.go(Go::PowerStop {
+                instance: id.clone(),
+            });
+            return;
+        }
         let Some(i) = w.instance(id) else { return };
         if !i.status.stoppable() {
             cx.status(format!(
                 "{} is not running · nothing to stop",
-                id.trim_start_matches(ID_PREFIX)
+                id.short_suffix()
             ));
             return;
         }
-        let short = id.trim_start_matches(ID_PREFIX).to_owned();
+        let short = id.short_suffix().to_owned();
         let d = Dialog::destructive(
             WidgetId::of("manager.stop"),
             &format!("Stop instance {short}?"),
@@ -825,12 +1098,48 @@ impl ManagerScreen {
             "Stop",
         )
         .cancel_label("Keep running");
-        cx.open(d, LayerTag::new("stop").key(id));
+        cx.open(d, LayerTag::new("stop").key(id.row_key()));
     }
 
-    fn purge(&mut self, id: &str, w: &World, cx: &mut Cx) {
+    fn start_unavailable(&self, id: &InstanceId, w: &World, cx: &mut Cx) -> Outcome {
+        let Some(InstanceEntry::Unavailable(unavailable)) = w.entry(id) else {
+            cx.status("Cannot start: the unavailable sandbox row is no longer present");
+            return Outcome::Consumed;
+        };
+        let display = unavailable.display();
+        if unavailable.phase.startable() {
+            cx.go(Go::PowerStart {
+                instance: id.clone(),
+            });
+            return Outcome::Changed;
+        }
+        let reason = if unavailable.phase.ready() {
+            format!(
+                "Sandbox {} is already ready · use t to stop",
+                display.sandbox_name
+            )
+        } else {
+            format!(
+                "Cannot start sandbox {} while {} · only stopped sandboxes can start",
+                display.sandbox_name,
+                unavailable.phase.label()
+            )
+        };
+        cx.status(reason);
+        Outcome::Consumed
+    }
+
+    fn purge(&mut self, id: &InstanceId, w: &World, cx: &mut Cx) {
+        if let Some(InstanceEntry::Unavailable(unavailable)) = w.entry(id) {
+            let display = unavailable.display();
+            cx.error(format!(
+                "Cannot purge {} while its work state is unknown: {}",
+                display.sandbox_name, display.reason
+            ));
+            return;
+        }
         let Some(i) = w.instance(id) else { return };
-        let short = id.trim_start_matches(ID_PREFIX).to_owned();
+        let short = id.short_suffix().to_owned();
         let ws = i
             .workspace
             .and_then(|x| w.workspace(x))
@@ -842,7 +1151,7 @@ impl ManagerScreen {
             Prop::new("Action", words.purge_action.as_str()).tone(Tone::Error),
             Prop::new(
                 "Target",
-                format!("{short} · {ws} › {} · {}", i.role, i.agent.label()),
+                format!("{short} · {ws} › {} · {}", i.role_label(), i.agent.label()),
             ),
             Prop::new(
                 "Scope",
@@ -884,12 +1193,12 @@ impl ManagerScreen {
             Some(&short),
             Button::danger(WidgetId::of("manager.purge").sub("ok"), "Purge"),
         );
-        cx.open(d, LayerTag::new("purge").key(id));
+        cx.open(d, LayerTag::new("purge").key(id.row_key()));
     }
 
     fn delete(&mut self, ws: WorkspaceId, w: &World, cx: &mut Cx) {
         let Some(x) = w.workspace(ws) else { return };
-        let kids = w.instances_of(Some(ws)).len();
+        let kids = w.entries_of(Some(ws)).len();
         let d = Dialog::destructive(
             WidgetId::of("manager.delete"),
             &format!("Delete workspace {}?", x.name),
@@ -938,10 +1247,21 @@ impl ManagerScreen {
         let item = |label: &str, key: &'static str| MenuItem::new(label).shortcut(key);
         match key {
             RowKey::Instance(id) => {
+                if let Some(InstanceEntry::Unavailable(unavailable)) = w.entry(id) {
+                    let display = unavailable.display();
+                    let mut lifecycle = vec![];
+                    if unavailable.phase.ready() {
+                        lifecycle.push((item("Stop sandbox", "t").danger(), "power-stop"));
+                    } else if unavailable.phase.startable() {
+                        lifecycle.push((item("Start sandbox", "r"), "power-start"));
+                    }
+                    lifecycle.push((item("Inspect", "i").separator(), "inspect"));
+                    return (display.sandbox_name, lifecycle);
+                }
                 let Some(i) = w.instance(id) else {
                     return (String::new(), vec![]);
                 };
-                let short = id.trim_start_matches(ID_PREFIX);
+                let short = id.short_suffix();
                 let live = i.status.is_live();
                 let off = "needs a running instance";
                 let reconnect = if live {
@@ -965,7 +1285,11 @@ impl ManagerScreen {
                         (reconnect, "reconnect"),
                         (if live { session } else { session.reason(off) }, "session"),
                         (
-                            if live { shell } else { shell.reason(off) }.separator(),
+                            if live {
+                                shell.separator()
+                            } else {
+                                shell.reason(off).separator()
+                            },
                             "shell",
                         ),
                         (item("Inspect", "i"), "inspect"),
@@ -1021,6 +1345,7 @@ impl ManagerScreen {
                 "New workspace".into(),
                 vec![(item("Create workspace", "Enter"), "new")],
             ),
+            RowKey::UnattributedSandboxes => ("Unattributed sandboxes".into(), vec![]),
         }
     }
 
@@ -1124,6 +1449,48 @@ impl ManagerScreen {
                 }
                 Err(e) => rows.push(DetailRow::Text(format!("! {}", e.label()), Tone::Error)),
             }
+        } else if let Some(InstanceEntry::Unavailable(unavailable)) = self.selected_entry(w) {
+            let display = unavailable.display();
+            let created = unavailable.created_secs.map_or_else(
+                || "creation time unavailable".to_owned(),
+                |secs| w.clock.ago(secs),
+            );
+            rows.push(DetailRow::Text(
+                format!("Sandbox  {}", display.sandbox_name),
+                Tone::Warning,
+            ));
+            rows.push(DetailRow::Text(
+                format!("Gateway  {}", display.gateway),
+                Tone::Secondary,
+            ));
+            rows.push(DetailRow::Text(
+                format!("Workspace  {}", display.workspace_name),
+                Tone::Secondary,
+            ));
+            rows.push(DetailRow::Text(
+                format!("Role  {}", display.role),
+                Tone::Secondary,
+            ));
+            rows.push(DetailRow::Text(
+                format!("Phase  {}", unavailable.phase.label()),
+                Tone::Secondary,
+            ));
+            let power = if unavailable.phase.ready() {
+                "stop available"
+            } else if unavailable.phase.startable() {
+                "start available"
+            } else {
+                "start only available while stopped"
+            };
+            rows.push(DetailRow::Text(format!("Power  {power}"), Tone::Muted));
+            rows.push(DetailRow::Text(
+                format!("Created  {created}"),
+                Tone::Secondary,
+            ));
+            rows.push(DetailRow::Text(
+                format!("Agent metadata unavailable  {}", display.reason),
+                Tone::Warning,
+            ));
         }
         self.detail_rows = rows;
         self.detail_cursor = self
@@ -1136,24 +1503,31 @@ impl ManagerScreen {
         let mk =
             |name: &str, label: &str, kind: ButtonKind| Button::new(DETAIL.sub(name), label, kind);
         match &self.selected {
-            RowKey::Instance(id) => {
-                let Some(i) = w.instance(id) else {
-                    self.actions = v;
-                    return;
-                };
-                if i.status.is_live() {
-                    v.push(mk("reconnect", "Reconnect", ButtonKind::Secondary));
-                    v.push(mk("session", "New session", ButtonKind::Secondary));
-                    v.push(mk("shell", "Shell", ButtonKind::Secondary));
-                } else if i.status.reconnectable() && i.status != InstanceStatus::Crashed {
-                    v.push(mk("reconnect", "Restore", ButtonKind::Secondary));
+            RowKey::Instance(id) => match w.entry(id) {
+                Some(InstanceEntry::Available(i)) => {
+                    if i.status.is_live() {
+                        v.push(mk("reconnect", "Reconnect", ButtonKind::Secondary));
+                        v.push(mk("session", "New session", ButtonKind::Secondary));
+                        v.push(mk("shell", "Shell", ButtonKind::Secondary));
+                    } else if i.status.reconnectable() && i.status != InstanceStatus::Crashed {
+                        v.push(mk("reconnect", "Restore", ButtonKind::Secondary));
+                    }
+                    v.push(mk("inspect", "Inspect", ButtonKind::Secondary));
+                    if i.status.stoppable() {
+                        v.push(mk("stop", "Stop", ButtonKind::Secondary));
+                    }
+                    v.push(mk("purge", "Purge…", ButtonKind::Danger));
                 }
-                v.push(mk("inspect", "Inspect", ButtonKind::Secondary));
-                if i.status.stoppable() {
-                    v.push(mk("stop", "Stop", ButtonKind::Secondary));
+                Some(InstanceEntry::Unavailable(unavailable)) => {
+                    v.push(mk("inspect", "Inspect", ButtonKind::Secondary));
+                    if unavailable.phase.ready() {
+                        v.push(mk("power-stop", "Stop sandbox", ButtonKind::Secondary));
+                    } else if unavailable.phase.startable() {
+                        v.push(mk("power-start", "Start sandbox", ButtonKind::Secondary));
+                    }
                 }
-                v.push(mk("purge", "Purge…", ButtonKind::Danger));
-            }
+                None => {}
+            },
             RowKey::Workspace(_) => {
                 v.push(mk("launch", "Launch", ButtonKind::Secondary));
                 v.push(mk("edit", "Edit", ButtonKind::Secondary));
@@ -1169,6 +1543,7 @@ impl ManagerScreen {
                 }
             }
             RowKey::NewWorkspace => v.push(mk("new", "Create workspace", ButtonKind::Secondary)),
+            RowKey::UnattributedSandboxes => {}
         }
         self.actions = v;
     }
@@ -1190,6 +1565,11 @@ impl ManagerScreen {
             }
             ("inspect", RowKey::Instance(id)) => {
                 self.inspect(&id, w, cx);
+                Outcome::Changed
+            }
+            ("power-start", RowKey::Instance(instance)) => self.start_unavailable(&instance, w, cx),
+            ("power-stop", RowKey::Instance(instance)) => {
+                self.stop(&instance, w, cx);
                 Outcome::Changed
             }
             ("stop", RowKey::Instance(id)) => {
@@ -1397,11 +1777,7 @@ impl ManagerScreen {
             ),
             RowKey::Workspace(id) => {
                 let ws = w.workspace(*id);
-                let n = w
-                    .instances_of(Some(*id))
-                    .iter()
-                    .filter(|i| i.status.is_live())
-                    .count();
+                let n = w.running_count_of(Some(*id));
                 (
                     ws.map(|x| x.name.clone()).unwrap_or_default(),
                     if n > 0 {
@@ -1412,24 +1788,37 @@ impl ManagerScreen {
                 )
             }
             RowKey::Instance(id) => {
-                let i = w.instance(id);
+                let entry = w.entry(id);
                 (
-                    format!(
-                        "{} · {}",
-                        id.trim_start_matches(ID_PREFIX),
-                        i.and_then(|x| x.workspace)
-                            .and_then(|x| w.workspace(x))
-                            .map(|x| x.name.as_str())
-                            .unwrap_or("current directory")
-                    ),
-                    format!(
-                        "instance · {}",
-                        i.map(|x| w.surfaces.vocabulary.status_label(x.status))
-                            .unwrap_or_else(|| "?".into())
-                    ),
+                    match entry {
+                        Some(InstanceEntry::Available(i)) => format!(
+                            "{} · {}",
+                            id.short_suffix(),
+                            i.workspace
+                                .and_then(|x| w.workspace(x))
+                                .map(|x| x.name.as_str())
+                                .unwrap_or("current directory")
+                        ),
+                        Some(InstanceEntry::Unavailable(i)) => i.display().sandbox_name,
+                        None => id.short_suffix(),
+                    },
+                    match entry {
+                        Some(InstanceEntry::Available(i)) => format!(
+                            "instance · {}",
+                            w.surfaces.vocabulary.status_label(i.status)
+                        ),
+                        Some(InstanceEntry::Unavailable(i)) => {
+                            format!("metadata unavailable · {}", i.phase.label())
+                        }
+                        None => "instance unavailable".into(),
+                    },
                 )
             }
             RowKey::NewWorkspace => ("New workspace".into(), "create".into()),
+            RowKey::UnattributedSandboxes => (
+                "Unattributed sandboxes".into(),
+                "unavailable metadata".into(),
+            ),
         };
         let inner = if as_drawer {
             Panel::framed(Some(&title))
@@ -1578,7 +1967,7 @@ impl ManagerScreen {
                             bg,
                         );
                         y += used + 1;
-                        let kids = w.instances_of(Some(ws.id));
+                        let kids = w.entries_of(Some(ws.id));
                         if !kids.is_empty() {
                             put(
                                 buf,
@@ -1598,13 +1987,15 @@ impl ManagerScreen {
                                 buf.set_string(inner.right() - mw, y, &meta, t.faint().bg(bg));
                             }
                             y += 1;
-                            for i in kids {
-                                let tone = if i.status.is_live() {
-                                    Tone::Normal
-                                } else {
-                                    Tone::Secondary
-                                };
-                                let line = instance_line(i, tone, &w.surfaces.vocabulary);
+                            for entry in kids {
+                                let tone = entry.as_available().map_or(Tone::Warning, |i| {
+                                    if i.status.is_live() {
+                                        Tone::Normal
+                                    } else {
+                                        Tone::Secondary
+                                    }
+                                });
+                                let line = entry_line(entry, tone, &w.surfaces.vocabulary);
                                 let text = junie_tui::widgets::viewport::line_text(&line);
                                 put(buf, y, &text, t.secondary());
                                 if y < inner.bottom() {
@@ -1662,179 +2053,216 @@ impl ManagerScreen {
                 y = inner.bottom().saturating_sub(2);
             }
             RowKey::Instance(id) => {
-                let Some(i) = w.instance(&id) else { return };
-                let ws = i.workspace.and_then(|x| w.workspace(x));
-                let acc = w.account_for(i.agent.provider(), ws, Some(&i.role), None);
-                let facts = vec![
-                    Prop::new(
-                        "Workspace",
-                        format!(
-                            "{} › role {}",
-                            ws.map(|x| x.name.as_str()).unwrap_or("current directory"),
-                            i.role
+                if let Some(i) = w.instance(&id) {
+                    let ws = i.workspace.and_then(|x| w.workspace(x));
+                    let acc = w.account_for(instance_tuple(i), ws, i.role.as_deref(), None);
+                    let facts = vec![
+                        Prop::new(
+                            "Workspace",
+                            format!(
+                                "{} › role {}",
+                                ws.map(|x| x.name.as_str()).unwrap_or("current directory"),
+                                i.role_label()
+                            ),
                         ),
-                    ),
-                    Prop::new(
-                        "Agent",
-                        format!(
-                            "{} · account {} ({})",
-                            i.agent.label(),
-                            acc.label(&w.accounts),
-                            acc.level.label()
+                        Prop::new(
+                            "Agent",
+                            format!(
+                                "{} · account {} ({})",
+                                i.agent.label(),
+                                acc.label(&w.accounts),
+                                acc.level.label()
+                            ),
                         ),
-                    ),
-                    Prop::new(&w.surfaces.vocabulary.container_noun, i.container_id()),
-                    Prop::new(
-                        "Started",
-                        format!(
-                            "{} · last seen {}",
-                            w.clock.ago(i.created_secs),
-                            w.clock.ago(i.last_seen_secs)
+                        Prop::new(&w.surfaces.vocabulary.container_noun, i.container_id()),
+                        Prop::new(
+                            "Started",
+                            format!(
+                                "{} · last seen {}",
+                                w.clock.ago(i.created_secs),
+                                w.clock.ago(i.last_seen_secs)
+                            ),
                         ),
-                    ),
-                    Prop::new(
-                        "Lifecycle",
-                        format!(
-                            "{} · {}",
-                            w.surfaces.vocabulary.status_label(i.status),
-                            w.surfaces.vocabulary.status_description(i.status)
+                        Prop::new(
+                            "Lifecycle",
+                            format!(
+                                "{} · {}",
+                                w.surfaces.vocabulary.status_label(i.status),
+                                w.surfaces.vocabulary.status_description(i.status)
+                            ),
+                        )
+                        .tone(match i.status {
+                            InstanceStatus::Crashed | InstanceStatus::FailedSetup => Tone::Error,
+                            InstanceStatus::Running => Tone::Normal,
+                            _ => Tone::Secondary,
+                        })
+                        .wrap(),
+                        Prop::new("Working tree", w.surfaces.vocabulary.dirty_summary(i)).tone(
+                            if i.is_dirty() {
+                                Tone::Warning
+                            } else {
+                                Tone::Secondary
+                            },
                         ),
-                    )
-                    .tone(match i.status {
-                        InstanceStatus::Crashed | InstanceStatus::FailedSetup => Tone::Error,
-                        InstanceStatus::Running => Tone::Normal,
-                        _ => Tone::Secondary,
-                    })
-                    .wrap(),
-                    Prop::new("Working tree", w.surfaces.vocabulary.dirty_summary(i)).tone(
-                        if i.is_dirty() {
-                            Tone::Warning
-                        } else {
-                            Tone::Secondary
-                        },
-                    ),
-                ];
-                let mut facts = facts;
-                if let Some(b) = &i.branch {
-                    facts.push(Prop::new(
-                        "Branch",
-                        match &i.pr {
-                            Some((n, title)) => format!("{b} · PR #{n} · {title}"),
-                            None => b.clone(),
-                        },
-                    ));
-                }
-                let used = props::render(
-                    Rect::new(inner.x, y, inner.width, inner.height),
-                    buf,
-                    t,
-                    &facts,
-                    bg,
-                );
-                y += used + 1;
-                let live_focus = ctx.interaction.focused(DETAIL);
-                put(
-                    buf,
-                    y,
-                    "Live topology",
-                    t.secondary().add_modifier(Modifier::BOLD),
-                );
-                let words = &w.surfaces.vocabulary.daemon;
-                let src = match &i.daemon {
-                    DaemonSnapshot::Unavailable => words.topology_unavailable.clone(),
-                    _ => fill_in(
-                        &words.topology_source,
-                        &[("ago", &w.clock.ago(i.last_seen_secs))],
-                    ),
-                };
-                let sw = width(&src) as u16;
-                if y < inner.bottom() && inner.width > sw + 16 {
-                    buf.set_string(inner.right() - sw, y, &src, t.faint().bg(bg));
-                }
-                y += 1;
-                let list_top = y;
-                let rows_avail = inner.bottom().saturating_sub(y + 2) as usize;
-                self.detail_scroll.set_content(self.detail_rows.len());
-                self.detail_scroll.set_viewport(rows_avail);
-                if live_focus {
-                    self.detail_scroll.ensure_visible(self.detail_cursor);
-                }
-                ctx.control(
-                    DETAIL,
-                    Rect::new(inner.x, list_top, inner.width, rows_avail as u16),
-                    false,
-                );
-                let mut sessions_heading_done = false;
-                for (k, ri) in self.detail_scroll.visible_range().enumerate() {
-                    let yy = list_top + k as u16;
-                    let row = &self.detail_rows[ri];
-                    let rid = Self::detail_row_id(ri);
-                    match row {
-                        DetailRow::Pane { text, .. } => {
-                            let mut s = ctx.state(rid);
-                            s.focused = live_focus && ri == self.detail_cursor;
-                            let st = t.row(s, bg);
-                            let r = Rect::new(inner.x - 1, yy, inner.width + 1, 1);
-                            fill(buf, r, st);
-                            buf.set_string(
-                                r.x,
-                                yy,
-                                t.gutter_symbol(s),
-                                t.gutter(s, st.bg.unwrap_or(bg), false),
-                            );
-                            buf.set_string(
-                                r.x + 2,
-                                yy,
-                                junie_tui::ui::reveal::cut(
-                                    Rect::new(r.x + 2, yy, r.width.saturating_sub(3), 1),
-                                    text,
-                                ),
-                                st,
-                            );
-                            legible_on_fill(buf, r, t, bg);
-                            ctx.clickable(rid, r);
-                        }
-                        DetailRow::Text(text, tone) => {
-                            put(buf, yy, text, Style::new().fg(t.tone(*tone)))
-                        }
-                        DetailRow::Session(text) => {
-                            if !sessions_heading_done {
-                                sessions_heading_done = true;
+                    ];
+                    let mut facts = facts;
+                    if let Some(b) = &i.branch {
+                        facts.push(Prop::new(
+                            "Branch",
+                            match &i.pr {
+                                Some((n, title)) => format!("{b} · PR #{n} · {title}"),
+                                None => b.clone(),
+                            },
+                        ));
+                    }
+                    let used = props::render(
+                        Rect::new(inner.x, y, inner.width, inner.height),
+                        buf,
+                        t,
+                        &facts,
+                        bg,
+                    );
+                    y += used + 1;
+                    let live_focus = ctx.interaction.focused(DETAIL);
+                    put(
+                        buf,
+                        y,
+                        "Live topology",
+                        t.secondary().add_modifier(Modifier::BOLD),
+                    );
+                    let words = &w.surfaces.vocabulary.daemon;
+                    let src = match &i.daemon {
+                        DaemonSnapshot::Unavailable => words.topology_unavailable.clone(),
+                        _ => fill_in(
+                            &words.topology_source,
+                            &[("ago", &w.clock.ago(i.last_seen_secs))],
+                        ),
+                    };
+                    let sw = width(&src) as u16;
+                    if y < inner.bottom() && inner.width > sw + 16 {
+                        buf.set_string(inner.right() - sw, y, &src, t.faint().bg(bg));
+                    }
+                    y += 1;
+                    let list_top = y;
+                    let rows_avail = inner.bottom().saturating_sub(y + 2) as usize;
+                    self.detail_scroll.set_content(self.detail_rows.len());
+                    self.detail_scroll.set_viewport(rows_avail);
+                    if live_focus {
+                        self.detail_scroll.ensure_visible(self.detail_cursor);
+                    }
+                    ctx.control(
+                        DETAIL,
+                        Rect::new(inner.x, list_top, inner.width, rows_avail as u16),
+                        false,
+                    );
+                    let mut sessions_heading_done = false;
+                    for (k, ri) in self.detail_scroll.visible_range().enumerate() {
+                        let yy = list_top + k as u16;
+                        let row = &self.detail_rows[ri];
+                        let rid = Self::detail_row_id(ri);
+                        match row {
+                            DetailRow::Pane { text, .. } => {
+                                let mut s = ctx.state(rid);
+                                s.focused = live_focus && ri == self.detail_cursor;
+                                let st = t.row(s, bg);
+                                let r = Rect::new(inner.x - 1, yy, inner.width + 1, 1);
+                                fill(buf, r, st);
+                                buf.set_string(
+                                    r.x,
+                                    yy,
+                                    t.gutter_symbol(s),
+                                    t.gutter(s, st.bg.unwrap_or(bg), false),
+                                );
+                                buf.set_string(
+                                    r.x + 2,
+                                    yy,
+                                    junie_tui::ui::reveal::cut(
+                                        Rect::new(r.x + 2, yy, r.width.saturating_sub(3), 1),
+                                        text,
+                                    ),
+                                    st,
+                                );
+                                legible_on_fill(buf, r, t, bg);
+                                ctx.clickable(rid, r);
                             }
-                            put(buf, yy, text, t.secondary());
-                        }
-                        DetailRow::Blank => {
-                            put(
-                                buf,
-                                yy,
-                                "Sessions",
-                                t.secondary().add_modifier(Modifier::BOLD),
-                            );
-                            let m = format!(
-                                "manifest · {}",
-                                plural(
-                                    i.sessions.as_ref().map(|s| s.len()).unwrap_or(0),
-                                    "recorded",
-                                    "recorded"
-                                )
-                            );
-                            let mw = width(&m) as u16;
-                            if yy < inner.bottom() && inner.width > mw + 12 {
-                                buf.set_string(inner.right() - mw, yy, &m, t.faint().bg(bg));
+                            DetailRow::Text(text, tone) => {
+                                put(buf, yy, text, Style::new().fg(t.tone(*tone)))
+                            }
+                            DetailRow::Session(text) => {
+                                if !sessions_heading_done {
+                                    sessions_heading_done = true;
+                                }
+                                put(buf, yy, text, t.secondary());
+                            }
+                            DetailRow::Blank => {
+                                put(
+                                    buf,
+                                    yy,
+                                    "Sessions",
+                                    t.secondary().add_modifier(Modifier::BOLD),
+                                );
+                                let m = format!(
+                                    "manifest · {}",
+                                    plural(
+                                        i.sessions.as_ref().map(|s| s.len()).unwrap_or(0),
+                                        "recorded",
+                                        "recorded"
+                                    )
+                                );
+                                let mw = width(&m) as u16;
+                                if yy < inner.bottom() && inner.width > mw + 12 {
+                                    buf.set_string(inner.right() - mw, yy, &m, t.faint().bg(bg));
+                                }
                             }
                         }
                     }
-                }
-                if self.detail_scroll.overflows() {
-                    scrollbar::render_with_fade(
-                        Rect::new(inner.x, list_top, inner.width, rows_avail as u16),
-                        buf,
-                        ctx,
-                        DETAIL,
-                        &self.detail_scroll,
-                        live_focus,
+                    if self.detail_scroll.overflows() {
+                        scrollbar::render_with_fade(
+                            Rect::new(inner.x, list_top, inner.width, rows_avail as u16),
+                            buf,
+                            ctx,
+                            DETAIL,
+                            &self.detail_scroll,
+                            live_focus,
+                        );
+                    }
+                    y = inner.bottom().saturating_sub(2);
+                } else if let Some(InstanceEntry::Unavailable(unavailable)) = w.entry(&id) {
+                    let display = unavailable.display();
+                    let power = if unavailable.phase.ready() {
+                        "stop available · t"
+                    } else if unavailable.phase.startable() {
+                        "start available · r"
+                    } else {
+                        "start only available while stopped"
+                    };
+                    let created = unavailable.created_secs.map_or_else(
+                        || "creation time unavailable".to_owned(),
+                        |secs| w.clock.ago(secs),
                     );
+                    let facts = vec![
+                        Prop::new("Sandbox", display.sandbox_name).copyable(),
+                        Prop::new("Gateway", display.gateway).copyable(),
+                        Prop::new("Workspace", display.workspace_name),
+                        Prop::new("Role", display.role),
+                        Prop::new("Phase", unavailable.phase.label()),
+                        Prop::new("Power", power),
+                        Prop::new("Created", created),
+                        Prop::new("Agent metadata", display.reason).tone(Tone::Warning),
+                        Prop::new("Actions", "agent metadata actions are unavailable")
+                            .tone(Tone::Muted),
+                    ];
+                    let used = props::render(
+                        Rect::new(inner.x, y, inner.width, inner.height),
+                        buf,
+                        t,
+                        &facts,
+                        bg,
+                    );
+                    y += used + 1;
                 }
+            }
+            RowKey::UnattributedSandboxes => {
                 y = inner.bottom().saturating_sub(2);
             }
         }
@@ -1856,7 +2284,7 @@ impl ManagerScreen {
     fn draw_roster(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, w: &World) {
         let t = ctx.theme;
         let focused = ctx.interaction.focused(ROSTER);
-        let running = w.running();
+        let running = w.running_entries();
         let inner = Panel::card(Some("Running"))
             .focused(focused)
             .meta(&plural(running.len(), "instance", "instances"))
@@ -1864,19 +2292,72 @@ impl ManagerScreen {
         let bg = t.surface;
         ctx.control(ROSTER, inner, false);
         let mut y = inner.y;
-        for i in &running {
+        for entry in &running {
             if y + 2 >= inner.bottom() {
                 break;
             }
+            let Some(i) = entry.as_available() else {
+                if let InstanceEntry::Unavailable(u) = entry {
+                    let display = u.display();
+                    let ws = u
+                        .workspace
+                        .and_then(|x| w.workspace(x))
+                        .map(|x| x.name.as_str())
+                        .unwrap_or_else(|| {
+                            if u.workspace_name.is_some() {
+                                display.workspace_name.as_str()
+                            } else {
+                                "current directory"
+                            }
+                        });
+                    let role = if u.role.is_some() {
+                        display.role.as_str()
+                    } else {
+                        "unknown role"
+                    };
+                    let rid = ROSTER.part(roster_row(&u.id));
+                    let mut s = ctx.state(rid);
+                    s.selected = self.selected == RowKey::Instance(u.id.clone());
+                    let st = t.row(s, bg);
+                    let r = Rect::new(inner.x - 1, y, inner.width + 1, 3);
+                    fill(buf, r, st);
+                    buf.set_string(
+                        inner.x,
+                        y,
+                        junie_tui::ui::reveal::cut(
+                            Rect::new(inner.x, y, inner.width, 1),
+                            &format!(
+                                "◉ {}  {ws} · {role} · {}",
+                                display.short_suffix,
+                                u.phase.label()
+                            ),
+                        ),
+                        st,
+                    );
+                    buf.set_string(
+                        inner.x + 3,
+                        y + 1,
+                        junie_tui::ui::reveal::cut(
+                            Rect::new(inner.x + 3, y + 1, inner.width.saturating_sub(3), 1),
+                            &display.reason,
+                        ),
+                        st.fg(t.text_muted).remove_modifier(Modifier::BOLD),
+                    );
+                    legible_on_fill(buf, r, t, bg);
+                    ctx.register_part(ROSTER, roster_row(&u.id), r);
+                    y += 4;
+                }
+                continue;
+            };
             let ws = i
                 .workspace
                 .and_then(|x| w.workspace(x))
                 .map(|x| x.name.as_str())
                 .unwrap_or("current directory");
             let acc = w.account_for(
-                i.agent.provider(),
+                instance_tuple(i),
                 i.workspace.and_then(|x| w.workspace(x)),
-                Some(&i.role),
+                i.role.as_deref(),
                 None,
             );
             let rid = ROSTER.part(roster_row(&i.id));
@@ -1892,8 +2373,8 @@ impl ManagerScreen {
                     Rect::new(inner.x, y, inner.width, 1),
                     &format!(
                         "◉ {}  {ws} · {} · {}",
-                        i.id.trim_start_matches(ID_PREFIX),
-                        i.role,
+                        i.id.short_suffix(),
+                        i.role_label(),
                         i.agent.label()
                     ),
                 ),
@@ -1952,6 +2433,7 @@ impl ManagerScreen {
         let preserved: Vec<_> = w
             .instances
             .iter()
+            .filter_map(InstanceEntry::as_available)
             .filter(|i| i.status.dirty() || i.status == InstanceStatus::RestoreAvailable)
             .collect();
         if !preserved.is_empty() && y + 2 < inner.bottom() {
@@ -1981,8 +2463,8 @@ impl ManagerScreen {
                         Rect::new(inner.x, y, inner.width, 1),
                         &format!(
                             "◌ {}  {ws} · {} · {}",
-                            i.id.trim_start_matches(ID_PREFIX),
-                            i.role,
+                            i.id.short_suffix(),
+                            i.role_label(),
                             w.surfaces.vocabulary.status_label(i.status)
                         ),
                     ),
@@ -2042,73 +2524,234 @@ fn tuple_rows(
     w: &World,
     ws: Option<WorkspaceId>,
     role: Option<&str>,
-) -> (Vec<Item>, Vec<(Agent, Option<String>)>) {
-    let (fallback_items, fallback_targets) = agent_rows(w, ws, role);
-    let mut items = fallback_items;
-    let mut targets = fallback_targets;
-    for (idx, item) in items.iter_mut().enumerate() {
-        let agent = targets[idx].0;
-        let supported =
-            w.surfaces.tuples.iter().any(|o| {
-                o.agent == agent && o.state == crate::domain::tuple::TupleState::Supported
-            });
-        if !supported {
-            item.disabled = true;
-            if let Some(offer) = w.surfaces.tuples.iter().find(|o| o.agent == agent) {
-                item.detail = offer
-                    .reason
-                    .clone()
-                    .unwrap_or_else(|| offer.state.label().to_owned());
-            }
+) -> (Vec<Item>, Vec<LaunchPickerTarget>) {
+    let wsr = ws.and_then(|id| w.workspace(id));
+    let mut tuples = Vec::new();
+    for agent in Agent::ALL {
+        let default = TupleIdentity::new(agent, agent.provider());
+        if w.offer_for_provider(agent, default.provider, wsr, role)
+            .configured
+            || w.surfaces
+                .tuples
+                .iter()
+                .any(|offer| offer.agent == agent && offer.provider == default.provider)
+        {
+            tuples.push(default);
         }
-    }
-    let mut agents: Vec<Agent> = Vec::new();
-    for offer in &w.surfaces.tuples {
-        if !agents.contains(&offer.agent) {
-            agents.push(offer.agent);
-        }
-    }
-    for agent in agents {
-        if targets.iter().any(|(a, _)| *a == agent) {
-            continue;
-        }
-        let offers: Vec<_> = w
+        for offer in w
             .surfaces
             .tuples
             .iter()
-            .filter(|o| o.agent == agent)
-            .collect();
-        let supported = offers
-            .iter()
-            .find(|o| o.state == crate::domain::tuple::TupleState::Supported);
-        let (detail, disabled, tag) = match supported {
-            Some(offer) => (
-                format!("{} · choose at start", offer.provider.label()),
-                false,
-                Some("ready"),
-            ),
-            None => {
-                let first = offers.first();
-                (
-                    first.and_then(|o| o.reason.clone()).unwrap_or_else(|| {
-                        first.map_or("unavailable", |o| o.state.label()).to_owned()
-                    }),
-                    true,
-                    Some("unavailable"),
-                )
+            .filter(|offer| offer.agent == agent)
+        {
+            let tuple = TupleIdentity::new(offer.agent, offer.provider);
+            if !tuples.contains(&tuple) {
+                tuples.push(tuple);
             }
+        }
+    }
+    let mut counts = std::collections::HashMap::<Agent, usize>::new();
+    for tuple in &tuples {
+        *counts.entry(tuple.agent).or_default() += 1;
+    }
+    let mut items = Vec::new();
+    let mut targets = Vec::new();
+    for tuple in tuples {
+        let tuple_offer = w
+            .surfaces
+            .tuples
+            .iter()
+            .find(|offer| offer.agent == tuple.agent && offer.provider == tuple.provider);
+        let effective = effective_launch_offer(w, tuple, ws, role);
+        let label = if counts.get(&tuple.agent).copied().unwrap_or_default() > 1 {
+            tuple.label()
+        } else {
+            tuple.agent.label().to_owned()
         };
-        items.push(Item {
-            tag: tag.map(Into::into),
-            ..Item::new(agent.label())
+        let account_detail = if let Some(blocked) = &effective.account_offer.blocked {
+            blocked.clone()
+        } else if let Some(account) = &effective.account_offer.preselected {
+            let resolved = w.account_for(tuple, ws.and_then(|id| w.workspace(id)), role, None);
+            let additional = effective.account_offer.accounts.len().saturating_sub(1);
+            format!(
+                "account {} · {}{}",
+                w.accounts
+                    .get(account)
+                    .map(|entry| entry.title())
+                    .unwrap_or_else(|| account.clone()),
+                resolved.level.label(),
+                if additional > 0 {
+                    format!(" · +{additional} more available")
+                } else {
+                    String::new()
+                }
+            )
+        } else if effective.account_offer.accounts.len() > 1 {
+            format!(
+                "{} accounts · choose at start",
+                effective.account_offer.accounts.len()
+            )
+        } else if effective.accountless_allowed() {
+            "accountless choice offered by backend".to_owned()
+        } else {
+            "no usable account".to_owned()
+        };
+        let (detail, tag) = match tuple_offer {
+            Some(offer) if offer.state == crate::domain::tuple::TupleState::Supported => (
+                account_detail,
+                if effective.launchable() {
+                    if effective.account_offer.accounts.len() > 1 {
+                        "choose at start"
+                    } else {
+                        "ready"
+                    }
+                } else {
+                    "unavailable"
+                },
+            ),
+            Some(offer) => (
+                offer
+                    .reason
+                    .clone()
+                    .unwrap_or_else(|| offer.state.label().to_owned()),
+                "unavailable",
+            ),
+            None => (
+                account_detail,
+                if effective.account_offer.blocked.is_some()
+                    || effective.account_offer.accounts.is_empty()
+                {
+                    "unavailable"
+                } else if effective.account_offer.accounts.len() > 1 {
+                    "choose at start"
+                } else {
+                    "ready"
+                },
+            ),
+        };
+        let key = ItemKey::text(&format!(
+            "tuple:{}:{}",
+            tuple.agent.short(),
+            tuple.provider.short()
+        ));
+        items.push(
+            Item::new(label)
+                .key(key)
                 .detail(detail)
-                .glyph("▪")
+                .glyph(if tuple.agent.registerable() {
+                    "▪"
+                } else {
+                    "·"
+                })
                 .group("agents")
-                .disabled(disabled)
+                .selection_group(ItemKey::text(tuple.agent.short()))
+                .tag(tag)
+                .disabled(
+                    !effective.launchable()
+                        || (effective.matrix_present
+                            && !tuple_offer.is_some_and(|offer| {
+                                offer.state == crate::domain::tuple::TupleState::Supported
+                            })),
+                ),
+        );
+        targets.push(LaunchPickerTarget {
+            key,
+            choice: launch_choice_snapshot(w, tuple, ws, role),
         });
-        targets.push((agent, None));
     }
     (items, targets)
+}
+
+struct EffectiveLaunchOffer {
+    model: String,
+    account_offer: crate::world::AgentOffer,
+    matrix_present: bool,
+    tuple: Option<crate::domain::tuple::TupleOffer>,
+    account_requirement: AccountRequirement,
+}
+
+impl EffectiveLaunchOffer {
+    fn accountless_allowed(&self) -> bool {
+        self.matrix_present
+            && self.tuple.is_some()
+            && self.account_requirement == AccountRequirement::Optional
+            && self.account_offer.accounts.is_empty()
+            && !self.account_offer.configured
+            && self.account_offer.blocked.is_none()
+    }
+}
+
+impl EffectiveLaunchOffer {
+    fn launchable(&self) -> bool {
+        if self.matrix_present {
+            self.tuple.is_some()
+                && self.account_offer.blocked.is_none()
+                && (!self.account_offer.accounts.is_empty() || self.accountless_allowed())
+        } else {
+            self.account_offer.configured
+                && self.account_offer.blocked.is_none()
+                && !self.account_offer.accounts.is_empty()
+        }
+    }
+}
+
+fn effective_launch_offer(
+    world: &World,
+    tuple_identity: TupleIdentity,
+    workspace: Option<WorkspaceId>,
+    role: Option<&str>,
+) -> EffectiveLaunchOffer {
+    let ws = workspace.and_then(|id| world.workspace(id));
+    let account_offer =
+        world.offer_for_provider(tuple_identity.agent, tuple_identity.provider, ws, role);
+    let matrix_present = !world.surfaces.tuples.is_empty();
+    let tuple = supported_launch_tuple(world, tuple_identity).cloned();
+    EffectiveLaunchOffer {
+        model: tuple
+            .as_ref()
+            .map_or_else(String::new, |offer| offer.default_model.clone()),
+        account_offer,
+        matrix_present,
+        tuple,
+        account_requirement: world.backend.account_requirement(tuple_identity),
+    }
+}
+
+fn launch_choice_snapshot(
+    world: &World,
+    tuple: TupleIdentity,
+    workspace: Option<WorkspaceId>,
+    role: Option<&str>,
+) -> LaunchChoice {
+    let effective = effective_launch_offer(world, tuple, workspace, role);
+    let account = match effective.account_offer.preselected.clone() {
+        Some(account) => {
+            let resolved = world.account_for(
+                tuple,
+                workspace.and_then(|id| world.workspace(id)),
+                role,
+                None,
+            );
+            AccountSelection::Automatic {
+                account,
+                level: resolved.level,
+            }
+        }
+        None if effective.accountless_allowed() => AccountSelection::Accountless,
+        None => AccountSelection::Unselected,
+    };
+    LaunchChoice {
+        tuple,
+        model: effective.model,
+        account,
+    }
+}
+
+fn instance_tuple(instance: &Instance) -> TupleIdentity {
+    instance.agents.first().map_or_else(
+        || TupleIdentity::new(instance.agent, instance.agent.provider()),
+        |choice| TupleIdentity::new(choice.agent, choice.provider),
+    )
 }
 
 fn agent_rows(
@@ -2121,10 +2764,11 @@ fn agent_rows(
     let mut targets = vec![];
 
     for (a, offer) in w.offered_agents(wsr, role) {
-        let (detail, disabled, tag) = match (&offer.preselected, &offer.blocked) {
+        let effective = effective_launch_offer(w, TupleIdentity::new(a, a.provider()), ws, role);
+        let (detail, _disabled, tag) = match (&offer.preselected, &offer.blocked) {
             (Some(id), _) => {
                 let acc = w.accounts.get(id);
-                let r = w.account_for(a.provider(), wsr, role, None);
+                let r = w.account_for(TupleIdentity::new(a, a.provider()), wsr, role, None);
                 let more = w.eligible_accounts(a, wsr, role).len().saturating_sub(1);
                 (
                     format!(
@@ -2149,9 +2793,77 @@ fn agent_rows(
             ),
             (None, None) => ("no usable account".to_owned(), true, Some("unavailable")),
         };
+        let (detail, disabled, tag) = if effective.matrix_present {
+            let account_detail = if let Some(reason) = &effective.account_offer.blocked {
+                reason.clone()
+            } else if let Some(id) = &effective.account_offer.preselected {
+                let resolved = w.account_for(TupleIdentity::new(a, a.provider()), wsr, role, None);
+                let more = effective.account_offer.accounts.len().saturating_sub(1);
+                format!(
+                    "account {} · {}{}",
+                    w.accounts
+                        .get(id)
+                        .map(|account| account.title())
+                        .unwrap_or_else(|| id.clone()),
+                    resolved.level.label(),
+                    if more > 0 {
+                        format!(" · +{more} more available")
+                    } else {
+                        String::new()
+                    }
+                )
+            } else if effective.account_offer.accounts.len() > 1 {
+                format!(
+                    "{} accounts · choose at start",
+                    effective.account_offer.accounts.len()
+                )
+            } else if effective.account_offer.accounts.is_empty() {
+                "no usable account".to_owned()
+            } else {
+                "choose at start".to_owned()
+            };
+            match &effective.tuple {
+                Some(tuple) => {
+                    let account_ready = effective.account_offer.has_usable_account();
+                    let tag = if !account_ready {
+                        "unavailable"
+                    } else if effective.account_offer.accounts.len() > 1 {
+                        "choose at start"
+                    } else {
+                        "ready"
+                    };
+                    (
+                        format!("{} · {account_detail}", tuple.provider.label()),
+                        !account_ready,
+                        Some(tag),
+                    )
+                }
+                None => {
+                    let rejected = w
+                        .surfaces
+                        .tuples
+                        .iter()
+                        .find(|tuple| tuple.agent == a && tuple.provider == a.provider());
+                    (
+                        rejected
+                            .and_then(|tuple| tuple.reason.clone())
+                            .unwrap_or_else(|| {
+                                rejected
+                                    .map_or("unavailable", |tuple| tuple.state.label())
+                                    .to_owned()
+                            }),
+                        true,
+                        Some("unavailable"),
+                    )
+                }
+            }
+        } else {
+            (detail, !effective.launchable(), tag)
+        };
         items.push(Item {
             tag: (tag).map(Into::into),
             ..Item::new(a.label())
+                .key(ItemKey::text(a.label()))
                 .detail(detail)
                 .glyph(if a.registerable() { "▪" } else { "·" })
                 .group("agents")
@@ -2217,10 +2929,43 @@ impl Page<Jackin> for ManagerScreen {
                         w.daemons.remove(instance);
                         crate::world::refresh_snapshots(w);
                         w.sync_arbiter();
-                        cx.status(format!(
-                            "Instance {} stopped",
-                            instance.trim_start_matches(ID_PREFIX)
-                        ));
+                        cx.status(format!("Instance {} stopped", instance.short_suffix()));
+                    }
+                    Err(error) => cx.error(error.clone()),
+                }
+            }
+            Msg::PowerStarted { instance, result } => {
+                self.busy_rows
+                    .retain(|(key, _)| *key != RowKey::Instance(instance.clone()));
+                match result {
+                    Ok(snapshot) => {
+                        w.apply((**snapshot).clone());
+                        w.sync_arbiter();
+                        let name = match w.entry(instance) {
+                            Some(InstanceEntry::Unavailable(row)) => row.display().sandbox_name,
+                            Some(InstanceEntry::Available(row)) => row.container_id(),
+                            None => instance.short_label(),
+                        };
+                        cx.status(format!("Sandbox {name} started"));
+                    }
+                    Err(error) => cx.error(error.clone()),
+                }
+            }
+            Msg::PowerStopped { instance, result } => {
+                self.busy_rows
+                    .retain(|(key, _)| *key != RowKey::Instance(instance.clone()));
+                match result {
+                    Ok(snapshot) => {
+                        w.apply((**snapshot).clone());
+                        w.daemons.remove(instance);
+                        crate::world::refresh_snapshots(w);
+                        w.sync_arbiter();
+                        let name = match w.entry(instance) {
+                            Some(InstanceEntry::Unavailable(row)) => row.display().sandbox_name,
+                            Some(InstanceEntry::Available(row)) => row.container_id(),
+                            None => instance.short_label(),
+                        };
+                        cx.status(format!("Sandbox {name} stopped"));
                     }
                     Err(error) => cx.error(error.clone()),
                 }
@@ -2235,7 +2980,7 @@ impl Page<Jackin> for ManagerScreen {
                         w.sync_arbiter();
                         cx.status(fill_in(
                             &w.surfaces.vocabulary.lifecycle.purged,
-                            &[("id", instance.trim_start_matches(ID_PREFIX))],
+                            &[("id", &instance.short_suffix())],
                         ));
                     }
                     Err(error) => {
@@ -2250,13 +2995,15 @@ impl Page<Jackin> for ManagerScreen {
             Msg::WorkspaceDeleted { id, result } => {
                 self.busy_rows.retain(|(k, _)| *k != RowKey::Workspace(*id));
                 match result {
-                    Ok(snapshot) => {
+                    Ok(saved) => {
                         let name = w.workspace(*id).map(|x| x.name.clone()).unwrap_or_default();
-                        w.apply((**snapshot).clone());
+                        w.apply((*saved.snapshot).clone());
                         self.selected = RowKey::CurrentDir;
-                        cx.status(format!(
-                            "Deleted workspace {name} · instances and files kept"
-                        ));
+                        let status = format!("Deleted workspace {name} · instances and files kept");
+                        cx.status(match saved.warning {
+                            Some(warning) => format!("{} · {status}", warning.status()),
+                            None => status,
+                        });
                     }
                     Err(error) if w.workspace(*id).is_some() => cx.error(error.clone()),
                     Err(_) => {}
@@ -2399,6 +3146,9 @@ impl Page<Jackin> for ManagerScreen {
             }
             KeyCode::Char('r') if key.plain() => {
                 if let RowKey::Instance(id) = self.selected.clone() {
+                    if matches!(w.entry(&id), Some(InstanceEntry::Unavailable(_))) {
+                        return self.start_unavailable(&id, w, cx);
+                    }
                     return self.reconnect(&id, w, cx);
                 }
             }
@@ -2410,7 +3160,13 @@ impl Page<Jackin> for ManagerScreen {
             }
             KeyCode::Char('!') => {
                 if let RowKey::Instance(id) = self.selected.clone() {
-                    if w.instance(&id).is_some_and(|i| i.status.is_live()) {
+                    if let Some(InstanceEntry::Unavailable(unavailable)) = w.entry(&id) {
+                        let display = unavailable.display();
+                        cx.status(format!(
+                            "Cannot open a shell for {}: {}",
+                            display.sandbox_name, display.reason
+                        ));
+                    } else if w.instance(&id).is_some_and(|i| i.status.is_live()) {
                         cx.go(Go::NewSession {
                             instance: id,
                             agent: None,
@@ -2477,7 +3233,7 @@ impl Page<Jackin> for ManagerScreen {
                     if let RowKey::Workspace(id) = self.selected {
                         if self.expanded.contains(&id) {
                             self.move_cursor(1);
-                        } else if !w.instances_of(Some(id)).is_empty() {
+                        } else if !w.entries_of(Some(id)).is_empty() {
                             self.expanded.insert(id);
                         }
                     }
@@ -2490,8 +3246,11 @@ impl Page<Jackin> for ManagerScreen {
                             self.expanded.remove(&id);
                         }
                         RowKey::Instance(iid) => {
-                            if let Some(ws) = w.instance(&iid).and_then(|i| i.workspace) {
-                                self.selected = RowKey::Workspace(ws);
+                            if let Some(entry) = w.entry(&iid) {
+                                self.selected = match entry.workspace_id() {
+                                    Some(ws) => RowKey::Workspace(ws),
+                                    None => RowKey::UnattributedSandboxes,
+                                };
                             }
                         }
                         _ => {}
@@ -2583,6 +3342,8 @@ impl Page<Jackin> for ManagerScreen {
                     "session",
                     "shell",
                     "inspect",
+                    "power-start",
+                    "power-stop",
                     "stop",
                     "purge",
                     "launch",
@@ -2674,77 +3435,70 @@ impl Page<Jackin> for ManagerScreen {
         cx: &mut Cx,
     ) -> Outcome {
         match (tag.kind, result) {
-            ("launch", ModalResult::PickedMany(indices)) => {
-                let agents: Vec<Agent> = indices
+            ("launch", ModalResult::PickedMany(keys)) => {
+                let choices: Vec<LaunchChoice> = keys
                     .iter()
-                    .filter_map(|&i| self.picker_targets.get(i).map(|(a, _)| *a))
+                    .filter_map(|key| {
+                        self.launch_picker_targets
+                            .iter()
+                            .find(|target| target.key == *key)
+                            .map(|target| target.choice.clone())
+                    })
                     .collect();
-                if agents.is_empty() || self.pending_launch.is_none() {
+                if choices.is_empty()
+                    || choices.len() != keys.len()
+                    || self.pending_launch.is_none()
+                {
+                    return Outcome::Changed;
+                }
+                let mut seen = HashSet::new();
+                if choices
+                    .iter()
+                    .any(|choice| !seen.insert(choice.tuple.agent))
+                {
+                    cx.status("Choose only one provider for each agent");
+                    self.launch_queue.clear();
+                    self.launch_collected.clear();
+                    self.launch_chaining = false;
                     return Outcome::Changed;
                 }
                 if let Some(pending) = self.pending_launch.clone() {
-                    for &agent in &agents {
-                        let account = self
-                            .picker_targets
-                            .iter()
-                            .find(|(a, _)| *a == agent)
-                            .and_then(|(_, acc)| acc.clone());
-                        if !self.launch_still_offered(w, &pending, agent, account.as_ref()) {
-                            cx.status("The launch options changed · open Launch again");
+                    for choice in &choices {
+                        if !self.launch_still_offered(w, &pending, choice) {
+                            self.launch_options_changed(cx);
                             return Outcome::Changed;
                         }
                     }
                 }
-                self.launch_queue = agents;
+                self.launch_queue = choices;
                 self.launch_collected = Vec::new();
                 self.launch_chaining = true;
                 self.advance_launch_queue(w, cx)
             }
+            ("launch", ModalResult::PickerEvent(PickerAction::SelectionConflict { .. })) => {
+                cx.status("Choose only one provider for each agent");
+                Outcome::Changed
+            }
             ("launch", ModalResult::Cancelled) => {
+                self.pending_launch = None;
                 self.launch_queue.clear();
                 self.launch_collected.clear();
                 self.launch_chaining = false;
                 Outcome::Changed
             }
-            ("account", ModalResult::Cancelled) if self.launch_chaining => {
-                self.launch_queue.clear();
-                self.launch_collected.clear();
-                self.launch_chaining = false;
+            ("account", ModalResult::Cancelled) => {
                 self.choosing = None;
-                Outcome::Changed
-            }
-            ("launch", ModalResult::Picked(i)) => {
-                let Some((agent, account)) = self.picker_targets.get(i).cloned() else {
-                    return Outcome::Changed;
-                };
-                let Some(pending) = self.pending_launch.take() else {
-                    return Outcome::Changed;
-                };
-                if !self.launch_still_offered(w, &pending, agent, account.as_ref()) {
-                    cx.status("The launch options changed · open Launch again");
-                    return Outcome::Changed;
-                }
-                let (ws, role) = pending;
-                if account.is_none() {
-                    let start = Start::Launch {
-                        workspace: ws,
-                        role,
-                    };
-                    self.choose_account(start, agent, w, cx);
-                    return Outcome::Changed;
-                }
-                cx.go(Go::Launch {
-                    workspace: ws,
-                    role,
-                    agent,
-                    account,
-                });
+                self.pending_launch = None;
+                self.pending_session = None;
+                self.launch_queue.clear();
+                self.launch_collected.clear();
+                self.launch_chaining = false;
                 Outcome::Changed
             }
             ("account", ModalResult::Picked(i)) => {
                 let Some(Choosing {
                     start,
-                    agent,
+                    tuple,
                     accounts,
                 }) = self.choosing.take()
                 else {
@@ -2752,46 +3506,70 @@ impl Page<Jackin> for ManagerScreen {
                 };
                 let account = accounts.get(i).cloned();
                 if self.launch_chaining {
-                    self.launch_queue.retain(|a| *a != agent);
-                    let offer = w
-                        .surfaces
-                        .tuples
-                        .iter()
-                        .find(|o| {
-                            o.agent == agent
-                                && o.state == crate::domain::tuple::TupleState::Supported
-                        })
-                        .cloned();
-                    let (provider, model) = match &offer {
-                        Some(o) => (o.provider, o.default_model.clone()),
-                        None => (agent.provider(), String::new()),
+                    let Some(pending) = self.pending_launch.clone() else {
+                        self.launch_options_changed(cx);
+                        return Outcome::Changed;
                     };
-                    self.launch_collected
-                        .push(crate::domain::tuple::InstanceChoice {
-                            agent,
-                            provider,
-                            account,
-                            model,
-                        });
+                    let Some(account) = account else {
+                        self.launch_options_changed(cx);
+                        return Outcome::Changed;
+                    };
+                    let Some(queued) = self.launch_queue.first().cloned() else {
+                        self.launch_options_changed(cx);
+                        return Outcome::Changed;
+                    };
+                    if queued.tuple != tuple {
+                        self.launch_options_changed(cx);
+                        return Outcome::Changed;
+                    }
+                    let mut explicit = queued;
+                    explicit.account = AccountSelection::Explicit(account);
+                    if !self.launch_still_offered(w, &pending, &explicit) {
+                        self.launch_options_changed(cx);
+                        return Outcome::Changed;
+                    }
+                    self.launch_queue.remove(0);
+                    self.launch_collected.push(explicit);
                     return self.advance_launch_queue(w, cx);
                 }
                 match start {
-                    Start::Launch { workspace, role } => cx.go(Go::Launch {
-                        workspace,
-                        role,
-                        agent,
-                        account,
-                    }),
+                    Start::Launch { workspace, role } => {
+                        let Some(account) = account else {
+                            self.launch_options_changed(cx);
+                            return Outcome::Changed;
+                        };
+                        let effective = effective_launch_offer(w, tuple, workspace, Some(&role));
+                        let choice = LaunchChoice {
+                            tuple,
+                            model: effective.model,
+                            account: AccountSelection::Explicit(account),
+                        };
+                        if !self.launch_still_offered(w, &(workspace, role.clone()), &choice) {
+                            self.launch_options_changed(cx);
+                            return Outcome::Changed;
+                        }
+                        let Some(instance) = choice.instance() else {
+                            self.launch_options_changed(cx);
+                            return Outcome::Changed;
+                        };
+                        self.pending_launch = None;
+                        cx.go(Go::LaunchMany {
+                            workspace,
+                            role,
+                            instances: vec![instance],
+                            task: None,
+                        });
+                    }
                     Start::Session { instance } => cx.go(Go::NewSession {
                         instance,
-                        agent: Some(agent),
+                        agent: Some(tuple.agent),
                         account,
                     }),
                 }
                 Outcome::Changed
             }
             ("session", ModalResult::Picked(i)) => {
-                let Some((agent, account)) = self.picker_targets.get(i).cloned() else {
+                let Some((agent, account)) = self.session_picker_targets.get(i).cloned() else {
                     return Outcome::Changed;
                 };
                 let Some(instance) = self.pending_session.take() else {
@@ -2799,7 +3577,12 @@ impl Page<Jackin> for ManagerScreen {
                 };
                 let shell = account.as_deref() == Some("__shell__");
                 if account.is_none() && !shell {
-                    self.choose_account(Start::Session { instance }, agent, w, cx);
+                    self.choose_account(
+                        Start::Session { instance },
+                        TupleIdentity::new(agent, agent.provider()),
+                        w,
+                        cx,
+                    );
                     return Outcome::Changed;
                 }
                 cx.go(Go::NewSession {
@@ -2815,13 +3598,30 @@ impl Page<Jackin> for ManagerScreen {
                     action: Some(1), ..
                 },
             ) => {
-                let id = tag.key.clone();
-                if !w.instance(&id).is_some_and(|i| i.status.stoppable()) {
-                    cx.status(format!(
-                        "{} is not running · nothing to stop",
-                        id.trim_start_matches(ID_PREFIX)
-                    ));
+                let Some(id) = id_for_row_key(&tag.key) else {
                     return Outcome::Changed;
+                };
+                match w.entry(&id) {
+                    None => {
+                        cx.status("Sandbox is already gone · nothing to stop");
+                        return Outcome::Changed;
+                    }
+                    Some(InstanceEntry::Unavailable(unavailable)) => {
+                        let display = unavailable.display();
+                        cx.status(format!(
+                            "Cannot stop {}: agent metadata unavailable · {}",
+                            display.sandbox_name, display.reason
+                        ));
+                        return Outcome::Changed;
+                    }
+                    Some(InstanceEntry::Available(instance)) if !instance.status.stoppable() => {
+                        cx.status(format!(
+                            "{} is not running · nothing to stop",
+                            id.short_suffix()
+                        ));
+                        return Outcome::Changed;
+                    }
+                    Some(InstanceEntry::Available(_)) => {}
                 }
                 self.busy_rows
                     .push((RowKey::Instance(id.clone()), "stopping…"));
@@ -2835,13 +3635,23 @@ impl Page<Jackin> for ManagerScreen {
                     action: Some(1), ..
                 },
             ) => {
-                let id = tag.key.clone();
-                if w.instance(&id).is_none() {
-                    cx.status(format!(
-                        "{} is already gone · nothing to purge",
-                        id.trim_start_matches(ID_PREFIX)
-                    ));
+                let Some(id) = id_for_row_key(&tag.key) else {
                     return Outcome::Changed;
+                };
+                match w.entry(&id) {
+                    None => {
+                        cx.status("Sandbox is already gone · nothing to purge");
+                        return Outcome::Changed;
+                    }
+                    Some(InstanceEntry::Unavailable(unavailable)) => {
+                        let display = unavailable.display();
+                        cx.status(format!(
+                            "Cannot purge {} while its work state is unknown: {}",
+                            display.sandbox_name, display.reason
+                        ));
+                        return Outcome::Changed;
+                    }
+                    Some(InstanceEntry::Available(_)) => {}
                 }
                 self.busy_rows
                     .push((RowKey::Instance(id.clone()), "purging…"));
@@ -2929,7 +3739,9 @@ impl Page<Jackin> for ManagerScreen {
         let mut v = vec![];
         if focus == Some(DETAIL) {
             v.push(hint("↑↓", "Move"));
-            if matches!(self.selected, RowKey::Instance(_)) {
+            if let RowKey::Instance(id) = &self.selected
+                && w.instance(id).is_some()
+            {
                 v.push(hint("Enter", "Attach pane"));
             }
             v.push(hint("Tab", "Actions"));
@@ -2944,6 +3756,16 @@ impl Page<Jackin> for ManagerScreen {
         }
         match &self.selected {
             RowKey::Instance(id) => {
+                if let Some(InstanceEntry::Unavailable(unavailable)) = w.entry(id) {
+                    if unavailable.phase.ready() {
+                        v.push(hint("t", "Stop sandbox"));
+                    } else if unavailable.phase.startable() {
+                        v.push(hint("r", "Start sandbox"));
+                    }
+                    v.push(hint("i", "Inspect"));
+                    v.push(hint("←", "Back"));
+                    return v;
+                }
                 let live = w.instance(id).is_some_and(|i| i.status.is_live());
                 let restorable = w
                     .instance(id)
@@ -2979,6 +3801,7 @@ impl Page<Jackin> for ManagerScreen {
             RowKey::NewWorkspace => {
                 v.push(hint("Enter", "Setup"));
             }
+            RowKey::UnattributedSandboxes => {}
         }
         v.push(hint("Tab", "Details"));
         v.push(hint("c", "Accounts"));
@@ -2998,14 +3821,24 @@ impl Page<Jackin> for ManagerScreen {
             ),
             RowKey::Instance(id) => {
                 let ws = w
-                    .instance(id)
-                    .and_then(|i| i.workspace)
+                    .entry(id)
+                    .and_then(InstanceEntry::workspace_id)
                     .and_then(|x| w.workspace(x))
                     .map(|x| x.name.clone())
                     .unwrap_or("current directory".into());
-                format!("Workspaces › {ws} › {}", id.trim_start_matches(ID_PREFIX))
+                match w.entry(id) {
+                    Some(InstanceEntry::Unavailable(i)) => {
+                        let display = i.display();
+                        format!(
+                            "Workspaces › {} › {} · {}",
+                            display.workspace_name, display.sandbox_name, display.gateway
+                        )
+                    }
+                    _ => format!("Workspaces › {ws} › {}", id.short_suffix()),
+                }
             }
             RowKey::NewWorkspace => "Workspaces › new workspace".into(),
+            RowKey::UnattributedSandboxes => "Workspaces › unattributed sandboxes".into(),
         }
     }
 
@@ -3016,6 +3849,17 @@ impl Page<Jackin> for ManagerScreen {
     fn on_esc_top(&mut self, _w: &mut World, _cx: &mut Cx) -> Outcome {
         Outcome::Ignored
     }
+}
+
+fn supported_launch_tuple(
+    world: &World,
+    tuple: TupleIdentity,
+) -> Option<&crate::domain::tuple::TupleOffer> {
+    world.surfaces.tuples.iter().find(|offer| {
+        offer.agent == tuple.agent
+            && offer.provider == tuple.provider
+            && offer.state == crate::domain::tuple::TupleState::Supported
+    })
 }
 
 impl Screen for ManagerScreen {
@@ -3049,8 +3893,12 @@ impl ManagerScreen {
         let title = match &self.selected {
             RowKey::CurrentDir => "Current directory".to_owned(),
             RowKey::Workspace(id) => w.workspace(*id).map(|x| x.name.clone()).unwrap_or_default(),
-            RowKey::Instance(id) => format!("Instance {}", id.trim_start_matches(ID_PREFIX)),
+            RowKey::Instance(id) => match w.entry(id) {
+                Some(InstanceEntry::Unavailable(unavailable)) => unavailable.display().sandbox_name,
+                _ => format!("Instance {}", id.short_suffix()),
+            },
             RowKey::NewWorkspace => "New workspace".into(),
+            RowKey::UnattributedSandboxes => "Unattributed sandboxes".into(),
         };
         let inner = Panel::card(Some(&title))
             .meta("Tab details")
@@ -3081,19 +3929,26 @@ impl ManagerScreen {
                                 crate::domain::workspace::AllowedRoles::Custom(l) =>
                                     format!(" · {} allowed", l.len()),
                             },
-                            w.account_for(Agent::ClaudeCode.provider(), Some(ws), None, None)
-                                .label(&w.accounts)
+                            w.account_for(
+                                TupleIdentity::new(Agent::ClaudeCode, Agent::ClaudeCode.provider()),
+                                Some(ws),
+                                None,
+                                None,
+                            )
+                            .label(&w.accounts)
                         ),
                         Tone::Muted,
                     ),
                 ]
                 .into_iter()
-                .chain(
-                    w.instances_of(Some(ws.id))
-                        .iter()
-                        .take(2)
-                        .map(|i| instance_line(i, Tone::Secondary, &w.surfaces.vocabulary)),
-                )
+                .chain(w.entries_of(Some(ws.id)).iter().take(2).map(|entry| {
+                    let tone = if entry.as_available().is_some() {
+                        Tone::Secondary
+                    } else {
+                        Tone::Warning
+                    };
+                    entry_line(entry, tone, &w.surfaces.vocabulary)
+                }))
                 .collect(),
                 None => vec![one(
                     format!(
@@ -3103,11 +3958,11 @@ impl ManagerScreen {
                     Tone::Muted,
                 )],
             },
-            RowKey::Instance(id) => match w.instance(id) {
-                Some(i) => vec![
+            RowKey::Instance(id) => match w.entry(id) {
+                Some(InstanceEntry::Available(i)) => vec![
                     vec![
                         Span::new(
-                            format!("{} · {} · ", i.role, i.agent.label()),
+                            format!("{} · {} · ", i.role_label(), i.agent.label()),
                             Tone::Secondary,
                         ),
                         Span::new(
@@ -3145,11 +4000,36 @@ impl ManagerScreen {
                         Tone::Muted,
                     ),
                 ],
+                Some(InstanceEntry::Unavailable(i)) => {
+                    let display = i.display();
+                    let power = if i.phase.ready() {
+                        "stop available · t"
+                    } else if i.phase.startable() {
+                        "start available · r"
+                    } else {
+                        "start only available while stopped"
+                    };
+                    vec![
+                        one(
+                            format!("Gateway {} · phase {}", display.gateway, i.phase.label()),
+                            Tone::Warning,
+                        ),
+                        one(format!("Power {power}"), Tone::Muted),
+                        one(
+                            format!("Agent metadata unavailable: {}", display.reason),
+                            Tone::Warning,
+                        ),
+                    ]
+                }
                 None => vec![],
             },
             RowKey::NewWorkspace => vec![one(
                 "Enter starts the five-step create chain".into(),
                 Tone::Muted,
+            )],
+            RowKey::UnattributedSandboxes => vec![one(
+                "These named sandboxes have no configured workspace".into(),
+                Tone::Warning,
             )],
         };
         for (i, l) in lines.iter().enumerate() {
@@ -3254,12 +4134,12 @@ impl ManagerScreen {
             return Outcome::Changed;
         }
 
-        if let Some(inst) = w
-            .running()
+        if let Some(entry) = w
+            .running_entries()
             .into_iter()
-            .find(|i| ROSTER.part(roster_row(&i.id)) == id)
+            .find(|e| ROSTER.part(roster_row(e.id())) == id)
         {
-            let inst = inst.id.clone();
+            let inst = entry.id().clone();
             self.select_instance(&inst, w);
             cx.focus.focus(TREE);
             return Outcome::Changed;

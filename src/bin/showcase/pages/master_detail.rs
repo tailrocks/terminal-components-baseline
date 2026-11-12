@@ -326,11 +326,15 @@ fn states_grid() -> StateGrid {
 }
 
 pub(crate) fn page_hint(h: junie_tui::widgets::keyhint::Hint) -> Hint {
+    let key = match h.key {
+        Cow::Borrowed(key) => key,
+        Cow::Owned(_) => "",
+    };
     let action = match h.action {
         Cow::Borrowed(s) => s,
         Cow::Owned(_) => "",
     };
-    (h.key, action)
+    (key, action)
 }
 
 impl Page for MasterDetailPage {

@@ -104,10 +104,12 @@ pub const EDIT_CELL: [Hint; 3] = [
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Hint {
-    pub key: &'static str,
+    pub key: Cow<'static, str>,
     pub action: Cow<'static, str>,
 
     pub priority: HintPriority,
+
+    pub click_key: Option<crate::core::event::Key>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -121,12 +123,18 @@ pub enum HintPriority {
 }
 
 impl Hint {
-    pub fn new(key: &'static str, action: impl Into<Cow<'static, str>>) -> Self {
+    pub fn new(key: impl Into<Cow<'static, str>>, action: impl Into<Cow<'static, str>>) -> Self {
         Self {
-            key,
+            key: key.into(),
             action: action.into(),
             priority: HintPriority::Auto,
+            click_key: None,
         }
+    }
+
+    pub fn click_key(mut self, key: crate::core::event::Key) -> Self {
+        self.click_key = Some(key);
+        self
     }
 
     pub fn priority(mut self, priority: HintPriority) -> Self {
@@ -142,7 +150,7 @@ impl Hint {
         match self.priority {
             HintPriority::Pinned => true,
             HintPriority::Normal => false,
-            HintPriority::Auto => style.pinned_keys.contains(&self.key),
+            HintPriority::Auto => style.pinned_keys.contains(&self.key.as_ref()),
         }
     }
 }
@@ -164,9 +172,10 @@ pub fn deliverable_line(line: &str) -> std::borrow::Cow<'_, str> {
 
 pub const fn hint(key: &'static str, action: &'static str) -> Hint {
     Hint {
-        key,
+        key: Cow::Borrowed(key),
         action: Cow::Borrowed(action),
         priority: HintPriority::Auto,
+        click_key: None,
     }
 }
 
@@ -215,7 +224,7 @@ pub fn render_aligned(
 const GAP: u16 = 2;
 
 fn hint_width(h: &Hint, compact: bool) -> u16 {
-    let kw = crate::ui::text::width(&normalize_key(h.key)) as u16;
+    let kw = crate::ui::text::width(&normalize_key(h.key.as_ref())) as u16;
     if compact {
         kw
     } else {
@@ -463,6 +472,7 @@ pub fn key_of(label: &str) -> Option<crate::core::event::Key> {
         "Tab" => KeyCode::Tab,
         "Space" => KeyCode::Char(' '),
         "Delete" => KeyCode::Delete,
+        "Insert" | "Ins" => KeyCode::Insert,
         "Backspace" => KeyCode::Backspace,
         "Home" => KeyCode::Home,
         "End" => KeyCode::End,
@@ -590,7 +600,7 @@ fn render_right(
     }
     for &i in &keep {
         let h = &hints[i];
-        let key = normalize_key(h.key);
+        let key = normalize_key(h.key.as_ref());
         let key = t.glyphs.key_label(&key);
         let kw = crate::ui::text::width(&key) as u16;
         buf.set_string(x, area.y, &key, t.key_hint_key());
@@ -605,4 +615,19 @@ fn render_right(
         buf.set_string(x, area.y, t.glyphs.ellipsis, t.faint());
     }
     keep.len()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn insert_hint_labels_are_clickable() {
+        for label in ["Insert", "Ins"] {
+            let key = key_of(label).unwrap_or_else(|| panic!("{label} must parse"));
+            assert_eq!(key.code, ratatui::crossterm::event::KeyCode::Insert);
+            assert_eq!(key.mods, KeyModifiers::NONE);
+        }
+        assert!(key_of("Insertion").is_none());
+    }
 }

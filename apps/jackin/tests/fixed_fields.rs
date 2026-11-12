@@ -8,13 +8,13 @@ use jackin_console::domain::account::{
     CredentialSource, DetectedKind, EditBlocked, Endpoint, IdentitySubject, IssueCode, LaunchBlock,
     Lifecycle, Provenance, Recoverability, RecoverableIssue, ValidationLevel, ValidationState,
 };
-use jackin_console::domain::agent::{Agent, AgentBlocked, AuthMode, Provider, UsageSurface};
+use jackin_console::domain::agent::{Agent, AuthMode, Provider, UsageSurface};
 use jackin_console::domain::docker::{DockerSetting, EngineState};
 use jackin_console::domain::doctor::{DoctorState, DoctorSurface};
 use jackin_console::domain::fixed::Fixed;
 use jackin_console::domain::fixed_fields::*;
 use jackin_console::domain::instance::{
-    DaemonSnapshot, Instance, InstanceStatus, ManifestError, RepoRef,
+    DaemonSnapshot, Instance, InstanceId, InstanceStatus, ManifestError, RepoRef,
 };
 use jackin_console::domain::openshell::{self, env_edit_block};
 use jackin_console::domain::reason::{IssueReason, UsageReason};
@@ -63,9 +63,57 @@ fn expected_global() -> GlobalFixed {
         dco_signoff: false,
         mounts_empty: true,
         role_env_empty: true,
-        non_launchable_modes_ignore: true,
+        all_agent_modes_present: true,
         all_trusted: true,
     }
+}
+
+#[test]
+fn openshell_surface_does_not_block_agents_globally() {
+    assert_eq!(SurfaceFixed::openshell().agent_blocked, None);
+}
+
+#[test]
+fn openshell_global_defaults_and_preserves_every_agent_mode_idempotently() {
+    let mut missing = GlobalConfig::default();
+    openshell::global(&mut missing);
+    for agent in Agent::ALL {
+        assert_eq!(missing.agent_modes.get(&agent), Some(&AuthMode::Sync));
+    }
+    let normalized = missing.clone();
+    openshell::global(&mut missing);
+    assert_eq!(missing, normalized);
+
+    for agent in Agent::ALL
+        .into_iter()
+        .filter(|agent| *agent != Agent::Codex)
+    {
+        for mode in [
+            AuthMode::Sync,
+            AuthMode::ApiKey,
+            AuthMode::OAuthToken,
+            AuthMode::Ignore,
+        ] {
+            let mut explicit = GlobalConfig::default();
+            explicit.agent_modes.insert(agent, mode);
+            openshell::global(&mut explicit);
+            assert_eq!(explicit.agent_modes.get(&agent), Some(&mode));
+            for other in Agent::ALL {
+                assert!(explicit.agent_modes.contains_key(&other));
+            }
+            let normalized = explicit.clone();
+            openshell::global(&mut explicit);
+            assert_eq!(explicit, normalized);
+        }
+    }
+
+    let mut ignored = GlobalConfig::default();
+    ignored.agent_modes.insert(Agent::Omp, AuthMode::Ignore);
+    openshell::global(&mut ignored);
+    assert_eq!(
+        ignored.agent_modes.get(&Agent::Omp),
+        Some(&AuthMode::Ignore)
+    );
 }
 
 fn expected_account(a: &Account) -> AccountFixed {
@@ -233,14 +281,12 @@ fn fixed_world_roles() {
 fn fixed_world_instances() {
     let w = world_for(Scenario::OpenshellFixed);
     assert!(!w.instances.is_empty());
-    for i in &w.instances {
+    for entry in &w.instances {
         assert_eq!(
-            instance_fixed(i),
-            InstanceFixed {
-                workdir: PROJECT.into()
+            instance_fixed(entry.as_available().expect("available fixture")),
+            InstanceFixed::Available {
+                workdir: Some(PROJECT.into())
             },
-            "{}",
-            i.id
         );
     }
 }
@@ -252,11 +298,7 @@ fn fixed_world_surfaces() {
     assert_eq!(got.vocabulary, Vocabulary::openshell(), "vocabulary");
     assert_eq!(got.fixed, Some(Fixed::openshell()), "fixed");
     assert_eq!(got.account_form, AccountForm::openshell(), "account_form");
-    assert_eq!(
-        got.agent_blocked,
-        Some(AgentBlocked::openshell()),
-        "agent_blocked"
-    );
+    assert_eq!(got.agent_blocked, None, "agent_blocked");
     assert_eq!(got.wizard, Some(WizardDefaults::openshell()), "wizard");
     assert_eq!(got.launch_role, LaunchRoleRule::Configured, "launch_role");
 }
@@ -280,8 +322,8 @@ fn fixed_world_view_is_the_openshell_constants() {
     assert_eq!(
         view.instances,
         vec![
-            InstanceFixed {
-                workdir: PROJECT.into()
+            InstanceFixed::Available {
+                workdir: Some(PROJECT.into())
             };
             w.instances.len()
         ]
@@ -541,14 +583,11 @@ fn fixed_world_extractor_sees_every_global_field() {
         },
     );
     global_case(
-        "an agent other than the launchable one is not Ignore",
+        "an explicit agent mode is data",
         |g| {
-            g.agent_modes.insert(other, AuthMode::Sync);
+            g.agent_modes.insert(other, AuthMode::ApiKey);
         },
-        GlobalFixed {
-            non_launchable_modes_ignore: false,
-            ..base()
-        },
+        base(),
     );
     global_case(
         "an agent other than the launchable one is missing",
@@ -556,7 +595,7 @@ fn fixed_world_extractor_sees_every_global_field() {
             g.agent_modes.remove(&other);
         },
         GlobalFixed {
-            non_launchable_modes_ignore: false,
+            all_agent_modes_present: false,
             ..base()
         },
     );
@@ -564,7 +603,7 @@ fn fixed_world_extractor_sees_every_global_field() {
         "no agent modes at all",
         |g| g.agent_modes.clear(),
         GlobalFixed {
-            non_launchable_modes_ignore: false,
+            all_agent_modes_present: false,
             ..base()
         },
     );
@@ -651,17 +690,20 @@ fn fixed_world_extractor_sees_the_role_and_instance_fields() {
     assert_eq!(role_fixed(&role), RoleFixed { trusted: false }, "trusted");
     role.description = "another".into();
     assert_eq!(role_fixed(&role), RoleFixed { trusted: false }, "Data");
-    let mut instance: Instance = w.instances[0].clone();
-    instance.workdir = PROJECT.into();
-    let want = InstanceFixed {
-        workdir: PROJECT.into(),
+    let mut instance: Instance = w.instances[0]
+        .as_available()
+        .expect("verified fixture")
+        .clone();
+    instance.workdir = Some(PROJECT.into());
+    let want = InstanceFixed::Available {
+        workdir: Some(PROJECT.into()),
     };
     assert_eq!(instance_fixed(&instance), want);
-    instance.workdir = "/workspace/x".into();
+    instance.workdir = Some("/workspace/x".into());
     assert_eq!(
         instance_fixed(&instance),
-        InstanceFixed {
-            workdir: "/workspace/x".into()
+        InstanceFixed::Available {
+            workdir: Some("/workspace/x".into())
         },
         "workdir"
     );
@@ -849,13 +891,16 @@ fn fixed_world_normalizer_sets_the_role_and_instance_fields() {
     role.trusted = false;
     openshell::role(&mut role);
     assert_eq!(role_fixed(&role), RoleFixed { trusted: true });
-    let mut instance: Instance = w.instances[0].clone();
-    instance.workdir = "/workspace/x".into();
+    let mut instance: Instance = w.instances[0]
+        .as_available()
+        .expect("verified fixture")
+        .clone();
+    instance.workdir = Some("/workspace/x".into());
     openshell::instance(&mut instance);
     assert_eq!(
         instance_fixed(&instance),
-        InstanceFixed {
-            workdir: PROJECT.into()
+        InstanceFixed::Available {
+            workdir: Some(PROJECT.into())
         }
     );
 }
@@ -869,11 +914,7 @@ fn fixed_world_normalizer_sets_every_fixed_surface_field() {
     assert_eq!(got.vocabulary, Vocabulary::openshell(), "vocabulary");
     assert_eq!(got.fixed, Some(Fixed::openshell()), "fixed");
     assert_eq!(got.account_form, AccountForm::openshell(), "account_form");
-    assert_eq!(
-        got.agent_blocked,
-        Some(AgentBlocked::openshell()),
-        "agent_blocked"
-    );
+    assert_eq!(got.agent_blocked, None, "agent_blocked");
     assert_eq!(got.wizard, Some(WizardDefaults::openshell()), "wizard");
     assert_eq!(got.launch_role, LaunchRoleRule::Configured, "launch_role");
 }
@@ -929,11 +970,11 @@ fn probe_account() -> Account {
 
 fn probe_instance() -> Instance {
     Instance {
-        id: "jk-probe".into(),
+        id: InstanceId::simulated("jk-probe"),
         container: "probe-container".into(),
         workspace: Some(42),
-        workdir: "/workspace/probe".into(),
-        role: "probe-role".into(),
+        workdir: Some("/workspace/probe".into()),
+        role: Some("probe-role".into()),
         agent: Agent::Amp,
         status: InstanceStatus::Crashed,
         created_secs: 11,
@@ -1034,7 +1075,7 @@ fn fixed_world_normalizers_leave_data_fields_alone() {
     assert_eq!(
         after,
         Instance {
-            workdir: PROJECT.into(),
+            workdir: Some(PROJECT.into()),
             ..before
         }
     );

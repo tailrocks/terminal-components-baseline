@@ -125,9 +125,9 @@ pub struct PaneRequest {
 }
 
 impl PaneRequest {
-    pub fn new(instance: &str, agent: Option<Agent>, account: Option<AccountId>) -> Self {
+    pub fn new(instance: &InstanceId, agent: Option<Agent>, account: Option<AccountId>) -> Self {
         Self {
-            instance: instance.to_owned(),
+            instance: instance.clone(),
             kind: match agent {
                 Some(agent) => PaneKind::Agent { agent, account },
                 None => PaneKind::Shell,

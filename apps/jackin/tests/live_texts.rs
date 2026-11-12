@@ -4,6 +4,7 @@ mod common;
 
 use common::*;
 use jackin_console::app::App;
+use jackin_console::domain::instance::InstanceId;
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
@@ -199,7 +200,7 @@ fn the_attach_status_does_not_claim_a_restore() {
         let mut app = app_with(Scenario::Returning, world);
         screen(&mut app);
         app.go(Go::Attach {
-            instance: "jk-7f3a".into(),
+            instance: InstanceId::simulated("jk-7f3a"),
             pane: None,
         });
         screen(&mut app);

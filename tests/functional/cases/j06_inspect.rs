@@ -515,6 +515,19 @@ fn j06_inspect_inspect() {
     refuse(&restored, BACKOFF);
     refuse(&restored, PAGE);
 
+    app.key("v");
+    let review = app.wait_screen("review mode after resize", |screen| {
+        let visible = text(screen);
+        retry_body(screen) && visible.contains("review") && visible.contains("Show unified")
+    });
+    require(&review, RAND);
+    app.key("v");
+    let unified = app.wait_screen("unified mode after resize", |screen| {
+        let visible = text(screen);
+        retry_wide(screen) && visible.contains("unified") && visible.contains("Show side by side")
+    });
+    require(&unified, RAND);
+
     let selected_bg = select_diff(&app, RAND);
     let chosen = app.screen();
     require(&chosen, COPY);

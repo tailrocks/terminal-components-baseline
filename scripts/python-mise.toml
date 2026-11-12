@@ -1,0 +1,6 @@
+[tools]
+python = { version = "3.15.2", patch_sysconfig = false }
+
+[settings]
+python.compile = false
+python.github_attestations = true

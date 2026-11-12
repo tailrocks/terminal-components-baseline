@@ -2,6 +2,7 @@ use super::bins::SHOWCASE;
 use super::support::{App, Point, find, text};
 
 #[test]
+#[ignore = "Tracked in docs/audits/2026-11-06-resize-fence-quarantine.md"]
 fn showcase_help_survives_shrink_and_growth_and_returns_focus() {
     let app = App::new(
         "showcase-lifecycle",

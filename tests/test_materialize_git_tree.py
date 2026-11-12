@@ -133,6 +133,14 @@ class BatchMaterializerTests(unittest.TestCase):
         self.assertIn("total materialized blob size limit", result.stderr)
         self.assertFalse(self.calls.exists())
 
+    def test_approved_blob_size_must_equal_reviewed_size(self) -> None:
+        path = "tests/functional/reference-bins/test"
+        replies = self.prepare([("100755", path, b"123456")])
+        self.allowlist.write_text(f"{path}\t{'a' * 40}\t7\n", encoding="ascii")
+        result = self.run_materializer(replies, maximum_blob=5)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(self.calls.exists())
+
     def test_unsafe_path_is_rejected_before_starting_batch_reader(self) -> None:
         replies = self.prepare([("100644", "../escape", b"x")])
         result = self.run_materializer(replies)

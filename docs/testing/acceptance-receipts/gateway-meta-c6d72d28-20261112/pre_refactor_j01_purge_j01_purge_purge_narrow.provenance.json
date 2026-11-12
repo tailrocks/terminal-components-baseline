@@ -1,0 +1,72 @@
+{
+  "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "lockfile_sha256": "924da8b2cf72e2ed3151abff9c399fc9591e33b840f7002cbbe63cdfa4848091",
+  "toolchain": {
+    "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "1.99.1 (5f94df478 2026-08-27)",
+    "nextest": "0.9.148",
+    "tuiscotti_cli": "0.4.0",
+    "tuiscotti_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+    "tuiscotti_tui_test": "0.2.1",
+    "mise": "2026.10.25",
+    "velnor_actions": "0.1.70",
+    "host": "aarch64-apple-darwin"
+  },
+  "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/7d468f26fe638cdce658e3ee039ef634f3ba6372615409f1d0de09bf2590081e/debug/jackin-preview",
+  "binary_sha256": "4e671b2db8fba7a9a72f9c1122b233d99e3276a93607941cf68e0f1721f7e6ee",
+  "fixture_args": [],
+  "env": {},
+  "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+  "candidate_sha256": "638133a4e102bae276517921c40fca3948cf57b65ba6e05fc260f15960813098",
+  "expect_baseline": "87b3c6057cc3d5f83b2f1b53b4f0a2cf2610ffb2285fa22cb9d46ea2a803f05d",
+  "precondition": "Re-pin for c6d72d28 gateway identity meta prefix (i.id.gateway): the available-instance meta rows now carry the 'jackin-local \u00b7' gateway prefix, so the narrow shots shift the following text and truncate the title with an ellipsis; captured from the live candidate build of this branch, textual see()/forbid_hidden() assertions verified green in the same run",
+  "session": null,
+  "expected_test_id": "pre_refactor/j01_purge/j01_purge_purge_narrow",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/pre_refactor_j01_purge_j01_purge_purge_narrow.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/pre_refactor_j01_purge_j01_purge_purge_narrow.provenance.json",
+  "previous_archive_path": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/superseded/pre_refactor/j01_purge/j01_purge_purge_narrow.tui.pb",
+  "test_id": "pre_refactor/j01_purge/j01_purge_purge_narrow",
+  "acceptance": {
+    "expected_baseline_sha256": "87b3c6057cc3d5f83b2f1b53b4f0a2cf2610ffb2285fa22cb9d46ea2a803f05d",
+    "accepted_baseline_sha256": "638133a4e102bae276517921c40fca3948cf57b65ba6e05fc260f15960813098",
+    "candidate_sha256": "638133a4e102bae276517921c40fca3948cf57b65ba6e05fc260f15960813098",
+    "transaction_receipt": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/pre_refactor_j01_purge_j01_purge_purge_narrow.accept.json"
+  },
+  "previous_baseline": {
+    "sha256": "87b3c6057cc3d5f83b2f1b53b4f0a2cf2610ffb2285fa22cb9d46ea2a803f05d"
+  },
+  "candidate": {
+    "sha256": "638133a4e102bae276517921c40fca3948cf57b65ba6e05fc260f15960813098",
+    "path": "tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_narrow.tui.pb"
+  },
+  "history": {
+    "superseded_baseline": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/superseded/pre_refactor/j01_purge/j01_purge_purge_narrow.tui.pb",
+    "superseded_baseline_sha256": "87b3c6057cc3d5f83b2f1b53b4f0a2cf2610ffb2285fa22cb9d46ea2a803f05d"
+  },
+  "capture": {
+    "mode": "candidate",
+    "candidate_path": "tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_narrow.tui.pb",
+    "candidate_sha256": "638133a4e102bae276517921c40fca3948cf57b65ba6e05fc260f15960813098",
+    "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/7d468f26fe638cdce658e3ee039ef634f3ba6372615409f1d0de09bf2590081e/debug/jackin-preview",
+    "binary_sha256": "4e671b2db8fba7a9a72f9c1122b233d99e3276a93607941cf68e0f1721f7e6ee",
+    "note": "Live candidate capture of this branch. The pinned reference binary in docs/testing/reference-manifest.json is built from fffe002e, which predates c6d72d28, so no Reference-mode capture of this change exists and the reference-session path of scripts/accept-baseline.py cannot bind it."
+  },
+  "cli_receipt": {
+    "schema": "tuiscotti.cli.v1",
+    "command": "accept",
+    "status": "pass",
+    "test_id": "pre_refactor/j01_purge/j01_purge_purge_narrow",
+    "reason": null,
+    "candidate_path": {
+      "encoding": "utf8",
+      "value": "/tmp/cand_pre_refactor_j01_purge_j01_purge_purge_narrow.tui.pb"
+    },
+    "candidate_sha256": "638133a4e102bae276517921c40fca3948cf57b65ba6e05fc260f15960813098",
+    "baseline_sha256": "638133a4e102bae276517921c40fca3948cf57b65ba6e05fc260f15960813098",
+    "output_path": {
+      "encoding": "utf8",
+      "value": "/Users/donbeave/Projects/jackin-project/terminal-components-baseline/tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_narrow.tui.pb"
+    },
+    "error_code": null
+  }
+}

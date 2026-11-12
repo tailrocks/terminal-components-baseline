@@ -8,7 +8,7 @@ use std::sync::{Arc, Mutex};
 use jackin_console::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, assemble};
 use jackin_console::backend::{Backend, Completion, Effect};
 use jackin_console::domain::agent::Agent;
-use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
+use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
@@ -91,8 +91,8 @@ impl Backend for TermBackend {
         vec![PaneRequest::new(&instance.id, Some(Agent::Codex), None)]
     }
 
-    fn capsule_left(&self, _: &World, instance: &str) {
-        self.left.lock().expect("left").push(instance.to_owned());
+    fn capsule_left(&self, _: &World, instance: &InstanceId) {
+        self.left.lock().expect("left").push(instance.short_label());
     }
 }
 
@@ -108,11 +108,11 @@ impl NativeClipboard for Sink {
 
 pub fn instance() -> Instance {
     Instance {
-        id: INSTANCE.into(),
+        id: InstanceId::simulated(INSTANCE),
         container: "jackin-sandbox".into(),
         workspace: None,
-        workdir: "/sandbox/project".into(),
-        role: "the-architect".into(),
+        workdir: Some("/sandbox/project".into()),
+        role: Some("the-architect".into()),
         agent: Agent::Codex,
         status: InstanceStatus::Running,
         created_secs: 1_788_401_000,
@@ -166,7 +166,11 @@ impl Rig {
                 gateway: None,
             }),
         );
-        parts.instances.push(instance());
+        parts
+            .instances
+            .push(jackin_console::domain::instance::InstanceEntry::available(
+                instance(),
+            ));
         let mut world = World::new(parts);
         prepare(&mut world);
         let copied = Arc::new(Sink(Mutex::new(Vec::new())));
@@ -174,7 +178,7 @@ impl Rig {
             world,
             Entry {
                 page: EntryPage::Attach {
-                    instance: INSTANCE.into(),
+                    instance: InstanceId::simulated(INSTANCE),
                     pane: None,
                 },
                 outro_when_framed: false,
@@ -290,7 +294,11 @@ impl Rig {
     }
 
     pub fn daemon(&self) -> &Daemon {
-        self.app.world.daemons.get(INSTANCE).expect("the daemon")
+        self.app
+            .world
+            .daemons
+            .get(&InstanceId::simulated(INSTANCE))
+            .expect("the daemon")
     }
 
     pub fn status(&self) -> String {

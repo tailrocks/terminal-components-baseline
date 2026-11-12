@@ -147,10 +147,29 @@ def receipt_body(manifest: dict, args: argparse.Namespace, binary: Path) -> dict
         body["acceptance"] = {
             "expected_baseline_sha256": args.expect_baseline,
             "accepted_baseline_sha256": args.candidate_sha256,
+            "candidate_sha256": args.candidate_sha256,
+            "transaction_receipt": str(args.receipt),
         }
         body["previous_baseline"] = {"sha256": args.expect_baseline}
-        body["candidate"] = {"sha256": args.candidate_sha256}
+        body["candidate"] = {
+            "sha256": args.candidate_sha256,
+            "path": baseline_relative_path(args, args.expected_test_id),
+        }
+        if args.previous_archive:
+            body["history"] = {
+                "superseded_baseline": str(args.previous_archive),
+                "superseded_baseline_sha256": args.expect_baseline,
+            }
     return body
+
+
+def baseline_relative_path(args: argparse.Namespace, test_id: str) -> str:
+    """Repository-relative path of the accepted baseline for `test_id`."""
+    path = (args.baselines / f"{test_id}.tui.pb").resolve()
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
 
 
 def verify_reference_session(
@@ -292,6 +311,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--provenance", type=Path)
     parser.add_argument("--previous-archive", type=Path)
     parser.add_argument("--precondition", required=True)
+    parser.add_argument("--capture-note", default=None)
     parser.add_argument("--binary", required=True, type=Path)
     parser.add_argument("--binary-sha256", required=True)
     parser.add_argument("--session", type=Path)
@@ -320,8 +340,15 @@ def main() -> None:
     if os.environ.get(CANDIDATE_GATE) == "1":
         fail("candidate gate refuses baseline acceptance")
     args = parse_args()
+    if args.provenance is None:
+        fail(
+            "acceptance requires --provenance so the acceptance body, including the "
+            "precondition, the binary identity and the capture record, is preserved"
+        )
     baselines = args.baselines
     receipt = args.receipt
+    if args.provenance.resolve() == receipt.resolve():
+        fail("the receipt and the provenance must be two different files")
     if inside(receipt, baselines):
         fail("receipt is inside the baseline root")
     if args.provenance and inside(args.provenance, baselines):
@@ -477,8 +504,19 @@ def main() -> None:
     if args.expected_test_id and cli_receipt.get("test_id") != args.expected_test_id:
         fail("accepted sample id does not match the requested test id")
     if reference_session is not None:
-        body["cli_receipt"] = cli_receipt
         body["capture_index_path"] = str(args.capture_index.resolve())
+    else:
+        body["capture"] = {
+            "mode": "candidate",
+            "candidate_path": baseline_relative_path(args, args.expected_test_id)
+            if args.expected_test_id
+            else str(args.candidate),
+            "candidate_sha256": args.candidate_sha256,
+            "binary_path": str(binary),
+            "binary_sha256": actual_binary,
+            "note": args.capture_note,
+        }
+    body["cli_receipt"] = cli_receipt
     receipt.parent.mkdir(parents=True, exist_ok=True)
     if args.provenance:
         args.provenance.parent.mkdir(parents=True, exist_ok=True)
@@ -486,7 +524,9 @@ def main() -> None:
         fail("receipt is inside the baseline root")
     if args.provenance and inside(args.provenance, baselines):
         fail("provenance is inside the baseline root")
-    text = json.dumps(cli_receipt if reference_session is not None else body, indent=2) + "\n"
+    # The CLI receipt is the transaction record and always lands in --receipt.
+    # The provenance body always lands in --provenance.
+    text = json.dumps(cli_receipt, indent=2) + "\n"
     atomic_write_text(receipt, text)
     if args.provenance:
         provenance = args.provenance

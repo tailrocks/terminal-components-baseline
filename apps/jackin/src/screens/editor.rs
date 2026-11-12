@@ -43,7 +43,7 @@ use crate::domain::workspace::{
     AllowedRoles, DirtyExitPolicy, Effective, RoleEntry, RoleName, RoleSource, Workspace,
     WorkspaceId,
 };
-use crate::world::{Msg, RoleLoad, SaveFailure, Snapshot, World, job};
+use crate::world::{Msg, RoleLoad, SaveFailure, SaveSuccess, Snapshot, World, job};
 use junie_tui::ui::text::plural;
 
 fn on_off(v: bool) -> &'static str {
@@ -526,14 +526,14 @@ impl EditorScreen {
     fn finish_save(
         &mut self,
         id: Option<WorkspaceId>,
-        result: &Result<Box<Snapshot>, SaveFailure>,
+        result: &Result<SaveSuccess, SaveFailure>,
         w: &mut World,
         cx: &mut Cx,
     ) {
         self.saving = false;
         self.save.busy = false;
-        let snapshot = match result {
-            Ok(snapshot) => snapshot,
+        let saved = match result {
+            Ok(saved) => saved,
             Err(error) => {
                 let title = format!("Save failed · {}", self.pending.name);
                 let mut props = vec![
@@ -551,10 +551,14 @@ impl EditorScreen {
             }
         };
         let name = self.pending.name.clone();
-        w.apply((**snapshot).clone());
+        w.apply((*saved.snapshot).clone());
         self.workspace = id.or(self.workspace);
         self.original = self.pending.clone();
-        cx.status(self.saved_status(&name, w));
+        let status = self.saved_status(&name, w);
+        cx.status(match saved.warning {
+            Some(warning) => format!("{} · {status}", warning.status()),
+            None => status,
+        });
         cx.go(Go::Manager);
     }
 
@@ -1540,10 +1544,11 @@ impl EditorScreen {
 
     fn open_role_picker(&mut self, w: &World, cx: &mut Cx) {
         let mut p = Picker::new(WidgetId::of("editor.roles.picker"), "Load role");
-        p.list.width = (84, 84);
+        p.set_width(84);
         p.scope = Some("trusted role registry".into());
         let (items, targets) = self.role_items(w, "");
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         self.picker_targets = targets;
         cx.open(p, LayerTag::new("role.load"));
     }
@@ -1650,7 +1655,7 @@ impl EditorScreen {
 
     fn open_workdir_picker(&mut self, w: &World, cx: &mut Cx) {
         let mut p = Picker::new(WidgetId::of("editor.workdir.picker"), "Working directory");
-        p.list.width = (72, 72);
+        p.set_width(72);
         p.scope = Some(self.pending.name.clone());
         let mut items = vec![];
         let mut targets = vec![];
@@ -1697,7 +1702,8 @@ impl EditorScreen {
             );
             targets.push(self.pending.workdir.clone());
         }
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         self.picker_targets = targets;
         cx.open(p, LayerTag::new("workdir"));
     }

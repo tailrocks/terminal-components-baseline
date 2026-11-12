@@ -6,16 +6,24 @@ use crate::backend::{Backend, Completion, Effect, OpSession, PlainKey, Ticket, V
 use crate::domain::account::{
     Account, AccountId, AccountOrigin, AccountRegistry, CredentialSource, ValidationLevel,
 };
-use crate::domain::instance::{Instance, InstanceStatus};
+use crate::domain::instance::{Instance, InstanceEntry, InstanceId, InstanceStatus, SandboxPhase};
 use crate::domain::launch::LaunchContent;
 use crate::domain::role::{RoleCheckState, RoleRecord};
+use crate::domain::tuple::{AccountRequirement, TupleIdentity};
 use crate::domain::vocabulary::{Rejection, fill_in};
 use crate::domain::workspace::{RoleEntry, RoleSource, Workspace, WorkspaceId};
 use crate::launch::{LaunchFeed, LaunchTarget};
 use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
-use crate::world::{GlobalConfig, Msg, SaveFailure, Snapshot, World};
+use crate::world::{GlobalConfig, Msg, SaveFailure, SaveSuccess, Snapshot, World};
 
 use self::launch::{LaunchPlan, Opening, SimLaunch};
+
+fn save_success(snapshot: Snapshot) -> SaveSuccess {
+    SaveSuccess {
+        snapshot: Box::new(snapshot),
+        warning: None,
+    }
+}
 
 pub mod changes;
 pub mod launch;
@@ -48,6 +56,7 @@ pub struct SimBackend {
     bind_fails_once: AtomicBool,
     doctor_runs: AtomicUsize,
     openshell: bool,
+    accountless_tuple: Option<TupleIdentity>,
     next_workspace_id: AtomicU32,
     refresh_overrides: Vec<(AccountId, RefreshOverride)>,
     index_fails_once: AtomicBool,
@@ -69,6 +78,7 @@ impl Default for SimBackend {
             bind_fails_once: AtomicBool::default(),
             doctor_runs: AtomicUsize::default(),
             openshell: false,
+            accountless_tuple: None,
             next_workspace_id: AtomicU32::new(100),
             refresh_overrides: Vec::new(),
             index_fails_once: AtomicBool::default(),
@@ -90,6 +100,15 @@ impl SimBackend {
         Arc::new(SimBackend {
             launch: LaunchRule::Guarded,
             openshell: true,
+            ..SimBackend::default()
+        })
+    }
+
+    pub fn guarded_accountless(tuple: TupleIdentity) -> Arc<dyn Backend> {
+        Arc::new(SimBackend {
+            launch: LaunchRule::Guarded,
+            openshell: true,
+            accountless_tuple: Some(tuple),
             ..SimBackend::default()
         })
     }
@@ -178,7 +197,10 @@ impl SimBackend {
         let mut snapshot = snapshot(world);
         snapshot.global = global.clone();
         Msg::GlobalSaved {
-            result: Ok(Box::new(snapshot)),
+            result: Ok(SaveSuccess {
+                snapshot: Box::new(snapshot),
+                warning: None,
+            }),
         }
     }
 
@@ -219,7 +241,10 @@ impl SimBackend {
         };
         Msg::WorkspaceSaved {
             id: Some(assigned),
-            result: Ok(Box::new(snapshot)),
+            result: Ok(SaveSuccess {
+                snapshot: Box::new(snapshot),
+                warning: None,
+            }),
         }
     }
 }
@@ -241,7 +266,9 @@ impl Backend for SimBackend {
                     result: Ok(()),
                 },
             ),
-            Effect::Stop { .. } => return Some(Completion::settle(1_800)),
+            Effect::Stop { .. } | Effect::PowerStart { .. } | Effect::PowerStop { .. } => {
+                return Some(Completion::settle(1_800));
+            }
             Effect::Purge { .. } => return Some(Completion::settle(2_200)),
             Effect::Refresh { .. } => return Some(Completion::settle(0)),
             Effect::RefreshAccount {
@@ -290,7 +317,7 @@ impl Backend for SimBackend {
                 Msg::ChangesRead {
                     ticket: *ticket,
                     result: Ok(changes::changes_for(
-                        instance,
+                        &instance.sandbox_name,
                         touched,
                         *uncommitted,
                         *unpushed,
@@ -313,6 +340,7 @@ impl Backend for SimBackend {
         world
             .instances
             .iter()
+            .filter_map(InstanceEntry::as_available)
             .find(|i| i.status == InstanceStatus::Running)
             .map(|i| Msg::Takeover {
                 instance: i.id.clone(),
@@ -333,8 +361,12 @@ impl Backend for SimBackend {
                 } else {
                     let mut snapshot = snapshot(world);
                     let now = world.clock.now_secs();
-                    for i in snapshot.instances.iter_mut().filter(|i| i.status.is_live()) {
-                        i.last_seen_secs = now;
+                    for entry in &mut snapshot.instances {
+                        if let Some(i) = entry.as_available_mut()
+                            && i.status.is_live()
+                        {
+                            i.last_seen_secs = now;
+                        }
                     }
                     Ok(Box::new(snapshot))
                 };
@@ -358,6 +390,14 @@ impl Backend for SimBackend {
                 result: Ok(Box::new(left_running(world, instance, |_| {
                     InstanceStatus::Purged
                 }))),
+            }),
+            Effect::PowerStart { instance } => Some(Msg::PowerStarted {
+                instance: instance.clone(),
+                result: power_transition(world, instance, true),
+            }),
+            Effect::PowerStop { instance } => Some(Msg::PowerStopped {
+                instance: instance.clone(),
+                result: power_transition(world, instance, false),
             }),
             Effect::RefreshAccount {
                 account, source, ..
@@ -518,7 +558,10 @@ impl Backend for SimBackend {
                 Some(Msg::RoleBound {
                     role: role.clone(),
                     agent: *agent,
-                    result,
+                    result: result.map(|snapshot| SaveSuccess {
+                        snapshot,
+                        warning: None,
+                    }),
                 })
             }
             Effect::AddRole { location } => {
@@ -538,7 +581,7 @@ impl Backend for SimBackend {
                         .as_mut()
                         .ok_or("roles are not available")?;
                     admin.roles.push(rec);
-                    Ok((name, Box::new(snapshot)))
+                    Ok((name, save_success(snapshot)))
                 });
                 Some(Msg::RoleAdded {
                     location: location.clone(),
@@ -555,7 +598,7 @@ impl Backend for SimBackend {
                 Some(Msg::RoleRemoved {
                     role: role.clone(),
                     result: if removed {
-                        Ok(Box::new(snapshot))
+                        Ok(save_success(snapshot))
                     } else {
                         Err(world
                             .surfaces
@@ -567,19 +610,30 @@ impl Backend for SimBackend {
             Effect::DeleteWorkspace { id } => {
                 let mut snapshot = snapshot(world);
                 snapshot.workspaces.retain(|w| w.id != *id);
-                for i in &mut snapshot.instances {
-                    if i.workspace == Some(*id) {
-                        i.workspace = None;
+                for entry in &mut snapshot.instances {
+                    match entry {
+                        InstanceEntry::Available(i) if i.workspace == Some(*id) => {
+                            i.workspace = None;
+                        }
+                        InstanceEntry::Unavailable(i) if i.workspace == Some(*id) => {
+                            i.workspace = None;
+                        }
+                        _ => {}
                     }
                 }
                 Some(Msg::WorkspaceDeleted {
                     id: *id,
-                    result: Ok(Box::new(snapshot)),
+                    result: Ok(save_success(snapshot)),
                 })
             }
             Effect::Restore { instance } => {
                 let mut snapshot = snapshot(world);
-                let result = match snapshot.instances.iter_mut().find(|i| i.id == *instance) {
+                let result = match snapshot
+                    .instances
+                    .iter_mut()
+                    .find(|entry| entry.id() == instance)
+                    .and_then(InstanceEntry::as_available_mut)
+                {
                     Some(i) => {
                         i.status = InstanceStatus::Running;
                         i.last_seen_secs = world.clock.now_secs();
@@ -589,7 +643,7 @@ impl Backend for SimBackend {
                         .surfaces
                         .vocabulary
                         .rejection(&Rejection::NotInRoster {
-                            instance: instance.clone(),
+                            instance: instance.short_label(),
                         })),
                 };
                 Some(Msg::Restored {
@@ -618,12 +672,21 @@ impl Backend for SimBackend {
         }
     }
 
+    fn account_requirement(&self, tuple: TupleIdentity) -> AccountRequirement {
+        if self.accountless_tuple == Some(tuple) {
+            AccountRequirement::Optional
+        } else {
+            AccountRequirement::Required
+        }
+    }
+
     fn launch(&self, world: &World, target: &LaunchTarget) -> Box<dyn LaunchFeed> {
-        let opening = match self.launch {
-            LaunchRule::Guarded => launch::opening(world, target),
-            LaunchRule::Clean | LaunchRule::FailNetwork | LaunchRule::HardCases => {
-                Opening::Straight
-            }
+        let opening = if self.launch == LaunchRule::Guarded {
+            launch::opening(world, target)
+        } else if let Some(reason) = launch::validate_tuples(world, target) {
+            Opening::Refuse(reason)
+        } else {
+            Opening::Straight
         };
         Box::new(SimLaunch::start(
             self.launch_plan(world, target),
@@ -640,27 +703,6 @@ impl Backend for SimBackend {
             &spawn,
             scripts::SimScripts::shared(),
         ))
-    }
-
-    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
-        if instance.agents.is_empty() {
-            return vec![PaneRequest::new(
-                &instance.id,
-                Some(instance.agent),
-                instance.account.clone(),
-            )];
-        }
-        instance
-            .agents
-            .iter()
-            .map(|a| {
-                let account = a
-                    .account
-                    .clone()
-                    .or_else(|| (a.agent == instance.agent).then(|| instance.account.clone())?);
-                PaneRequest::new(&instance.id, Some(a.agent), account)
-            })
-            .collect()
     }
 }
 
@@ -692,7 +734,10 @@ fn settle_accounts_save(
     Msg::AccountsSaved {
         ticket,
         added,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(SaveSuccess {
+            snapshot: Box::new(snapshot),
+            warning: None,
+        }),
     }
 }
 
@@ -737,16 +782,58 @@ fn give_ids(registry: &mut AccountRegistry) -> Option<AccountId> {
 /// last seen, and nothing else.
 fn left_running(
     world: &World,
-    instance: &str,
+    instance: &InstanceId,
     status: impl Fn(&Instance) -> InstanceStatus,
 ) -> Snapshot {
     let mut snapshot = snapshot(world);
     let now = world.clock.now_secs();
-    if let Some(i) = snapshot.instances.iter_mut().find(|i| i.id == instance) {
+    if let Some(i) = snapshot
+        .instances
+        .iter_mut()
+        .find(|entry| entry.id() == instance)
+        .and_then(InstanceEntry::as_available_mut)
+    {
         i.status = status(i);
         i.last_seen_secs = now;
     }
     snapshot
+}
+
+fn power_transition(
+    world: &World,
+    instance: &InstanceId,
+    start: bool,
+) -> Result<Box<Snapshot>, String> {
+    let mut snapshot = snapshot(world);
+    let Some(InstanceEntry::Unavailable(unavailable)) = snapshot
+        .instances
+        .iter_mut()
+        .find(|entry| entry.id() == instance)
+    else {
+        return Err("Cannot power this sandbox because its metadata is no longer available".into());
+    };
+    if start {
+        if !unavailable.phase.startable() {
+            let display = unavailable.display();
+            return Err(format!(
+                "Cannot start sandbox {} while {} · only stopped sandboxes can start",
+                display.sandbox_name,
+                unavailable.phase.label()
+            ));
+        }
+        unavailable.phase = SandboxPhase::Ready;
+    } else {
+        if !unavailable.phase.ready() {
+            let display = unavailable.display();
+            return Err(format!(
+                "Cannot stop sandbox {} while {} · only ready sandboxes can stop",
+                display.sandbox_name,
+                unavailable.phase.label()
+            ));
+        }
+        unavailable.phase = SandboxPhase::Stopped;
+    }
+    Ok(Box::new(snapshot))
 }
 
 /// How far a key that is held as a fingerprint can be vouched for.

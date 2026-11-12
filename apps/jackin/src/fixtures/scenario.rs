@@ -133,7 +133,7 @@ pub fn entry_for(scenario: Scenario) -> Entry {
         }),
         Scenario::CapsuleMulti | Scenario::OutroLast | Scenario::CapsuleTerminal => {
             EntryPage::Attach {
-                instance: "jk-7f3a".into(),
+                instance: crate::domain::instance::InstanceId::simulated("jk-7f3a"),
                 pane: None,
             }
         }

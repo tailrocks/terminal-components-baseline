@@ -44,7 +44,7 @@ fn rig_with_a_selection() -> Rig {
         .app
         .world
         .daemons
-        .get_mut(pane_support::INSTANCE)
+        .get_mut(&pane_support::instance_id())
         .expect("daemon");
     area.pane_mut(pane)
         .expect("pane")

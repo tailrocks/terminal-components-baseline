@@ -11,7 +11,7 @@ use jackin_console::domain::account::{
     AccountRegistry, CredentialSource, DetectedKind, IssueCode, ValidationState,
 };
 use jackin_console::domain::agent::Agent;
-use jackin_console::domain::instance::{Instance, InstanceStatus};
+use jackin_console::domain::instance::{Instance, InstanceEntry, InstanceId, InstanceStatus};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::reason::{IssueReason, RefreshOutcome};
 use jackin_console::domain::role::{FindingArea, RoleAdmin, RoleCheckState, RoleFinding};
@@ -22,12 +22,18 @@ use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
-use jackin_console::world::{DaemonHealth, GlobalConfig, Msg, SaveFailure, World};
+use jackin_console::world::{
+    DaemonHealth, GlobalConfig, Msg, SaveFailure, SaveSuccess, SaveWarning, Snapshot, World,
+};
 use junie_tui::core::event::{External, Input, Outcome};
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::theme::{ColorLevel, Theme};
 use junie_tui::widgets::file_browser::FileEntry;
+
+fn iid(label: &str) -> InstanceId {
+    InstanceId::simulated(label)
+}
 
 type Answer = fn(&Effect, &World) -> Option<Msg>;
 
@@ -146,6 +152,48 @@ fn status(app: &App) -> String {
     app.shell.status.text().unwrap_or_default().to_owned()
 }
 
+fn save_success(snapshot: Snapshot, warning: Option<SaveWarning>) -> SaveSuccess {
+    SaveSuccess {
+        snapshot: Box::new(snapshot),
+        warning,
+    }
+}
+
+fn unsynced(reply: Option<Msg>) -> Option<Msg> {
+    match reply? {
+        Msg::WorkspaceDeleted { id, result } => Some(Msg::WorkspaceDeleted {
+            id,
+            result: result
+                .map(|saved| save_success(*saved.snapshot, Some(SaveWarning::DirectorySync))),
+        }),
+        Msg::RoleBound {
+            role,
+            agent,
+            result,
+        } => Some(Msg::RoleBound {
+            role,
+            agent,
+            result: result
+                .map(|saved| save_success(*saved.snapshot, Some(SaveWarning::DirectorySync))),
+        }),
+        Msg::RoleAdded { location, result } => Some(Msg::RoleAdded {
+            location,
+            result: result.map(|(name, saved)| {
+                (
+                    name,
+                    save_success(*saved.snapshot, Some(SaveWarning::DirectorySync)),
+                )
+            }),
+        }),
+        Msg::RoleRemoved { role, result } => Some(Msg::RoleRemoved {
+            role,
+            result: result
+                .map(|saved| save_success(*saved.snapshot, Some(SaveWarning::DirectorySync))),
+        }),
+        other => Some(other),
+    }
+}
+
 const CANONICAL: &str = "/workspace/backend-canonical";
 
 /// Stores the payload the way a backend would: the record keeps the id it was
@@ -164,8 +212,24 @@ fn store_workspace(effect: &Effect, world: &World) -> Option<Msg> {
     }
     Some(Msg::WorkspaceSaved {
         id: Some(stored.id),
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
+}
+
+fn store_workspace_unsynced(effect: &Effect, world: &World) -> Option<Msg> {
+    match store_workspace(effect, world)? {
+        Msg::WorkspaceSaved {
+            id,
+            result: Ok(mut saved),
+        } => {
+            saved.warning = Some(SaveWarning::DirectorySync);
+            Some(Msg::WorkspaceSaved {
+                id,
+                result: Ok(saved),
+            })
+        }
+        message => Some(message),
+    }
 }
 
 fn fail_workspace(effect: &Effect, _: &World) -> Option<Msg> {
@@ -219,6 +283,27 @@ fn save_workspace_stores_the_payload() {
         !roster.contains(&("x", original.workdir.as_str())),
         "the roster must be the reply snapshot, not the pending copy: {roster:?}"
     );
+}
+
+#[test]
+fn committed_unsynced_workspace_save_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::Returning, store_workspace_unsynced);
+    press(&mut app, "down e enter x ctrl+s");
+    press(&mut app, "right enter");
+    settle(&mut app);
+
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Workspace x saved"
+    );
+    let roster: Vec<(&str, &str)> = app
+        .world
+        .workspaces
+        .iter()
+        .map(|workspace| (workspace.name.as_str(), workspace.workdir.as_str()))
+        .collect();
+    assert!(roster.contains(&("x", CANONICAL)), "{roster:?}");
+    assert!(!screen(&mut app).contains("Save failed"));
 }
 
 #[test]
@@ -297,8 +382,20 @@ fn store_global(effect: &Effect, world: &World) -> Option<Msg> {
     snapshot.global = (**global).clone();
     snapshot.global.dco_signoff = false;
     Some(Msg::GlobalSaved {
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
+}
+
+fn store_global_unsynced(effect: &Effect, world: &World) -> Option<Msg> {
+    match store_global(effect, world)? {
+        Msg::GlobalSaved {
+            result: Ok(mut saved),
+        } => {
+            saved.warning = Some(SaveWarning::DirectorySync);
+            Some(Msg::GlobalSaved { result: Ok(saved) })
+        }
+        message => Some(message),
+    }
 }
 
 fn fail_global(effect: &Effect, _: &World) -> Option<Msg> {
@@ -336,6 +433,18 @@ fn save_global_stores_the_payload() {
         !app.world.global.dco_signoff,
         "the world must be the reply snapshot, not the pending copy"
     );
+}
+
+#[test]
+fn committed_unsynced_global_save_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::Returning, store_global_unsynced);
+    press(&mut app, "s enter space ctrl+s");
+    press(&mut app, "right enter");
+    settle(&mut app);
+
+    assert_eq!(status(&app), "Saved, durability uncertain · Settings saved");
+    assert!(!app.world.global.dco_signoff);
+    assert!(!screen(&mut app).contains("Settings error"));
 }
 
 #[test]
@@ -414,8 +523,26 @@ fn store_accounts(effect: &Effect, world: &World) -> Option<Msg> {
     Some(Msg::AccountsSaved {
         ticket: *ticket,
         added: None,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
+}
+
+fn store_accounts_unsynced(effect: &Effect, world: &World) -> Option<Msg> {
+    match store_accounts(effect, world)? {
+        Msg::AccountsSaved {
+            ticket,
+            added,
+            result: Ok(mut saved),
+        } => {
+            saved.warning = Some(SaveWarning::DirectorySync);
+            Some(Msg::AccountsSaved {
+                ticket,
+                added,
+                result: Ok(saved),
+            })
+        }
+        message => Some(message),
+    }
 }
 
 fn fail_accounts(effect: &Effect, _: &World) -> Option<Msg> {
@@ -464,6 +591,30 @@ fn save_accounts_stores_the_payload() {
 }
 
 #[test]
+fn committed_unsynced_accounts_save_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::AccountsMixed, store_accounts_unsynced);
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Saved Claude · Spare"
+    );
+    let spare = app
+        .world
+        .accounts
+        .accounts
+        .iter()
+        .find(|account| account.display_name == "Spare")
+        .expect("the saved account");
+    assert_eq!(spare.purpose.as_deref(), Some("kept by the backend"));
+    let shown = screen(&mut app);
+    assert!(!shown.contains("New account"), "{shown}");
+    assert!(!shown.contains("disk full"), "{shown}");
+}
+
+#[test]
 fn failed_accounts_save_keeps_the_form() {
     let (mut app, _) = backed(Scenario::AccountsMixed, fail_accounts);
     let before = app.world.accounts.clone();
@@ -488,7 +639,7 @@ fn delete_workspace(effect: &Effect, world: &World) -> Option<Msg> {
     snapshot.workspaces.retain(|w| w.id != *id);
     Some(Msg::WorkspaceDeleted {
         id: *id,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
 }
 
@@ -510,8 +661,8 @@ fn delete_workspace_is_an_effect() {
         .world
         .instances
         .iter()
-        .filter(|i| i.workspace == Some(doomed.id))
-        .map(|i| i.id.clone())
+        .filter(|entry| entry.workspace_id() == Some(doomed.id))
+        .map(|entry| entry.id().clone())
         .collect();
     assert!(!linked.is_empty());
     press(&mut app, "down d");
@@ -531,6 +682,30 @@ fn delete_workspace_is_an_effect() {
             "the instances are the reply snapshot's, not the screen's"
         );
     }
+}
+
+#[test]
+fn committed_unsynced_workspace_delete_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::Returning, |effect, world| {
+        unsynced(delete_workspace(effect, world))
+    });
+    let doomed = app.world.workspaces[0].clone();
+    press(&mut app, "down d");
+    press(&mut app, "right enter");
+    settle(&mut app);
+
+    assert!(
+        app.world
+            .workspaces
+            .iter()
+            .all(|workspace| workspace.id != doomed.id)
+    );
+    assert_eq!(app.route(), Route::Manager);
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Deleted workspace payments-platform · instances and files kept"
+    );
+    assert!(!screen(&mut app).contains("Nothing changed"));
 }
 
 #[test]
@@ -554,7 +729,12 @@ fn restore(effect: &Effect, world: &World) -> Option<Msg> {
         return None;
     };
     let mut snapshot = sim::snapshot(world);
-    for i in snapshot.instances.iter_mut().filter(|i| i.id == *instance) {
+    for i in snapshot
+        .instances
+        .iter_mut()
+        .filter_map(InstanceEntry::as_available_mut)
+        .filter(|i| i.id == *instance)
+    {
         i.status = InstanceStatus::Running;
         i.last_seen_secs = RESTORED_AT;
     }
@@ -582,17 +762,17 @@ fn restore_is_an_effect() {
     assert_eq!(
         backend.seen(),
         [Effect::Restore {
-            instance: "jk-c41e".into()
+            instance: iid("jk-c41e")
         }]
     );
-    let restored = app.world.instance("jk-c41e").expect("the instance");
+    let restored = app.world.instance(&iid("jk-c41e")).expect("the instance");
     assert_eq!(restored.status, InstanceStatus::Running);
     assert_eq!(
         restored.last_seen_secs, RESTORED_AT,
         "the instance is the reply snapshot's, not the screen's"
     );
     assert_eq!(app.route(), Route::Capsule);
-    assert!(app.world.daemons.contains_key("jk-c41e"));
+    assert!(app.world.daemons.contains_key(&iid("jk-c41e")));
 }
 
 #[test]
@@ -601,10 +781,10 @@ fn refused_restore_stays_on_the_row() {
     press(&mut app, "down right down down enter");
     settle(&mut app);
 
-    let kept = app.world.instance("jk-c41e").expect("the instance");
+    let kept = app.world.instance(&iid("jk-c41e")).expect("the instance");
     assert_eq!(kept.status, InstanceStatus::PreservedDirty);
     assert_eq!(app.route(), Route::Manager);
-    assert!(!app.world.daemons.contains_key("jk-c41e"));
+    assert!(!app.world.daemons.contains_key(&iid("jk-c41e")));
     assert_eq!(status(&app), "the sandbox was removed");
 }
 
@@ -1035,13 +1215,13 @@ fn failure_app() -> App {
 fn a_failed_stop_shows_the_reply_error() {
     let mut app = failure_app();
     app.deliver(&Msg::Stopped {
-        instance: "jk-7f3a".into(),
+        instance: iid("jk-7f3a"),
         result: Err("docker is not answering".into()),
     });
     assert_eq!(status(&app), "docker is not answering");
-    let kept = app.world.instance("jk-7f3a").expect("the instance");
+    let kept = app.world.instance(&iid("jk-7f3a")).expect("the instance");
     assert_eq!(kept.status, InstanceStatus::Running);
-    assert!(app.world.daemons.contains_key("jk-7f3a"));
+    assert!(app.world.daemons.contains_key(&iid("jk-7f3a")));
 }
 
 #[test]
@@ -1049,11 +1229,11 @@ fn a_refused_purge_reports_its_reason() {
     let mut app = failure_app();
     let reason = "purge refused: 2 unpushed commits would be lost";
     app.deliver(&Msg::Purged {
-        instance: "jk-c41e".into(),
+        instance: iid("jk-c41e"),
         result: Err(reason.into()),
     });
     assert_eq!(status(&app), reason);
-    let kept = app.world.instance("jk-c41e").expect("the instance");
+    let kept = app.world.instance(&iid("jk-c41e")).expect("the instance");
     assert_ne!(kept.status, InstanceStatus::Purged);
 }
 
@@ -1130,9 +1310,10 @@ fn run_for(app: &mut App, ms: i64) -> Vec<String> {
     seen
 }
 
-fn last_seen(w: &World) -> Vec<(String, i64)> {
+fn last_seen(w: &World) -> Vec<(InstanceId, i64)> {
     w.instances
         .iter()
+        .filter_map(InstanceEntry::as_available)
         .map(|i| (i.id.clone(), i.last_seen_secs))
         .collect()
 }
@@ -1162,6 +1343,7 @@ fn the_sim_fails_the_first_refresh_then_bumps_last_seen() {
     let live = |w: &World| {
         w.instances
             .iter()
+            .filter_map(InstanceEntry::as_available)
             .filter(|i| i.status.is_live())
             .map(|i| (i.id.clone(), i.last_seen_secs))
             .collect::<Vec<_>>()
@@ -1186,7 +1368,7 @@ const TAKEOVER: &str = "tty004 · MacBook attached to this instance";
 
 fn attached_for(app: &mut App, ms: i64) -> Vec<String> {
     app.go(Go::Attach {
-        instance: "jk-7f3a".into(),
+        instance: iid("jk-7f3a"),
         pane: None,
     });
     run_for(app, ms)
@@ -1282,7 +1464,7 @@ fn two_stops_due_in_one_tick_both_land() {
     let running: Vec<_> = ["jk-7f3a", "jk-9b02"]
         .iter()
         .map(|id| {
-            let i = app.world.instance(id).expect("the instance");
+            let i = app.world.instance(&iid(id)).expect("the instance");
             assert_eq!(i.status, InstanceStatus::Running, "{id}");
             i.id.clone()
         })
@@ -1301,7 +1483,7 @@ fn two_stops_due_in_one_tick_both_land() {
             InstanceStatus::Running,
             "the second reply must not put {id} back"
         );
-        assert!(!app.world.daemons.contains_key(id.as_str()), "{id}");
+        assert!(!app.world.daemons.contains_key(id), "{id}");
     }
 }
 
@@ -1335,7 +1517,7 @@ fn bind_role(effect: &Effect, world: &World) -> Option<Msg> {
     Some(Msg::RoleBound {
         role: role.clone(),
         agent: *agent,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
 }
 
@@ -1383,6 +1565,33 @@ fn role_bind_comes_from_the_snapshot() {
 }
 
 #[test]
+fn committed_unsynced_role_bind_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::RoleBinding, |effect, world| {
+        unsynced(bind_role(effect, world))
+    });
+    press(&mut app, PICK_EXPERIMENTS);
+    settle(&mut app);
+
+    let bindings = &admin(&app.world)
+        .role("sentinel")
+        .expect("sentinel")
+        .bindings;
+    assert_eq!(
+        bindings.get(&Agent::Codex).map(String::as_str),
+        Some("acct-codex-experiments")
+    );
+    assert_eq!(
+        bindings.get(&Agent::ClaudeCode).map(String::as_str),
+        Some(MARKER)
+    );
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Bound Codex · Experiments to sentinel for Codex"
+    );
+    assert!(!screen(&mut app).contains("Could not save the binding"));
+}
+
+#[test]
 fn failed_role_bind_keeps_the_binding() {
     let (mut app, _) = backed(Scenario::RoleBinding, refuse_bind);
     let before = app.world.surfaces.roles.clone();
@@ -1409,7 +1618,7 @@ fn add_role(effect: &Effect, world: &World) -> Option<Msg> {
     snapshot.surfaces.roles.as_mut()?.roles.push(record);
     Some(Msg::RoleAdded {
         location: location.clone(),
-        result: Ok((name, Box::new(snapshot))),
+        result: Ok((name, save_success(snapshot, None))),
     })
 }
 
@@ -1445,6 +1654,28 @@ fn role_add_comes_from_the_snapshot() {
     assert!(names.contains(&"registered-by-backend"), "{names:?}");
     assert!(!names.contains(&"new-role"), "{names:?}");
     assert_eq!(status(&app), "Role registered-by-backend added");
+}
+
+#[test]
+fn committed_unsynced_role_add_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::RoleBinding, |effect, world| {
+        unsynced(add_role(effect, world))
+    });
+    press(&mut app, ADD_NEW_ROLE);
+    settle(&mut app);
+
+    let names: Vec<_> = admin(&app.world)
+        .roles
+        .iter()
+        .map(|role| role.name.as_str())
+        .collect();
+    assert!(names.contains(&"registered-by-backend"), "{names:?}");
+    assert!(!names.contains(&"new-role"), "{names:?}");
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Role registered-by-backend added"
+    );
+    assert!(!screen(&mut app).contains("Could not add role"));
 }
 
 #[test]
@@ -1552,7 +1783,7 @@ fn remove_role(effect: &Effect, world: &World) -> Option<Msg> {
         .retain(|r| r.name != *role && r.name != "data-eng");
     Some(Msg::RoleRemoved {
         role: role.clone(),
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
     })
 }
 
@@ -1591,6 +1822,27 @@ fn role_remove_comes_from_the_snapshot() {
         "the roster is the reply snapshot's, not the screen's"
     );
     assert_eq!(status(&app), "Removed role writer");
+}
+
+#[test]
+fn committed_unsynced_role_remove_applies_snapshot_and_warns() {
+    let (mut app, _) = backed(Scenario::RoleBinding, |effect, world| {
+        unsynced(remove_role(effect, world))
+    });
+    press(&mut app, REMOVE_WRITER);
+    settle(&mut app);
+
+    let names: Vec<_> = admin(&app.world)
+        .roles
+        .iter()
+        .map(|role| role.name.as_str())
+        .collect();
+    assert_eq!(names, ["sentinel", "the-architect", "reviewer"]);
+    assert_eq!(
+        status(&app),
+        "Saved, durability uncertain · Removed role writer"
+    );
+    assert!(!screen(&mut app).contains("Nothing changed"));
 }
 
 #[test]
@@ -1732,7 +1984,7 @@ fn a_restored_instance_gets_the_host_pane_policy_when_it_is_created() {
     let (mut app, _) = backed(Scenario::Returning, restore);
     let id = "jk-c41e";
     let msg = Msg::Restored {
-        instance: id.into(),
+        instance: iid(id),
         result: Ok(Box::new(sim::snapshot(&app.world))),
     };
     let route = app.route();
@@ -1748,7 +2000,11 @@ fn a_restored_instance_gets_the_host_pane_policy_when_it_is_created() {
     });
     assert!(!requests.is_empty(), "the screen asks to attach");
 
-    let daemon = app.world.daemons.get(id).expect("the restored daemon");
+    let daemon = app
+        .world
+        .daemons
+        .get(&iid(id))
+        .expect("the restored daemon");
     assert_eq!(
         daemon.policy.clipboard_write,
         ClipboardWrite::Deny,
@@ -1789,14 +2045,14 @@ fn a_second_enter_on_a_restoring_instance_does_not_restore_it_again() {
 
     let reply = restore(
         &Effect::Restore {
-            instance: "jk-c41e".into(),
+            instance: iid("jk-c41e"),
         },
         &app.world,
     )
     .expect("the reply");
     app.deliver(&reply);
     assert_eq!(app.route(), Route::Capsule);
-    assert!(app.world.daemons.contains_key("jk-c41e"));
+    assert!(app.world.daemons.contains_key(&iid("jk-c41e")));
 }
 
 #[test]
@@ -1821,19 +2077,19 @@ fn a_refresh_that_lands_after_a_newer_snapshot_is_dropped() {
 
     let old = sim::snapshot(&app.world);
     let mut newer = old.clone();
-    newer.instances.retain(|i| i.id != "jk-c41e");
+    newer.instances.retain(|i| i.id() != &iid("jk-c41e"));
     app.deliver(&Msg::Purged {
-        instance: "jk-c41e".into(),
+        instance: iid("jk-c41e"),
         result: Ok(Box::new(newer)),
     });
-    assert!(app.world.instance("jk-c41e").is_none());
+    assert!(app.world.instance(&iid("jk-c41e")).is_none());
 
     app.deliver(&Msg::Refreshed {
         ticket: app.world.refresh_ticket,
         result: Ok(Box::new(old)),
     });
     assert!(
-        app.world.instance("jk-c41e").is_none(),
+        app.world.instance(&iid("jk-c41e")).is_none(),
         "the older refresh did not bring the instance back"
     );
 }
@@ -2128,15 +2384,15 @@ fn a_delete_error_for_a_workspace_that_is_gone_is_dropped() {
 #[test]
 fn inspect_names_the_account_the_launch_used() {
     let mut world = world_for(Scenario::Returning);
-    let (provider, ws, role) = {
-        let i = world.instance("jk-7f3a").expect("instance");
-        (i.agent.provider(), i.workspace, i.role.clone())
+    let (agent, provider, ws, role) = {
+        let i = world.instance(&iid("jk-7f3a")).expect("instance");
+        (i.agent, i.agent.provider(), i.workspace, i.role.clone())
     };
     let resolved = world
         .account_for(
-            provider,
+            jackin_console::domain::tuple::TupleIdentity::new(agent, provider),
             ws.and_then(|id| world.workspace(id)),
-            Some(&role),
+            role.as_deref(),
             None,
         )
         .account
@@ -2147,7 +2403,10 @@ fn inspect_names_the_account_the_launch_used() {
         .find(|a| a.id != resolved)
         .expect("a second account")
         .clone();
-    world.instance_mut("jk-7f3a").expect("instance").account = Some(other.id.clone());
+    world
+        .instance_mut(&iid("jk-7f3a"))
+        .expect("instance")
+        .account = Some(other.id.clone());
     let mut app = timed(Scenario::Returning, world);
     press(&mut app, "down right down i");
 
@@ -2186,22 +2445,31 @@ fn a_second_restore_reply_keeps_the_daemon_the_first_built() {
     let id = "jk-c41e";
     let reply = |app: &App| {
         let mut snapshot = sim::snapshot(&app.world);
-        for i in snapshot.instances.iter_mut().filter(|i| i.id == id) {
+        for i in snapshot
+            .instances
+            .iter_mut()
+            .filter_map(InstanceEntry::as_available_mut)
+            .filter(|i| i.id == iid(id))
+        {
             i.status = InstanceStatus::Running;
         }
         Msg::Restored {
-            instance: id.into(),
+            instance: iid(id),
             result: Ok(Box::new(snapshot)),
         }
     };
     let first = reply(&app);
     app.deliver(&first);
-    let daemon = app.world.daemons.get_mut(id).expect("the restored daemon");
+    let daemon = app
+        .world
+        .daemons
+        .get_mut(&iid(id))
+        .expect("the restored daemon");
     daemon.workspace = "kept".into();
 
     let second = reply(&app);
     app.deliver(&second);
-    assert_eq!(app.world.daemons[id].workspace, "kept");
+    assert_eq!(app.world.daemons[&iid(id)].workspace, "kept");
 }
 
 #[test]
@@ -2225,7 +2493,7 @@ fn a_backend_owns_last_seen_while_the_capsule_is_attached() {
     let (mut app, _) = backed(Scenario::HardCases, unchanged_roster);
     let before = last_seen(&app.world);
     app.go(Go::Attach {
-        instance: "jk-7f3a".into(),
+        instance: iid("jk-7f3a"),
         pane: None,
     });
     assert_eq!(app.route(), Route::Capsule);
@@ -2672,7 +2940,24 @@ fn saved_as(effect: &Effect, world: &World, purpose: &str) -> Msg {
     Msg::AccountsSaved {
         ticket: *ticket,
         added: None,
-        result: Ok(Box::new(snapshot)),
+        result: Ok(save_success(snapshot, None)),
+    }
+}
+
+fn saved_as_unsynced(effect: &Effect, world: &World, purpose: &str) -> Msg {
+    let Msg::AccountsSaved {
+        ticket,
+        added,
+        result: Ok(mut saved),
+    } = saved_as(effect, world, purpose)
+    else {
+        panic!("an account save expected");
+    };
+    saved.warning = Some(SaveWarning::DirectorySync);
+    Msg::AccountsSaved {
+        ticket,
+        added,
+        result: Ok(saved),
     }
 }
 
@@ -2735,6 +3020,79 @@ fn the_late_reply_of_a_save_that_gave_way_still_lands_while_the_newer_save_is_ou
 
     app.deliver(&saved_as(second, &app.world, "newer"));
     assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+}
+
+#[test]
+fn an_unsynced_old_reply_applies_while_leaving_the_newer_save_in_flight() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        |_, _| None,
+    );
+    app.go(Go::Accounts {
+        select: Some(PERSONAL.into()),
+    });
+    press(&mut app, "t");
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two saves expected, got {saves:?}");
+    };
+
+    app.deliver(&saved_as_unsynced(first, &app.world, "older"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("older"));
+    assert_eq!(status(&app), "Saved, durability uncertain");
+
+    press(&mut app, "t");
+    assert!(status(&app).contains("Saving the previous change"));
+    app.deliver(&saved_as(second, &app.world, "newer"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+}
+
+#[test]
+fn an_unsynced_reply_after_a_newer_commit_is_ignored_without_a_durability_warning() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        |_, _| None,
+    );
+    app.go(Go::Accounts {
+        select: Some(PERSONAL.into()),
+    });
+    press(&mut app, "t");
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two saves expected, got {saves:?}");
+    };
+
+    app.deliver(&saved_as(second, &app.world, "newer"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+    let committed = status(&app);
+    app.deliver(&saved_as_unsynced(first, &app.world, "older"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+    assert_ne!(
+        status(&app),
+        "Saved, durability uncertain",
+        "a stale reply must not warn about a durability the newer commit already settled"
+    );
+    assert_eq!(
+        status(&app),
+        committed,
+        "a stale reply must leave the status of the newer commit alone"
+    );
+
+    app.set_status(
+        "Routine refresh complete",
+        junie_tui::theme::Tone::Secondary,
+    );
+    assert_eq!(
+        status(&app),
+        "Routine refresh complete",
+        "a stale reply must not leave a durability warning behind"
+    );
 }
 
 #[test]

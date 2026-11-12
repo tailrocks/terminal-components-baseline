@@ -11,8 +11,13 @@ use jackin_console::backend::{
     Backend, Completion, Effect, FileSource, OnePassword, OpSession, PlainKey,
 };
 use jackin_console::domain::agent::Agent;
-use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
+use jackin_console::domain::agent::Provider;
+use jackin_console::domain::instance::{
+    DaemonSnapshot, Instance, InstanceEntry, InstanceId, InstanceStatus, SandboxPhase,
+    UnavailableInstance,
+};
 use jackin_console::domain::launch::{LaunchContent, LaunchFailure, NextStep, RefusalReason};
+use jackin_console::domain::tuple::InstanceChoice;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{
     EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
@@ -20,7 +25,7 @@ use jackin_console::launch::{
 };
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::sim::SimBackend;
-use jackin_console::world::{Msg, World};
+use jackin_console::world::{Msg, SaveWarning, World};
 use junie_tui::core::event::Input;
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
@@ -28,6 +33,16 @@ use junie_tui::theme::{ColorLevel, Theme};
 use junie_tui::widgets::steps::StepState;
 
 const WORK: &str = "acct-claude-work";
+
+fn iid(label: &str) -> InstanceId {
+    InstanceId::simulated(label)
+}
+
+fn available(entry: &InstanceEntry) -> &Instance {
+    entry
+        .as_available()
+        .expect("the simulator has verified metadata")
+}
 
 fn started(world: World) -> App {
     app_with_world(
@@ -65,7 +80,7 @@ fn facts(i: &Instance) -> String {
         "{} | {} | {} | {:?} | {} | {} | {} | {}",
         i.id,
         i.container,
-        i.workdir,
+        i.workdir.as_deref().expect("test instance workdir"),
         i.status,
         i.created_secs,
         i.run_id,
@@ -85,7 +100,7 @@ fn the_sim_launch_ends_as_it_did() {
     let app = the_sim_launch(world_for(Scenario::LaunchRunning));
     let record = app
         .world
-        .instance("jk-b5df")
+        .instance(&iid("jk-b5df"))
         .expect("the launched instance");
     assert_eq!(
         facts(record),
@@ -93,7 +108,7 @@ fn the_sim_launch_ends_as_it_did() {
          | run-202609030914-b5df | chainargos/payments-platform | feature/settlement-backoff"
     );
     assert_eq!(record.workspace, Some(1));
-    assert_eq!(record.role, "the-architect");
+    assert_eq!(record.role.as_deref(), Some("the-architect"));
     assert_eq!(record.agent, Agent::ClaudeCode);
     assert_eq!(record.default_branch, "main");
     assert_eq!(record.account.as_deref(), Some(WORK));
@@ -108,7 +123,7 @@ fn the_sim_launch_ends_as_it_did() {
         ]
     );
 
-    let daemon = app.world.daemons.get("jk-b5df").expect("its daemon");
+    let daemon = app.world.daemons.get(&iid("jk-b5df")).expect("its daemon");
     assert_eq!(daemon.workspace, "payments-platform");
     assert_eq!(daemon.tabs.len(), 1);
     let [pane] = daemon.panes.as_slice() else {
@@ -116,6 +131,613 @@ fn the_sim_launch_ends_as_it_did() {
     };
     assert_eq!(pane.agent, Some(Agent::ClaudeCode));
     assert_eq!(pane.account.as_deref(), Some(WORK));
+}
+
+#[test]
+fn the_sim_launch_records_every_selected_agent_and_default_panes_follow_them() {
+    let world = world_for(Scenario::LaunchRunning);
+    let target = LaunchTarget {
+        workspace: Some(1),
+        role: "the-architect".into(),
+        instances: vec![
+            InstanceChoice {
+                agent: Agent::Codex,
+                provider: Provider::OpenAi,
+                account: Some("acct-codex-primary".into()),
+                model: "gpt-5-codex".into(),
+            },
+            InstanceChoice {
+                agent: Agent::Omp,
+                provider: Provider::OpenCode,
+                account: Some("acct-opencode-go".into()),
+                model: "omp-default".into(),
+            },
+        ],
+        task: None,
+    };
+    let mut feed = SimBackend::shared().launch(&world, &target);
+    let instance = (0..1_000)
+        .flat_map(|_| feed.poll(&world))
+        .find_map(|event| match event {
+            LaunchEvent::Ready(ready) => Some(
+                ready
+                    .instance
+                    .as_available()
+                    .expect("sim launch has verified metadata")
+                    .clone(),
+            ),
+            _ => None,
+        })
+        .expect("simulation finishes the launch");
+
+    assert_eq!(
+        instance
+            .agents
+            .iter()
+            .map(|agent| agent.agent)
+            .collect::<Vec<_>>(),
+        [Agent::Codex, Agent::Omp]
+    );
+    assert_eq!(instance.agents[0].provider, Provider::OpenAi);
+    assert_eq!(
+        instance.agents[0].account.as_deref(),
+        Some("acct-codex-primary")
+    );
+    assert_eq!(instance.agents[0].model, "gpt-5-codex");
+    assert_eq!(instance.agents[1].provider, Provider::OpenCode);
+    assert_eq!(
+        instance.agents[1].account.as_deref(),
+        Some("acct-opencode-go")
+    );
+    assert_eq!(instance.agents[1].model, "omp-default");
+
+    let panes = SimBackend::shared().initial_panes(&instance);
+    assert_eq!(panes.len(), 2);
+    assert_eq!(panes[0].agent(), Some(Agent::Codex));
+    assert_eq!(
+        panes[0].account().map(String::as_str),
+        Some("acct-codex-primary")
+    );
+    assert_eq!(panes[1].agent(), Some(Agent::Omp));
+    assert_eq!(
+        panes[1].account().map(String::as_str),
+        Some("acct-opencode-go")
+    );
+}
+
+#[test]
+fn unavailable_agent_metadata_keeps_a_named_running_row_and_blocks_attach() {
+    let mut world = world_for(Scenario::Returning);
+    world.instances.clear();
+    world.daemons.clear();
+    let instance = UnavailableInstance::new(
+        InstanceId::new("jackin-local", "jk-unreadable"),
+        Some(1),
+        Some("payments-platform".into()),
+        None,
+        SandboxPhase::Ready,
+        Some(1_788_401_000),
+        "required agent metadata is malformed",
+    );
+    let instance_id = instance.id.clone();
+    world.admit_entry(InstanceEntry::Unavailable(instance.clone()));
+    world.sync_arbiter();
+
+    let mut app = app_with_world(
+        Scenario::Returning,
+        world,
+        Motion::Reduced,
+        0,
+        Theme::for_level(ColorLevel::TrueColor),
+    );
+    press(&mut app, "*");
+    press(&mut app, "down");
+    press(&mut app, "right");
+    let shown = screen(&mut app);
+    assert!(shown.contains("unreadable"), "{shown}");
+    assert!(shown.contains("metadata unavailable"), "{shown}");
+    assert!(
+        shown.contains("required agent metadata is malformed"),
+        "{shown}"
+    );
+    assert!(
+        shown.contains("Role") && shown.contains("unavailable"),
+        "{shown}"
+    );
+    assert!(!shown.contains("failed setup"), "{shown}");
+
+    press(&mut app, "i");
+    let inspected = screen(&mut app);
+    assert!(inspected.contains("jk-unreadable"), "{inspected}");
+    assert!(inspected.contains("jackin-local"), "{inspected}");
+    assert!(inspected.contains("ready"), "{inspected}");
+    assert!(
+        inspected.contains("required agent metadata is malformed"),
+        "{inspected}"
+    );
+    press(&mut app, "esc");
+
+    let Some(InstanceEntry::Unavailable(row)) = app.world.entry(&instance_id) else {
+        panic!("the degraded sandbox remains a named unavailable entry");
+    };
+    assert_eq!(row.phase, SandboxPhase::Ready);
+    assert_eq!(row.reason, "required agent metadata is malformed");
+    assert!(row.role.is_none());
+    assert!(
+        app.world
+            .entry(&instance_id)
+            .unwrap()
+            .as_available()
+            .is_none()
+    );
+    press(&mut app, "enter");
+    assert_eq!(app.route(), Route::Manager);
+    assert!(status(&app).contains("required agent metadata is malformed"));
+    assert!(!app.world.daemons.contains_key(&instance_id));
+    for key in ["a", "n", "!"] {
+        press(&mut app, key);
+        assert!(
+            status(&app).contains("required agent metadata is malformed"),
+            "{key} must refuse metadata-dependent actions with the observed reason"
+        );
+        assert_eq!(app.route(), Route::Manager);
+        assert!(!app.world.daemons.contains_key(&instance_id));
+    }
+
+    press(&mut app, "t");
+    tick_until(&mut app, "the power stop reply", |app| {
+        matches!(
+            app.world.entry(&instance_id),
+            Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Stopped
+        )
+    });
+    let Some(InstanceEntry::Unavailable(stopped)) = app.world.entry(&instance_id) else {
+        panic!("power stop keeps the metadata-degraded entry");
+    };
+    assert_eq!(stopped.phase, SandboxPhase::Stopped);
+    assert_eq!(stopped.reason, "required agent metadata is malformed");
+    click_text(&mut app, "Start sandbox");
+    press(&mut app, "enter");
+    tick_until(&mut app, "the power start reply", |app| {
+        matches!(
+            app.world.entry(&instance_id),
+            Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Ready
+        )
+    });
+    let Some(InstanceEntry::Unavailable(started)) = app.world.entry(&instance_id) else {
+        panic!("power start keeps the metadata-degraded entry");
+    };
+    assert_eq!(started.phase, SandboxPhase::Ready);
+    assert_eq!(started.reason, "required agent metadata is malformed");
+}
+
+#[test]
+fn unattributed_sandbox_keeps_missing_workspace_and_creation_facts_visible() {
+    let mut world = world_for(Scenario::Returning);
+    world.instances.clear();
+    world.daemons.clear();
+    let unavailable = UnavailableInstance::new(
+        InstanceId::new("gateway-legacy", "sandbox-without-creation-time"),
+        None,
+        Some("removed-workspace".into()),
+        None,
+        SandboxPhase::Stopped,
+        None,
+        "agent metadata file is missing",
+    );
+    world.admit_entry(InstanceEntry::Unavailable(unavailable));
+    world.sync_arbiter();
+    assert_eq!(world.running_count(), 0);
+    assert_eq!(world.arbiter.running(), Ok(0));
+
+    let mut app = app_with(Scenario::Returning, world);
+    press(&mut app, "*");
+    press(&mut app, "down down down down down down");
+    let shown = screen_at(&mut app, 180, 50);
+    assert!(shown.contains("Unattributed sandboxes"), "{shown}");
+    assert!(shown.contains("sandbox-without-creation-time"), "{shown}");
+    assert!(shown.contains("gateway-legacy"), "{shown}");
+    assert!(shown.contains("removed-workspace"), "{shown}");
+    assert!(shown.contains("creation time unavailable"), "{shown}");
+    assert!(shown.contains("stopped"), "{shown}");
+    assert!(shown.contains("agent metadata file is missing"), "{shown}");
+    assert!(!shown.contains("FailedSetup"), "{shown}");
+    assert!(!shown.contains("Codex"), "{shown}");
+}
+
+#[test]
+fn unavailable_power_routes_by_full_gateway_and_sandbox_identity() {
+    let rows = [
+        UnavailableInstance::new(
+            InstanceId::new("gateway-a", "sandbox-shared-name"),
+            Some(1),
+            Some("payments-platform".into()),
+            Some("the-architect".into()),
+            SandboxPhase::Ready,
+            Some(1_788_401_000),
+            "metadata unreadable on gateway-a",
+        ),
+        UnavailableInstance::new(
+            InstanceId::new("gateway-b", "sandbox-shared-name"),
+            Some(1),
+            Some("payments-platform".into()),
+            Some("the-architect".into()),
+            SandboxPhase::Ready,
+            Some(1_788_401_000),
+            "metadata unreadable on gateway-b",
+        ),
+        UnavailableInstance::new(
+            InstanceId::new("gateway-a", "sandbox-alpha-1234"),
+            Some(1),
+            Some("payments-platform".into()),
+            Some("the-architect".into()),
+            SandboxPhase::Ready,
+            Some(1_788_401_000),
+            "metadata unreadable on alpha",
+        ),
+        UnavailableInstance::new(
+            InstanceId::new("gateway-a", "sandbox-beta-1234"),
+            Some(1),
+            Some("payments-platform".into()),
+            Some("the-architect".into()),
+            SandboxPhase::Ready,
+            Some(1_788_401_000),
+            "metadata unreadable on beta",
+        ),
+    ];
+    assert_ne!(rows[0].id, rows[1].id);
+    assert_eq!(rows[0].id.short_label(), rows[1].id.short_label());
+    assert_ne!(rows[2].id, rows[3].id);
+    assert_eq!(rows[2].id.short_label(), rows[3].id.short_label());
+
+    let second_id = rows[1].id.clone();
+    let first_id = rows[0].id.clone();
+    let mut world = world_for(Scenario::Returning);
+    world.instances.clear();
+    world.daemons.clear();
+    for row in rows {
+        world.admit_entry(InstanceEntry::Unavailable(row));
+    }
+    world.sync_arbiter();
+    assert_eq!(world.running_count(), 4);
+    assert_eq!(world.arbiter.running(), Ok(4));
+    let mut app = app_with_world(
+        Scenario::Returning,
+        world,
+        Motion::Reduced,
+        0,
+        Theme::for_level(ColorLevel::TrueColor),
+    );
+    press(&mut app, "*");
+    press(&mut app, "down right down");
+    let shown = screen(&mut app);
+    assert!(shown.contains("sandbox-shared-name · gateway-b"), "{shown}");
+    press(&mut app, "t");
+    tick_until(&mut app, "the selected gateway stopped", |app| {
+        matches!(
+            app.world.entry(&second_id),
+            Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Stopped
+        )
+    });
+    assert_eq!(app.world.running_count(), 3);
+    assert_eq!(app.world.arbiter.running(), Ok(3));
+    assert!(matches!(
+        app.world.entry(&first_id),
+        Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Ready
+    ));
+
+    press(&mut app, "r");
+    tick_until(&mut app, "the selected gateway started", |app| {
+        matches!(
+            app.world.entry(&second_id),
+            Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Ready
+        )
+    });
+    assert_eq!(app.world.running_count(), 4);
+    assert_eq!(app.world.arbiter.running(), Ok(4));
+    assert!(matches!(
+        app.world.entry(&first_id),
+        Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Ready
+    ));
+}
+
+#[test]
+fn unavailable_start_requires_stopped_phase_at_ui_and_effect_boundaries() {
+    let phases = [
+        SandboxPhase::Provisioning,
+        SandboxPhase::Starting,
+        SandboxPhase::Ready,
+        SandboxPhase::Stopping,
+        SandboxPhase::Stopped,
+        SandboxPhase::Completed { exit_code: 0 },
+        SandboxPhase::Error { exit_code: Some(7) },
+        SandboxPhase::Error { exit_code: None },
+        SandboxPhase::Deleting,
+        SandboxPhase::Suspending,
+        SandboxPhase::Suspended,
+        SandboxPhase::Unknown,
+    ];
+    for (index, phase) in phases.into_iter().enumerate() {
+        let id = InstanceId::new("gateway-phase-test", format!("sandbox-phase-{index}"));
+        let mut world = world_for(Scenario::Returning);
+        let control = world
+            .instances
+            .iter()
+            .find_map(InstanceEntry::as_available)
+            .expect("returning scenario has a verified control row")
+            .clone();
+        world.instances = vec![InstanceEntry::available(control)];
+        world.daemons.clear();
+        world.sync_arbiter();
+        world.admit_entry(InstanceEntry::Unavailable(UnavailableInstance::new(
+            id.clone(),
+            Some(1),
+            Some("payments-platform".into()),
+            None,
+            phase.clone(),
+            Some(1_788_401_000),
+            "required agent metadata is malformed",
+        )));
+        let mut app = app_with_world(
+            Scenario::Returning,
+            world,
+            Motion::Reduced,
+            0,
+            Theme::for_level(ColorLevel::TrueColor),
+        );
+        press(&mut app, "*");
+        click_text(&mut app, &id.sandbox_name);
+        let affordances = screen_at(&mut app, 180, 50);
+        if phase.startable() {
+            assert!(affordances.contains("Start sandbox"), "{affordances}");
+        } else if phase.ready() {
+            assert!(affordances.contains("Stop sandbox"), "{affordances}");
+            assert!(!affordances.contains("Start sandbox"), "{affordances}");
+        } else {
+            assert!(!affordances.contains("Start sandbox"), "{affordances}");
+            assert!(
+                affordances.contains("start only available while stopped"),
+                "{affordances}"
+            );
+        }
+
+        if phase.startable() {
+            app.world.perform(Effect::PowerStart {
+                instance: id.clone(),
+            });
+            tick_until(&mut app, "the stopped sandbox starts", |app| {
+                matches!(
+                    app.world.entry(&id),
+                    Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Ready
+                )
+            });
+            app.world.perform(Effect::PowerStart {
+                instance: id.clone(),
+            });
+            tick_until(&mut app, "the repeated start is refused", |app| {
+                app.world.jobs.is_empty()
+            });
+            assert!(matches!(
+                app.world.entry(&id),
+                Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Ready
+            ));
+            press(&mut app, "r");
+            assert!(matches!(
+                app.world.entry(&id),
+                Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Ready
+            ));
+            assert!(status(&app).contains("already ready"));
+            press(&mut app, "t");
+            tick_until(&mut app, "the ready sandbox stops", |app| {
+                matches!(
+                    app.world.entry(&id),
+                    Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Stopped
+                )
+            });
+            press(&mut app, "r");
+            tick_until(
+                &mut app,
+                "the stopped sandbox starts from its shortcut",
+                |app| {
+                    matches!(
+                        app.world.entry(&id),
+                        Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Ready
+                    )
+                },
+            );
+        } else {
+            press(&mut app, "r");
+            let reason = if phase.ready() {
+                "already ready"
+            } else {
+                "only stopped sandboxes can start"
+            };
+            assert!(status(&app).contains(reason), "{}", status(&app));
+            assert!(matches!(
+                app.world.entry(&id),
+                Some(InstanceEntry::Unavailable(row)) if row.phase == phase
+            ));
+            app.world.perform(Effect::PowerStart {
+                instance: id.clone(),
+            });
+            tick_until(&mut app, "the phase-invalid start is refused", |app| {
+                app.world.jobs.is_empty()
+            });
+            assert!(matches!(
+                app.world.entry(&id),
+                Some(InstanceEntry::Unavailable(row)) if row.phase == phase
+            ));
+            if phase.ready() {
+                press(&mut app, "t");
+                tick_until(&mut app, "the ready sandbox stops", |app| {
+                    matches!(
+                        app.world.entry(&id),
+                        Some(InstanceEntry::Unavailable(row)) if row.phase == SandboxPhase::Stopped
+                    )
+                });
+            }
+        }
+    }
+}
+
+#[test]
+fn simulated_plain_text_replaces_only_the_lead_account_projection() {
+    let target = LaunchTarget {
+        workspace: Some(1),
+        role: "the-architect".into(),
+        instances: vec![
+            InstanceChoice {
+                agent: Agent::Codex,
+                provider: Provider::OpenAi,
+                account: Some("acct-codex-primary".into()),
+                model: "gpt-5-codex".into(),
+            },
+            InstanceChoice {
+                agent: Agent::Omp,
+                provider: Provider::OpenCode,
+                account: Some("acct-opencode-go".into()),
+                model: "omp-default".into(),
+            },
+        ],
+        task: None,
+    };
+    let mut world = world_for(Scenario::LaunchRunning);
+    world.backend = SimBackend::hard_cases();
+    world.op.set_session(OpSession::Locked);
+    let backend = SimBackend::hard_cases();
+    let mut feed = backend.launch(&world, &target);
+    let credential_error = (0..1_000)
+        .flat_map(|_| feed.poll(&world))
+        .find(|event| matches!(event, LaunchEvent::CredentialError { .. }));
+    assert!(credential_error.is_some());
+    let typed = feed
+        .use_plain_text(PlainKey::new("sk-fixture").expect("fixture key"))
+        .expect("one-off key resumes the launch");
+    assert!(!format!("{typed:?}").contains("sk-fixture"));
+    let instance = (0..1_000)
+        .flat_map(|_| feed.poll(&world))
+        .find_map(|event| match event {
+            LaunchEvent::Ready(ready) => Some(
+                ready
+                    .instance
+                    .as_available()
+                    .expect("sim launch has verified metadata")
+                    .clone(),
+            ),
+            _ => None,
+        })
+        .expect("one-off plaintext launch completes");
+
+    assert_eq!(instance.account, None);
+    assert_eq!(instance.agents[0].account, None);
+    assert_eq!(
+        instance.agents[1].account.as_deref(),
+        Some("acct-opencode-go")
+    );
+    assert!(!instance.accounts.contains(&"acct-codex-primary".into()));
+    assert!(instance.accounts.contains(&"acct-opencode-go".into()));
+    let panes = backend.initial_panes(&instance);
+    assert_eq!(panes.len(), 2);
+    assert_eq!(panes[0].account(), None);
+    assert_eq!(
+        panes[1].account().map(String::as_str),
+        Some("acct-opencode-go")
+    );
+    assert!(!format!("{instance:?}{panes:?}").contains("sk-fixture"));
+
+    let mut inspect_world = world_for(Scenario::Returning);
+    inspect_world.instances = vec![InstanceEntry::available(instance.clone())];
+    inspect_world.daemons.clear();
+    let mut inspect_app = app_with(Scenario::Returning, inspect_world);
+    press(&mut inspect_app, "*");
+    click_text(&mut inspect_app, &instance.id.short_suffix());
+    press(&mut inspect_app, "i");
+    let inspected_plain_text = screen(&mut inspect_app);
+    assert!(
+        inspected_plain_text.contains("no registered account used"),
+        "{inspected_plain_text}"
+    );
+    assert!(!inspected_plain_text.contains("OpenAI · Primary"));
+
+    let mut cancel_world = world_for(Scenario::LaunchRunning);
+    cancel_world.backend = SimBackend::hard_cases();
+    cancel_world.op.set_session(OpSession::Locked);
+    let mut cancelled = backend.launch(&cancel_world, &target);
+    let _ = (0..1_000)
+        .flat_map(|_| cancelled.poll(&cancel_world))
+        .find(|event| matches!(event, LaunchEvent::CredentialError { .. }));
+    let _ = cancelled
+        .use_plain_text(PlainKey::new("sk-cancel-fixture").expect("fixture key"))
+        .expect("one-off key resumes the launch");
+    let cancelled = cancelled.cancel(&cancel_world).expect("cancelled record");
+    let cancelled = cancelled
+        .as_available()
+        .expect("sim launch cancellation keeps verified metadata");
+    assert_eq!(cancelled.account, None);
+    assert_eq!(cancelled.agents[0].account, None);
+    assert_eq!(
+        cancelled.agents[1].account.as_deref(),
+        Some("acct-opencode-go")
+    );
+    assert!(!cancelled.accounts.contains(&"acct-codex-primary".into()));
+    assert!(cancelled.accounts.contains(&"acct-opencode-go".into()));
+    assert!(!format!("{cancelled:?}").contains("sk-cancel-fixture"));
+
+    let mut retry_world = world_for(Scenario::LaunchRunning);
+    retry_world.op.set_session(OpSession::Locked);
+    let mut retry = backend.launch(&retry_world, &target);
+    let _ = (0..1_000)
+        .flat_map(|_| retry.poll(&retry_world))
+        .find(|event| matches!(event, LaunchEvent::CredentialError { .. }));
+    retry.retry_credentials(retry_world.op.as_mut());
+    let retried_instance = (0..1_000)
+        .flat_map(|_| retry.poll(&retry_world))
+        .find_map(|event| match event {
+            LaunchEvent::Ready(ready) => Some(
+                ready
+                    .instance
+                    .as_available()
+                    .expect("sim launch has verified metadata")
+                    .clone(),
+            ),
+            _ => None,
+        })
+        .expect("registered credential retry completes");
+    assert_eq!(
+        retried_instance.account.as_deref(),
+        Some("acct-codex-primary")
+    );
+    assert_eq!(
+        retried_instance.agents[0].account.as_deref(),
+        Some("acct-codex-primary")
+    );
+    assert!(
+        retried_instance
+            .accounts
+            .contains(&"acct-codex-primary".into())
+    );
+    let mut retry_inspect_world = world_for(Scenario::Returning);
+    let registered_title = retry_inspect_world
+        .accounts
+        .get("acct-codex-primary")
+        .expect("the registered control account")
+        .title();
+    retry_inspect_world.instances = vec![InstanceEntry::available(retried_instance.clone())];
+    retry_inspect_world.daemons.clear();
+    let mut retry_inspect_app = app_with(Scenario::Returning, retry_inspect_world);
+    press(&mut retry_inspect_app, "*");
+    click_text(&mut retry_inspect_app, &retried_instance.id.short_suffix());
+    press(&mut retry_inspect_app, "i");
+    let inspected_registered = screen(&mut retry_inspect_app);
+    assert!(
+        inspected_registered.contains(&registered_title),
+        "{inspected_registered}"
+    );
+    let registered_panes = backend.initial_panes(&retried_instance);
+    assert_eq!(
+        registered_panes[0].account().map(String::as_str),
+        Some("acct-codex-primary")
+    );
 }
 
 #[test]
@@ -140,7 +762,11 @@ fn the_sim_retry_unlocks_the_session_and_resumes() {
     );
     tick_until(&mut app, "the capsule", |a| a.route() == Route::Capsule);
     assert_eq!(
-        app.world.instances.last().map(|i| i.run_id.as_str()),
+        app.world
+            .instances
+            .last()
+            .map(available)
+            .map(|i| i.run_id.as_str()),
         Some("run-202609030914-b5df")
     );
 }
@@ -151,7 +777,7 @@ fn the_sim_cancel_records_a_failed_setup() {
     tick(&mut app, 10);
     press(&mut app, "x");
     press(&mut app, "right enter");
-    let record = app.world.instances.last().expect("a record");
+    let record = available(app.world.instances.last().expect("a record"));
     assert_eq!(
         facts(record),
         "jk-b5df | jackin-payments-platform | /workspace/payments-platform | FailedSetup | 1788401640 \
@@ -159,7 +785,7 @@ fn the_sim_cancel_records_a_failed_setup() {
     );
     assert_eq!(record.daemon, DaemonSnapshot::Unavailable);
     assert_eq!(app.route(), Route::Manager);
-    assert!(!app.world.daemons.contains_key("jk-b5df"));
+    assert!(!app.world.daemons.contains_key(&iid("jk-b5df")));
 }
 
 #[test]
@@ -167,7 +793,7 @@ fn the_sim_abort_records_a_failed_setup() {
     let mut app = started(world_for(Scenario::LaunchRunning));
     tick(&mut app, 10);
     press(&mut app, "ctrl+c");
-    let record = app.world.instances.last().expect("a record");
+    let record = available(app.world.instances.last().expect("a record"));
     assert_eq!(
         facts(record),
         "jk-b5df | jackin-payments-platform | /workspace/payments-platform | FailedSetup | 1788401640 \
@@ -184,7 +810,7 @@ fn the_sim_failure_records_a_failed_setup() {
         "the failure",
         shows("The Construct network could not be attached"),
     );
-    let record = app.world.instances.last().expect("a record");
+    let record = available(app.world.instances.last().expect("a record"));
     assert_eq!(
         facts(record),
         "jk-b5df | jackin-payments-platform | /workspace/payments-platform | FailedSetup | 1788401642 \
@@ -264,9 +890,9 @@ impl LaunchFeed for ScriptedFeed {
         self.typed.clone()
     }
 
-    fn cancel(&mut self, _: &World) -> Option<Instance> {
+    fn cancel(&mut self, _: &World) -> Option<InstanceEntry> {
         self.calls.lock().expect("calls").cancels += 1;
-        self.cancel_record.take()
+        self.cancel_record.take().map(InstanceEntry::available)
     }
 }
 
@@ -304,7 +930,7 @@ impl Backend for FeedBackend {
             .lock()
             .expect("calls")
             .initial_panes
-            .push(instance.id.clone());
+            .push(instance.id.to_string());
         let mut panes = self.inner.initial_panes(instance);
         if self.with_shell {
             panes.push(PaneRequest::new(&instance.id, None, None));
@@ -325,11 +951,11 @@ const SANDBOX: &str = "/sandbox/project";
 /// matches one in the world).
 fn launched(id: &str, container: &str, status: InstanceStatus) -> Instance {
     Instance {
-        id: id.into(),
+        id: iid(id),
         container: container.into(),
         workspace: Some(1),
-        workdir: SANDBOX.into(),
-        role: "the-architect".into(),
+        workdir: Some(SANDBOX.into()),
+        role: Some("the-architect".into()),
         agent: Agent::ClaudeCode,
         status,
         created_secs: 1_700_000_000,
@@ -352,8 +978,17 @@ fn launched(id: &str, container: &str, status: InstanceStatus) -> Instance {
 
 fn ready(instance: Instance) -> LaunchEvent {
     LaunchEvent::Ready(Box::new(ReadyInstance {
-        instance,
+        instance: InstanceEntry::available(instance),
         run_id: "R1".into(),
+        warning: None,
+    }))
+}
+
+fn ready_unsynced(instance: Instance) -> LaunchEvent {
+    LaunchEvent::Ready(Box::new(ReadyInstance {
+        instance: InstanceEntry::available(instance),
+        run_id: "R1".into(),
+        warning: Some(SaveWarning::DirectorySync),
     }))
 }
 
@@ -369,7 +1004,7 @@ fn failed_with(instance: Option<Instance>) -> LaunchEvent {
             next_step: NextStep::RunDoctor,
             detail: vec!["gateway: jackin-local".into()],
         },
-        instance,
+        instance: instance.map(InstanceEntry::available),
     }))
 }
 
@@ -433,7 +1068,11 @@ fn ready_event_inserts_the_backend_instance() {
     tick_until(&mut app, "the capsule", |a| a.route() == Route::Capsule);
 
     assert_eq!(app.world.instances.len(), others + 1);
-    let mut stored = app.world.instance("jk-5b0x").expect("the instance").clone();
+    let mut stored = app
+        .world
+        .instance(&iid("jk-5b0x"))
+        .expect("the instance")
+        .clone();
     stored.daemon = mine.daemon.clone();
     stored.last_seen_secs = mine.last_seen_secs;
     assert_eq!(
@@ -441,6 +1080,7 @@ fn ready_event_inserts_the_backend_instance() {
         "the cockpit stores the backend's record as it is"
     );
     assert_eq!(app.world.running_count(), 3);
+    assert!(!status(&app).contains("durability uncertain"));
 
     let shown = screen(&mut app);
     assert!(shown.contains("sbx-alpha-5b0x"), "{shown}");
@@ -449,7 +1089,7 @@ fn ready_event_inserts_the_backend_instance() {
     let daemon = app
         .world
         .daemons
-        .get("jk-5b0x")
+        .get(&iid("jk-5b0x"))
         .expect("the attach builds it");
     assert_eq!(daemon.workspace, "payments-platform");
     let [pane] = daemon.panes.as_slice() else {
@@ -457,6 +1097,40 @@ fn ready_event_inserts_the_backend_instance() {
     };
     assert_eq!(pane.agent, Some(Agent::ClaudeCode));
     assert_eq!(pane.account.as_deref(), Some(WORK));
+}
+
+#[test]
+fn a_committed_launch_warning_is_carried_through_ready_and_survives_routine_status() {
+    let mine = launched("jk-5b0x", "sbx-alpha", InstanceStatus::Running);
+    let mut batch = running(0);
+    batch.push(ready_unsynced(mine));
+    let (mut app, _) = scripted(vec![batch], None);
+    tick_until(&mut app, "the capsule", |a| a.route() == Route::Capsule);
+
+    assert_eq!(status(&app), "Saved, durability uncertain");
+    assert_eq!(
+        app.world.committed_save_warning,
+        Some(SaveWarning::DirectorySync)
+    );
+    app.set_status(
+        "Routine refresh complete",
+        junie_tui::theme::Tone::Secondary,
+    );
+    assert_eq!(status(&app), "Saved, durability uncertain");
+}
+
+#[test]
+fn a_ready_warning_from_a_later_poll_survives_handoff() {
+    let mine = launched("jk-5b0x", "sbx-alpha", InstanceStatus::Running);
+    let (mut app, _) = scripted(vec![running(0), vec![ready_unsynced(mine)]], None);
+    assert!(!status(&app).contains("durability uncertain"));
+
+    tick_until(&mut app, "the capsule", |a| a.route() == Route::Capsule);
+    assert_eq!(status(&app), "Saved, durability uncertain");
+    assert_eq!(
+        app.world.committed_save_warning,
+        Some(SaveWarning::DirectorySync)
+    );
 }
 
 #[test]
@@ -473,7 +1147,7 @@ fn daemon_is_built_by_attach() {
     let daemon = app
         .world
         .daemons
-        .get("jk-5b0x")
+        .get(&iid("jk-5b0x"))
         .expect("the attach builds it");
     assert_eq!(daemon.tabs.len(), 2, "one tab per request the backend made");
     let [agent, shell] = daemon.panes.as_slice() else {
@@ -493,7 +1167,7 @@ const PRIMARY: &str = "acct-codex-primary";
 fn agent_pane_account(record: Instance) -> Option<String> {
     let (mut app, _) = scripted(vec![running(0), vec![ready(record)]], None);
     tick_until(&mut app, "the capsule", |a| a.route() == Route::Capsule);
-    let daemon = app.world.daemons.get("jk-5b0x").expect("its daemon");
+    let daemon = app.world.daemons.get(&iid("jk-5b0x")).expect("its daemon");
     let [pane] = daemon.panes.as_slice() else {
         panic!("one pane expected");
     };
@@ -529,9 +1203,9 @@ fn the_cockpit_builds_no_daemon() {
     tick(&mut app, 4);
 
     assert_eq!(app.route(), Route::Cockpit);
-    assert!(app.world.instance("jk-5b0x").is_some());
+    assert!(app.world.instance(&iid("jk-5b0x")).is_some());
     assert!(
-        !app.world.daemons.contains_key("jk-5b0x"),
+        !app.world.daemons.contains_key(&iid("jk-5b0x")),
         "only the attach builds a daemon, and none was tried"
     );
 }
@@ -548,7 +1222,7 @@ fn failed_event_builds_from_the_event() {
     );
 
     assert_eq!(app.world.instances.len(), others + 1);
-    assert_eq!(app.world.instance("jk-fa11"), Some(&mine));
+    assert_eq!(app.world.instance(&iid("jk-fa11")), Some(&mine));
     let shown = screen(&mut app);
     assert!(
         shown.contains("R-7"),
@@ -664,7 +1338,7 @@ fn cancel_keeps_the_record_the_feed_returns() {
 
     assert_eq!(calls.lock().expect("calls").cancels, 1);
     assert_eq!(app.world.instances.len(), others + 1);
-    assert_eq!(app.world.instance("jk-ca9c"), Some(&mine));
+    assert_eq!(app.world.instance(&iid("jk-ca9c")), Some(&mine));
     assert_eq!(app.route(), Route::Manager);
 }
 
@@ -676,7 +1350,7 @@ fn ctrl_c_keeps_the_record_the_feed_returns() {
     press(&mut app, "ctrl+c");
 
     assert_eq!(calls.lock().expect("calls").cancels, 1);
-    assert_eq!(app.world.instance("jk-ca9c"), Some(&mine));
+    assert_eq!(app.world.instance(&iid("jk-ca9c")), Some(&mine));
     assert_eq!(app.route(), Route::Manager);
 }
 
@@ -1049,7 +1723,7 @@ fn a_blocked_stage_keeps_the_cancel_it_offers() {
         "x reaches the feed's cancel while a stage is blocked"
     );
     assert_eq!(app.world.instances.len(), others + 1);
-    assert_eq!(app.world.instance("jk-b10c"), Some(&mine));
+    assert_eq!(app.world.instance(&iid("jk-b10c")), Some(&mine));
     assert_eq!(app.route(), Route::Manager);
 }
 
@@ -1113,7 +1787,7 @@ fn a_ready_instance_that_is_not_running_fails_the_launch_with_its_status() {
 
     assert_eq!(app.route(), Route::Cockpit);
     assert!(
-        app.world.instance("jk-5b0x").is_some(),
+        app.world.instance(&iid("jk-5b0x")).is_some(),
         "the record the backend made is kept"
     );
     assert!(screen(&mut app).contains("Run id     R1"));

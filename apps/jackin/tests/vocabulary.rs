@@ -4,7 +4,7 @@ mod common;
 
 use common::*;
 use jackin_console::app::{App, Route};
-use jackin_console::domain::instance::{DaemonSnapshot, InstanceStatus};
+use jackin_console::domain::instance::{DaemonSnapshot, InstanceId, InstanceStatus};
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::domain::workspace::MountSource;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
@@ -16,6 +16,10 @@ use junie_tui::theme::{ColorLevel, Theme, Tone};
 
 fn squash(text: &str) -> String {
     text.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+fn id(label: &str) -> InstanceId {
+    InstanceId::simulated(label)
 }
 
 fn live_world(scenario: Scenario) -> jackin_console::world::World {
@@ -186,7 +190,17 @@ fn the_session_choice_reason_follows_the_words() {
             .next()
             .map(|a| a.id.clone())
             .expect("a Codex account");
-        world.account_for(provider, None, None, Some(&session)).why
+        world
+            .account_for(
+                jackin_console::domain::tuple::TupleIdentity::new(
+                    jackin_console::domain::agent::Agent::Codex,
+                    provider,
+                ),
+                None,
+                None,
+                Some(&session),
+            )
+            .why
     });
     assert_eq!(
         reasons[0],
@@ -244,7 +258,7 @@ fn the_launch_failure_status_follows_the_words() {
 #[test]
 fn the_still_inside_status_follows_the_words() {
     let (demo, live) = go_pair(Scenario::Returning, || Go::InstanceEnded {
-        instance: "jk-7f3a".into(),
+        instance: id("jk-7f3a"),
         purge: false,
     });
     assert!(demo.contains("Still inside the Construct · 1 instance remains"));
@@ -392,8 +406,8 @@ fn the_summary_lines_follow_the_words() {
 #[test]
 fn the_summary_names_a_terminal_without_tabs() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
-        world.instance_mut("jk-7f3a").expect("instance").daemon = DaemonSnapshot::NoTabs;
-        world.daemons.remove("jk-7f3a");
+        world.instance_mut(&id("jk-7f3a")).expect("instance").daemon = DaemonSnapshot::NoTabs;
+        world.daemons.remove(&id("jk-7f3a"));
         let mut app = app_with(Scenario::Returning, world);
         press(&mut app, "down right down");
         screen_at(&mut app, 80, 24)
@@ -405,7 +419,7 @@ fn the_summary_names_a_terminal_without_tabs() {
 #[test]
 fn the_roster_card_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
-        let id = world.running()[0].id.clone();
+        let id = world.running_entries()[0].id().clone();
         world.daemons.remove(&id);
         world.instance_mut(&id).expect("instance").daemon = DaemonSnapshot::Unavailable;
         let mut app = app_with(Scenario::Returning, world);
@@ -432,7 +446,7 @@ fn the_quit_dialog_follows_the_words() {
         let mut app = app_with(Scenario::Returning, world);
         screen(&mut app);
         app.go(Go::Attach {
-            instance: "jk-9b02".into(),
+            instance: id("jk-9b02"),
             pane: None,
         });
         screen(&mut app);
@@ -474,7 +488,7 @@ fn the_purge_dialog_follows_the_words() {
         !live.contains("container") && !live.contains("worktree") && !live.contains("1 sandbox")
     );
     let mut world = live_world(Scenario::Returning);
-    let instance = world.instance_mut("jk-7f3a").expect("instance");
+    let instance = world.instance_mut(&id("jk-7f3a")).expect("instance");
     let session = instance.sessions.as_ref().expect("sessions")[0].clone();
     instance.sessions = Ok(vec![session; 10]);
     let mut app = app_with(Scenario::Returning, world);
@@ -490,7 +504,7 @@ fn the_purge_dialog_names_a_clean_copy() {
         } else {
             world_for(Scenario::Returning)
         };
-        let instance = world.instance_mut("jk-7f3a").expect("instance");
+        let instance = world.instance_mut(&id("jk-7f3a")).expect("instance");
         instance.status = InstanceStatus::RestoreAvailable;
         instance.uncommitted = 0;
         instance.unpushed = 0;
@@ -517,11 +531,17 @@ fn the_purge_status_follows_the_words() {
         let mut app = app_with(Scenario::Returning, world);
         screen(&mut app);
         let mut snapshot = sim::snapshot(&app.world);
-        for i in snapshot.instances.iter_mut().filter(|i| i.id == "jk-c41e") {
-            i.status = InstanceStatus::Purged;
+        for entry in snapshot
+            .instances
+            .iter_mut()
+            .filter(|entry| entry.id() == &id("jk-c41e"))
+        {
+            if let Some(i) = entry.as_available_mut() {
+                i.status = InstanceStatus::Purged;
+            }
         }
         app.deliver(&Msg::Purged {
-            instance: "jk-c41e".into(),
+            instance: id("jk-c41e"),
             result: Ok(Box::new(snapshot)),
         });
         screen(&mut app)
@@ -570,7 +590,7 @@ fn the_workspace_menu_names_the_github_url() {
 #[test]
 fn the_failed_setup_instance_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
-        world.instance_mut("jk-7f3a").expect("instance").status = InstanceStatus::FailedSetup;
+        world.instance_mut(&id("jk-7f3a")).expect("instance").status = InstanceStatus::FailedSetup;
         let mut app = app_with(Scenario::Returning, world);
         press(&mut app, "down right down enter");
         let status = screen(&mut app);
@@ -586,12 +606,12 @@ fn the_failed_setup_instance_follows_the_words() {
 #[test]
 fn the_last_session_status_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
-        world.instance_mut("jk-7f3a").expect("instance").status = InstanceStatus::CleanExited;
-        world.daemons.remove("jk-7f3a");
+        world.instance_mut(&id("jk-7f3a")).expect("instance").status = InstanceStatus::CleanExited;
+        world.daemons.remove(&id("jk-7f3a"));
         let mut app = app_with(Scenario::Returning, world);
         screen(&mut app);
         app.go(Go::Attach {
-            instance: "jk-9b02".into(),
+            instance: id("jk-9b02"),
             pane: None,
         });
         screen(&mut app);
@@ -621,8 +641,8 @@ fn the_terminal_screen_names_itself_by_the_words() {
 #[test]
 fn the_terminal_without_tabs_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
-        world.instance_mut("jk-7f3a").expect("instance").daemon = DaemonSnapshot::NoTabs;
-        world.daemons.remove("jk-7f3a");
+        world.instance_mut(&id("jk-7f3a")).expect("instance").daemon = DaemonSnapshot::NoTabs;
+        world.daemons.remove(&id("jk-7f3a"));
         let mut app = app_with(Scenario::Returning, world);
         press(&mut app, "down right down");
         let detail = screen(&mut app);
@@ -638,8 +658,8 @@ fn the_terminal_without_tabs_follows_the_words() {
 #[test]
 fn the_unreachable_gateway_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
-        world.instance_mut("jk-7f3a").expect("instance").daemon = DaemonSnapshot::Unavailable;
-        world.daemons.remove("jk-7f3a");
+        world.instance_mut(&id("jk-7f3a")).expect("instance").daemon = DaemonSnapshot::Unavailable;
+        world.daemons.remove(&id("jk-7f3a"));
         let mut app = app_with(Scenario::Returning, world);
         press(&mut app, "down right down");
         screen(&mut app)
@@ -682,7 +702,9 @@ fn the_github_dialog_copies_the_pull_request_url() {
 fn the_github_dialog_copies_the_branch_url_without_a_pull_request() {
     let mut world = capsule_world(true);
     for instance in &mut world.instances {
-        instance.pr = None;
+        if let Some(instance) = instance.as_available_mut() {
+            instance.pr = None;
+        }
     }
     let live = run(
         Scenario::CapsuleMulti,
@@ -701,7 +723,9 @@ fn the_github_dialog_copies_nothing_without_a_matching_repository() {
     let unrelated = |live: bool| {
         let mut world = capsule_world(live);
         for instance in &mut world.instances {
-            instance.github = None;
+            if let Some(instance) = instance.as_available_mut() {
+                instance.github = None;
+            }
         }
         run(Scenario::CapsuleMulti, world, &keys)
     };
@@ -780,7 +804,7 @@ fn lifecycle_row(live: bool, status: InstanceStatus) -> String {
     } else {
         world_for(Scenario::Returning)
     };
-    let instance = world.instance_mut("jk-7f3a").expect("instance");
+    let instance = world.instance_mut(&id("jk-7f3a")).expect("instance");
     instance.status = status;
     instance.unpushed = 2;
     let mut app = app_with(Scenario::Returning, world);
@@ -869,10 +893,10 @@ fn unexported_world(live: bool) -> jackin_console::world::World {
     } else {
         world_for(Scenario::Returning)
     };
-    let preserved = world.instance_mut("jk-7f3a").expect("instance");
+    let preserved = world.instance_mut(&id("jk-7f3a")).expect("instance");
     preserved.status = InstanceStatus::PreservedUnpushed;
     preserved.unpushed = 2;
-    let capsule = world.instance_mut("jk-9b02").expect("instance");
+    let capsule = world.instance_mut(&id("jk-9b02")).expect("instance");
     capsule.unpushed = 2;
     capsule.uncommitted = 3;
     world
@@ -888,7 +912,7 @@ fn unexported_captures(live: bool) -> Vec<(&'static str, String)> {
         let mut app = app_with(Scenario::Returning, unexported_world(live));
         screen(&mut app);
         app.go(Go::Attach {
-            instance: "jk-9b02".into(),
+            instance: id("jk-9b02"),
             pane: None,
         });
         screen(&mut app);
@@ -926,7 +950,7 @@ fn the_dirty_quit_dialog_follows_the_words() {
         let mut app = app_with(Scenario::Returning, unexported_world(live));
         screen(&mut app);
         app.go(Go::Attach {
-            instance: "jk-9b02".into(),
+            instance: id("jk-9b02"),
             pane: None,
         });
         screen(&mut app);

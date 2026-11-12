@@ -2,6 +2,21 @@ use crate::core::event::{ClientPlatform, Key};
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct KeyboardCapabilities {
+    pub alt: bool,
+    pub super_key: bool,
+}
+
+impl KeyboardCapabilities {
+    pub fn current() -> Self {
+        Self {
+            alt: crate::core::keyboard::alt_delivered(),
+            super_key: crate::core::keyboard::super_delivered(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Nav {
     Up,
     Down,
@@ -123,6 +138,23 @@ impl Default for NavKeys {
     }
 }
 
+pub(crate) fn normalize_shift_chars(code: KeyCode, mods: KeyModifiers) -> (KeyCode, KeyModifiers) {
+    if let KeyCode::Char(c) = code
+        && c.is_uppercase()
+    {
+        let mut folded = c.to_lowercase();
+        let base = folded.next().unwrap_or(c);
+        if folded.next().is_none() {
+            return (KeyCode::Char(base), mods.union(KeyModifiers::SHIFT));
+        }
+    }
+    (code, mods)
+}
+
+pub fn normalized_key_mods(key: &Key) -> KeyModifiers {
+    normalize_shift_chars(key.code, key.mods).1
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct KeyBinding {
     pub code: KeyCode,
@@ -170,26 +202,52 @@ impl KeyBinding {
     }
 
     pub fn deliverable(&self) -> bool {
-        use crate::core::keyboard::{alt_delivered, super_delivered};
-        (!self.mods.contains(KeyModifiers::SUPER) || super_delivered())
-            && (!self.mods.contains(KeyModifiers::ALT) || alt_delivered())
-            && (!self.alt_stand_in || !alt_delivered())
+        self.deliverable_with(KeyboardCapabilities::current())
+    }
+
+    pub fn deliverable_with(&self, capabilities: KeyboardCapabilities) -> bool {
+        (!self.mods.contains(KeyModifiers::SUPER) || capabilities.super_key)
+            && (!self.mods.contains(KeyModifiers::ALT) || capabilities.alt)
+            && (!self.alt_stand_in || !capabilities.alt)
+    }
+
+    pub fn normalized_mods(&self) -> KeyModifiers {
+        normalize_shift_chars(self.code, self.mods).1
     }
 
     pub fn matches(&self, key: &Key) -> bool {
-        if self.code != key.code {
+        self.matches_with(key, KeyboardCapabilities::current())
+    }
+
+    pub fn matches_with(&self, key: &Key, capabilities: KeyboardCapabilities) -> bool {
+        let (self_code, self_mods) = normalize_shift_chars(self.code, self.mods);
+        let (key_code, key_mods) = normalize_shift_chars(key.code, key.mods);
+        if self_code != key_code {
             return false;
         }
-        if self.alt_stand_in && crate::core::keyboard::alt_delivered() {
+        if self.alt_stand_in && capabilities.alt {
             return false;
         }
-        if matches!(self.code, KeyCode::Char(_)) {
-            (!self.mods.contains(KeyModifiers::SHIFT) || key.shift())
-                && self.mods.difference(KeyModifiers::SHIFT)
-                    == key.mods.difference(KeyModifiers::SHIFT)
-        } else {
-            self.mods == key.mods
+        self_mods == key_mods
+    }
+
+    fn matches_shifted_char_with(&self, key: &Key, capabilities: KeyboardCapabilities) -> bool {
+        let (self_code, self_mods) = normalize_shift_chars(self.code, self.mods);
+        let (key_code, key_mods) = normalize_shift_chars(key.code, key.mods);
+        if self_code != key_code || !matches!(self_code, KeyCode::Char(_)) {
+            return false;
         }
+        if self.alt_stand_in && capabilities.alt {
+            return false;
+        }
+        if self_mods.contains(KeyModifiers::SHIFT) {
+            return false;
+        }
+        self_mods == key_mods.difference(KeyModifiers::SHIFT)
+    }
+
+    fn matches_shifted_char(&self, key: &Key) -> bool {
+        self.matches_shifted_char_with(key, KeyboardCapabilities::current())
     }
 
     pub fn label(&self) -> String {
@@ -277,7 +335,34 @@ pub trait Actions: Copy + PartialEq + Sized + 'static {
 }
 
 pub fn lookup<A: Copy>(map: &[(KeyBinding, A)], key: &Key) -> Option<A> {
-    map.iter().find(|(b, _)| b.matches(key)).map(|&(_, a)| a)
+    if let Some(action) = map.iter().find(|(b, _)| b.matches(key)).map(|&(_, a)| a) {
+        return Some(action);
+    }
+    map.iter()
+        .find(|(b, _)| b.matches_shifted_char(key))
+        .map(|&(_, a)| a)
+}
+
+pub fn lookup_with<A: Copy>(
+    map: &[(KeyBinding, A)],
+    key: &Key,
+    capabilities: KeyboardCapabilities,
+) -> Option<A> {
+    if let Some(action) = map
+        .iter()
+        .find(|(binding, _)| {
+            binding.deliverable_with(capabilities) && binding.matches_with(key, capabilities)
+        })
+        .map(|&(_, action)| action)
+    {
+        return Some(action);
+    }
+    map.iter()
+        .find(|(binding, _)| {
+            binding.deliverable_with(capabilities)
+                && binding.matches_shifted_char_with(key, capabilities)
+        })
+        .map(|&(_, action)| action)
 }
 
 pub fn unassigned_chord<A: Copy>(key: &Key, map: &[(KeyBinding, A)]) -> bool {
@@ -295,6 +380,16 @@ pub fn deliverable_binding_for<A: PartialEq>(
     map.iter()
         .find(|(b, a)| *a == action && b.deliverable())
         .map(|&(b, _)| b)
+}
+
+pub fn deliverable_binding_for_with<A: PartialEq>(
+    map: &[(KeyBinding, A)],
+    action: A,
+    capabilities: KeyboardCapabilities,
+) -> Option<KeyBinding> {
+    map.iter()
+        .find(|(binding, candidate)| *candidate == action && binding.deliverable_with(capabilities))
+        .map(|&(binding, _)| binding)
 }
 
 pub fn label_for<A: PartialEq>(map: &[(KeyBinding, A)], action: A) -> Option<String> {
@@ -333,4 +428,38 @@ pub fn intern(label: String) -> &'static str {
     let l: &'static str = Box::leak(label.into_boxed_str());
     labels.insert(l);
     l
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn an_ascii_uppercase_letter_folds_to_its_lowercase_with_shift() {
+        let (code, mods) = normalize_shift_chars(KeyCode::Char('T'), KeyModifiers::NONE);
+        assert_eq!(code, KeyCode::Char('t'));
+        assert_eq!(mods, KeyModifiers::SHIFT);
+    }
+
+    #[test]
+    fn a_lowercase_mapping_with_more_than_one_scalar_is_not_folded() {
+        let (code, mods) = normalize_shift_chars(KeyCode::Char('\u{0130}'), KeyModifiers::NONE);
+        assert_eq!(code, KeyCode::Char('\u{0130}'));
+        assert_eq!(mods, KeyModifiers::NONE);
+        let binding = KeyBinding::new(KeyCode::Char('\u{0130}'), KeyModifiers::NONE);
+        let shifted = KeyBinding::new(KeyCode::Char('I'), KeyModifiers::SHIFT);
+        let ascii_shift = Key {
+            code: KeyCode::Char('I'),
+            mods: KeyModifiers::SHIFT,
+        };
+        let dotted = Key {
+            code: KeyCode::Char('\u{0130}'),
+            mods: KeyModifiers::NONE,
+        };
+        assert!(
+            !binding.matches_shifted_char(&ascii_shift),
+            "a dotted capital I is not the shifted I of an ASCII keyboard"
+        );
+        assert!(!shifted.matches_shifted_char(&dotted));
+    }
 }

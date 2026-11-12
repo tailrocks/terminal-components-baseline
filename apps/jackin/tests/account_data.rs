@@ -258,8 +258,33 @@ fn the_new_providers_have_no_usage_surface() {
 }
 
 #[test]
+fn registered_mimo_accounts_are_associated_with_mimo_code() {
+    let mimo = Account::registered(
+        "mimo-account",
+        "Mimo",
+        Provider::Mimo,
+        CredentialSource::HostEnv {
+            var: "MIMO_API_KEY".into(),
+            detected: DetectedKind::Unknown,
+        },
+    );
+    let unrelated = Account::registered(
+        "cursor-account",
+        "Cursor",
+        Provider::Cursor,
+        CredentialSource::HostEnv {
+            var: "CURSOR_API_KEY".into(),
+            detected: DetectedKind::Unknown,
+        },
+    );
+    assert_eq!(mimo.agent, Some(Agent::MimoCode));
+    assert_eq!(unrelated.agent, None);
+}
+
+#[test]
 fn the_picker_lists_blocked_agents_as_unavailable_rows() {
     let mut world = returning();
+    world.surfaces.tuples.clear();
     block_codex(&mut world);
     world.surfaces.agent_blocked = Some(AgentBlocked {
         launchable: Agent::Codex,

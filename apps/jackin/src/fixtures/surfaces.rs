@@ -252,9 +252,14 @@ pub fn fixed(w: &mut World) {
     openshell::surfaces(&mut w.surfaces);
     w.surfaces.config_path = Some(format!("{}/.config/jackin/config.toml", w.home));
     openshell::global(&mut w.global);
-    w.global
-        .agent_modes
-        .insert(Fixed::openshell().launchable, AuthMode::Sync);
+    for agent in Agent::ALL {
+        let mode = if agent == Fixed::openshell().launchable {
+            AuthMode::Sync
+        } else {
+            AuthMode::Ignore
+        };
+        w.global.agent_modes.insert(agent, mode);
+    }
     w.global.env.retain(plain);
     for a in &mut w.accounts.accounts {
         openshell::account(a);
@@ -266,7 +271,11 @@ pub fn fixed(w: &mut World) {
         }
     }
     w.roles.iter_mut().for_each(openshell::role);
-    w.instances.iter_mut().for_each(openshell::instance);
+    w.instances.iter_mut().for_each(|entry| {
+        if let Some(instance) = entry.as_available_mut() {
+            openshell::instance(instance);
+        }
+    });
     for ws in &mut w.workspaces {
         openshell::workspace(ws, &format!("~/src/{}", ws.name), &w.accounts);
         if ws.name == "release-automation" {

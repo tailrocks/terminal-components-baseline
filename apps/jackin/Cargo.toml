@@ -30,6 +30,7 @@ product = []
 junie-tui = { path = "../..", default-features = false, features = ["terminal"] }
 clap = { workspace = true, optional = true }
 ratatui = { workspace = true }
+unicode-segmentation = "1"
 
 [dev-dependencies]
 jackin-console = { path = ".", default-features = false, features = ["demo"] }

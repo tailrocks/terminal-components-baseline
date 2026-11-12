@@ -1,4 +1,4 @@
-use crate::domain::instance::ID_PREFIX;
+use crate::domain::instance::InstanceId;
 use crate::screens::Jackin;
 use junie_tui::core::event::{Key, Outcome};
 use junie_tui::core::hit::{Axis, Bar};
@@ -86,7 +86,7 @@ enum Intent {
 }
 
 pub struct CapsuleScreen {
-    pub instance: String,
+    pub instance: InstanceId,
 
     pub prefix_until: Option<i64>,
 
@@ -222,7 +222,7 @@ impl Command {
 }
 
 impl CapsuleScreen {
-    pub fn new(instance: &str, w: &mut World, pane: Option<u64>) -> Self {
+    pub fn new(instance: &InstanceId, w: &mut World, pane: Option<u64>) -> Self {
         if let Some(p) = pane
             && let Some(d) = w.daemons.get_mut(instance)
             && let Some(tab) = d.active_tab_mut()
@@ -231,7 +231,7 @@ impl CapsuleScreen {
             tab.focused = p;
         }
         Self {
-            instance: instance.to_owned(),
+            instance: instance.clone(),
             prefix_until: None,
             prefix_timeout_ms: None,
             drag: None,
@@ -676,12 +676,12 @@ impl CapsuleScreen {
             Intent::Split(SplitDir::Vertical, true) => "Split ↑ Above".into(),
         };
         let mut p = Picker::new(WidgetId::of("capsule.agent"), &title);
-        p.list.width = (72, 72);
+        p.set_width(72);
         let ws = w
             .instance(&self.instance)
             .and_then(|i| i.workspace)
             .and_then(|x| w.workspace(x));
-        let role = w.instance(&self.instance).map(|i| i.role.clone());
+        let role = w.instance(&self.instance).and_then(|i| i.role.clone());
         let mut items = vec![];
         self.picker_agents.clear();
 
@@ -696,11 +696,11 @@ impl CapsuleScreen {
         };
         for (a, mut offer) in w.offered_agents(ws, role.as_deref()) {
             if !w.surfaces.tuples.is_empty()
-                && !w
-                    .surfaces
-                    .tuples
-                    .iter()
-                    .any(|o| o.agent == a && o.state == crate::domain::tuple::TupleState::Supported)
+                && !w.surfaces.tuples.iter().any(|offer| {
+                    offer.agent == a
+                        && offer.provider == a.provider()
+                        && offer.state == crate::domain::tuple::TupleState::Supported
+                })
             {
                 continue;
             }
@@ -726,7 +726,7 @@ impl CapsuleScreen {
                     .detail(detail)
                     .glyph("▪")
                     .group("agents")
-                    .disabled(offer.blocked.is_some())
+                    .disabled(!offer.has_usable_account())
             });
             self.picker_agents.push(Some(a));
         }
@@ -739,7 +739,8 @@ impl CapsuleScreen {
                 .disabled(shell_refused.is_some()),
         );
         self.picker_agents.push(None);
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         cx.open(p, LayerTag::new("agent"));
     }
 
@@ -752,24 +753,24 @@ impl CapsuleScreen {
             .instance(&self.instance)
             .and_then(|i| i.workspace)
             .and_then(|x| w.workspace(x));
-        let role = w.instance(&self.instance).map(|i| i.role.clone());
+        let role = w.instance(&self.instance).and_then(|i| i.role.clone());
         let offer = w.offer_for(a, ws, role.as_deref());
-        match offer.accounts.len() {
-            _ if offer.blocked.is_some() => self.spawn_failed(a, offer.blocked, cx),
-            0 => self.spawn_failed(a, None, cx),
-            1 => self.spawn(Some(a), offer.accounts.first().cloned(), w, cx),
-            _ => {
-                self.pending_agent = Some(a);
-                let (p, ids) = super::modals::account_picker(
-                    WidgetId::of("capsule.provider"),
-                    w,
-                    a,
-                    ws,
-                    &offer,
-                );
-                self.picker_accounts = ids;
-                cx.open(p, LayerTag::new("provider"));
-            }
+        if !offer.has_usable_account() {
+            self.spawn_failed(a, offer.blocked, cx);
+        } else if offer.accounts.len() == 1 {
+            self.spawn(Some(a), offer.accounts.first().cloned(), w, cx);
+        } else {
+            self.pending_agent = Some(a);
+            let (p, ids) = super::modals::account_picker(
+                WidgetId::of("capsule.provider"),
+                w,
+                a,
+                a.provider(),
+                ws,
+                &offer,
+            );
+            self.picker_accounts = ids;
+            cx.open(p, LayerTag::new("provider"));
         }
     }
 
@@ -980,11 +981,12 @@ impl CapsuleScreen {
 
     fn open_palette(&mut self, w: &World, cx: &mut Cx) {
         let mut p = Picker::new(WidgetId::of("capsule.palette"), "Command palette");
-        p.list.width = (60, 60);
+        p.set_width(60);
         p.placeholder = "Type to filter commands…".into();
         p.empty_text = "No matching commands".into();
         self.palette_cmds = PALETTE.to_vec();
-        p.set_items(self.palette_items("", w));
+        p.set_items(self.palette_items("", w))
+            .unwrap_or_else(|error| p.report_item_error(error));
         p.scope = Some(format!("{} of 20", PALETTE.len()));
         cx.open(p, LayerTag::new("palette"));
     }
@@ -1076,14 +1078,16 @@ impl CapsuleScreen {
             Command::NewTab => self.spawn_flow(Intent::NewTab, w, cx),
             Command::SplitPane => {
                 let mut p = Picker::new(WidgetId::of("capsule.split"), "Split pane");
-                p.set_searchable(false);
-                p.list.width = (40, 40);
+                p.set_searchable(false)
+                    .expect("disabling picker search is valid");
+                p.set_width(40);
                 p.set_items(
                     ["→ Right", "← Left", "↓ Below", "↑ Above"]
                         .iter()
                         .map(|l| Item::new(*l).glyph(" "))
                         .collect(),
-                );
+                )
+                .unwrap_or_else(|error| p.report_item_error(error));
                 cx.open(p, LayerTag::new("split"));
             }
             Command::ZoomPane => self.toggle_zoom(w, cx),
@@ -1132,14 +1136,16 @@ impl CapsuleScreen {
                     self.close_pane_flow(true, w, cx);
                 } else {
                     let mut p = Picker::new(WidgetId::of("capsule.closetarget"), "Close");
-                    p.set_searchable(false);
-                    p.list.width = (40, 40);
+                    p.set_searchable(false)
+                        .expect("disabling picker search is valid");
+                    p.set_width(40);
                     p.set_items(
                         ["Close pane", "Close tab"]
                             .iter()
                             .map(|l| Item::new(*l).glyph(" "))
                             .collect(),
-                    );
+                    )
+                    .unwrap_or_else(|error| p.report_item_error(error));
                     cx.open(p, LayerTag::new("closetarget"));
                 }
             }
@@ -1341,13 +1347,13 @@ impl CapsuleScreen {
             props
                 .push(Prop::new(&format!("{noun} ID"), fill_in(id, &[("run8", &run8)])).copyable());
         }
-        props.extend([Prop::new("Role", i.role.clone()), Prop::new("Agent", agent)]);
+        props.extend([Prop::new("Role", i.role_label()), Prop::new("Agent", agent)]);
         if let Some(title) = focused.and_then(|p| p.body.title()) {
             props.push(Prop::new(&v.pane.title_label, title.to_owned()));
         }
         props.extend([
-            Prop::new("Workdir", i.workdir.clone()),
-            Prop::new("Instance", i.id.trim_start_matches(ID_PREFIX).to_owned()),
+            Prop::new("Workdir", i.workdir_label()),
+            Prop::new("Instance", i.id.short_suffix()),
             Prop::new(
                 w.surfaces.vocabulary.version_label.as_str(),
                 w.surfaces.version.as_str(),
@@ -1842,7 +1848,7 @@ impl CapsuleScreen {
             right.push(Segment::new("prefix…", Tone::Normal).bold().priority(10));
         }
         right.push(
-            Segment::new(format!("{ws} › {}", i.role), Tone::Normal)
+            Segment::new(format!("{ws} › {}", i.role_label()), Tone::Normal)
                 .bold()
                 .priority(9),
         );
@@ -2500,10 +2506,7 @@ impl CapsuleScreen {
                         Prop::new("Action", words.quit_discard_action.as_str()).tone(Tone::Error),
                         Prop::new(
                             "Target",
-                            format!(
-                                "{ws} · instance {}",
-                                self.instance.trim_start_matches(ID_PREFIX)
-                            ),
+                            format!("{ws} · instance {}", self.instance.short_suffix()),
                         ),
                         Prop::new("Reversible", "no").tone(Tone::Secondary),
                     ];

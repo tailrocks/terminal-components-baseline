@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use junie_tui::clock::Clock;
-use junie_tui::core::event::{External, Input, Key, Outcome};
+use junie_tui::core::event::{External, Input, Key, MouseKind, Outcome};
 use junie_tui::core::focus::FocusChange;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
@@ -29,9 +29,7 @@ use ratatui::layout::{Position, Rect};
 
 use crate::arbiter::{EntryDecision, ExitDecision};
 use crate::backend::Effect;
-use crate::domain::instance::ID_PREFIX;
-use crate::domain::instance::InstanceId;
-use crate::domain::instance::InstanceStatus;
+use crate::domain::instance::{InstanceEntry, InstanceId, InstanceStatus};
 use crate::domain::launch::EmptyLanding;
 use crate::domain::vocabulary::fill_in;
 use crate::launch::LaunchTarget;
@@ -303,26 +301,50 @@ impl App {
     }
 
     fn drop_orphaned_daemons(&mut self) {
-        let gone: Vec<(InstanceId, &'static str)> = self
+        let mut degraded: Vec<(String, String)> = Vec::new();
+        let gone: Vec<(InstanceId, String, String)> = self
             .world
             .daemons
             .keys()
-            .filter_map(|id| match self.world.instance(id) {
-                None => Some((id.clone(), "was removed elsewhere")),
-                Some(i) if i.status != InstanceStatus::Running => {
-                    Some((id.clone(), "stopped elsewhere"))
+            .filter_map(|id| match self.world.entry(id) {
+                None => Some((
+                    id.clone(),
+                    id.short_label(),
+                    "was removed elsewhere".to_owned(),
+                )),
+                Some(InstanceEntry::Unavailable(unavailable)) if unavailable.phase.ready() => {
+                    let display = unavailable.display();
+                    degraded.push((
+                        display.sandbox_name,
+                        format!("metadata unavailable · {}", display.reason),
+                    ));
+                    None
                 }
-                Some(_) => None,
+                Some(InstanceEntry::Unavailable(unavailable)) => {
+                    let display = unavailable.display();
+                    Some((
+                        id.clone(),
+                        display.sandbox_name,
+                        format!("metadata unavailable · {}", display.reason),
+                    ))
+                }
+                Some(InstanceEntry::Available(i)) if i.status != InstanceStatus::Running => {
+                    Some((id.clone(), id.short_label(), "stopped elsewhere".to_owned()))
+                }
+                Some(InstanceEntry::Available(_)) => None,
             })
             .collect();
+        for (name, why) in degraded {
+            self.set_status(&format!("Instance {name} {why}"), Tone::Secondary);
+        }
         let open = self.open_capsule();
-        for (instance, why) in gone {
+        for (instance, name, why) in gone {
             if open.as_ref() == Some(&instance) {
                 self.go(Go::InstanceEnded {
                     instance: instance.clone(),
                     purge: false,
                 });
-                self.set_status(&format!("Instance {instance} {why}"), Tone::Secondary);
+                self.set_status(&format!("Instance {name} {why}"), Tone::Secondary);
             } else {
                 self.world.daemons.remove(&instance);
             }
@@ -376,11 +398,11 @@ impl App {
             EntryPage::Roles { select } => self.go(Go::Roles { select }),
             EntryPage::RoleEditor { role } => self.go(Go::RoleEditor { role }),
             EntryPage::Launch(target) => {
-                self.go(Go::Launch {
+                self.go(Go::LaunchMany {
                     workspace: target.workspace,
-                    role: target.role.clone(),
-                    agent: target.agent(),
-                    account: target.account(),
+                    role: target.role,
+                    instances: target.instances,
+                    task: target.task,
                 });
                 if frame > 0 {
                     let (_, reqs) = self.shell.deliver(true, |cx| {
@@ -431,7 +453,28 @@ impl App {
     }
 
     pub fn set_status(&mut self, s: &str, tone: Tone) {
+        if tone != Tone::Error
+            && let Some(warning) = self.world.committed_save_warning
+        {
+            if s.contains(warning.status()) {
+                self.world.committed_save_status = Some(s.to_owned());
+            }
+            self.show_committed_save_warning();
+            return;
+        }
         self.shell.status.set_at(s, tone, self.world.clock.now());
+    }
+
+    fn show_committed_save_warning(&mut self) {
+        if let Some(warning) = self.world.committed_save_warning {
+            self.shell.status.sticky_at(
+                self.world
+                    .committed_save_status
+                    .as_deref()
+                    .unwrap_or_else(|| warning.status()),
+                self.world.clock.now(),
+            );
+        }
     }
 
     fn animating(&self) -> bool {
@@ -473,6 +516,11 @@ impl App {
     }
 
     fn handle_input(&mut self, input: Input) -> Outcome {
+        if matches!(&input, Input::Key(_) | Input::Paste(_))
+            || matches!(&input, Input::Mouse(mouse) if !matches!(mouse.kind, MouseKind::Move))
+        {
+            self.world.dismiss_committed_save_warning();
+        }
         let out = match input {
             Input::Resize(..) => Outcome::Changed,
             Input::Tick => self.tick_step(),
@@ -534,6 +582,9 @@ impl App {
         out = out.or(PointerRouter::tick(self));
         if self.shell.status.expire(self.world.clock.now()) {
             out = Outcome::Changed;
+        }
+        if self.shell.status.get().is_none() {
+            self.show_committed_save_warning();
         }
         if let Some(at) = self.exit_after_status
             && self.world.now_ms() >= at
@@ -620,7 +671,9 @@ impl App {
 
     fn dispatch_reply(&mut self, m: &Msg) -> Outcome {
         self.tell_forms_of_reply(m);
-        if self.world.absorb(m) == Absorbed::Stale {
+        let absorbed = self.world.absorb(m);
+        self.show_committed_save_warning();
+        if absorbed == Absorbed::Stale {
             return Outcome::Ignored;
         }
         let ended = m
@@ -1483,7 +1536,6 @@ impl App {
                 self.refresh_picker();
                 return Outcome::Changed;
             }
-            ModalResult::PickerEvent(_) => return Outcome::Consumed,
             ModalResult::FormEvent(FormAction::Changed(_)) => {
                 self.form_changed();
                 return Outcome::Changed;
@@ -1566,7 +1618,8 @@ impl App {
             && let Some(p) = self.layers.top_as_mut::<Picker>()
         {
             let n = items.len();
-            p.set_items(items);
+            p.set_items(items)
+                .unwrap_or_else(|error| p.report_item_error(error));
             if tag.kind == "palette" {
                 p.scope = Some(format!("{n} of 20"));
             }
@@ -1788,12 +1841,20 @@ impl App {
                 Request::Status(s, tone) => self.set_status(&s, tone),
                 Request::StatusAs(s, kind) => self.set_status(&s, kind.tone()),
                 Request::Sticky(s) => {
-                    let now = self.world.clock.now();
-                    self.shell.status.sticky_at(s, now);
+                    if self.world.committed_save_warning.is_some() {
+                        self.show_committed_save_warning();
+                    } else {
+                        let now = self.world.clock.now();
+                        self.shell.status.sticky_at(s, now);
+                    }
                 }
                 Request::Progress(s, job) => {
-                    let now = self.world.clock.now();
-                    self.shell.status.progress_at(job, s, now);
+                    if self.world.committed_save_warning.is_some() {
+                        self.show_committed_save_warning();
+                    } else {
+                        let now = self.world.clock.now();
+                        self.shell.status.progress_at(job, s, now);
+                    }
                 }
                 Request::Open(layer, tag) => self.open_layer(layer, tag, owner),
 
@@ -1823,17 +1884,21 @@ impl App {
             .flatten()
     }
 
-    fn attachable(&self, instance: &str) -> bool {
+    fn attachable(&self, instance: &InstanceId) -> bool {
         self.world
             .instance(instance)
             .is_some_and(|i| i.status == InstanceStatus::Running)
     }
 
-    fn refuse_attach(&mut self, instance: &str) {
+    fn refuse_attach(&mut self, instance: &InstanceId) {
+        let unavailable_reason = self.world.entry(instance).and_then(|entry| match entry {
+            InstanceEntry::Unavailable(unavailable) => Some(unavailable.display().reason),
+            InstanceEntry::Available(_) => None,
+        });
         self.set_status(
-            &format!(
-                "Cannot attach: {} is not running",
-                instance.trim_start_matches(ID_PREFIX)
+            &unavailable_reason.map_or_else(
+                || format!("Cannot attach: {} is not running", instance.short_suffix()),
+                |reason| format!("Cannot attach: agent metadata unavailable · {reason}"),
             ),
             Tone::Error,
         );
@@ -1900,29 +1965,6 @@ impl App {
             }
             Go::Prelude => {
                 let page = Page::Prelude(Box::new(PreludeScreen::new(&self.world)));
-                self.open_page(page);
-            }
-            Go::Launch {
-                workspace,
-                role,
-                agent,
-                account,
-            } => {
-                let page = Page::Cockpit(Box::new(CockpitScreen::new(
-                    &self.world,
-                    LaunchTarget {
-                        workspace,
-                        role,
-                        instances: vec![crate::domain::tuple::InstanceChoice {
-                            agent,
-                            provider: agent.provider(),
-                            account,
-                            model: String::new(),
-                        }],
-                        task: None,
-                    },
-                    self.shell.motion,
-                )));
                 self.open_page(page);
             }
             Go::LaunchMany {
@@ -2006,11 +2048,10 @@ impl App {
                 self.set_status(&format!("Started {label} in a new tab"), Tone::Secondary);
             }
             Go::Detach => {
-                let inst = self
-                    .router
-                    .capsule()
-                    .map(|c| c.instance.clone())
-                    .unwrap_or_default();
+                let Some(inst) = self.router.capsule().map(|c| c.instance.clone()) else {
+                    self.show_tab(TAB_MANAGER);
+                    return;
+                };
                 let now = self.world.now_ms();
                 if let Some(d) = self.world.daemons.get_mut(&inst) {
                     d.attached_by = None;
@@ -2059,7 +2100,79 @@ impl App {
                 self.world.sync_arbiter();
 
                 self.show_tab(TAB_MANAGER);
-                self.leave_construct(&instance);
+                self.leave_construct(Some(&instance));
+            }
+            Go::PowerStart { instance } => match self.world.entry(&instance) {
+                Some(InstanceEntry::Unavailable(unavailable)) if unavailable.phase.startable() => {
+                    let row = crate::screens::manager::RowKey::Instance(instance.clone());
+                    if self
+                        .router
+                        .manager_mut()
+                        .busy_rows
+                        .iter()
+                        .any(|(k, _)| *k == row)
+                    {
+                        self.set_status(
+                            "Power action already pending for this sandbox",
+                            Tone::Warning,
+                        );
+                    } else {
+                        self.router.manager_mut().busy_rows.push((row, "starting…"));
+                        self.world
+                            .perform(crate::backend::Effect::PowerStart { instance });
+                        self.set_status("Starting sandbox…", Tone::Secondary);
+                    }
+                }
+                Some(InstanceEntry::Unavailable(unavailable)) => {
+                    let display = unavailable.display();
+                    let message = if unavailable.phase.ready() {
+                        format!(
+                            "Sandbox {} is already ready · use t to stop",
+                            display.sandbox_name
+                        )
+                    } else {
+                        format!(
+                            "Cannot start sandbox {} while {} · only stopped sandboxes can start",
+                            display.sandbox_name,
+                            unavailable.phase.label()
+                        )
+                    };
+                    self.set_status(&message, Tone::Warning);
+                }
+                _ => self.set_status(
+                    "Cannot start: unavailable sandbox metadata is no longer present",
+                    Tone::Error,
+                ),
+            },
+            Go::PowerStop { instance } => {
+                if matches!(
+                    self.world.entry(&instance),
+                    Some(InstanceEntry::Unavailable(unavailable)) if unavailable.phase.ready()
+                ) {
+                    let row = crate::screens::manager::RowKey::Instance(instance.clone());
+                    if self
+                        .router
+                        .manager_mut()
+                        .busy_rows
+                        .iter()
+                        .any(|(k, _)| *k == row)
+                    {
+                        self.set_status(
+                            "Power action already pending for this sandbox",
+                            Tone::Warning,
+                        );
+                    } else {
+                        self.router.manager_mut().busy_rows.push((row, "stopping…"));
+                        self.world
+                            .perform(crate::backend::Effect::PowerStop { instance });
+                        self.set_status("Stopping sandbox…", Tone::Secondary);
+                    }
+                } else {
+                    self.set_status(
+                        "Cannot stop: only a ready unavailable sandbox can be stopped",
+                        Tone::Warning,
+                    );
+                }
             }
             Go::LaunchFailedAck { instance } => {
                 self.show_tab(TAB_MANAGER);
@@ -2086,7 +2199,7 @@ impl App {
                     }
                     self.enter_route();
                 } else {
-                    self.leave_construct(instance.as_deref().unwrap_or(""));
+                    self.leave_construct(instance.as_ref());
                 }
             }
 
@@ -2103,7 +2216,7 @@ impl App {
         }
     }
 
-    fn leave_construct(&mut self, instance: &str) {
+    fn leave_construct(&mut self, instance: Option<&InstanceId>) {
         let decision = self.world.arbiter.request_exit(self.world.now_ms());
         match decision {
             ExitDecision::Outro { elapsed_secs } => {
@@ -2112,26 +2225,34 @@ impl App {
             }
             ExitDecision::StillInside { remaining } => {
                 self.show_tab(TAB_MANAGER);
-                self.router
-                    .manager_mut()
-                    .select_instance(instance, &self.world);
+                if let Some(instance) = instance {
+                    self.router
+                        .manager_mut()
+                        .select_instance(instance, &self.world);
+                }
                 self.enter_route();
                 let rows: Vec<String> = self
                     .world
-                    .running()
+                    .running_entries()
                     .iter()
-                    .map(|i| {
-                        let ws = i
-                            .workspace
-                            .and_then(|x| self.world.workspace(x))
-                            .map(|x| x.name.clone())
-                            .unwrap_or("current directory".into());
-                        format!(
-                            "{ws} › {} · {}",
-                            i.role,
-                            self.world
-                                .mask_path(&format!("{}/src/{ws}", self.world.home))
-                        )
+                    .map(|entry| match entry {
+                        InstanceEntry::Available(i) => {
+                            let ws = i
+                                .workspace
+                                .and_then(|x| self.world.workspace(x))
+                                .map(|x| x.name.clone())
+                                .unwrap_or("current directory".into());
+                            format!(
+                                "{ws} › {} · {}",
+                                i.role_label(),
+                                self.world
+                                    .mask_path(&format!("{}/src/{ws}", self.world.home))
+                            )
+                        }
+                        InstanceEntry::Unavailable(u) => {
+                            let d = u.display();
+                            format!("{} › {} · {}", d.workspace_name, d.role, d.reason)
+                        }
                     })
                     .collect();
                 let text = format!(

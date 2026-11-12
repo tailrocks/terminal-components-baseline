@@ -1246,7 +1246,7 @@ impl App {
         let index = SwitcherIndex::build(&w.catalog, &w.connection.name, &open, &self.history);
         let mut p = Picker::new(WidgetId::of("switcher"), "Open Quickly");
         p.placeholder = "Search tables, views, schemas, tabs, queries…".into();
-        p.list.width = (88, 88);
+        p.set_width(88);
         p.hints =
             "↑↓ Move · Enter Open · Alt+Enter New tab · Tab Scope · Esc Clear / Close".to_owned();
         self.scope = 0;
@@ -1305,7 +1305,8 @@ impl App {
                 }
             })
             .collect();
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
 
         self.switcher_targets = results.into_iter().map(|r| r.target).collect();
     }
@@ -1317,7 +1318,8 @@ impl App {
         let mut p = Picker::new(WidgetId::of("tablist"), "Open tabs");
         p.placeholder = "Filter tabs…".into();
         p.hints = "↑↓ Move · Enter Switch · Delete Close tab · Esc Close".to_owned();
-        p.set_items(tab_list_items(w, ""));
+        p.set_items(tab_list_items(w, ""))
+            .unwrap_or_else(|error| p.report_item_error(error));
         p.set_cursor(w.active);
         self.layers.open(
             Box::new(p),
@@ -1333,8 +1335,9 @@ impl App {
         };
         let current = w.connection.safe_mode;
         let mut p = Picker::new(WidgetId::of("safemode"), "Safe Mode · this connection");
-        p.set_searchable(false);
-        p.list.width = (112, 112);
+        p.set_searchable(false)
+            .expect("disabling picker search is valid");
+        p.set_width(112);
         p.hints =
             "↑↓ Move · Enter Set level · Esc Keep · levels are saved to the connection".to_owned();
         let items: Vec<Item> = SafeMode::ALL
@@ -1346,11 +1349,14 @@ impl App {
                 if *s == current { it.tag("current") } else { it }
             })
             .collect();
-        p.set_items(items);
-        p.list.cursor.index = SafeMode::ALL
-            .iter()
-            .position(|s| *s == current)
-            .unwrap_or(0);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
+        p.set_cursor(
+            SafeMode::ALL
+                .iter()
+                .position(|s| *s == current)
+                .unwrap_or(0),
+        );
         p.empty_text = String::new();
         self.layers.open(
             Box::new(p),
@@ -1519,7 +1525,8 @@ impl App {
             return;
         };
         let items = tab_list_items(w, p.query());
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
     }
 
     fn layer_closed(&mut self, entry: LayerEntry<ModalResult>, r: ModalResult) -> Outcome {
@@ -2194,7 +2201,7 @@ impl PointerHost for App {
 }
 
 fn tab_index(p: &Picker, i: usize) -> usize {
-    p.items.get(i).map_or(i, |it| it.value)
+    p.items().get(i).map_or(i, |it| it.value)
 }
 
 fn tab_list_items(w: &Workbench, query: &str) -> Vec<Item> {

@@ -60,10 +60,10 @@ impl Fixed {
             launch_usage_only: "launch needs a local Codex login · this source is usage only"
                 .into(),
             agent_launchable: Reason::new("Set by each account · change it in Accounts (c)"),
-            agent_other: Reason::new("No credentials · jackin launches Codex only"),
+            agent_other: Reason::new("Set by each account · change it in Accounts (c)"),
             agent_notes: [
                 "The mode comes from each account's credential source.".into(),
-                "jackin launches Codex only; other agents get no credentials.".into(),
+                "Explicit Ignore blocks launch; other modes stay available.".into(),
             ],
             env_secret_note: [
                 "Keep secrets out of env. Values are stored as plain text.".into(),

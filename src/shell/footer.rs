@@ -130,11 +130,11 @@ impl Footer {
 
     pub fn compose(&self, reveal: Option<(&'static str, &'static str)>) -> Vec<Hint> {
         let mut hints = self.hints.clone().unwrap_or_else(|| self.fallback.clone());
-        crate::ui::reveal::advertise(&mut hints, reveal, |h| h.key, hint);
+        crate::ui::reveal::advertise(&mut hints, reveal, |h| h.key.as_ref(), hint);
         if self.tab_next && !self.editing && !hints.iter().any(|h| h.key == "Tab") {
             hints.push(hint("Tab", "Next"));
         }
-        hints.retain(|h| deliverable(h.key));
+        hints.retain(|h| deliverable(h.key.as_ref()));
         if self.dirty
             && let Some(key) = self.pin_dirty
         {

@@ -22,11 +22,21 @@ use junie_tui::widgets::button::{Button, row_layout};
 use junie_tui::widgets::empty::EmptyState;
 use junie_tui::widgets::option_list::Item;
 use junie_tui::widgets::panel::Panel;
-use junie_tui::widgets::picker::{Picker, PickerAction, PickerStatus};
+use junie_tui::widgets::picker::{Picker, PickerAction, PickerKeyProfile, PickerStatus};
 use junie_tui::widgets::props::{self, Prop};
 use junie_tui::widgets::tree::TreeNode;
 
 const ID: WidgetId = WidgetId::of("pickers");
+const MULTI_ROWS: [&str; 4] = ["Row1", "Row2", "Row3", "Row4"];
+const MULTI_SELECTION_GROUP: ItemKey = ItemKey::text("multi-provider");
+
+fn multi_row_label(key: ItemKey) -> &'static str {
+    MULTI_ROWS
+        .iter()
+        .copied()
+        .find(|label| ItemKey::text(label) == key)
+        .unwrap_or("Unknown row")
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Kind {
@@ -137,8 +147,6 @@ const BRANCHES: &[&str] = &[
     "release/4.2",
 ];
 
-const MULTI_ROWS: [&str; 4] = ["Row 1", "Row 2", "Row 3", "Row 4"];
-
 const FETCH_TICKS: u32 = 3;
 
 pub struct PickersPage {
@@ -200,7 +208,8 @@ impl Rows {
                         Scope::Tasks => "Tasks",
                     }
                 ));
-                p.set_items(ranked.into_iter().map(|r| r.1).collect());
+                p.set_items(ranked.into_iter().map(|r| r.1).collect())
+                    .unwrap_or_else(|error| p.report_item_error(error));
             }
             Kind::Tabs => {
                 let items = self
@@ -226,7 +235,8 @@ impl Rows {
                 let live = self.tabs.iter().filter(|t| t.1.is_some()).count();
                 p.scope = Some(format!("{live} live"));
 
-                p.refresh_items(items);
+                p.replace_items(items)
+                    .unwrap_or_else(|error| p.report_item_error(error));
             }
             Kind::Level => {
                 p.set_items(
@@ -239,48 +249,67 @@ impl Rows {
                             it
                         })
                         .collect(),
-                );
+                )
+                .unwrap_or_else(|error| p.report_item_error(error));
                 p.set_cursor(self.level);
             }
-            Kind::Commands => p.set_items(
-                COMMANDS
-                    .iter()
-                    .filter(|c| fuzzy(c.0, &q).is_some())
-                    .map(|(l, g, k, why)| {
-                        let it = Item::new(*l)
-                            .glyph(*g)
-                            .group("Commands")
-                            .key(ItemKey::text(k))
-                            .detail(why.unwrap_or(k));
-                        it.disabled(why.is_some())
-                    })
-                    .collect(),
-            ),
+            Kind::Commands => p
+                .set_items(
+                    COMMANDS
+                        .iter()
+                        .filter(|c| fuzzy(c.0, &q).is_some())
+                        .map(|(l, g, k, why)| {
+                            let it = Item::new(*l)
+                                .glyph(*g)
+                                .group("Commands")
+                                .key(ItemKey::text(k))
+                                .detail(why.unwrap_or(k));
+                            it.disabled(why.is_some())
+                        })
+                        .collect(),
+                )
+                .unwrap_or_else(|error| p.report_item_error(error)),
             Kind::Multi | Kind::MultiSearch => {
                 let items: Vec<Item> = MULTI_ROWS
                     .iter()
                     .enumerate()
-                    .filter(|(_, l)| kind == Kind::Multi || fuzzy(l, &q).is_some())
                     .map(|(i, l)| {
                         let mut it = Item::new(*l)
                             .key(ItemKey::text(l))
                             .detail(format!("multi row {}", i + 1));
+                        if matches!(i, 2 | 3) {
+                            it = it.selection_group(MULTI_SELECTION_GROUP);
+                        }
                         if i == 1 {
                             it = it.reason("Unavailable row");
                         }
                         it
                     })
                     .collect();
-                p.refresh_items_by_key(items)
-                    .expect("showcase multi-picker rows have unique keys");
+                if kind == Kind::MultiSearch {
+                    p.replace_items(items.clone())
+                        .unwrap_or_else(|error| p.report_item_error(error));
+                    p.set_visible_items(
+                        items
+                            .into_iter()
+                            .filter(|item| fuzzy(&item.label, &q).is_some())
+                            .collect(),
+                    )
+                    .unwrap_or_else(|error| p.report_item_error(error));
+                } else {
+                    p.set_items(items)
+                        .unwrap_or_else(|error| p.report_item_error(error));
+                }
             }
             Kind::Remote => match self.fetching {
                 Some(_) => {
-                    p.set_items(vec![]);
+                    p.set_items(vec![])
+                        .unwrap_or_else(|error| p.report_item_error(error));
                     p.status = PickerStatus::Loading("Fetching branches from origin…".into());
                 }
                 None if self.remote_fails => {
-                    p.set_items(vec![]);
+                    p.set_items(vec![])
+                        .unwrap_or_else(|error| p.report_item_error(error));
                     p.status = PickerStatus::Error {
                         message: "Could not reach origin".into(),
                         detail: Some("r retries".into()),
@@ -293,7 +322,8 @@ impl Rows {
                             .iter()
                             .map(|b| Item::new(*b).glyph("⎇").group("origin"))
                             .collect(),
-                    );
+                    )
+                    .unwrap_or_else(|error| p.report_item_error(error));
                 }
             },
         }
@@ -364,6 +394,10 @@ impl PickersPage {
     fn style(&self, p: Picker, anchor: Rect) -> Picker {
         let o = &self.opts;
         let mut p = p
+            .key_profile(match o.value("pickers.nav") {
+                "vim" => PickerKeyProfile::Vim,
+                _ => PickerKeyProfile::Desktop,
+            })
             .max_rows(o.value("pickers.max_rows").parse().unwrap_or(12))
             .fit(match o.value("pickers.fit") {
                 "third" => Place::DEFAULT.v_align(VAlign::Third),
@@ -424,7 +458,8 @@ impl PickersPage {
             Kind::Level => {
                 let mut p =
                     Picker::new(ID.sub("picker.level"), "Safe Mode · this connection").width(112);
-                p.set_searchable(false);
+                p.set_searchable(false)
+                    .expect("disabling picker search is valid");
                 p
             }
             Kind::Commands => Picker::new(ID.sub("picker.commands"), "Run command")
@@ -433,21 +468,25 @@ impl PickersPage {
             Kind::Remote => {
                 let mut p =
                     Picker::new(ID.sub("picker.remote"), "Remote branches · origin").width(56);
-                p.set_searchable(false);
+                p.set_searchable(false)
+                    .expect("disabling picker search is valid");
                 p
             }
             Kind::Multi => {
                 let mut p = Picker::new(ID.sub("picker.multi"), "Multi select")
                     .width(56)
-                    .multi_select_by_key(true);
-                p.set_searchable(false);
+                    .multi_select(true)
+                    .expect("empty picker accepts multi-selection");
+                p.set_searchable(false)
+                    .expect("disabling picker search is valid");
                 p
             }
             Kind::MultiSearch => Picker::new(ID.sub("picker.multisearch"), "Multi search")
                 .width(56)
-                .multi_select_by_key(true),
+                .multi_select(true)
+                .expect("empty picker accepts multi-selection"),
         };
-        p.hints = match kind {
+        p = p.hints(match kind {
             Kind::Quick => {
                 "↑↓ Move · Enter Open · Alt+Enter New tab · Tab Scope · Esc Clear / Close"
             }
@@ -455,10 +494,9 @@ impl PickersPage {
             Kind::Level => "↑↓ Move · Enter Set level · Esc Keep",
             Kind::Commands => "↑↓ Move · Enter Run · Esc Close",
             Kind::Remote => "↑↓ Move · Enter Check out · r Retry · Esc Close",
-            Kind::Multi => "Space Toggle · Enter Confirm · Esc Close",
-            Kind::MultiSearch => "Type Filter · Ctrl+Space Toggle · Enter Confirm · Esc Close",
-        }
-        .to_owned();
+            Kind::Multi => "Enter Confirm · Esc Close",
+            Kind::MultiSearch => "Type Filter · Enter Confirm · Esc Close",
+        });
         let mut p = self.style(p, anchor);
         self.opened += 1;
         if kind == Kind::Remote {
@@ -479,13 +517,46 @@ impl PickersPage {
         let Some(LayerResult::Picker(ev)) = r.result else {
             return;
         };
-        self.last = format!("{ev:?}");
         let picker = r.closed.as_ref().and_then(|e| e.get::<Picker>()).cloned();
+        let conflict_feedback = match &ev {
+            PickerAction::SelectionConflict {
+                attempted,
+                selected,
+            } => Some(format!(
+                "{} conflicts with selected {}",
+                multi_row_label(*attempted),
+                multi_row_label(*selected)
+            )),
+            _ => None,
+        };
+        self.last = match &ev {
+            PickerAction::ChosenMany(keys) => {
+                let positions: Vec<usize> = keys
+                    .iter()
+                    .filter_map(|key| {
+                        let item = picker.as_ref()?.item_for_key(*key)?;
+                        MULTI_ROWS
+                            .iter()
+                            .position(|label| *label == item.label.as_str())
+                    })
+                    .collect();
+                format!("ChosenMany({positions:?})")
+            }
+            PickerAction::SelectionConflict { .. } => conflict_feedback
+                .clone()
+                .unwrap_or_else(|| "Selection conflict".into()),
+            _ => format!("{ev:?}"),
+        };
+        if let Some(message) = conflict_feedback {
+            cx.status(message);
+        }
         match ev {
+            PickerAction::Toggled => {}
+            PickerAction::SelectionConflict { .. } => {}
             PickerAction::QueryChanged => self.refill(kind, cx),
             PickerAction::Chosen(i) | PickerAction::ChosenAlt(i) => {
                 let alt = matches!(ev, PickerAction::ChosenAlt(_));
-                if let Some(it) = picker.as_ref().and_then(|p| p.items.get(i)) {
+                if let Some(it) = picker.as_ref().and_then(|p: &Picker| p.items().get(i)) {
                     if kind == Kind::Level {
                         self.level = i;
                     }
@@ -497,21 +568,18 @@ impl PickersPage {
                     ));
                 }
             }
-            PickerAction::ChosenMany(_indices) => {
-                let keys = picker
-                    .as_ref()
-                    .map(|p| p.selected_keys().to_vec())
-                    .unwrap_or_default();
+            PickerAction::ChosenMany(keys) => {
                 let labels: Vec<String> = keys
                     .iter()
-                    .filter_map(|key| {
-                        MULTI_ROWS
-                            .iter()
-                            .find(|label| ItemKey::text(label) == *key)
-                            .map(|label| (*label).to_owned())
+                    .map(|key| {
+                        picker
+                            .as_ref()
+                            .and_then(|picker| picker.item_for_key(*key))
+                            .map(|item| item.label.clone())
+                            .unwrap_or_else(|| "Unavailable selection".into())
                     })
                     .collect();
-                self.chosen = Some((labels.join(", "), format!("{} selected", labels.len())));
+                self.chosen = Some((labels.join(", "), format!("{} selected", keys.len())));
                 cx.status(format!("ChoseMany: {}", labels.join(", ")));
             }
             PickerAction::Secondary(i) => {
@@ -573,7 +641,8 @@ impl PickersPage {
     }
 
     fn readout(&self) -> Vec<Prop> {
-        let p = self.style(Picker::new(ID.sub("picker.sample"), "Sample"), Rect::ZERO);
+        let p: Picker = self.style(Picker::new(ID.sub("picker.sample"), "Sample"), Rect::ZERO);
+        let list = p.list();
         let on = |b: bool| if b { "on" } else { "off" };
 
         let commands = COMMANDS
@@ -591,10 +660,10 @@ impl PickersPage {
                 "Size",
                 format!(
                     "width {} · max rows {} · {:?}{}",
-                    p.list.width.1,
-                    p.list.max_rows,
-                    p.list.placement,
-                    if p.list.placement == Placement::Center {
+                    list.width.1,
+                    list.max_rows,
+                    list.placement,
+                    if list.placement == Placement::Center {
                         ""
                     } else {
                         " the button"
@@ -605,14 +674,14 @@ impl PickersPage {
                 "Fit",
                 format!(
                     "margin {} · {:?} · backdrop keeps {} bottom rows",
-                    p.list.fit.margin, p.list.fit.v_align, p.backdrop.keep_bottom
+                    list.fit.margin, list.fit.v_align, p.backdrop.keep_bottom
                 ),
             ),
             Prop::new(
                 "Rows",
                 format!(
                     "cursor {:?} · Delete secondary {} · nav {}",
-                    p.list.look,
+                    list.look,
                     on(p.delete_is_secondary),
                     self.opts.value("pickers.nav")
                 ),
@@ -621,8 +690,8 @@ impl PickersPage {
                 "Close",
                 format!(
                     "Esc {} · outside click {}",
-                    on(p.list.dismiss.escape),
-                    on(p.list.dismiss.outside_click)
+                    on(list.dismiss.escape),
+                    on(list.dismiss.outside_click)
                 ),
             ),
             Prop::new(
@@ -758,13 +827,15 @@ fn states_grid() -> StateGrid {
     use SpecimenState::*;
     let id = ID.sub("states");
     let mut p = Picker::new(id.child(0), "Remote branches").width(44);
-    p.set_searchable(false);
+    p.set_searchable(false)
+        .expect("disabling picker search is valid");
     p.set_items(
         ["main", "feat/rate-limit", "release/4.2"]
             .iter()
             .map(|b| Item::new(*b).glyph("⎇"))
             .collect(),
-    );
+    )
+    .unwrap_or_else(|error| p.report_item_error(error));
     StateGrid::new(id)
         .rows(&[Rest, Hover, Disabled, Empty, Loading, Error, Overflow])
         .column_width(50)

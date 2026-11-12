@@ -12,7 +12,7 @@ mod product_support;
 use capsule_support::*;
 use common::app_with;
 use jackin_console::app::Remote;
-use jackin_console::domain::instance::DaemonSnapshot;
+use jackin_console::domain::instance::{DaemonSnapshot, InstanceEntry, InstanceId};
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::panes::{
     EndKind, FailNext, LinkEvent, LinkFault, LinkStatus, PaneBody, PaneEffect, PaneId,
@@ -30,7 +30,7 @@ fn wake(rig: &mut Rig, pane: PaneId) -> Outcome {
 
 fn wake_of(rig: &mut Rig, instance: &str, pane: PaneId) -> Outcome {
     let msg = Msg::PaneWake {
-        instance: instance.into(),
+        instance: InstanceId::simulated(instance),
         pane,
     };
     Application::handle(
@@ -234,7 +234,11 @@ fn the_next_step_comes_from_the_pane_words() {
 /// a snapshot built by jackin carries it.
 fn snapshot_without_daemons(world: &World) -> jackin_console::world::Snapshot {
     let mut snapshot = sim::snapshot(world);
-    for instance in &mut snapshot.instances {
+    for instance in snapshot
+        .instances
+        .iter_mut()
+        .filter_map(InstanceEntry::as_available_mut)
+    {
         instance.daemon = DaemonSnapshot::Unavailable;
     }
     snapshot
@@ -246,7 +250,7 @@ fn refresh_keeps_open_panes() {
     world.backend = SimBackend::shared();
     let mut app = app_with(Scenario::CapsuleMulti, world);
 
-    let before: Vec<(String, usize, usize)> = app
+    let before: Vec<(InstanceId, usize, usize)> = app
         .world
         .daemons
         .iter()
@@ -260,7 +264,7 @@ fn refresh_keeps_open_panes() {
         .collect();
     let open: DaemonSnapshot = app
         .world
-        .instance("jk-7f3a")
+        .instance(&InstanceId::simulated("jk-7f3a"))
         .expect("record")
         .daemon
         .clone();
@@ -274,6 +278,7 @@ fn refresh_keeps_open_panes() {
         snapshot
             .instances
             .iter()
+            .filter_map(InstanceEntry::as_available)
             .all(|i| i.daemon == DaemonSnapshot::Unavailable),
         "the snapshot says nothing about daemons"
     );
@@ -283,7 +288,7 @@ fn refresh_keeps_open_panes() {
     });
     assert_ne!(outcome, Outcome::Ignored);
 
-    let after: Vec<(String, usize, usize)> = app
+    let after: Vec<(InstanceId, usize, usize)> = app
         .world
         .daemons
         .iter()
@@ -298,7 +303,10 @@ fn refresh_keeps_open_panes() {
         .collect();
     assert_eq!(after_ids, ids, "the panes are the same panes");
     assert_eq!(
-        app.world.instance("jk-7f3a").expect("record").daemon,
+        app.world
+            .instance(&InstanceId::simulated("jk-7f3a"))
+            .expect("record")
+            .daemon,
         open,
         "the roster shows the open tabs again"
     );
@@ -309,10 +317,12 @@ fn refresh_keeps_open_panes() {
     );
     assert_eq!(outcome, Outcome::Changed);
     assert_eq!(
-        app.world.daemons["jk-7f3a"].panes.len(),
+        app.world.daemons[&InstanceId::simulated("jk-7f3a")]
+            .panes
+            .len(),
         before
             .iter()
-            .find(|(id, ..)| id == "jk-7f3a")
+            .find(|(id, ..)| id == &InstanceId::simulated("jk-7f3a"))
             .map(|(_, _, panes)| *panes)
             .expect("daemon"),
         "a reloaded snapshot keeps them too"

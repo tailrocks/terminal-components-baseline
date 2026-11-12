@@ -13,9 +13,9 @@
 //! passes every check. Only a review of the table closes that hole.
 
 use super::account::{Account, AccountForm, AccountOrigin, AccountRegistry, EditBlocked};
-use super::agent::{Agent, AgentBlocked, AuthMode};
+use super::agent::{Agent, AgentBlocked};
 use super::fixed::Fixed;
-use super::instance::Instance;
+use super::instance::{Instance, InstanceEntry};
 use super::role::LaunchRoleRule;
 use super::surfaces::Surfaces;
 use super::vocabulary::Vocabulary;
@@ -55,7 +55,7 @@ pub struct GlobalFixed {
     pub dco_signoff: bool,
     pub mounts_empty: bool,
     pub role_env_empty: bool,
-    pub non_launchable_modes_ignore: bool,
+    pub all_agent_modes_present: bool,
     pub all_trusted: bool,
 }
 
@@ -72,8 +72,9 @@ pub struct RoleFixed {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct InstanceFixed {
-    pub workdir: String,
+pub enum InstanceFixed {
+    Available { workdir: Option<String> },
+    Unavailable,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -92,7 +93,7 @@ impl SurfaceFixed {
             vocabulary: Vocabulary::openshell(),
             fixed: Some(Fixed::openshell()),
             account_form: AccountForm::openshell(),
-            agent_blocked: Some(AgentBlocked::openshell()),
+            agent_blocked: None,
             wizard: Some(WizardDefaults::openshell()),
             launch_role: LaunchRoleRule::Configured,
         }
@@ -177,16 +178,14 @@ pub fn global_fixed(g: &GlobalConfig) -> GlobalFixed {
         agent_modes,
         trust,
     } = g;
-    let launchable = Fixed::openshell().launchable;
     GlobalFixed {
         coauthor_trailer: *coauthor_trailer,
         dco_signoff: *dco_signoff,
         mounts_empty: mounts.is_empty(),
         role_env_empty: role_env.is_empty(),
-        non_launchable_modes_ignore: Agent::ALL
+        all_agent_modes_present: Agent::ALL
             .into_iter()
-            .filter(|a| *a != launchable)
-            .all(|a| agent_modes.get(&a) == Some(&AuthMode::Ignore)),
+            .all(|agent| agent_modes.contains_key(&agent)),
         all_trusted: trust.iter().all(|row| {
             let TrustRow {
                 source: _,
@@ -269,8 +268,15 @@ pub fn instance_fixed(i: &Instance) -> InstanceFixed {
         agents: _,
         task: _,
     } = i;
-    InstanceFixed {
+    InstanceFixed::Available {
         workdir: workdir.clone(),
+    }
+}
+
+fn instance_entry_fixed(entry: &InstanceEntry) -> InstanceFixed {
+    match entry {
+        InstanceEntry::Available(instance) => instance_fixed(instance),
+        InstanceEntry::Unavailable(_) => InstanceFixed::Unavailable,
     }
 }
 
@@ -304,7 +310,7 @@ pub fn surface_fixed(s: &Surfaces) -> SurfaceFixed {
 fn collect(
     workspaces: &[Workspace],
     roles: &[RoleEntry],
-    instances: &[Instance],
+    instances: &[InstanceEntry],
     global: &GlobalConfig,
     registry: &AccountRegistry,
     surfaces: &Surfaces,
@@ -319,7 +325,7 @@ fn collect(
             .map(|ws| workspace_fixed(ws, registry))
             .collect(),
         roles: roles.iter().map(role_fixed).collect(),
-        instances: instances.iter().map(instance_fixed).collect(),
+        instances: instances.iter().map(instance_entry_fixed).collect(),
         global: global_fixed(global),
         accounts: accounts.iter().map(account_fixed).collect(),
         surfaces: surface_fixed(surfaces),
@@ -356,6 +362,8 @@ pub fn world_fixed(w: &World) -> FixedFields {
         refresh_started_secs: _,
         refresh_ticket: _,
         saved_ticket: _,
+        committed_save_warning: _,
+        committed_save_status: _,
         pane_policy: _,
     } = w;
     collect(workspaces, roles, instances, global, accounts, surfaces)

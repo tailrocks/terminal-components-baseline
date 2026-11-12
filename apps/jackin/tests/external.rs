@@ -1,7 +1,7 @@
 #![cfg(feature = "demo")]
 
 use jackin_console::app::{App, Remote, Route};
-use jackin_console::domain::instance::InstanceStatus;
+use jackin_console::domain::instance::{InstanceEntry, InstanceId, InstanceStatus};
 use jackin_console::domain::workspace::Workspace;
 use jackin_console::fixtures::{Scenario, app_for, world_for};
 use jackin_console::screens::Go;
@@ -16,6 +16,10 @@ use ratatui::backend::TestBackend;
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 
 const STOPPED: &str = "jk-7f3a";
+
+fn instance_id(id: &str) -> InstanceId {
+    InstanceId::simulated(id)
+}
 
 fn app() -> App {
     app_for(
@@ -44,17 +48,25 @@ fn pump(app: &mut App) -> Vec<Outcome> {
 /// The reply to a stop: the roster with the instance no longer running.
 fn stopped(app: &App, id: &str) -> Msg {
     let mut snapshot = sim::snapshot(&app.world);
-    for i in snapshot.instances.iter_mut().filter(|i| i.id == id) {
+    for i in snapshot
+        .instances
+        .iter_mut()
+        .filter_map(InstanceEntry::as_available_mut)
+        .filter(|i| i.id == instance_id(id))
+    {
         i.status = InstanceStatus::RestoreAvailable;
     }
     Msg::Stopped {
-        instance: id.into(),
+        instance: instance_id(id),
         result: Ok(Box::new(snapshot)),
     }
 }
 
 fn status_of(app: &App, id: &str) -> InstanceStatus {
-    app.world.instance(id).expect("fixture instance").status
+    app.world
+        .instance(&instance_id(id))
+        .expect("fixture instance")
+        .status
 }
 
 fn screen(app: &mut App) -> String {
@@ -141,7 +153,7 @@ fn a_reloaded_snapshot_shows_on_the_next_frame() {
 
 fn without(app: &App, id: &str) -> Snapshot {
     let mut snapshot = sim::snapshot(&app.world);
-    snapshot.instances.retain(|i| i.id != id);
+    snapshot.instances.retain(|i| i.id() != &instance_id(id));
     snapshot
 }
 
@@ -149,38 +161,38 @@ fn without(app: &App, id: &str) -> Snapshot {
 fn a_reload_that_removes_the_open_instance_leaves_its_capsule() {
     let (mut app, tx) = linked();
     app.go(Go::Attach {
-        instance: STOPPED.into(),
+        instance: instance_id(STOPPED),
         pane: None,
     });
     assert_eq!(app.route(), Route::Capsule);
-    assert!(app.world.daemons.contains_key(STOPPED));
+    assert!(app.world.daemons.contains_key(&instance_id(STOPPED)));
 
     assert!(tx.send(Remote::Reloaded(Box::new(without(&app, STOPPED)))));
     assert_eq!(pump(&mut app), vec![Outcome::Changed]);
 
     assert_ne!(app.route(), Route::Capsule);
-    assert!(app.world.instance(STOPPED).is_none());
-    assert!(!app.world.daemons.contains_key(STOPPED));
+    assert!(app.world.instance(&instance_id(STOPPED)).is_none());
+    assert!(!app.world.daemons.contains_key(&instance_id(STOPPED)));
 }
 
 #[test]
 fn a_reload_that_removes_an_unopened_instance_drops_its_daemon() {
     let (mut app, tx) = linked();
     let other = "jk-9b02";
-    assert!(app.world.daemons.contains_key(other));
+    assert!(app.world.daemons.contains_key(&instance_id(other)));
 
     assert!(tx.send(Remote::Reloaded(Box::new(without(&app, other)))));
     pump(&mut app);
 
-    assert!(!app.world.daemons.contains_key(other));
-    assert!(app.world.daemons.contains_key(STOPPED));
+    assert!(!app.world.daemons.contains_key(&instance_id(other)));
+    assert!(app.world.daemons.contains_key(&instance_id(STOPPED)));
 }
 
 #[test]
 fn a_periodic_refresh_that_removes_the_open_instance_leaves_its_capsule() {
     let mut app = app();
     app.go(Go::Attach {
-        instance: STOPPED.into(),
+        instance: instance_id(STOPPED),
         pane: None,
     });
     assert_eq!(app.route(), Route::Capsule);
@@ -192,8 +204,8 @@ fn a_periodic_refresh_that_removes_the_open_instance_leaves_its_capsule() {
     assert_eq!(app.deliver(&refreshed), Outcome::Changed);
 
     assert_ne!(app.route(), Route::Capsule);
-    assert!(app.world.instance(STOPPED).is_none());
-    assert!(!app.world.daemons.contains_key(STOPPED));
+    assert!(app.world.instance(&instance_id(STOPPED)).is_none());
+    assert!(!app.world.daemons.contains_key(&instance_id(STOPPED)));
     let shown = screen(&mut app);
     assert!(
         shown.contains(&format!("Instance {STOPPED} was removed elsewhere")),
@@ -205,7 +217,7 @@ fn a_periodic_refresh_that_removes_the_open_instance_leaves_its_capsule() {
 fn a_periodic_refresh_that_removes_an_unopened_instance_drops_its_daemon() {
     let mut app = app();
     let other = "jk-9b02";
-    assert!(app.world.daemons.contains_key(other));
+    assert!(app.world.daemons.contains_key(&instance_id(other)));
 
     let refreshed = Msg::Refreshed {
         ticket: app.world.refresh_ticket,
@@ -213,13 +225,18 @@ fn a_periodic_refresh_that_removes_an_unopened_instance_drops_its_daemon() {
     };
     app.deliver(&refreshed);
 
-    assert!(!app.world.daemons.contains_key(other));
-    assert!(app.world.daemons.contains_key(STOPPED));
+    assert!(!app.world.daemons.contains_key(&instance_id(other)));
+    assert!(app.world.daemons.contains_key(&instance_id(STOPPED)));
 }
 
 fn restorable(app: &App, id: &str) -> Snapshot {
     let mut snapshot = sim::snapshot(&app.world);
-    for i in snapshot.instances.iter_mut().filter(|i| i.id == id) {
+    for i in snapshot
+        .instances
+        .iter_mut()
+        .filter_map(InstanceEntry::as_available_mut)
+        .filter(|i| i.id == instance_id(id))
+    {
         i.status = InstanceStatus::RestoreAvailable;
     }
     snapshot
@@ -229,7 +246,7 @@ fn restorable(app: &App, id: &str) -> Snapshot {
 fn a_reload_that_stops_the_open_instance_leaves_its_capsule() {
     let (mut app, tx) = linked();
     app.go(Go::Attach {
-        instance: STOPPED.into(),
+        instance: instance_id(STOPPED),
         pane: None,
     });
     assert_eq!(app.route(), Route::Capsule);
@@ -243,7 +260,7 @@ fn a_reload_that_stops_the_open_instance_leaves_its_capsule() {
         InstanceStatus::RestoreAvailable,
         "the backend's status stands"
     );
-    assert!(!app.world.daemons.contains_key(STOPPED));
+    assert!(!app.world.daemons.contains_key(&instance_id(STOPPED)));
     let shown = screen(&mut app);
     assert!(
         shown.contains(&format!("Instance {STOPPED} stopped elsewhere")),
@@ -255,7 +272,7 @@ fn a_reload_that_stops_the_open_instance_leaves_its_capsule() {
 fn a_periodic_refresh_that_stops_an_unopened_instance_drops_its_daemon() {
     let mut app = app();
     let other = "jk-9b02";
-    assert!(app.world.daemons.contains_key(other));
+    assert!(app.world.daemons.contains_key(&instance_id(other)));
 
     let refreshed = Msg::Refreshed {
         ticket: app.world.refresh_ticket,
@@ -263,8 +280,8 @@ fn a_periodic_refresh_that_stops_an_unopened_instance_drops_its_daemon() {
     };
     app.deliver(&refreshed);
 
-    assert!(!app.world.daemons.contains_key(other));
-    assert!(app.world.daemons.contains_key(STOPPED));
+    assert!(!app.world.daemons.contains_key(&instance_id(other)));
+    assert!(app.world.daemons.contains_key(&instance_id(STOPPED)));
 }
 
 fn with_roles(app: &App, roles: bool) -> Snapshot {
