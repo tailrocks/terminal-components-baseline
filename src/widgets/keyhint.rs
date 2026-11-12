@@ -463,6 +463,7 @@ pub fn key_of(label: &str) -> Option<crate::core::event::Key> {
         "Tab" => KeyCode::Tab,
         "Space" => KeyCode::Char(' '),
         "Delete" => KeyCode::Delete,
+        "Insert" | "Ins" => KeyCode::Insert,
         "Backspace" => KeyCode::Backspace,
         "Home" => KeyCode::Home,
         "End" => KeyCode::End,
@@ -605,4 +606,19 @@ fn render_right(
         buf.set_string(x, area.y, t.glyphs.ellipsis, t.faint());
     }
     keep.len()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn insert_hint_labels_are_clickable() {
+        for label in ["Insert", "Ins"] {
+            let key = key_of(label).unwrap_or_else(|| panic!("{label} must parse"));
+            assert_eq!(key.code, ratatui::crossterm::event::KeyCode::Insert);
+            assert_eq!(key.mods, KeyModifiers::NONE);
+        }
+        assert!(key_of("Insertion").is_none());
+    }
 }
