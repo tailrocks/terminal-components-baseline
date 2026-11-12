@@ -56,3 +56,41 @@ fn back_from_an_unavailable_sandbox_row_returns_to_its_parent() {
         app.router.manager_mut().selected
     );
 }
+
+#[test]
+fn selecting_an_unavailable_instance_expands_its_parent_workspace() {
+    let mut world = world_for(Scenario::Returning);
+    let ws = world
+        .workspaces
+        .first()
+        .expect("returning scenario has a workspace")
+        .id;
+    let id = InstanceId::new("gw-expand", "boxfailed");
+    world.admit_entry(InstanceEntry::Unavailable(UnavailableInstance::new(
+        id.clone(),
+        Some(ws),
+        None,
+        Some("api".into()),
+        SandboxPhase::Error { exit_code: Some(1) },
+        None,
+        "launch failed",
+    )));
+    let mut app = app_with(Scenario::Returning, world);
+    {
+        let manager = app.router.manager_mut();
+        manager.expanded.remove(&ws);
+        assert!(
+            !manager.expanded.contains(&ws),
+            "precondition: workspace collapsed"
+        );
+        manager.select_instance(&id, &app.world);
+    }
+    assert!(
+        app.router.manager_mut().expanded.contains(&ws),
+        "selecting an unavailable instance must expand its parent workspace"
+    );
+    assert!(
+        app.router.manager_mut().selected == RowKey::Instance(id),
+        "the failed sandbox must stay selected so build_rows can reveal it"
+    );
+}

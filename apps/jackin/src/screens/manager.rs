@@ -286,8 +286,8 @@ impl ManagerScreen {
     }
 
     pub fn select_instance(&mut self, id: &InstanceId, w: &World) {
-        if let Some(i) = w.instance(id)
-            && let Some(ws) = i.workspace
+        if let Some(entry) = w.entry(id)
+            && let Some(ws) = entry.workspace_id()
         {
             self.expanded.insert(ws);
         }
