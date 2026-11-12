@@ -489,6 +489,7 @@ impl Picker {
         self.list.checked.clear();
         self.list.reset(self.items.len());
         self.list.cursor.index = self.first_enabled();
+        self.status = PickerStatus::Ready;
         Ok(())
     }
 
@@ -524,6 +525,7 @@ impl Picker {
             .unwrap_or_else(|| self.first_enabled());
         self.list.scroll.set_content(self.items.len());
         self.list.scroll.scroll_to(offset);
+        self.status = PickerStatus::Ready;
         Ok(())
     }
 
@@ -562,6 +564,7 @@ impl Picker {
             .unwrap_or_else(|| self.first_enabled());
         self.list.scroll.set_content(self.items.len());
         self.list.scroll.scroll_to(offset);
+        self.status = PickerStatus::Ready;
         Ok(())
     }
 
@@ -1758,6 +1761,58 @@ mod tests {
             (Outcome::Changed, Some(super::PickerAction::QueryChanged))
         );
         assert_eq!(undeliverable.query(), "x");
+    }
+
+    #[test]
+    fn corrected_items_restore_readiness_after_report_item_error() {
+        let items = || vec![Item::new("Alpha").key(ItemKey::text("alpha"))];
+        let mut picker = Picker::new(WidgetId::of("picker-readiness"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        picker.set_items(items()).expect("valid initial items");
+
+        // A transient validation failure blocks all interaction.
+        picker.report_item_error(super::PickerItemsError::MissingStableKey);
+        assert!(
+            picker.eligible(0).is_none(),
+            "error state must block interaction"
+        );
+
+        // set_items accepts corrected items and restores readiness.
+        picker
+            .set_items(items())
+            .expect("corrected items are valid");
+        assert!(
+            picker.status == super::PickerStatus::Ready,
+            "set_items must restore readiness"
+        );
+        assert_eq!(
+            picker.eligible(0),
+            Some(0),
+            "restored rows must be interactive again"
+        );
+
+        // replace_items does the same.
+        picker.report_item_error(super::PickerItemsError::MissingStableKey);
+        picker
+            .replace_items(items())
+            .expect("corrected items are valid");
+        assert!(
+            picker.status == super::PickerStatus::Ready,
+            "replace_items must restore readiness"
+        );
+        assert_eq!(picker.eligible(0), Some(0));
+
+        // set_visible_items does the same.
+        picker.report_item_error(super::PickerItemsError::MissingStableKey);
+        picker
+            .set_visible_items(items())
+            .expect("corrected items are valid");
+        assert!(
+            picker.status == super::PickerStatus::Ready,
+            "set_visible_items must restore readiness"
+        );
+        assert_eq!(picker.eligible(0), Some(0));
     }
 
     #[test]
