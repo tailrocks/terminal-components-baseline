@@ -68,7 +68,11 @@ fn cli_after_help() -> String {
 }
 
 fn main() -> std::io::Result<()> {
-    let _ = (coverage::PICKER_COVERAGE, coverage::PICKER_ALLOWLIST);
+    let _ = (
+        coverage::PICKER_COVERAGE,
+        coverage::PICKER_ALLOWLIST,
+        coverage::KEYMAP_ALLOWLIST,
+    );
     let cli: Cli = junie_tui::cli::parse(cli_after_help());
     let motion = cli.common.motion(NO_MOTION_ENV);
     let mut app = App::with_motion(cli.common.theme(), motion, cli.common.frame);

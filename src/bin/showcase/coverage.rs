@@ -209,3 +209,84 @@ pub const PICKER_ALLOWLIST: &[(&str, &str)] = &[
         "The page composes pickers through layers and does not call the widget's direct render entry point.",
     ),
 ];
+
+/// Capability-aware keymap APIs: the showcase pages drive widgets through the
+/// plain `lookup`/`deliverable_binding_for` helpers and read rendered hint bars,
+/// so the `_with` overloads and the capability probes they wrap are exercised
+/// indirectly by every page render rather than named in page code.
+pub const KEYMAP_ALLOWLIST: &[(&str, &str)] = &[
+    (
+        "core::keymap::KeyboardCapabilities",
+        "Pages render with the ambient terminal capabilities and never construct a capability set; every hint bar already reflects them.",
+    ),
+    (
+        "core::keymap::KeyboardCapabilities::current",
+        "Showcase pages ask widgets for their hints instead of probing the thread-local capability state themselves.",
+    ),
+    (
+        "core::keymap::KeyBinding::deliverable_with",
+        "Pages observe deliverability through the hint keys that survive rendering, not by calling the capability-aware predicate.",
+    ),
+    (
+        "core::keymap::KeyBinding::matches_with",
+        "Page key handling goes through widget keymaps; no page matches a binding against explicit capabilities.",
+    ),
+    (
+        "core::keymap::lookup_with",
+        "Pages look bindings up through the ambient `lookup` helper, so the capability-carrying overload has no page call site.",
+    ),
+    (
+        "core::keymap::deliverable_binding_for_with",
+        "Pages read the deliverable binding from rendered hint bars, so the capability-aware lookup has no page call site.",
+    ),
+    (
+        "core::hints::HintCx::current",
+        "Pages draw widgets through the showcase harness, which supplies the hint context; no page builds one from ambient state.",
+    ),
+    (
+        "core::hints::HintCx::with_environment",
+        "No showcase page overrides the hint environment; the harness-rendered hint bars are the demonstration.",
+    ),
+];
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn catalog_source() -> String {
+        let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+        std::fs::read_to_string(root.join("src/catalog.rs")).expect("catalog source reads")
+    }
+
+    #[test]
+    fn capability_aware_keymap_apis_are_declared_with_reasons() {
+        let catalog = catalog_source();
+        let mut seen = std::collections::BTreeSet::new();
+        for (id, reason) in KEYMAP_ALLOWLIST {
+            assert!(
+                catalog.contains(&format!("\"{id}\"")),
+                "declared id is not a catalog capability: {id}"
+            );
+            assert!(
+                !reason.trim().is_empty(),
+                "allowlist entry has no reason: {id}"
+            );
+            assert!(seen.insert(*id), "duplicate allowlist entry: {id}");
+        }
+        for id in [
+            "core::keymap::KeyboardCapabilities",
+            "core::keymap::KeyboardCapabilities::current",
+            "core::keymap::KeyBinding::deliverable_with",
+            "core::keymap::KeyBinding::matches_with",
+            "core::keymap::lookup_with",
+            "core::keymap::deliverable_binding_for_with",
+            "core::hints::HintCx::current",
+            "core::hints::HintCx::with_environment",
+        ] {
+            assert!(
+                seen.contains(id),
+                "capability-aware keymap API lacks a coverage declaration: {id}"
+            );
+        }
+    }
+}

@@ -1942,10 +1942,13 @@ mod tests {
             picker.checked().is_empty(),
             "hidden selections must not survive multi-select being disabled"
         );
-        assert_eq!(<Picker as HasHints>::hints(&picker, &HintCx::current(None))
-            .iter()
-            .filter(|hint| hint.action == "Toggle")
-            .count(), 0);
+        assert_eq!(
+            <Picker as HasHints>::hints(&picker, &HintCx::current(None))
+                .iter()
+                .filter(|hint| hint.action == "Toggle")
+                .count(),
+            0
+        );
     }
 
     #[test]
