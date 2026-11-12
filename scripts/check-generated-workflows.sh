@@ -2158,6 +2158,8 @@ def dependency_deltas(baseline_data, selected_data, trusted_identities, trusted_
         del workspace["sha2"]
         del root_dev["sha2"]
         del app_dev["jackin-console"]
+        if not toml_equal(workspace, baseline_data["Cargo.toml"].get("workspace", {}).get("dependencies", {})):
+            reject("Cargo manifests change workspace dependency source declarations")
         if not toml_equal(candidate, baseline_data):
             reject("Cargo manifests change values outside the reviewed dependency bundle")
         root_identity = package_identity(baseline_data["Cargo.toml"], "Cargo.toml")
