@@ -102,3 +102,49 @@ fn a_path_under_a_longer_home_name_is_not_abbreviated() {
     assert_eq!(world.mask_path("/home/dev/project/src"), "~/…/src");
     assert_eq!(world.mask_path("/home/dev"), "~");
 }
+
+#[test]
+fn running_entries_keep_ready_unavailable_sandboxes_identifiable() {
+    use jackin_console::domain::instance::{
+        InstanceEntry, InstanceId, SandboxPhase, UnavailableInstance,
+    };
+    let mut world = World::new(parts());
+    let ready = InstanceId::new("gw-a", "box-ready");
+    let stopped = InstanceId::new("gw-a", "box-stopped");
+    world.admit_entry(InstanceEntry::Unavailable(UnavailableInstance::new(
+        ready.clone(),
+        None,
+        None,
+        Some("api".into()),
+        SandboxPhase::Ready,
+        None,
+        "metadata degraded",
+    )));
+    world.admit_entry(InstanceEntry::Unavailable(UnavailableInstance::new(
+        stopped.clone(),
+        None,
+        None,
+        Some("api".into()),
+        SandboxPhase::Stopped,
+        None,
+        "sandbox stopped",
+    )));
+    let running: Vec<InstanceId> = world
+        .running_entries()
+        .iter()
+        .map(|entry| entry.id().clone())
+        .collect();
+    assert!(
+        running.contains(&ready),
+        "a ready sandbox with degraded metadata must stay in the running view: {running:?}"
+    );
+    assert!(
+        !running.contains(&stopped),
+        "a stopped sandbox must not be in the running view: {running:?}"
+    );
+    assert_eq!(
+        world.running_entries().len(),
+        world.running_count(),
+        "the running view must agree with the running count"
+    );
+}

@@ -2219,20 +2219,26 @@ impl App {
                 self.enter_route();
                 let rows: Vec<String> = self
                     .world
-                    .running()
+                    .running_entries()
                     .iter()
-                    .map(|i| {
-                        let ws = i
-                            .workspace
-                            .and_then(|x| self.world.workspace(x))
-                            .map(|x| x.name.clone())
-                            .unwrap_or("current directory".into());
-                        format!(
-                            "{ws} › {} · {}",
-                            i.role_label(),
-                            self.world
-                                .mask_path(&format!("{}/src/{ws}", self.world.home))
-                        )
+                    .map(|entry| match entry {
+                        InstanceEntry::Available(i) => {
+                            let ws = i
+                                .workspace
+                                .and_then(|x| self.world.workspace(x))
+                                .map(|x| x.name.clone())
+                                .unwrap_or("current directory".into());
+                            format!(
+                                "{ws} › {} · {}",
+                                i.role_label(),
+                                self.world
+                                    .mask_path(&format!("{}/src/{ws}", self.world.home))
+                            )
+                        }
+                        InstanceEntry::Unavailable(u) => {
+                            let d = u.display();
+                            format!("{} › {} · {}", d.workspace_name, d.role, d.reason)
+                        }
                     })
                     .collect();
                 let text = format!(

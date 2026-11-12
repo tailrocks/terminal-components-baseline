@@ -419,7 +419,7 @@ fn the_summary_names_a_terminal_without_tabs() {
 #[test]
 fn the_roster_card_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
-        let id = world.running()[0].id.clone();
+        let id = world.running_entries()[0].id().clone();
         world.daemons.remove(&id);
         world.instance_mut(&id).expect("instance").daemon = DaemonSnapshot::Unavailable;
         let mut app = app_with(Scenario::Returning, world);

@@ -2286,7 +2286,7 @@ impl ManagerScreen {
     fn draw_roster(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, w: &World) {
         let t = ctx.theme;
         let focused = ctx.interaction.focused(ROSTER);
-        let running = w.running();
+        let running = w.running_entries();
         let inner = Panel::card(Some("Running"))
             .focused(focused)
             .meta(&plural(running.len(), "instance", "instances"))
@@ -2294,10 +2294,53 @@ impl ManagerScreen {
         let bg = t.surface;
         ctx.control(ROSTER, inner, false);
         let mut y = inner.y;
-        for i in &running {
+        for entry in &running {
             if y + 2 >= inner.bottom() {
                 break;
             }
+            let Some(i) = entry.as_available() else {
+                if let InstanceEntry::Unavailable(u) = entry {
+                    let ws = u
+                        .workspace
+                        .and_then(|x| w.workspace(x))
+                        .map(|x| x.name.as_str())
+                        .or(u.workspace_name.as_deref())
+                        .unwrap_or("current directory");
+                    let rid = ROSTER.part(roster_row(&u.id));
+                    let mut s = ctx.state(rid);
+                    s.selected = self.selected == RowKey::Instance(u.id.clone());
+                    let st = t.row(s, bg);
+                    let r = Rect::new(inner.x - 1, y, inner.width + 1, 3);
+                    fill(buf, r, st);
+                    buf.set_string(
+                        inner.x,
+                        y,
+                        junie_tui::ui::reveal::cut(
+                            Rect::new(inner.x, y, inner.width, 1),
+                            &format!(
+                                "◉ {}  {ws} · {} · {}",
+                                u.id.short_suffix(),
+                                u.role.as_deref().unwrap_or("unknown role"),
+                                u.phase.label()
+                            ),
+                        ),
+                        st,
+                    );
+                    buf.set_string(
+                        inner.x + 3,
+                        y + 1,
+                        junie_tui::ui::reveal::cut(
+                            Rect::new(inner.x + 3, y + 1, inner.width.saturating_sub(3), 1),
+                            &u.reason,
+                        ),
+                        st.fg(t.text_muted).remove_modifier(Modifier::BOLD),
+                    );
+                    legible_on_fill(buf, r, t, bg);
+                    ctx.register_part(ROSTER, roster_row(&u.id), r);
+                    y += 4;
+                }
+                continue;
+            };
             let ws = i
                 .workspace
                 .and_then(|x| w.workspace(x))
@@ -4083,12 +4126,12 @@ impl ManagerScreen {
             return Outcome::Changed;
         }
 
-        if let Some(inst) = w
-            .running()
+        if let Some(entry) = w
+            .running_entries()
             .into_iter()
-            .find(|i| ROSTER.part(roster_row(&i.id)) == id)
+            .find(|e| ROSTER.part(roster_row(e.id())) == id)
         {
-            let inst = inst.id.clone();
+            let inst = entry.id().clone();
             self.select_instance(&inst, w);
             cx.focus.focus(TREE);
             return Outcome::Changed;
