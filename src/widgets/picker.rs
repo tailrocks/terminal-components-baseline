@@ -260,6 +260,8 @@ impl Picker {
         self.multi = on;
         if on {
             self.choose_hint = std::borrow::Cow::Borrowed("Confirm");
+        } else {
+            self.list.checked.clear();
         }
         Ok(self)
     }
@@ -1912,6 +1914,85 @@ mod tests {
             })
         );
         assert_eq!(picker.checked(), &[ItemKey::text("omp-kimi")]);
+    }
+
+    #[test]
+    fn disabling_multi_select_clears_hidden_selections() {
+        let mut picker = Picker::new(WidgetId::of("picker-test-multi-off"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        picker
+            .set_items(vec![
+                Item::new("Alpha").key(ItemKey::text("alpha")),
+                Item::new("Beta").key(ItemKey::text("beta")),
+            ])
+            .expect("valid picker update");
+        picker.toggle_checked(0);
+        picker.toggle_checked(1);
+        assert_eq!(
+            picker.checked(),
+            &[ItemKey::text("alpha"), ItemKey::text("beta")]
+        );
+
+        picker = picker
+            .multi_select(false)
+            .expect("disabling multi-select is valid");
+        assert!(
+            picker.checked().is_empty(),
+            "hidden selections must not survive multi-select being disabled"
+        );
+        assert_eq!(
+            <Picker as HasHints>::hints(&picker, &HintCx::current(None))
+                .iter()
+                .filter(|hint| hint.action == "Toggle")
+                .count(),
+            0
+        );
+    }
+
+    #[test]
+    fn grouped_selections_can_be_deselected_after_groups_change() {
+        let group = ItemKey::text("provider");
+        let mut picker = Picker::new(WidgetId::of("picker-test-group-off"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        picker
+            .set_items(vec![
+                Item::new("Alpha").key(ItemKey::text("alpha")),
+                Item::new("Beta").key(ItemKey::text("beta")),
+            ])
+            .expect("valid picker update");
+        picker.toggle_checked(0);
+        picker.toggle_checked(1);
+        assert_eq!(
+            picker.checked(),
+            &[ItemKey::text("alpha"), ItemKey::text("beta")]
+        );
+
+        picker
+            .replace_items(vec![
+                Item::new("Alpha")
+                    .key(ItemKey::text("alpha"))
+                    .selection_group(group),
+                Item::new("Beta")
+                    .key(ItemKey::text("beta"))
+                    .selection_group(group),
+            ])
+            .expect("valid picker update");
+        assert_eq!(
+            picker.checked(),
+            &[ItemKey::text("alpha"), ItemKey::text("beta")],
+            "replace_items preserves both checked keys"
+        );
+
+        assert_eq!(picker.toggle_checked(0), None);
+        assert_eq!(
+            picker.checked(),
+            &[ItemKey::text("beta")],
+            "removing an already-checked key must not report a group conflict"
+        );
+        assert_eq!(picker.toggle_checked(1), None);
+        assert!(picker.checked().is_empty());
     }
 
     #[test]
