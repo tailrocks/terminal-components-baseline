@@ -2050,12 +2050,6 @@ def validate_snapshot_lock(path, trusted_path, permitted_deltas):
         elif not toml_equal(candidate_package, trusted_package):
             reject("Cargo.lock changes a reviewed external package record")
     if removed_edges != permitted_deltas["removed"] or added_edges != permitted_deltas["added"]:
-        import sys as _s
-        print(f"DEBUG removed_edges={sorted(removed_edges)}", file=_s.stderr)
-        print(f"DEBUG added_edges={sorted(added_edges)}", file=_s.stderr)
-        print(f"DEBUG permitted_removed={sorted(permitted_deltas['removed'])}", file=_s.stderr)
-        print(f"DEBUG permitted_added={sorted(permitted_deltas['added'])}", file=_s.stderr)
-        print(f"DEBUG candidate_digest={candidate_digest}", file=_s.stderr)
         reject("Cargo.lock local edge changes do not match the selected manifest dependency changes")
     return candidate_digest
 
