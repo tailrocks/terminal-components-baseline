@@ -226,6 +226,7 @@ pub struct UnavailableInstance {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UnavailableDisplay {
     pub sandbox_name: String,
+    pub short_suffix: String,
     pub gateway: String,
     pub workspace_name: String,
     pub role: String,
@@ -256,6 +257,7 @@ impl UnavailableInstance {
     pub fn display(&self) -> UnavailableDisplay {
         UnavailableDisplay {
             sandbox_name: display_context(&self.id.sandbox_name, 64, "sandbox name unavailable"),
+            short_suffix: display_context(&self.id.short_suffix(), 16, "sandbox unavailable"),
             gateway: display_context(&self.id.gateway, 40, "gateway unavailable"),
             workspace_name: display_context(
                 self.workspace_name.as_deref().unwrap_or_default(),

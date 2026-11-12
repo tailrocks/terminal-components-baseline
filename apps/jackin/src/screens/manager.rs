@@ -2298,12 +2298,23 @@ impl ManagerScreen {
             }
             let Some(i) = entry.as_available() else {
                 if let InstanceEntry::Unavailable(u) = entry {
+                    let display = u.display();
                     let ws = u
                         .workspace
                         .and_then(|x| w.workspace(x))
                         .map(|x| x.name.as_str())
-                        .or(u.workspace_name.as_deref())
-                        .unwrap_or("current directory");
+                        .unwrap_or_else(|| {
+                            if u.workspace_name.is_some() {
+                                display.workspace_name.as_str()
+                            } else {
+                                "current directory"
+                            }
+                        });
+                    let role = if u.role.is_some() {
+                        display.role.as_str()
+                    } else {
+                        "unknown role"
+                    };
                     let rid = ROSTER.part(roster_row(&u.id));
                     let mut s = ctx.state(rid);
                     s.selected = self.selected == RowKey::Instance(u.id.clone());
@@ -2316,9 +2327,8 @@ impl ManagerScreen {
                         junie_tui::ui::reveal::cut(
                             Rect::new(inner.x, y, inner.width, 1),
                             &format!(
-                                "◉ {}  {ws} · {} · {}",
-                                u.id.short_suffix(),
-                                u.role.as_deref().unwrap_or("unknown role"),
+                                "◉ {}  {ws} · {role} · {}",
+                                display.short_suffix,
                                 u.phase.label()
                             ),
                         ),
@@ -2329,7 +2339,7 @@ impl ManagerScreen {
                         y + 1,
                         junie_tui::ui::reveal::cut(
                             Rect::new(inner.x + 3, y + 1, inner.width.saturating_sub(3), 1),
-                            &u.reason,
+                            &display.reason,
                         ),
                         st.fg(t.text_muted).remove_modifier(Modifier::BOLD),
                     );
