@@ -402,21 +402,26 @@ impl OpFlow {
         self.picker
             .set_searchable(true)
             .unwrap_or_else(|error| self.picker.report_item_error(error));
-        self.picker.status = PickerStatus::Loading(match self.step {
-            OpStep::Account => "loading accounts…".into(),
-            OpStep::Vault => "loading vaults…".into(),
-            OpStep::Item => format!(
-                "loading items from {}…",
-                self.vault.as_ref().map(|v| v.1.as_str()).unwrap_or("vault")
-            ),
-            OpStep::Field => format!(
-                "loading {}…",
-                self.item.as_ref().map(|i| i.1.as_str()).unwrap_or("item")
-            ),
-        });
+        // set_items restores picker readiness, so the loading status must be
+        // assigned afterwards or the retry banner never shows the loading
+        // state; a reported item error keeps precedence over the loading copy.
         self.picker
             .set_items(vec![])
             .unwrap_or_else(|error| self.picker.report_item_error(error));
+        if !matches!(self.picker.status, PickerStatus::Error { .. }) {
+            self.picker.status = PickerStatus::Loading(match self.step {
+                OpStep::Account => "loading accounts…".into(),
+                OpStep::Vault => "loading vaults…".into(),
+                OpStep::Item => format!(
+                    "loading items from {}…",
+                    self.vault.as_ref().map(|v| v.1.as_str()).unwrap_or("vault")
+                ),
+                OpStep::Field => format!(
+                    "loading {}…",
+                    self.item.as_ref().map(|i| i.1.as_str()).unwrap_or("item")
+                ),
+            });
+        }
         self.ids.clear();
         self.sections.clear();
         self.listing = None;
