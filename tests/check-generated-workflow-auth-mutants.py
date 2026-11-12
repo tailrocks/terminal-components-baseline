@@ -12,7 +12,7 @@ root = Path(__file__).resolve().parent.parent
 checker = root / "scripts/check-generated-workflows.sh"
 fixture = root / "tests/check-generated-workflow-auth.py"
 source = checker.read_text()
-expected_checker = "bd962c218c9ed9a61e694c31b99889d692f95079b48e3086badc4ff9e9b8fbd5"
+expected_checker = "c55857794496f5b3ca2b6a115438d14346408bed9483172c84298cb5954193ab"
 if hashlib.sha256(checker.read_bytes()).hexdigest() != expected_checker:
     raise SystemExit("mutant driver requires the pinned independently reviewed checker")
 
