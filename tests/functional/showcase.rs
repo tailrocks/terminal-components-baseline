@@ -1628,6 +1628,7 @@ fn showcase_terminal_viewport_double_click_selects_a_word() {
     app.click(word);
     let selected = app.wait_screen("a double click selects the word", |s| {
         text(s).contains("selection   8 characters")
+            && text(s).contains("copied      1 line · 8 characters")
     });
     assert!(status_row(&selected).contains("Copied 8 characters · finished"));
     app.finish();
