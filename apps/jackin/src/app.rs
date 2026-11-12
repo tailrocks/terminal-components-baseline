@@ -2103,10 +2103,7 @@ impl App {
                             Tone::Warning,
                         );
                     } else {
-                        self.router
-                            .manager_mut()
-                            .busy_rows
-                            .push((row, "starting…"));
+                        self.router.manager_mut().busy_rows.push((row, "starting…"));
                         self.world
                             .perform(crate::backend::Effect::PowerStart { instance });
                         self.set_status("Starting sandbox…", Tone::Secondary);
@@ -2151,10 +2148,7 @@ impl App {
                             Tone::Warning,
                         );
                     } else {
-                        self.router
-                            .manager_mut()
-                            .busy_rows
-                            .push((row, "stopping…"));
+                        self.router.manager_mut().busy_rows.push((row, "stopping…"));
                         self.world
                             .perform(crate::backend::Effect::PowerStop { instance });
                         self.set_status("Stopping sandbox…", Tone::Secondary);

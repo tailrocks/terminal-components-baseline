@@ -141,6 +141,14 @@ pub const PICKER_ALLOWLIST: &[(&str, &str)] = &[
         "The page presents multi-select behavior through the picker layer and its resulting actions, rather than reading the checked-key buffer directly.",
     ),
     (
+        "widgets::option_list::OptionList::toggle_checked",
+        "The page drives check state through delivered input events on the picker layer rather than mutating the shared list directly.",
+    ),
+    (
+        "widgets::option_list::OptionList::is_checked",
+        "The page observes selection through rendered check glyphs and picker actions rather than polling the shared list directly.",
+    ),
+    (
         "widgets::picker::Picker::toggle_checked",
         "The page presents multi-select behavior through delivered input events rather than manipulating selection state directly.",
     ),

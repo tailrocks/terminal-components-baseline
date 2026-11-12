@@ -2437,6 +2437,8 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::builder("widgets::option_list::OptionList::fade_edges"),
     Capability::builder("widgets::option_list::OptionList::look"),
     Capability::builder("widgets::option_list::OptionList::dismiss"),
+    Capability::function("widgets::option_list::OptionList::toggle_checked"),
+    Capability::function("widgets::option_list::OptionList::is_checked"),
     Capability::builder("widgets::option_list::OptionList::placement"),
     Capability::builder("widgets::option_list::OptionList::fit"),
     Capability::builder("widgets::option_list::OptionList::max_rows"),
