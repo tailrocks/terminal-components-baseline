@@ -567,7 +567,8 @@ impl Picker {
     fn toggle_item(&mut self, key: ItemKey) -> Option<PickerAction> {
         let group = Self::item_for_key_in(&self.authoritative_items, key)
             .and_then(|item| item.selection_group);
-        if let Some(group) = group
+        if !self.list.checked.contains(&key)
+            && let Some(group) = group
             && let Some(selected) =
                 self.authoritative_items
                     .iter()
@@ -1941,13 +1942,10 @@ mod tests {
             picker.checked().is_empty(),
             "hidden selections must not survive multi-select being disabled"
         );
-        assert_eq!(
-            <Picker as HasHints>::hints(&picker, &HintCx::current(None))
-                .iter()
-                .filter(|hint| hint.action == "Toggle")
-                .count(),
-            0
-        );
+        assert_eq!(<Picker as HasHints>::hints(&picker, &HintCx::current(None))
+            .iter()
+            .filter(|hint| hint.action == "Toggle")
+            .count(), 0);
     }
 
     #[test]
