@@ -811,6 +811,16 @@ assert_expected_hook_states() {
     assert_target_state "$hooks_path/pre-push" "$pre_push_initial_identity" "$pre_push_initial_hash" || return 1
   fi
 }
+if [[ -L "$repo_root/scripts/materialize-trusted-seed-cargo-lock.sh" || ! -f "$repo_root/scripts/materialize-trusted-seed-cargo-lock.sh" ]]; then
+  printf 'generated-workflows: trusted seed sentinel bootstrap helper is missing or unsafe in the source checkout\n' >&2
+  exit 1
+fi
+# A fresh clone has no untracked scripts/trusted-seed-cargo.lock; restore the
+# reviewed sentinel from the tracked metadata pack (idempotent; never rewrites an
+# existing sentinel) before this installer requires and re-verifies its digest.
+if [[ ! -e "$repo_root/scripts/trusted-seed-cargo.lock" && ! -L "$repo_root/scripts/trusted-seed-cargo.lock" ]]; then
+  /bin/bash "$repo_root/scripts/materialize-trusted-seed-cargo-lock.sh"
+fi
 for path in "$repo_root/scripts/check-generated-workflows.sh" "$repo_root/scripts/generated-workflow-guard-config.toml" "$repo_root/scripts/python-inventory.sh" "$repo_root/scripts/trusted-seed.commit" "$repo_root/scripts/trusted-seed-metadata.pack" "$repo_root/scripts/trusted-seed-metadata.objects" "$repo_root/scripts/trusted-seed-cargo.lock" "$repo_root/scripts/trusted-seed-cargo-policy.json" "$repo_root/scripts/python-mise.toml" "$repo_root/scripts/$python_lock_file"; do
   if [[ -L "$path" || ! -f "$path" ]]; then
     printf 'generated-workflows: reviewed installation input is not a regular file\n' >&2
