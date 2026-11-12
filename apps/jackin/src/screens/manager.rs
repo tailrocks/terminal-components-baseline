@@ -367,33 +367,33 @@ impl ManagerScreen {
             });
             if expanded {
                 for entry in &kids {
-                    let Some(i) = entry.as_available() else {
-                        let InstanceEntry::Unavailable(unavailable) = entry else {
-                            unreachable!()
-                        };
-                        let display = unavailable.display();
-                        let created = unavailable.created_secs.map_or_else(
-                            || "creation time unavailable".to_owned(),
-                            |secs| w.clock.ago(secs),
-                        );
-                        rows.push(Row {
-                            key: RowKey::Instance(unavailable.id.clone()),
-                            depth: 1,
-                            glyph: "?",
-                            glyph_tone: Tone::Warning,
-                            label: display.sandbox_name,
-                            meta: format!(
-                                "{} · {} · {} · {created} · metadata unavailable: {}",
-                                display.gateway,
-                                display.role,
-                                unavailable.phase.label(),
-                                display.reason
-                            ),
-                            meta_tone: Tone::Warning,
-                            trailing: None,
-                            expandable: false,
-                        });
-                        continue;
+                    let i = match entry {
+                        InstanceEntry::Available(instance) => instance,
+                        InstanceEntry::Unavailable(unavailable) => {
+                            let display = unavailable.display();
+                            let created = unavailable.created_secs.map_or_else(
+                                || "creation time unavailable".to_owned(),
+                                |secs| w.clock.ago(secs),
+                            );
+                            rows.push(Row {
+                                key: RowKey::Instance(unavailable.id.clone()),
+                                depth: 1,
+                                glyph: "?",
+                                glyph_tone: Tone::Warning,
+                                label: display.sandbox_name,
+                                meta: format!(
+                                    "{} · {} · {} · {created} · metadata unavailable: {}",
+                                    display.gateway,
+                                    display.role,
+                                    unavailable.phase.label(),
+                                    display.reason
+                                ),
+                                meta_tone: Tone::Warning,
+                                trailing: None,
+                                expandable: false,
+                            });
+                            continue;
+                        }
                     };
                     let (glyph, gt) = instance_mark(i.status);
                     let (meta, mt) = if let Some((_, what)) = self
@@ -885,10 +885,9 @@ impl ManagerScreen {
     }
 
     fn attach_restored(&mut self, id: &InstanceId, w: &mut World, cx: &mut Cx) {
-        let Some(instance) = w.instance(id) else {
+        if w.instance(id).is_none() {
             return;
-        };
-        let _ = instance;
+        }
         w.open_first_session(id);
         let short = id.short_suffix();
         cx.status(fill_in(

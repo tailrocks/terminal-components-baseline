@@ -530,7 +530,9 @@ impl Picker {
         }
         let mut visible = Vec::with_capacity(items.len());
         for item in items {
-            let key = item.key.expect("validated stable key");
+            let Some(key) = item.key else {
+                return Err(PickerItemsError::MissingStableKey);
+            };
             let Some(mut authoritative) = self
                 .authoritative_items
                 .iter()
