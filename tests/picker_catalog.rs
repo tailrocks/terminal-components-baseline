@@ -69,6 +69,58 @@ fn picker_api(source: &str) -> BTreeSet<String> {
     ids
 }
 
+/// Public API of the shared option list the picker embeds. Allowlist entries
+/// for `widgets::option_list::OptionList::*` are verified against the real
+/// visibility of `src/widgets/option_list.rs` instead of the picker module,
+/// whose extractor can only ever emit `widgets::picker::*` ids.
+fn option_list_api(source: &str) -> BTreeSet<String> {
+    let file = syn::parse_file(source).expect("option list source parses");
+    let mut ids = BTreeSet::new();
+    let mut public_type = false;
+    for item in &file.items {
+        if let Item::Struct(item) = item
+            && matches!(item.vis, Visibility::Public(_))
+            && item.ident == "OptionList"
+        {
+            public_type = true;
+        }
+    }
+    if !public_type {
+        return ids;
+    }
+    ids.insert("widgets::option_list::OptionList".to_owned());
+    for item in &file.items {
+        if let Item::Impl(item) = item
+            && item.trait_.is_none()
+            && let Type::Path(path) = &*item.self_ty
+            && path
+                .path
+                .segments
+                .last()
+                .is_some_and(|ty| ty.ident == "OptionList")
+        {
+            for method in &item.items {
+                match method {
+                    ImplItem::Fn(method) if matches!(method.vis, Visibility::Public(_)) => {
+                        ids.insert(format!(
+                            "widgets::option_list::OptionList::{}",
+                            method.sig.ident
+                        ));
+                    }
+                    ImplItem::Const(constant) if matches!(constant.vis, Visibility::Public(_)) => {
+                        ids.insert(format!(
+                            "widgets::option_list::OptionList::{}",
+                            constant.ident
+                        ));
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+    ids
+}
+
 fn picker_catalog(source: &str) -> BTreeMap<String, String> {
     let file = syn::parse_file(source).expect("catalog source parses");
     let mut visitor = CatalogVisitor::default();
@@ -460,8 +512,10 @@ fn validate_picker_sources(
     picker_source: &str,
     catalog_source: &str,
     page_source: &str,
+    option_list_source: &str,
 ) -> Result<(), Vec<String>> {
     let exported = picker_api(picker_source);
+    let option_list_exported = option_list_api(option_list_source);
     let catalog = picker_catalog(catalog_source);
     let page = PageUsage::from_source(page_source, &exported, &catalog);
     let coverage_ids: BTreeSet<String> = coverage::PICKER_COVERAGE
@@ -491,7 +545,7 @@ fn validate_picker_sources(
         if reason.trim().is_empty() {
             errors.push(format!("allowlist entry has no reason: {id}"));
         }
-        if !exported.contains(id) {
+        if !exported.contains(id) && !option_list_exported.contains(id) {
             errors.push(format!("allowlist entry is not a public API: {id}"));
         }
     }
@@ -519,20 +573,22 @@ fn validate_picker_sources(
     }
 }
 
-fn repository_sources() -> (String, String, String) {
+fn repository_sources() -> (String, String, String, String) {
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
     (
         std::fs::read_to_string(root.join("src/widgets/picker.rs")).expect("picker source reads"),
         std::fs::read_to_string(root.join("src/catalog.rs")).expect("catalog source reads"),
         std::fs::read_to_string(root.join("src/bin/showcase/pages/pickers.rs"))
             .expect("picker showcase page reads"),
+        std::fs::read_to_string(root.join("src/widgets/option_list.rs"))
+            .expect("option list source reads"),
     )
 }
 
 #[test]
 fn picker_repository_guard_matches_actual_catalog_and_showcase_usage() {
-    let (picker, catalog, page) = repository_sources();
-    let result = validate_picker_sources(&picker, &catalog, &page);
+    let (picker, catalog, page, option_list) = repository_sources();
+    let result = validate_picker_sources(&picker, &catalog, &page, &option_list);
     assert!(result.is_ok(), "{}", result.unwrap_err().join("\n"));
     assert!(coverage::PICKER_ALLOWLIST.iter().any(|(id, reason)| {
         *id == "widgets::picker::Picker::reset_selection" && !reason.trim().is_empty()
@@ -541,14 +597,14 @@ fn picker_repository_guard_matches_actual_catalog_and_showcase_usage() {
 
 #[test]
 fn picker_repository_guard_rejects_a_removed_configured_toggle_demonstration() {
-    let (picker, catalog, page) = repository_sources();
+    let (picker, catalog, page, option_list) = repository_sources();
     let old = ".key_profile(match o.value(\"pickers.nav\") {\n                \"vim\" => PickerKeyProfile::Vim,\n                _ => PickerKeyProfile::Desktop,\n            })";
     let broken_page = page.replace(old, ".key_profile(PickerKeyProfile::Desktop)");
     assert_ne!(
         broken_page, page,
         "configured profile demo mutation matched source"
     );
-    let result = validate_picker_sources(&picker, &catalog, &broken_page);
+    let result = validate_picker_sources(&picker, &catalog, &broken_page, &option_list);
     assert!(
         result.as_ref().is_err_and(|errors| errors
             .iter()
@@ -559,11 +615,11 @@ fn picker_repository_guard_rejects_a_removed_configured_toggle_demonstration() {
 
 #[test]
 fn picker_repository_guard_rejects_a_removed_exported_catalog_entry() {
-    let (picker, catalog, page) = repository_sources();
+    let (picker, catalog, page, option_list) = repository_sources();
     let entry = "    Capability::function(\"widgets::picker::Picker::query\"),\n";
     let broken_catalog = catalog.replace(entry, "");
     assert_ne!(broken_catalog, catalog, "catalog mutation matched source");
-    let result = validate_picker_sources(&picker, &broken_catalog, &page);
+    let result = validate_picker_sources(&picker, &broken_catalog, &page, &option_list);
     assert!(
         result.as_ref().is_err_and(|errors| errors
             .iter()
@@ -574,7 +630,7 @@ fn picker_repository_guard_rejects_a_removed_exported_catalog_entry() {
 
 #[test]
 fn typed_picker_bindings_respect_lexical_scope_and_shadowing() {
-    let (picker, catalog, _) = repository_sources();
+    let (picker, catalog, _, _) = repository_sources();
     let exported = picker_api(&picker);
     let catalog = picker_catalog(&catalog);
     let has_list = |source: &str| {
@@ -607,7 +663,7 @@ fn typed_picker_bindings_respect_lexical_scope_and_shadowing() {
 
 #[test]
 fn typed_picker_closures_respect_shadowing_and_restore_outer_bindings() {
-    let (picker, catalog, _) = repository_sources();
+    let (picker, catalog, _, _) = repository_sources();
     let exported = picker_api(&picker);
     let catalog = picker_catalog(&catalog);
     let has_items = |source: &str| {
@@ -630,7 +686,7 @@ fn typed_picker_closures_respect_shadowing_and_restore_outer_bindings() {
 }
 
 fn page_uses_picker_list(source: &str) -> bool {
-    let (picker, catalog, _) = repository_sources();
+    let (picker, catalog, _, _) = repository_sources();
     PageUsage::from_source(source, &picker_api(&picker), &picker_catalog(&catalog))
         .api
         .contains("widgets::picker::Picker::list")
