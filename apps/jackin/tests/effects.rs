@@ -3051,7 +3051,7 @@ fn an_unsynced_old_reply_applies_while_leaving_the_newer_save_in_flight() {
 }
 
 #[test]
-fn an_unsynced_reply_after_a_newer_commit_warns_without_reapplying_the_old_snapshot() {
+fn an_unsynced_reply_after_a_newer_commit_is_ignored_without_a_durability_warning() {
     let (mut app, backend) = held_in(
         Scenario::AccountsMixed,
         |e| matches!(e, Effect::SaveAccounts { .. }),
@@ -3070,15 +3070,29 @@ fn an_unsynced_reply_after_a_newer_commit_warns_without_reapplying_the_old_snaps
 
     app.deliver(&saved_as(second, &app.world, "newer"));
     assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+    let committed = status(&app);
     app.deliver(&saved_as_unsynced(first, &app.world, "older"));
     assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
-    assert_eq!(status(&app), "Saved, durability uncertain");
+    assert_ne!(
+        status(&app),
+        "Saved, durability uncertain",
+        "a stale reply must not warn about a durability the newer commit already settled"
+    );
+    assert_eq!(
+        status(&app),
+        committed,
+        "a stale reply must leave the status of the newer commit alone"
+    );
 
     app.set_status(
         "Routine refresh complete",
         junie_tui::theme::Tone::Secondary,
     );
-    assert_eq!(status(&app), "Saved, durability uncertain");
+    assert_eq!(
+        status(&app),
+        "Routine refresh complete",
+        "a stale reply must not leave a durability warning behind"
+    );
 }
 
 #[test]
