@@ -1606,6 +1606,21 @@ if [[ -L "$hooks_dir" || ! -d "$hooks_dir" ]]; then
   printf 'generated-workflows: effective hook directory is unsafe\n' >&2
   exit 1
 fi
+if [[ "$platform" == macos-arm64 ]]; then
+  hooks_dir_owner=$(/usr/bin/stat -f '%u' "$hooks_dir")
+  hooks_dir_mode=$(/usr/bin/stat -f '%Lp' "$hooks_dir")
+else
+  hooks_dir_owner=$(/usr/bin/stat -c '%u' "$hooks_dir")
+  hooks_dir_mode=$(/usr/bin/stat -c '%a' "$hooks_dir")
+fi
+if [[ "$hooks_dir_owner" != "$(/usr/bin/id -u)" ]]; then
+  printf 'generated-workflows: effective hook directory has the wrong owner\n' >&2
+  exit 1
+fi
+if [[ ! "$hooks_dir_mode" =~ ^[0-7]{3,4}$ ]] || (( (8#$hooks_dir_mode & 18) != 0 )); then
+  printf 'generated-workflows: effective hook directory is writable by group or others\n' >&2
+  exit 1
+fi
 pre_commit_temp=$(/usr/bin/mktemp "$hooks_dir/.jackin-generated-workflow-guard.$$.pre-commit.new.XXXXXX") || exit 1
 pre_push_temp=$(/usr/bin/mktemp "$hooks_dir/.jackin-generated-workflow-guard.$$.pre-push.new.XXXXXX") || exit 1
 write_hook pre-commit "$pre_commit_temp" || exit 1
