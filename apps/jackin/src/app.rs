@@ -2090,9 +2090,27 @@ impl App {
             }
             Go::PowerStart { instance } => match self.world.entry(&instance) {
                 Some(InstanceEntry::Unavailable(unavailable)) if unavailable.phase.startable() => {
-                    self.world
-                        .perform(crate::backend::Effect::PowerStart { instance });
-                    self.set_status("Starting sandbox…", Tone::Secondary);
+                    let row = crate::screens::manager::RowKey::Instance(instance.clone());
+                    if self
+                        .router
+                        .manager_mut()
+                        .busy_rows
+                        .iter()
+                        .any(|(k, _)| *k == row)
+                    {
+                        self.set_status(
+                            "Power action already pending for this sandbox",
+                            Tone::Warning,
+                        );
+                    } else {
+                        self.router
+                            .manager_mut()
+                            .busy_rows
+                            .push((row, "starting…"));
+                        self.world
+                            .perform(crate::backend::Effect::PowerStart { instance });
+                        self.set_status("Starting sandbox…", Tone::Secondary);
+                    }
                 }
                 Some(InstanceEntry::Unavailable(unavailable)) => {
                     let display = unavailable.display();
@@ -2120,9 +2138,27 @@ impl App {
                     self.world.entry(&instance),
                     Some(InstanceEntry::Unavailable(unavailable)) if unavailable.phase.ready()
                 ) {
-                    self.world
-                        .perform(crate::backend::Effect::PowerStop { instance });
-                    self.set_status("Stopping sandbox…", Tone::Secondary);
+                    let row = crate::screens::manager::RowKey::Instance(instance.clone());
+                    if self
+                        .router
+                        .manager_mut()
+                        .busy_rows
+                        .iter()
+                        .any(|(k, _)| *k == row)
+                    {
+                        self.set_status(
+                            "Power action already pending for this sandbox",
+                            Tone::Warning,
+                        );
+                    } else {
+                        self.router
+                            .manager_mut()
+                            .busy_rows
+                            .push((row, "stopping…"));
+                        self.world
+                            .perform(crate::backend::Effect::PowerStop { instance });
+                        self.set_status("Stopping sandbox…", Tone::Secondary);
+                    }
                 } else {
                     self.set_status(
                         "Cannot stop: only a ready unavailable sandbox can be stopped",
