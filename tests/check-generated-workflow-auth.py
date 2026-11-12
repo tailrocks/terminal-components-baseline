@@ -992,7 +992,7 @@ else:
         fixed_cache, fixed_key, source_snapshot = rebind_qualified_cache(source_generation, digest)
         metadata_pack = repo / "scripts/trusted-seed-metadata.pack"
         metadata_objects = repo / "scripts/trusted-seed-metadata.objects"
-        if hashlib.sha256(metadata_pack.read_bytes()).hexdigest() != "3a9cb7bd266c1bfc4a91749544c3e87a105017d857eaa760b78d93607b71eba5" or hashlib.sha256(metadata_objects.read_bytes()).hexdigest() != "ee971765aa912664a346ab0b16c3fb33e149c219d691e34936b95f7c4642b2d9":
+        if hashlib.sha256(metadata_pack.read_bytes()).hexdigest() != "845b98b650d85074bdad58d771e785f01d0824e4647efe0113fcdb7821704874" or hashlib.sha256(metadata_objects.read_bytes()).hexdigest() != "58233f6e2765561ef177650f49b76fb45e0f0980a97d98df5f39759a36525268":
             raise SystemExit("selected seed metadata pack does not match its embedded reviewed identities")
         with metadata_pack.open("rb") as pack:
             subprocess.run(["/usr/bin/git", "-C", str(repo), "index-pack", "--stdin"], stdin=pack, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=clean, check=True)
