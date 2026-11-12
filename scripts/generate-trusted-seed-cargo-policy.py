@@ -16,6 +16,11 @@ SEED_COMMIT = "19f21866544814ef960716d92260c2d65606370d"
 SEED_TREE = "8c4d34b58a366f556649a59a04a42bff88e9aa7b"
 MANIFEST_PATHS = ("Cargo.toml", "apps/jackin/Cargo.toml")
 EXPECTED_AGGREGATE = "59f990cee12bba13b31cd3f149442a9486e6e3890819b2abe16ce51d4c0a911e"
+# The reviewed artifact is only ever written under this exact name in the
+# current working directory. The command-line output argument must match it
+# verbatim, so no caller-controlled path component can ever reach the file
+# creation below (no absolute paths, no traversal, no directory separators).
+OUTPUT_NAME = "trusted-seed-cargo-policy.json"
 
 
 def git(repository, *arguments):
@@ -55,6 +60,10 @@ def main():
         raise SystemExit("usage: generate-trusted-seed-cargo-policy.py SEED_REPOSITORY OUTPUT")
     repository = Path(sys.argv[1]).resolve(strict=True)
     output = Path(sys.argv[2])
+    if len(output.parts) != 1 or output.name != OUTPUT_NAME or output.is_absolute():
+        raise SystemExit(
+            f"trusted seed Cargo policy output must be exactly {OUTPUT_NAME!r} in the current directory"
+        )
     if git(repository, "rev-parse", "--verify", f"{SEED_COMMIT}^{{commit}}").decode().strip() != SEED_COMMIT:
         raise SystemExit("trusted seed Cargo policy source commit differs from the reviewed commit")
     if git(repository, "rev-parse", "--verify", f"{SEED_COMMIT}^{{tree}}").decode().strip() != SEED_TREE:
@@ -102,11 +111,13 @@ def main():
     encoded = (json.dumps(policy, ensure_ascii=True, separators=(",", ":"), sort_keys=True) + "\n").encode("ascii")
     if len(encoded) > 262144:
         raise SystemExit("trusted seed Cargo policy artifact exceeds its fixed size bound")
-    if output.is_symlink() or (output.exists() and not output.is_file()):
+    if os.path.islink(OUTPUT_NAME) or (os.path.exists(OUTPUT_NAME) and not os.path.isfile(OUTPUT_NAME)):
         raise SystemExit("trusted seed Cargo policy output path is not a regular file")
-    # Create the reviewed artifact with an explicit, umask-independent mode so
-    # the pinned bytes never land in a group- or world-writable file.
-    descriptor = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    # Create the reviewed artifact under its fixed, reviewed name with an
+    # explicit, umask-independent mode so the pinned bytes never land in a
+    # group- or world-writable file. O_NOFOLLOW refuses a symlink that is
+    # swapped in between the check above and the open below.
+    descriptor = os.open(OUTPUT_NAME, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW, 0o600)
     with os.fdopen(descriptor, "wb") as handle:
         handle.write(encoded)
 
