@@ -340,6 +340,11 @@ def main() -> None:
     if os.environ.get(CANDIDATE_GATE) == "1":
         fail("candidate gate refuses baseline acceptance")
     args = parse_args()
+    if args.provenance is None:
+        fail(
+            "acceptance requires --provenance so the acceptance body, including the "
+            "precondition, the binary identity and the capture record, is preserved"
+        )
     baselines = args.baselines
     receipt = args.receipt
     if inside(receipt, baselines):
