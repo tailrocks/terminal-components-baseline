@@ -954,11 +954,11 @@ impl World {
         }
         let mut changed = Vec::new();
         for (id, d) in self.daemons.iter_mut() {
-            if self.instances.iter().any(|entry| {
-                entry
-                    .as_available()
-                    .is_some_and(|i| i.id == *id && i.status == InstanceStatus::Running)
-            }) && d.tick(now)
+            if self
+                .instances
+                .iter()
+                .any(|entry| *entry.id() == *id && entry_is_running(entry))
+                && d.tick(now)
             {
                 changed.push(id.clone());
             }
