@@ -273,7 +273,7 @@ impl CockpitScreen {
                     .agents
                     .iter()
                     .find(|a| a.account.as_ref() == Some(&account.id))
-                    .map(|a| TupleIdentity::new(a.agent.clone(), a.provider)),
+                    .map(|a| TupleIdentity::new(a.agent, a.provider)),
                 _ => None,
             })
             .unwrap_or(self.tuple);
