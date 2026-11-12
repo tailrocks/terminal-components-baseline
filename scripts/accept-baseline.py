@@ -347,6 +347,8 @@ def main() -> None:
         )
     baselines = args.baselines
     receipt = args.receipt
+    if args.provenance.resolve() == receipt.resolve():
+        fail("the receipt and the provenance must be two different files")
     if inside(receipt, baselines):
         fail("receipt is inside the baseline root")
     if args.provenance and inside(args.provenance, baselines):

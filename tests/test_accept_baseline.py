@@ -248,6 +248,39 @@ class AcceptancePreflightTests(unittest.TestCase):
         self.assertIn("provenance", stderr.getvalue())
         self.assertFalse((self.root / "receipts" / "accepted.json").exists())
 
+    def test_the_receipt_and_the_provenance_must_be_different_files(self):
+        argv = [
+            str(SCRIPT),
+            "--candidate",
+            str(self.candidate),
+            "--candidate-sha256",
+            self.candidate_sha,
+            "--expect-baseline",
+            self.baseline_sha,
+            "--baselines",
+            str(self.baselines),
+            "--receipt",
+            str(self.root / "receipts" / "accepted.json"),
+            "--provenance",
+            str(self.root / "receipts" / "accepted.json"),
+            "--precondition",
+            "J06 fresh reference capture",
+            "--binary",
+            str(self.binary),
+            "--binary-sha256",
+            self.binary_sha,
+            "--tuiscotti",
+            "must-not-run",
+        ]
+        with patch("sys.argv", argv), patch.object(accept_baseline.subprocess, "run") as run:
+            stderr = io.StringIO()
+            with redirect_stderr(stderr):
+                with self.assertRaises(SystemExit):
+                    accept_baseline.main()
+        run.assert_not_called()
+        self.assertIn("different files", stderr.getvalue())
+        self.assertFalse((self.root / "receipts" / "accepted.json").exists())
+
     def test_acceptance_requires_provenance_before_the_cli_runs(self):
         self.run_preflight(with_provenance=False)
         self.assertIn(
