@@ -12,10 +12,10 @@ import tempfile
 import tomllib
 from pathlib import Path
 
-SEED_COMMIT = "19f21866544814ef960716d92260c2d65606370d"
-SEED_TREE = "8c4d34b58a366f556649a59a04a42bff88e9aa7b"
+SEED_COMMIT = "f4d9999ace7d6deb4294cd89c00afcc80e748d49"
+SEED_TREE = "95406daef6ba234fde62fc47b933fbb8bdfce320"
 MANIFEST_PATHS = ("Cargo.toml", "apps/jackin/Cargo.toml")
-EXPECTED_AGGREGATE = "59f990cee12bba13b31cd3f149442a9486e6e3890819b2abe16ce51d4c0a911e"
+EXPECTED_AGGREGATE = "4e7f83b2eaf98c6b3413d10cc4c0dacc4c123d84ecdfd401e5da90daf7ad7f19"
 # The reviewed artifact is only ever written under this exact name in the
 # current working directory. The command-line output argument must match it
 # verbatim, so no caller-controlled path component can ever reach the file
