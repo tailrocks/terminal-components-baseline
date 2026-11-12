@@ -8,6 +8,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 import tomllib
 from pathlib import Path
 
@@ -21,29 +22,32 @@ def git(repository, *arguments):
     executable = shutil.which("git")
     if executable is None:
         raise SystemExit("trusted seed Cargo policy generation requires Git")
-    environment = {
-        "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
-        "HOME": "/tmp",
-        "GIT_CONFIG_NOSYSTEM": "1",
-        "GIT_CONFIG_GLOBAL": "/dev/null",
-        "GIT_CONFIG_SYSTEM": "/dev/null",
-        "GIT_NO_REPLACE_OBJECTS": "1",
-        "GIT_NO_LAZY_FETCH": "1",
-        "GIT_OPTIONAL_LOCKS": "0",
-        "LC_ALL": "C",
-        "LANG": "C",
-    }
-    try:
-        return subprocess.run(
-            [executable, "-C", str(repository), *arguments],
-            check=True,
-            env=environment,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        ).stdout
-    except subprocess.CalledProcessError as error:
-        detail = error.stderr.decode("utf-8", "backslashreplace").strip()
-        raise SystemExit(f"trusted seed Cargo policy generation failed: {detail}") from error
+    # A private per-invocation home avoids the shared, publicly writable
+    # directory: git must not read or write any state outside our control.
+    with tempfile.TemporaryDirectory(prefix="trusted-seed-policy-home.") as private_home:
+        environment = {
+            "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
+            "HOME": private_home,
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": "/dev/null",
+            "GIT_CONFIG_SYSTEM": "/dev/null",
+            "GIT_NO_REPLACE_OBJECTS": "1",
+            "GIT_NO_LAZY_FETCH": "1",
+            "GIT_OPTIONAL_LOCKS": "0",
+            "LC_ALL": "C",
+            "LANG": "C",
+        }
+        try:
+            return subprocess.run(
+                [executable, "-C", str(repository), *arguments],
+                check=True,
+                env=environment,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            ).stdout
+        except subprocess.CalledProcessError as error:
+            detail = error.stderr.decode("utf-8", "backslashreplace").strip()
+            raise SystemExit(f"trusted seed Cargo policy generation failed: {detail}") from error
 
 
 def main():
@@ -98,7 +102,13 @@ def main():
     encoded = (json.dumps(policy, ensure_ascii=True, separators=(",", ":"), sort_keys=True) + "\n").encode("ascii")
     if len(encoded) > 262144:
         raise SystemExit("trusted seed Cargo policy artifact exceeds its fixed size bound")
-    output.write_bytes(encoded)
+    if output.is_symlink() or (output.exists() and not output.is_file()):
+        raise SystemExit("trusted seed Cargo policy output path is not a regular file")
+    # Create the reviewed artifact with an explicit, umask-independent mode so
+    # the pinned bytes never land in a group- or world-writable file.
+    descriptor = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(descriptor, "wb") as handle:
+        handle.write(encoded)
 
 
 if __name__ == "__main__":
