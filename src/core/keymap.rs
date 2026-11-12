@@ -228,6 +228,25 @@ impl KeyBinding {
         self_mods == key_mods
     }
 
+    fn matches_shifted_char_with(&self, key: &Key, capabilities: KeyboardCapabilities) -> bool {
+        let (self_code, self_mods) = normalize_shift_chars(self.code, self.mods);
+        let (key_code, key_mods) = normalize_shift_chars(key.code, key.mods);
+        if self_code != key_code || !matches!(self_code, KeyCode::Char(_)) {
+            return false;
+        }
+        if self.alt_stand_in && capabilities.alt {
+            return false;
+        }
+        if self_mods.contains(KeyModifiers::SHIFT) {
+            return false;
+        }
+        self_mods == key_mods.difference(KeyModifiers::SHIFT)
+    }
+
+    fn matches_shifted_char(&self, key: &Key) -> bool {
+        self.matches_shifted_char_with(key, KeyboardCapabilities::current())
+    }
+
     pub fn label(&self) -> String {
         self.label_on(ClientPlatform::current())
     }
@@ -313,7 +332,12 @@ pub trait Actions: Copy + PartialEq + Sized + 'static {
 }
 
 pub fn lookup<A: Copy>(map: &[(KeyBinding, A)], key: &Key) -> Option<A> {
-    map.iter().find(|(b, _)| b.matches(key)).map(|&(_, a)| a)
+    if let Some(action) = map.iter().find(|(b, _)| b.matches(key)).map(|&(_, a)| a) {
+        return Some(action);
+    }
+    map.iter()
+        .find(|(b, _)| b.matches_shifted_char(key))
+        .map(|&(_, a)| a)
 }
 
 pub fn lookup_with<A: Copy>(
@@ -321,9 +345,19 @@ pub fn lookup_with<A: Copy>(
     key: &Key,
     capabilities: KeyboardCapabilities,
 ) -> Option<A> {
-    map.iter()
+    if let Some(action) = map
+        .iter()
         .find(|(binding, _)| {
             binding.deliverable_with(capabilities) && binding.matches_with(key, capabilities)
+        })
+        .map(|&(_, action)| action)
+    {
+        return Some(action);
+    }
+    map.iter()
+        .find(|(binding, _)| {
+            binding.deliverable_with(capabilities)
+                && binding.matches_shifted_char_with(key, capabilities)
         })
         .map(|&(_, action)| action)
 }
