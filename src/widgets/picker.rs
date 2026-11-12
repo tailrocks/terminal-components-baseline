@@ -1761,6 +1761,43 @@ mod tests {
     }
 
     #[test]
+    fn legacy_shifted_character_events_toggle_the_picker() {
+        use ratatui::crossterm::event::{Event, KeyEvent};
+
+        let mut picker = Picker::new(WidgetId::of("picker-legacy-shift"), "Choose")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection")
+            .toggle_binding(KeyBinding::char('t').shift());
+        picker
+            .set_items(vec![Item::new("Alpha").key(ItemKey::text("alpha"))])
+            .expect("valid picker update");
+        let legacy = Event::Key(KeyEvent::new(KeyCode::Char('T'), KeyModifiers::SHIFT));
+        let input = crate::core::event::Input::from_crossterm_with(
+            legacy,
+            crate::core::event::InputConfig::default(),
+        )
+        .expect("legacy key event decodes");
+        let crate::core::event::Input::Key(key) = input else {
+            panic!("legacy key event must decode to a key");
+        };
+        assert_eq!(
+            key.code,
+            KeyCode::Char('T'),
+            "legacy input preserves the produced character code"
+        );
+        let (outcome, _action) = picker.on_key(&key);
+        assert!(
+            matches!(outcome, Outcome::Changed | Outcome::Consumed),
+            "the advertised shift toggle must consume the legacy event"
+        );
+        assert_eq!(
+            picker.checked(),
+            vec![ItemKey::text("alpha")],
+            "the legacy Shift+T encoding must toggle the picker"
+        );
+    }
+
+    #[test]
     fn remapped_toggle_hint_clicks_deliver_the_bound_key() {
         struct RestoreCaps {
             alt: bool,

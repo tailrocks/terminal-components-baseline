@@ -138,6 +138,24 @@ impl Default for NavKeys {
     }
 }
 
+/// Normalizes the legacy terminal encoding of shifted character events.
+///
+/// Without the enhanced keyboard protocol a physical Shift+T is delivered as
+/// the produced uppercase character (`Char('T')` plus SHIFT), while the
+/// synthetic encoding used by key bindings is the base character plus SHIFT
+/// (`Char('t')` plus SHIFT). Folding the produced-character encoding into the
+/// base-character encoding before comparing makes both spellings of the same
+/// physical keystroke match the same binding.
+fn normalize_shift_chars(code: KeyCode, mods: KeyModifiers) -> (KeyCode, KeyModifiers) {
+    if let KeyCode::Char(c) = code
+        && c.is_uppercase()
+    {
+        let base = c.to_lowercase().next().unwrap_or(c);
+        return (KeyCode::Char(base), mods.union(KeyModifiers::SHIFT));
+    }
+    (code, mods)
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct KeyBinding {
     pub code: KeyCode,
@@ -199,18 +217,20 @@ impl KeyBinding {
     }
 
     pub fn matches_with(&self, key: &Key, capabilities: KeyboardCapabilities) -> bool {
-        if self.code != key.code {
+        let (self_code, self_mods) = normalize_shift_chars(self.code, self.mods);
+        let (key_code, key_mods) = normalize_shift_chars(key.code, key.mods);
+        if self_code != key_code {
             return false;
         }
         if self.alt_stand_in && capabilities.alt {
             return false;
         }
-        if matches!(self.code, KeyCode::Char(_)) {
-            (!self.mods.contains(KeyModifiers::SHIFT) || key.shift())
-                && self.mods.difference(KeyModifiers::SHIFT)
-                    == key.mods.difference(KeyModifiers::SHIFT)
+        if matches!(self_code, KeyCode::Char(_)) {
+            (!self_mods.contains(KeyModifiers::SHIFT) || key_mods.contains(KeyModifiers::SHIFT))
+                && self_mods.difference(KeyModifiers::SHIFT)
+                    == key_mods.difference(KeyModifiers::SHIFT)
         } else {
-            self.mods == key.mods
+            self_mods == key_mods
         }
     }
 
