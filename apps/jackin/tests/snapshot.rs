@@ -209,7 +209,7 @@ fn refresh_replaces_verified_and_unavailable_entries_without_stale_metadata() {
 }
 
 #[test]
-fn refresh_to_unavailable_closes_attached_capsule_without_reporting_removal() {
+fn refresh_to_unavailable_keeps_the_attached_capsule_and_reports_the_degradation() {
     let mut world = world_for(Scenario::CapsuleMulti);
     let id = InstanceId::simulated("jk-7f3a");
     let verified = world
@@ -243,7 +243,11 @@ fn refresh_to_unavailable_closes_attached_capsule_without_reporting_removal() {
         }),
         Outcome::Changed
     );
-    assert_eq!(app.route(), Route::Manager);
+    assert_eq!(app.route(), Route::Capsule);
+    assert!(
+        app.world.daemons.contains_key(&id),
+        "a sandbox that is still ready keeps its daemon when the metadata degrades"
+    );
     assert_eq!(app.world.instances.len(), 1);
     assert!(app.world.instance(&id).is_none());
     assert_eq!(app.world.running_count(), 1);
@@ -251,13 +255,12 @@ fn refresh_to_unavailable_closes_attached_capsule_without_reporting_removal() {
         panic!("the observed sandbox remains unavailable and visible");
     };
     assert_eq!(row.phase, SandboxPhase::Ready);
-    let shown = screen(&mut app);
-    assert!(
-        shown.contains("required agent metadata is malformed"),
-        "{shown}"
-    );
     let status = app.shell.status.text().unwrap_or_default();
     assert!(status.contains("metadata unavailable"), "{status}");
+    assert!(
+        status.contains("required agent metadata is malformed"),
+        "{status}"
+    );
     assert!(!status.contains("removed"), "{status}");
 
     let mut restored_snapshot = snapshot_of(&app.world);

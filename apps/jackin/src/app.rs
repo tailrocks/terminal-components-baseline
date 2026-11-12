@@ -301,6 +301,7 @@ impl App {
     }
 
     fn drop_orphaned_daemons(&mut self) {
+        let mut degraded: Vec<(String, String)> = Vec::new();
         let gone: Vec<(InstanceId, String, String)> = self
             .world
             .daemons
@@ -311,6 +312,14 @@ impl App {
                     id.short_label(),
                     "was removed elsewhere".to_owned(),
                 )),
+                Some(InstanceEntry::Unavailable(unavailable)) if unavailable.phase.ready() => {
+                    let display = unavailable.display();
+                    degraded.push((
+                        display.sandbox_name,
+                        format!("metadata unavailable · {}", display.reason),
+                    ));
+                    None
+                }
                 Some(InstanceEntry::Unavailable(unavailable)) => {
                     let display = unavailable.display();
                     Some((
@@ -325,6 +334,9 @@ impl App {
                 Some(InstanceEntry::Available(_)) => None,
             })
             .collect();
+        for (name, why) in degraded {
+            self.set_status(&format!("Instance {name} {why}"), Tone::Secondary);
+        }
         let open = self.open_capsule();
         for (instance, name, why) in gone {
             if open.as_ref() == Some(&instance) {
