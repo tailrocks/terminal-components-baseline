@@ -11,7 +11,7 @@ use jackin_console::domain::instance::{
 };
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::screens::Go;
-use jackin_console::world::{Msg, Snapshot, World};
+use jackin_console::world::{Absorbed, Msg, SaveSuccess, SaveWarning, Snapshot, World};
 use junie_tui::core::event::Outcome;
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
@@ -587,4 +587,38 @@ fn the_sim_never_hands_out_a_workspace_id_in_use() {
         world.apply(*result.clone().expect("saved").snapshot);
     }
     assert_eq!(ids, vec![highest + 1, highest + 2]);
+}
+
+#[test]
+fn a_stale_account_save_does_not_report_uncertain_durability() {
+    let mut world = world_for(Scenario::Returning);
+    let older = world.next_ticket();
+    let newer = world.next_ticket();
+    let snapshot = snapshot_of(&world);
+    let saved = |warning| SaveSuccess {
+        snapshot: Box::new(snapshot.clone()),
+        warning,
+    };
+    assert_eq!(
+        world.absorb(&Msg::AccountsSaved {
+            ticket: newer,
+            added: None,
+            result: Ok(saved(None)),
+        }),
+        Absorbed::Current,
+        "the newest account save is the current one"
+    );
+    assert_eq!(
+        world.absorb(&Msg::AccountsSaved {
+            ticket: older,
+            added: None,
+            result: Ok(saved(Some(SaveWarning::DirectorySync))),
+        }),
+        Absorbed::Stale,
+        "the older account save is stale"
+    );
+    assert_eq!(
+        world.committed_save_warning, None,
+        "a stale reply must not report uncertain durability for an ignored snapshot"
+    );
 }

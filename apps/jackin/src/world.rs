@@ -795,7 +795,11 @@ impl World {
             } => saved.warning,
             _ => None,
         };
-        if warning.is_some() {
+        let stale_save = matches!(
+            msg,
+            Msg::AccountsSaved { ticket, result: Ok(_), .. } if *ticket <= self.saved_ticket
+        );
+        if warning.is_some() && !stale_save {
             self.committed_save_warning = warning;
             self.committed_save_status = None;
         }
