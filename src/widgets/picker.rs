@@ -153,7 +153,10 @@ impl HasHints for Picker {
             } else {
                 binding.label_on(cx.platform)
             };
-            v.push(Hint::new(label, "Toggle"));
+            v.push(Hint::new(label, "Toggle").click_key(Key {
+                code: binding.code,
+                mods: binding.mods,
+            }));
         }
         v.push(Hint::new(
             "Enter",
@@ -1324,7 +1327,7 @@ mod tests {
     use crate::core::focus::{Focus, FocusRing};
     use crate::core::hints::{HasHints, HintCx};
     use crate::core::hit::HitRegistry;
-    use crate::core::id::{ItemKey, WidgetId};
+    use crate::core::id::{ItemKey, Part, PartRef, WidgetId};
     use crate::core::intent::Phase;
     use crate::core::keymap::{KeyBinding, KeyboardCapabilities};
     use crate::core::pointer::PointerEvent;
@@ -1333,6 +1336,8 @@ mod tests {
     use crate::ui::ctx::{Interaction, RenderCtx};
     use crate::ui::layer::{Layer, LayerCx, LayerOut};
     use crate::ui::layers::LayerResult;
+    use crate::widgets::hintbar::{HintBar, HintKeys, HintLayer};
+    use crate::widgets::keyhint::key_of;
     use crate::widgets::menu::MenuItem;
     use ratatui::buffer::Buffer;
     use ratatui::layout::{Position, Rect};
@@ -1753,6 +1758,143 @@ mod tests {
             (Outcome::Changed, Some(super::PickerAction::QueryChanged))
         );
         assert_eq!(undeliverable.query(), "x");
+    }
+
+    #[test]
+    fn remapped_toggle_hint_clicks_deliver_the_bound_key() {
+        struct RestoreCaps {
+            alt: bool,
+            super_key: bool,
+        }
+
+        impl Drop for RestoreCaps {
+            fn drop(&mut self) {
+                crate::core::keyboard::set_alt_delivered(self.alt);
+                crate::core::keyboard::set_super_delivered(self.super_key);
+            }
+        }
+
+        let _restore = RestoreCaps {
+            alt: KeyboardCapabilities::current().alt,
+            super_key: KeyboardCapabilities::current().super_key,
+        };
+        crate::core::keyboard::set_alt_delivered(true);
+        crate::core::keyboard::set_super_delivered(true);
+
+        let cases = [
+            (
+                KeyBinding::cmd('t'),
+                Key {
+                    code: KeyCode::Char('t'),
+                    mods: KeyModifiers::SUPER,
+                },
+            ),
+            (
+                KeyBinding::alt('t'),
+                Key {
+                    code: KeyCode::Char('t'),
+                    mods: KeyModifiers::ALT,
+                },
+            ),
+            (
+                KeyBinding::char('t').shift(),
+                Key {
+                    code: KeyCode::Char('t'),
+                    mods: KeyModifiers::SHIFT,
+                },
+            ),
+        ];
+        for (binding, expected) in cases {
+            let mut picker = Picker::new(WidgetId::of("picker-remapped-hint"), "Choose")
+                .multi_select(true)
+                .expect("empty picker accepts multi-selection")
+                .toggle_binding(binding);
+            picker
+                .set_items(vec![Item::new("Alpha").key(ItemKey::text("alpha"))])
+                .expect("valid picker update");
+            let hints = HasHints::hints(&picker, &HintCx::current(None));
+            let toggle_at = hints
+                .iter()
+                .position(|hint| hint.action == "Toggle")
+                .expect("remapped binding advertises a toggle hint");
+
+            let area = Rect::new(0, 0, 100, 1);
+            let theme = Theme::for_level(ColorLevel::TrueColor);
+            let layer = HintLayer::new(hints.clone());
+            let mut buffer = Buffer::empty(area);
+            let mut hits = HitRegistry::default();
+            let mut ring = FocusRing::default();
+            let spots;
+            let keys;
+            {
+                let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+                spots = HintBar::render_at(area, &mut buffer, &theme, &layer);
+                keys = HintKeys::register(&mut ctx, &mut buffer, &layer.hints, spots.clone());
+            }
+            let cell = spots
+                .iter()
+                .find(|(i, _)| *i == toggle_at)
+                .map(|(_, cell)| *cell)
+                .expect("toggle hint renders a clickable cell");
+            let id = HintBar::ID.part(PartRef::item(Part::KEY, ItemKey::index(toggle_at)));
+            let ev = PointerEvent::new(
+                &hits,
+                Phase::Click,
+                id,
+                Position::new(cell.x, cell.y),
+                1,
+                KeyModifiers::NONE,
+            );
+            let clicked = keys
+                .clicked(&ev)
+                .expect("clicking the remapped toggle hint must yield a key");
+            assert_eq!(
+                clicked, expected,
+                "the hint click for {binding:?} must deliver the key the binding sends"
+            );
+
+            // Near-miss labels must not be accepted in place of the bound key.
+            assert!(
+                key_of("Insertion").is_none(),
+                "near-miss labels must not parse"
+            );
+            assert_ne!(
+                clicked,
+                Key {
+                    code: KeyCode::Insert,
+                    mods: KeyModifiers::NONE,
+                },
+                "a remapped hint must not fall back to the default Insert toggle"
+            );
+            if let Some(naive) = key_of(layer.hints[toggle_at].key.as_ref()) {
+                assert_ne!(
+                    naive, expected,
+                    "the display label must not re-parse to the bound key by accident"
+                );
+                assert_ne!(
+                    picker.on_key(&naive).1,
+                    Some(PickerAction::Toggled),
+                    "the label-reparsed key {naive:?} must not toggle"
+                );
+                assert!(picker.checked().is_empty());
+            }
+            assert_ne!(
+                picker
+                    .on_key(&Key {
+                        code: KeyCode::Insert,
+                        mods: KeyModifiers::NONE,
+                    })
+                    .1,
+                Some(PickerAction::Toggled)
+            );
+            assert!(picker.checked().is_empty());
+
+            assert_eq!(
+                picker.on_key(&clicked),
+                (Outcome::Changed, Some(PickerAction::Toggled))
+            );
+            assert_eq!(picker.checked(), &[ItemKey::text("alpha")]);
+        }
     }
 
     #[test]

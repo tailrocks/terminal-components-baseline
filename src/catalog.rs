@@ -2179,6 +2179,7 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::variant("widgets::keyhint::HintPriority::Pinned"),
     Capability::builder("widgets::keyhint::Hint::priority"),
     Capability::builder("widgets::keyhint::Hint::pinned"),
+    Capability::builder("widgets::keyhint::Hint::click_key"),
     Capability::function("widgets::keyhint::range"),
     Capability::function("widgets::keyhint::normalize_key"),
     Capability::function("widgets::keyhint::modifier_click"),

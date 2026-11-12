@@ -108,6 +108,11 @@ pub struct Hint {
     pub action: Cow<'static, str>,
 
     pub priority: HintPriority,
+
+    /// Stable binding identifier for clickable hints. When set, footer clicks
+    /// deliver exactly this key instead of re-parsing the display label, so
+    /// remapped bindings (Super/Alt/Shift chords) round-trip faithfully.
+    pub click_key: Option<crate::core::event::Key>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -126,7 +131,13 @@ impl Hint {
             key: key.into(),
             action: action.into(),
             priority: HintPriority::Auto,
+            click_key: None,
         }
+    }
+
+    pub fn click_key(mut self, key: crate::core::event::Key) -> Self {
+        self.click_key = Some(key);
+        self
     }
 
     pub fn priority(mut self, priority: HintPriority) -> Self {
@@ -167,6 +178,7 @@ pub const fn hint(key: &'static str, action: &'static str) -> Hint {
         key: Cow::Borrowed(key),
         action: Cow::Borrowed(action),
         priority: HintPriority::Auto,
+        click_key: None,
     }
 }
 

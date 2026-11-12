@@ -118,6 +118,7 @@ pub const TYPE_TO_JUMP: Hint = Hint {
     key: Cow::Borrowed("Type"),
     action: Cow::Borrowed("to jump"),
     priority: HintPriority::Normal,
+    click_key: None,
 };
 
 pub fn nav_hints(nav: &NavKeys, type_ahead: bool, ends: bool) -> Vec<Hint> {

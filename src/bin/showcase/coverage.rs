@@ -255,6 +255,10 @@ pub const KEYMAP_ALLOWLIST: &[(&str, &str)] = &[
         "core::hints::HintCx::with_environment",
         "No showcase page overrides the hint environment; the harness-rendered hint bars are the demonstration.",
     ),
+    (
+        "widgets::keyhint::Hint::click_key",
+        "Footer hint clicks are demonstrated through delivered pointer events on rendered hint bars; the stable click-key override is filled in internally by widget hint generators and is not a page configuration option.",
+    ),
 ];
 
 #[cfg(test)]
