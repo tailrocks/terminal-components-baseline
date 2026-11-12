@@ -221,6 +221,10 @@ policy_lifecycle_self_test() {
   mkdir -p "$test_root"
   cp -p "$repo_root/tests/policy-git-object-lifecycle.sh" "$test_root/policy-git-object-lifecycle.fixed.sh"
   fixed_helper_sha=$(policy_lifecycle_hash_file "$test_root/policy-git-object-lifecycle.fixed.sh")
+  # Restore the untracked trusted-seed sentinel before the first source snapshot
+  # so the preflight cannot be blamed for changing the source checkout, and so
+  # the untracked-yet-present expectation below is satisfied in a fresh clone.
+  bash "$repo_root/scripts/materialize-trusted-seed-cargo-lock.sh" || return $?
   policy_lifecycle_source_snapshot "$repo_root" > "$test_root/source.before.json"
   if ! BASELINE_GUARD_E2E_FOCUS=cargo-local-lock-policy BASELINE_GUARD_POLICY_CASE=positive-local-local-removal BASELINE_GUARD_POLICY_PREFLIGHT_ONLY=1 BASELINE_GUARD_POLICY_CONTROL_EXPORT="$policy_source_repository" /bin/bash "$repo_root/tests/check-installed-generated-workflow-guard.sh" > "$test_root/preflight.log" 2>&1; then
     cat "$test_root/preflight.log" >&2

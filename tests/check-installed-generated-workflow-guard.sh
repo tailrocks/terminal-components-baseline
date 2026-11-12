@@ -4,6 +4,10 @@
 set -euo pipefail
 
 repo_root=$(cd "$(dirname "$0")/.." && pwd -P)
+# A fresh clone has no untracked scripts/trusted-seed-cargo.lock; restore the
+# reviewed sentinel bytes from the tracked metadata pack before anything reads
+# them (this script is idempotent and never rewrites an existing sentinel).
+bash "$repo_root/scripts/materialize-trusted-seed-cargo-lock.sh" || exit $?
 e2e_focus=${BASELINE_GUARD_E2E_FOCUS:-all}
 cold_install=${BASELINE_GUARD_COLD_INSTALL:-0}
 public_mutant=${BASELINE_GUARD_PUBLIC_MUTANT:-}

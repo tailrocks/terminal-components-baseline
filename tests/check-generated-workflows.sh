@@ -9,6 +9,10 @@ checker=${CHECKER_UNDER_TEST:-$root_checker}
 if [[ "$checker" != /* ]]; then
   checker=$(cd "$(dirname "$checker")" && pwd -P)/$(basename "$checker")
 fi
+# A fresh clone lacks the deliberately untracked scripts/trusted-seed-cargo.lock;
+# restore the reviewed bytes from the tracked metadata pack before the suite (and
+# copy_checker_for_fixture) consumes them. Idempotent; existing files untouched.
+bash "$repo_root/scripts/materialize-trusted-seed-cargo-lock.sh" || exit $?
 caller_path=$PATH
 test_root=$(mktemp -d "${TMPDIR:-/tmp}/baseline boundary tests.XXXXXX")
 trap 'find "$test_root" -depth -delete' EXIT
