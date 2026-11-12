@@ -262,8 +262,23 @@ impl CockpitScreen {
     }
 
     fn why_label(&self, account: &crate::domain::account::Account, w: &World) -> &'static str {
+        // The fallback account may come from a later launch choice; resolve the
+        // precedence lookup with the tuple that actually supplied the account
+        // instead of the lead tuple.
+        let tuple = self
+            .instance_id
+            .as_ref()
+            .and_then(|id| match w.entry(id) {
+                Some(crate::domain::instance::InstanceEntry::Available(instance)) => instance
+                    .agents
+                    .iter()
+                    .find(|a| a.account.as_ref() == Some(&account.id))
+                    .map(|a| TupleIdentity::new(a.agent.clone(), a.provider)),
+                _ => None,
+            })
+            .unwrap_or(self.tuple);
         let r = w.account_for(
-            self.tuple,
+            tuple,
             self.workspace.and_then(|id| w.workspace(id)),
             Some(&self.role),
             None,
