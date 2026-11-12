@@ -138,7 +138,7 @@ impl Default for NavKeys {
     }
 }
 
-fn normalize_shift_chars(code: KeyCode, mods: KeyModifiers) -> (KeyCode, KeyModifiers) {
+pub(crate) fn normalize_shift_chars(code: KeyCode, mods: KeyModifiers) -> (KeyCode, KeyModifiers) {
     if let KeyCode::Char(c) = code
         && c.is_uppercase()
     {
@@ -146,6 +146,15 @@ fn normalize_shift_chars(code: KeyCode, mods: KeyModifiers) -> (KeyCode, KeyModi
         return (KeyCode::Char(base), mods.union(KeyModifiers::SHIFT));
     }
     (code, mods)
+}
+
+/// The normalized modifier set of a key event.
+///
+/// A produced uppercase character implies SHIFT, exactly like the legacy
+/// shifted-character normalization, so an uppercase event and a shifted event
+/// carry the same modifier set.
+pub fn normalized_key_mods(key: &Key) -> KeyModifiers {
+    normalize_shift_chars(key.code, key.mods).1
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -204,6 +213,13 @@ impl KeyBinding {
             && (!self.alt_stand_in || !capabilities.alt)
     }
 
+    /// The normalized modifier set of this binding: a produced uppercase
+    /// character implies SHIFT, so `char('T')` and `char('t').shift()` carry the
+    /// same modifier set.
+    pub fn normalized_mods(&self) -> KeyModifiers {
+        normalize_shift_chars(self.code, self.mods).1
+    }
+
     pub fn matches(&self, key: &Key) -> bool {
         self.matches_with(key, KeyboardCapabilities::current())
     }
@@ -217,13 +233,14 @@ impl KeyBinding {
         if self.alt_stand_in && capabilities.alt {
             return false;
         }
-        if matches!(self_code, KeyCode::Char(_)) {
-            (!self_mods.contains(KeyModifiers::SHIFT) || key_mods.contains(KeyModifiers::SHIFT))
-                && self_mods.difference(KeyModifiers::SHIFT)
-                    == key_mods.difference(KeyModifiers::SHIFT)
-        } else {
-            self_mods == key_mods
-        }
+        // The normalized shift state is part of the identity of a character
+        // binding: a plain letter binding must not answer to a shifted
+        // (uppercase) event, and a shift-folded binding must not answer to a
+        // plain one. Comparing the normalized modifier sets exactly keeps the
+        // legacy produced-character encoding (`Char('T')` plus SHIFT)
+        // matchable by `char('t').shift()` and by `char('T')`, while a plain
+        // `char('u')` binding stays exclusive to the plain `u` event.
+        self_mods == key_mods
     }
 
     pub fn label(&self) -> String {

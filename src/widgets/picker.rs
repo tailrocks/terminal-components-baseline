@@ -673,7 +673,7 @@ impl Picker {
         let toggle = self.toggle_keymap.iter().any(|(binding, command)| {
             *command == PickerCmd::Toggle
                 && binding.deliverable_with(capabilities)
-                && binding.mods == key.mods
+                && binding.normalized_mods() == crate::core::keymap::normalized_key_mods(key)
                 && binding.matches_with(key, capabilities)
         });
         if self.multi && toggle {
