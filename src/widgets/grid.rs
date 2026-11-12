@@ -1768,9 +1768,6 @@ impl DataGrid {
             GridCmd::Refresh => (Outcome::Changed, Some(GridAction::Refresh)),
             GridCmd::Undo => {
                 if self.undo() {
-                    // The pending queue changed, so observers must re-read the
-                    // pending count: emitting nothing left a stale status line
-                    // claiming a row was still queued for deletion.
                     (
                         Outcome::Changed,
                         Some(GridAction::CellChanged {

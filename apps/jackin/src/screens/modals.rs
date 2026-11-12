@@ -402,9 +402,6 @@ impl OpFlow {
         self.picker
             .set_searchable(true)
             .unwrap_or_else(|error| self.picker.report_item_error(error));
-        // set_items restores picker readiness, so the loading status must be
-        // assigned afterwards or the retry banner never shows the loading
-        // state; a reported item error keeps precedence over the loading copy.
         self.picker
             .set_items(vec![])
             .unwrap_or_else(|error| self.picker.report_item_error(error));

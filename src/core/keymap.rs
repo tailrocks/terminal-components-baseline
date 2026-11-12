@@ -148,11 +148,6 @@ pub(crate) fn normalize_shift_chars(code: KeyCode, mods: KeyModifiers) -> (KeyCo
     (code, mods)
 }
 
-/// The normalized modifier set of a key event.
-///
-/// A produced uppercase character implies SHIFT, exactly like the legacy
-/// shifted-character normalization, so an uppercase event and a shifted event
-/// carry the same modifier set.
 pub fn normalized_key_mods(key: &Key) -> KeyModifiers {
     normalize_shift_chars(key.code, key.mods).1
 }
@@ -213,9 +208,6 @@ impl KeyBinding {
             && (!self.alt_stand_in || !capabilities.alt)
     }
 
-    /// The normalized modifier set of this binding: a produced uppercase
-    /// character implies SHIFT, so `char('T')` and `char('t').shift()` carry the
-    /// same modifier set.
     pub fn normalized_mods(&self) -> KeyModifiers {
         normalize_shift_chars(self.code, self.mods).1
     }
@@ -233,13 +225,6 @@ impl KeyBinding {
         if self.alt_stand_in && capabilities.alt {
             return false;
         }
-        // The normalized shift state is part of the identity of a character
-        // binding: a plain letter binding must not answer to a shifted
-        // (uppercase) event, and a shift-folded binding must not answer to a
-        // plain one. Comparing the normalized modifier sets exactly keeps the
-        // legacy produced-character encoding (`Char('T')` plus SHIFT)
-        // matchable by `char('t').shift()` and by `char('T')`, while a plain
-        // `char('u')` binding stays exclusive to the plain `u` event.
         self_mods == key_mods
     }
 
