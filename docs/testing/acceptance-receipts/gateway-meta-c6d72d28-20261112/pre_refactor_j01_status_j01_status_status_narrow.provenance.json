@@ -13,7 +13,7 @@
     "host": "aarch64-apple-darwin"
   },
   "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/7d468f26fe638cdce658e3ee039ef634f3ba6372615409f1d0de09bf2590081e/debug/jackin-preview",
-  "binary_sha256": "19fcd2875182a836c7a34b41271df7a038e379f07f3894c47e04732947f8e228",
+  "binary_sha256": "4e671b2db8fba7a9a72f9c1122b233d99e3276a93607941cf68e0f1721f7e6ee",
   "fixture_args": [],
   "env": {},
   "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
@@ -22,15 +22,15 @@
   "precondition": "Re-pin for c6d72d28 gateway identity meta prefix (i.id.gateway): the available-instance meta rows now carry the 'jackin-local \u00b7' gateway prefix, so the narrow shots shift the following text and truncate the title with an ellipsis; captured from the live candidate build of this branch, textual see()/forbid_hidden() assertions verified green in the same run",
   "session": null,
   "expected_test_id": "pre_refactor/j01_status/j01_status_status_narrow",
-  "acceptance_receipt_path": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/pre_refactor_pre_refactor_j01_status_j01_status_status_narrow.accept.json",
-  "provenance_path": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/pre_refactor_pre_refactor_j01_status_j01_status_status_narrow.provenance.json",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/pre_refactor_j01_status_j01_status_status_narrow.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/pre_refactor_j01_status_j01_status_status_narrow.provenance.json",
   "previous_archive_path": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/superseded/pre_refactor/j01_status/j01_status_status_narrow.tui.pb",
   "test_id": "pre_refactor/j01_status/j01_status_status_narrow",
   "acceptance": {
     "expected_baseline_sha256": "e282d6cd0b0f1e98f460b5f1d1a641b5440104909ef6a748d90284fa8a1766a4",
     "accepted_baseline_sha256": "6a8df385941675cf37188778df744faf69ee69a2cf3b9f99e7fb67cd35f00fd5",
-    "transaction_receipt": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/pre_refactor_pre_refactor_j01_status_j01_status_status_narrow.accept.json",
-    "candidate_sha256": "6a8df385941675cf37188778df744faf69ee69a2cf3b9f99e7fb67cd35f00fd5"
+    "candidate_sha256": "6a8df385941675cf37188778df744faf69ee69a2cf3b9f99e7fb67cd35f00fd5",
+    "transaction_receipt": "docs/testing/acceptance-receipts/gateway-meta-c6d72d28-20261112/pre_refactor_j01_status_j01_status_status_narrow.accept.json"
   },
   "previous_baseline": {
     "sha256": "e282d6cd0b0f1e98f460b5f1d1a641b5440104909ef6a748d90284fa8a1766a4"
@@ -47,8 +47,26 @@
     "mode": "candidate",
     "candidate_path": "tests/functional/baselines/pre_refactor/j01_status/j01_status_status_narrow.tui.pb",
     "candidate_sha256": "6a8df385941675cf37188778df744faf69ee69a2cf3b9f99e7fb67cd35f00fd5",
-    "binary_path": "/Users/donbeave/Projects/jackin-project/terminal-components-baseline/target/debug/jackin-preview",
-    "binary_sha256": "19fcd2875182a836c7a34b41271df7a038e379f07f3894c47e04732947f8e228",
+    "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/7d468f26fe638cdce658e3ee039ef634f3ba6372615409f1d0de09bf2590081e/debug/jackin-preview",
+    "binary_sha256": "4e671b2db8fba7a9a72f9c1122b233d99e3276a93607941cf68e0f1721f7e6ee",
     "note": "Live candidate capture of this branch. The pinned reference binary in docs/testing/reference-manifest.json is built from fffe002e, which predates c6d72d28, so no Reference-mode capture of this change exists and the reference-session path of scripts/accept-baseline.py cannot bind it."
+  },
+  "cli_receipt": {
+    "schema": "tuiscotti.cli.v1",
+    "command": "accept",
+    "status": "pass",
+    "test_id": "pre_refactor/j01_status/j01_status_status_narrow",
+    "reason": null,
+    "candidate_path": {
+      "encoding": "utf8",
+      "value": "/tmp/cand_pre_refactor_j01_status_j01_status_status_narrow.tui.pb"
+    },
+    "candidate_sha256": "6a8df385941675cf37188778df744faf69ee69a2cf3b9f99e7fb67cd35f00fd5",
+    "baseline_sha256": "6a8df385941675cf37188778df744faf69ee69a2cf3b9f99e7fb67cd35f00fd5",
+    "output_path": {
+      "encoding": "utf8",
+      "value": "/Users/donbeave/Projects/jackin-project/terminal-components-baseline/tests/functional/baselines/pre_refactor/j01_status/j01_status_status_narrow.tui.pb"
+    },
+    "error_code": null
   }
 }

@@ -6,7 +6,7 @@
   "reason": null,
   "candidate_path": {
     "encoding": "utf8",
-    "value": "/Users/donbeave/Projects/jackin-project/terminal-components-baseline/tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_narrow.tui.pb"
+    "value": "/tmp/cand_pre_refactor_j01_purge_j01_purge_purge_narrow.tui.pb"
   },
   "candidate_sha256": "638133a4e102bae276517921c40fca3948cf57b65ba6e05fc260f15960813098",
   "baseline_sha256": "638133a4e102bae276517921c40fca3948cf57b65ba6e05fc260f15960813098",

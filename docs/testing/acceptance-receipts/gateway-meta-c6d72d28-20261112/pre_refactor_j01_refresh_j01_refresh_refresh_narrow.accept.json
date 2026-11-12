@@ -6,7 +6,7 @@
   "reason": null,
   "candidate_path": {
     "encoding": "utf8",
-    "value": "/Users/donbeave/Projects/jackin-project/terminal-components-baseline/tests/functional/baselines/pre_refactor/j01_refresh/j01_refresh_refresh_narrow.tui.pb"
+    "value": "/tmp/cand_pre_refactor_j01_refresh_j01_refresh_refresh_narrow.tui.pb"
   },
   "candidate_sha256": "a589c729f197f6a53081150b896a832f0fad27cbb2f55289404bf92c66ded44b",
   "baseline_sha256": "a589c729f197f6a53081150b896a832f0fad27cbb2f55289404bf92c66ded44b",
