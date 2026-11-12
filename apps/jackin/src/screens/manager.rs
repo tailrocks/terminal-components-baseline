@@ -3195,8 +3195,11 @@ impl Page<Jackin> for ManagerScreen {
                             self.expanded.remove(&id);
                         }
                         RowKey::Instance(iid) => {
-                            if let Some(ws) = w.instance(&iid).and_then(|i| i.workspace) {
-                                self.selected = RowKey::Workspace(ws);
+                            if let Some(entry) = w.entry(&iid) {
+                                self.selected = match entry.workspace_id() {
+                                    Some(ws) => RowKey::Workspace(ws),
+                                    None => RowKey::UnattributedSandboxes,
+                                };
                             }
                         }
                         _ => {}
