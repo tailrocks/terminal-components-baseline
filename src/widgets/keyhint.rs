@@ -109,9 +109,6 @@ pub struct Hint {
 
     pub priority: HintPriority,
 
-    /// Stable binding identifier for clickable hints. When set, footer clicks
-    /// deliver exactly this key instead of re-parsing the display label, so
-    /// remapped bindings (Super/Alt/Shift chords) round-trip faithfully.
     pub click_key: Option<crate::core::event::Key>,
 }
 

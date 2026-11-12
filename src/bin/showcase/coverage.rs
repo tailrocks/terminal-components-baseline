@@ -218,10 +218,6 @@ pub const PICKER_ALLOWLIST: &[(&str, &str)] = &[
     ),
 ];
 
-/// Capability-aware keymap APIs: the showcase pages drive widgets through the
-/// plain `lookup`/`deliverable_binding_for` helpers and read rendered hint bars,
-/// so the `_with` overloads and the capability probes they wrap are exercised
-/// indirectly by every page render rather than named in page code.
 pub const KEYMAP_ALLOWLIST: &[(&str, &str)] = &[
     (
         "core::keymap::KeyboardCapabilities",

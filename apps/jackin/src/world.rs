@@ -1057,9 +1057,6 @@ impl World {
             .count()
     }
 
-    /// Entry-aware running view: every row `running_count` reports as running,
-    /// including ready sandboxes whose metadata is degraded
-    /// (`InstanceEntry::Unavailable`), stays identifiable.
     pub fn running_entries(&self) -> Vec<&InstanceEntry> {
         self.instances
             .iter()

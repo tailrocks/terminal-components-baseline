@@ -262,9 +262,6 @@ impl CockpitScreen {
     }
 
     fn why_label(&self, account: &crate::domain::account::Account, w: &World) -> &'static str {
-        // The fallback account may come from a later launch choice; resolve the
-        // precedence lookup with the tuple that actually supplied the account
-        // instead of the lead tuple.
         let tuple = self
             .instance_id
             .as_ref()

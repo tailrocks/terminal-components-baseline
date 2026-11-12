@@ -1890,7 +1890,6 @@ mod tests {
                 "the hint click for {binding:?} must deliver the key the binding sends"
             );
 
-            // Near-miss labels must not be accepted in place of the bound key.
             assert!(
                 key_of("Insertion").is_none(),
                 "near-miss labels must not parse"

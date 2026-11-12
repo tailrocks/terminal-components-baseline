@@ -69,10 +69,6 @@ fn picker_api(source: &str) -> BTreeSet<String> {
     ids
 }
 
-/// Public API of the shared option list the picker embeds. Allowlist entries
-/// for `widgets::option_list::OptionList::*` are verified against the real
-/// visibility of `src/widgets/option_list.rs` instead of the picker module,
-/// whose extractor can only ever emit `widgets::picker::*` ids.
 fn option_list_api(source: &str) -> BTreeSet<String> {
     let file = syn::parse_file(source).expect("option list source parses");
     let mut ids = BTreeSet::new();

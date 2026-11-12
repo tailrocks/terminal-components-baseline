@@ -138,14 +138,6 @@ impl Default for NavKeys {
     }
 }
 
-/// Normalizes the legacy terminal encoding of shifted character events.
-///
-/// Without the enhanced keyboard protocol a physical Shift+T is delivered as
-/// the produced uppercase character (`Char('T')` plus SHIFT), while the
-/// synthetic encoding used by key bindings is the base character plus SHIFT
-/// (`Char('t')` plus SHIFT). Folding the produced-character encoding into the
-/// base-character encoding before comparing makes both spellings of the same
-/// physical keystroke match the same binding.
 fn normalize_shift_chars(code: KeyCode, mods: KeyModifiers) -> (KeyCode, KeyModifiers) {
     if let KeyCode::Char(c) = code
         && c.is_uppercase()

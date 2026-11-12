@@ -438,8 +438,6 @@ impl ManagerScreen {
                             _ => (i.status.label().into(), Tone::Muted),
                         }
                     };
-                    // Mirror the unavailable rows: surface the full gateway
-                    // identity so same-suffix sandboxes stay distinguishable.
                     let meta = format!("{} · {meta}", i.id.gateway);
                     rows.push(Row {
                         key: RowKey::Instance(i.id.clone()),

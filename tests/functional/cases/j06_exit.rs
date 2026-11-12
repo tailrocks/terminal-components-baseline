@@ -39,6 +39,7 @@ const WARNING: &str = "4 changed · 1 unpushed";
 const KEPT_TREE: &str = "2 uncommitted · 1 unpushed";
 const CLEAN_LIFE: &str = "The final session ended cleanly";
 const DIRTY_LIFE: &str = "Stopped with uncommitted changes";
+const NO_OUTRO: &str = "returning to host without the outro";
 const INSPECT_TITLE: &str = "Inspect changes · payments-platform";
 const MOD: &str = "src/settlement/mod.rs";
 const RETRY: &str = "src/settlement/retry.rs";
@@ -295,6 +296,7 @@ fn at_manager_after_exit(screen: &TerminalSnapshot) -> bool {
     screen.cols() == 120
         && screen.rows() == 40
         && visible.contains(PAGE)
+        && visible.contains(NO_OUTRO)
         && !visible.contains(OUTRO)
         && !visible.contains(SECOND)
         && !visible.contains(UNSAVED)
