@@ -28,8 +28,8 @@ qualified_payload_sha256 = "6a0ba692733d2590cb07d65de6c45a9a7bceffb1e40040629614
 qualified_checker_sha256 = "83b44c1175f40e243bafe94f0dd50bf28435a626b7815bb038c9e0c88086e3b9"
 qualified_manifest_key = "9a0ed85e2b52adbaf29bddccde72f00f702e0cc7f33ce352e3dd806cd231a3ee"
 qualified_fixture_head = "1d7f63dbb13ecb2bf3e3295e7a296dc2080a62b1"
-qualified_seed_commit = "106c84d28b41d340128031760af416b7df83e9c1"
-qualified_seed_tree = "9e1cfbdbf9114d38dd6474e9ae3570779928bd64"
+qualified_seed_commit = "19f21866544814ef960716d92260c2d65606370d"
+qualified_seed_tree = "8c4d34b58a366f556649a59a04a42bff88e9aa7b"
 qualified_cache_receipts = {
     "baseline178-v7-authenticated-real-setup-postconditions-v1.json": "e1029452c0b1e79f25502e0425277e23e94f9a14c3ec98174f37a71b692a2ef0",
     "baseline178-v7-authenticated-real-setup-receipt-v1/command.json": "a13019f5235c8ba4898b4ee35503f72111e1ade05ba4da04993e8379f5d2df2f",
@@ -379,7 +379,7 @@ with tempfile.TemporaryDirectory(prefix="guard-auth-test.") as temporary:
             "rust": "1.99.1",
             "jactionlint": "2.4.0",
             "shellcheck": "0.11.0",
-            "seed_commit": "106c84d28b41d340128031760af416b7df83e9c1",
+            "seed_commit": "19f21866544814ef960716d92260c2d65606370d",
         }
         if any(fields.get(name) != value for name, value in expected.items()):
             raise SystemExit("qualified cache receipt has unexpected production tool or seed identities")
@@ -992,7 +992,7 @@ else:
         fixed_cache, fixed_key, source_snapshot = rebind_qualified_cache(source_generation, digest)
         metadata_pack = repo / "scripts/trusted-seed-metadata.pack"
         metadata_objects = repo / "scripts/trusted-seed-metadata.objects"
-        if hashlib.sha256(metadata_pack.read_bytes()).hexdigest() != "ef142ca2c05b0946afaf85cf120813ec5690844fea4f7aa02f1a63b38581e140" or hashlib.sha256(metadata_objects.read_bytes()).hexdigest() != "83fb1921111a981a454ef85f75fdda535c635062e262238979f3a7be0e4dd24d":
+        if hashlib.sha256(metadata_pack.read_bytes()).hexdigest() != "ff7cf7e8128ee7a5935353adc4a613963fae26851105a0a6b715ca28067957e0" or hashlib.sha256(metadata_objects.read_bytes()).hexdigest() != "4c14aa78ddd2c895069117072847110243e0435954945e05930def518546aa32":
             raise SystemExit("selected seed metadata pack does not match its embedded reviewed identities")
         with metadata_pack.open("rb") as pack:
             subprocess.run(["/usr/bin/git", "-C", str(repo), "index-pack", "--stdin"], stdin=pack, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=clean, check=True)

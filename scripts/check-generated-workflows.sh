@@ -92,16 +92,16 @@ case "$(uname -s):$(uname -m)" in
     ;;
   *) printf 'generated-workflows: unsupported host platform\n' >&2; exit 2 ;;
 esac
-expected_config_sha256=e31ae40a15860bf0f060976c64fb5fa8cd3684b6eb7a13107f76a463478da4ad
+expected_config_sha256=5a3778822d3169e0627845d535367e9c1a0d8988cafc335938dfe103a2e089ae
 expected_python_mise_sha256=4bf669510cff7c1f5d5c7c8edc5f6d496bedf872b635295a607f81680074744d
 expected_inventory_helper_sha256=0541173812097cd6ac4deb065a7e45b6960ddcf26369eb3fd32805a0b66f33eb
-trusted_seed_commit=106c84d28b41d340128031760af416b7df83e9c1
-trusted_seed_tree=9e1cfbdbf9114d38dd6474e9ae3570779928bd64
-trusted_lock_sha256=4acfd9a5b7669e48d9ce210063c460fb23e459c9bfa6f8b1b3e0e183578d3775
-trusted_seed_policy_sha256=1509668e924122976da7fc4473186b7746f9f48e6ac05359d5920e2bd3362847
+trusted_seed_commit=19f21866544814ef960716d92260c2d65606370d
+trusted_seed_tree=8c4d34b58a366f556649a59a04a42bff88e9aa7b
+trusted_lock_sha256=d1abe8b74eac36822b25a735e8cc28e2c8434103a8c87f662a9ebe2da5f593a7
+trusted_seed_policy_sha256=2c78b4ee8017bb196aea59097b56579b55add8fe93cb040bceabb4c7f98b0056
 trusted_manifests_sha256=59f990cee12bba13b31cd3f149442a9486e6e3890819b2abe16ce51d4c0a911e
-trusted_metadata_pack_sha256=ef142ca2c05b0946afaf85cf120813ec5690844fea4f7aa02f1a63b38581e140
-trusted_metadata_object_list_sha256=83fb1921111a981a454ef85f75fdda535c635062e262238979f3a7be0e4dd24d
+trusted_metadata_pack_sha256=ff7cf7e8128ee7a5935353adc4a613963fae26851105a0a6b715ca28067957e0
+trusted_metadata_object_list_sha256=4c14aa78ddd2c895069117072847110243e0435954945e05930def518546aa32
 
 sha256_file() {
   if [[ "$hash_tool" == /usr/bin/shasum ]]; then
@@ -1909,7 +1909,7 @@ def load_policy():
         raise SystemExit("generated-workflows: trusted seed Cargo policy artifact is malformed") from error
     if type(policy) is not dict or set(policy) != {"schema", "seed_commit", "seed_tree", "manifest_aggregate_sha256", "manifests"}:
         reject("trusted seed Cargo policy artifact has unsupported fields")
-    if policy.get("schema") != 1 or policy.get("seed_commit") != "106c84d28b41d340128031760af416b7df83e9c1" or policy.get("seed_tree") != "9e1cfbdbf9114d38dd6474e9ae3570779928bd64" or policy.get("manifest_aggregate_sha256") != trusted_manifests_sha256:
+    if policy.get("schema") != 1 or policy.get("seed_commit") != "19f21866544814ef960716d92260c2d65606370d" or policy.get("seed_tree") != "8c4d34b58a366f556649a59a04a42bff88e9aa7b" or policy.get("manifest_aggregate_sha256") != trusted_manifests_sha256:
         reject("trusted seed Cargo policy artifact does not match the reviewed source identity")
     records = policy.get("manifests")
     if type(records) is not list or [record.get("path") if type(record) is dict else None for record in records] != list(manifest_paths):

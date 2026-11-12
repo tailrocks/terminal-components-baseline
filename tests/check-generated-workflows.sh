@@ -111,7 +111,7 @@ import tomllib
 from pathlib import Path
 
 lock_bytes = Path(sys.argv[1]).read_bytes()
-if hashlib.sha256(lock_bytes).hexdigest() != "4acfd9a5b7669e48d9ce210063c460fb23e459c9bfa6f8b1b3e0e183578d3775":
+if hashlib.sha256(lock_bytes).hexdigest() != "d1abe8b74eac36822b25a735e8cc28e2c8434103a8c87f662a9ebe2da5f593a7":
     raise SystemExit("trusted lock identity mismatch")
 lock = tomllib.loads(lock_bytes.decode())
 repositories = {}

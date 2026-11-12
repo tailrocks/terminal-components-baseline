@@ -968,9 +968,9 @@ capture_required_run_evidence() {
   if [[ -n "${installation:-}" && -n "${checker_digest:-}" && -f "$installation/versions/$checker_digest/manifest" ]]; then
     cp -p "$installation/versions/$checker_digest/manifest" "$evidence_run/cache/installed-checker.manifest" || return 1
   fi
-  if [[ -n "${installation:-}" && -f "$installation/cache/seed/106c84d28b41d340128031760af416b7df83e9c1/manifest" ]]; then
-    cp -p "$installation/cache/seed/106c84d28b41d340128031760af416b7df83e9c1/manifest" "$evidence_run/cache/seed.manifest" || return 1
-    cp -p "$installation/cache/seed/106c84d28b41d340128031760af416b7df83e9c1/objects.txt" "$evidence_run/cache/seed.objects" || return 1
+  if [[ -n "${installation:-}" && -f "$installation/cache/seed/19f21866544814ef960716d92260c2d65606370d/manifest" ]]; then
+    cp -p "$installation/cache/seed/19f21866544814ef960716d92260c2d65606370d/manifest" "$evidence_run/cache/seed.manifest" || return 1
+    cp -p "$installation/cache/seed/19f21866544814ef960716d92260c2d65606370d/objects.txt" "$evidence_run/cache/seed.objects" || return 1
   fi
   if [[ -z "${tool_cache_generation:-}" && -n "${installation:-}" && -d "$installation/cache/tools" ]]; then
     tool_cache_generation=$(find "$installation/cache/tools" -mindepth 1 -maxdepth 1 -type d ! -name '.stage*' -print -quit) || return 1
@@ -997,7 +997,7 @@ capture_required_run_evidence() {
   local evidence_seed_state=unavailable
   if [[ -n "${repository:-}" && -d "$repository" ]]; then
     evidence_source_head=$("$git_command" -C "$repository" rev-parse HEAD 2>/dev/null || true)
-    if "$git_command" -C "$repository" cat-file -e '106c84d28b41d340128031760af416b7df83e9c1^{commit}' 2>/dev/null; then
+    if "$git_command" -C "$repository" cat-file -e '19f21866544814ef960716d92260c2d65606370d^{commit}' 2>/dev/null; then
       evidence_seed_state=present
     else
       evidence_seed_state=absent
@@ -1338,7 +1338,7 @@ try:
         return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
     if len(data) > 4096 or len(data) != before.st_size or identity(before_path) != identity(before) or identity(before) != identity(after) or identity(after) != identity(after_path):
         raise ValueError
-    if hashlib.sha1(b"commit " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest() != "106c84d28b41d340128031760af416b7df83e9c1":
+    if hashlib.sha1(b"commit " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest() != "19f21866544814ef960716d92260c2d65606370d":
         raise ValueError
 except (OSError, ValueError):
     sys.exit(1)
@@ -1348,12 +1348,12 @@ PYSEED
     return 1
   fi
   policy_seed_sha=$(sha256_file "$repo_root/scripts/trusted-seed-cargo.lock") || return 1
-  if [[ "$policy_seed_sha" != 4acfd9a5b7669e48d9ce210063c460fb23e459c9bfa6f8b1b3e0e183578d3775 ]]; then
+  if [[ "$policy_seed_sha" != d1abe8b74eac36822b25a735e8cc28e2c8434103a8c87f662a9ebe2da5f593a7 ]]; then
     printf 'generated-workflows: policy fixture trusted seed differs from the reviewed source input\n' >&2
     return 1
   fi
   policy_manifest_sha=$(sha256_file "$repo_root/scripts/trusted-seed-cargo-policy.json") || return 1
-  if [[ "$policy_manifest_sha" != 1509668e924122976da7fc4473186b7746f9f48e6ac05359d5920e2bd3362847 ]]; then
+  if [[ "$policy_manifest_sha" != 2c78b4ee8017bb196aea59097b56579b55add8fe93cb040bceabb4c7f98b0056 ]]; then
     printf 'generated-workflows: policy fixture trusted seed Cargo policy differs from the reviewed source input\n' >&2
     return 1
   fi
@@ -1716,7 +1716,7 @@ if [[ "$("$git_command" -C "$repository" rev-parse HEAD)" != "$source_head" ]]; 
   printf 'generated-workflows: disposable source checkout did not bind the selected source commit\n' >&2
   exit 1
 fi
-if "$git_command" -C "$repository" cat-file -e '106c84d28b41d340128031760af416b7df83e9c1^{commit}' 2>/dev/null; then
+if "$git_command" -C "$repository" cat-file -e '19f21866544814ef960716d92260c2d65606370d^{commit}' 2>/dev/null; then
   printf 'generated-workflows: shallow fixture unexpectedly contains the approved seed commit\n' >&2
   exit 1
 fi
