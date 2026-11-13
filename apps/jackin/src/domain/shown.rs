@@ -32,7 +32,7 @@ pub fn escaped(raw: &str) -> String {
     let mut out = String::with_capacity(raw.len());
     for c in raw.chars() {
         if is_hidden(c) {
-            out.extend(c.escape_debug());
+            out.extend(c.escape_unicode());
         } else {
             out.push(c);
         }
@@ -95,5 +95,12 @@ mod tests {
         let shown = escaped("\u{7}bell\u{200b}zwsp\u{feff}bom");
         assert!(!shown.chars().any(super::is_hidden), "{shown:?}");
         assert!(shown.ends_with("bom"), "{shown:?}");
+    }
+
+    #[test]
+    fn escaped_renders_unicode_fillers_as_debug_escapes() {
+        let shown = escaped("a\u{115f}b\u{1160}c\u{2800}d\u{3164}e\u{ffa0}f");
+        assert!(!shown.chars().any(super::is_hidden), "{shown:?}");
+        assert_eq!(shown, "a\\u{115f}b\\u{1160}c\\u{2800}d\\u{3164}e\\u{ffa0}f");
     }
 }
